@@ -31,13 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface RegistrationCoreService extends OpenmrsService {
-     
 
 	/**
 	 * 
 	 * 
 	 * @param person
-	 * @param maxResults TODO
+	 * @param maxResults
 	 * @return
 	 * @should find by given and family name
 	 * @should find by given, middle and family name

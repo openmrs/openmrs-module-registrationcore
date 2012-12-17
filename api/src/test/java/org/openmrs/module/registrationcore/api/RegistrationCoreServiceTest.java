@@ -13,8 +13,6 @@
  */
 package org.openmrs.module.registrationcore.api;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.Set;
 
 import org.hamcrest.BaseMatcher;
@@ -47,11 +45,6 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 		personService = Context.getPersonService();
 	}
 	
-	@Test
-	public void shouldSetupContext() {
-		assertNotNull(Context.getService(RegistrationCoreService.class));
-	}
-	
 	/**
 	 * @see RegistrationCoreService#searchForSimilarPeople(Person, Integer)
 	 * @verifies find by country
@@ -62,7 +55,6 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 		
 		PersonAddress address = newBlankAddress();
 		address.setCountry("USA");
-		
 		person.addAddress(address);
 		
 		Set<Person> results = service.searchForSimilarPeople(person, 10);
@@ -75,6 +67,7 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 	private PersonAddress newBlankAddress() {
 	    PersonAddress address = new PersonAddress();
 		address.setVoided(null);
+		address.setPreferred(null);
 	    return address;
     }
 	
@@ -87,14 +80,13 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 		PersonAddress personAddress = personService.getPersonAddressByUuid("7418fe01-e7e0-4f0c-ad1b-4b4d845577f9");
 		personAddress.setCountry("USA");
 		personService.savePerson(personAddress.getPerson());
-		
 		Context.flushSession();
-		
+
 		Person person = newBlankPerson();
 		
 		PersonAddress address = newBlankAddress();
 		address.setCountry("USA");
-		//address.setCityVillage("Indianapolis");
+		address.setCityVillage("Indianapolis");
 		
 		person.addAddress(address);
 		

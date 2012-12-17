@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Restrictions;
 import org.openmrs.Person;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
@@ -75,9 +74,8 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
 		if (person.getAddresses() != null && !person.getAddresses().isEmpty()) {
 			Criteria addressesCriteria = criteria.createCriteria("addresses");
 			for (PersonAddress address : person.getAddresses()) {
-				addressesCriteria.add(Restrictions.eq("country", address.getCountry()));
-				//addressesCriteria.add(Example.create(address).excludeNone().excludeZeroes().excludeProperty("uuid")
-				//        .excludeProperty("personAddressId").excludeProperty("preferred"));
+				addressesCriteria.add(Example.create(address).excludeNone().excludeZeroes().excludeProperty("uuid")
+				        .excludeProperty("personAddressId").excludeProperty("preferred"));
 			}
 		}
 		
