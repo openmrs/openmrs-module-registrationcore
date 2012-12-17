@@ -14,11 +14,14 @@
 package org.openmrs.module.registrationcore;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.BaseOpenmrsObject;
+import org.openmrs.Patient;
+import org.openmrs.Relationship;
 
 /**
  * It is a model class. It should extend either {@link BaseOpenmrsObject} or
@@ -41,6 +44,25 @@ public class RegistrationEvent implements Serializable {
 	private List<String> errors;
 	
 	/**
+	 * @param patient
+	 */
+	public RegistrationEvent(Patient patient) {
+		patientUuid = patient.getUuid();
+	}
+	
+	/**
+	 * @param patient
+	 * @param relationships
+	 */
+	public RegistrationEvent(Patient patient, List<Relationship> relationships) {
+		patientUuid = patient.getUuid();
+		relationshipUuids = new ArrayList<String>();
+		for (Relationship relationship : relationships) {
+			relationshipUuids.add(relationship.getUuid());
+		}
+	}
+	
+	/**
 	 * @return the patientUuid
 	 */
 	public String getPatientUuid() {
@@ -58,6 +80,8 @@ public class RegistrationEvent implements Serializable {
 	 * @return the relationshipUuids
 	 */
 	public List<String> getRelationshipUuids() {
+		if (relationshipUuids == null)
+			relationshipUuids = new ArrayList<String>();
 		return relationshipUuids;
 	}
 	
