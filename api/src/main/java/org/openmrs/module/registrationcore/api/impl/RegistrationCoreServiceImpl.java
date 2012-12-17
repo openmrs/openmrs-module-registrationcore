@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+import java.util.Set;
+
+import org.openmrs.Person;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,5 +43,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
      */
     public RegistrationCoreDAO getDao() {
 	    return dao;
+    }
+    
+	/**
+     * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#searchForSimilarPeople(org.openmrs.Person, Integer)
+     */
+    @Override
+    public Set<Person> searchForSimilarPeople(Person person, Integer maxResults) {
+	    return dao.searchForSimilarPeople(person, maxResults);
     }
 }

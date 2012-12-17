@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.registrationcore.api;
 
+import java.util.Set;
+
+import org.openmrs.Person;
 import org.openmrs.api.OpenmrsService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +32,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface RegistrationCoreService extends OpenmrsService {
      
-	/*
-	 * Add service methods here
+
+	/**
 	 * 
+	 * 
+	 * @param person
+	 * @param maxResults TODO
+	 * @return
+	 * @should find by given and family name
+	 * @should find by given, middle and family name
+	 * @should find by country
+	 * @should find by country and city
+	 * @should find by gender
 	 */
+	public Set<Person> searchForSimilarPeople(Person person, Integer maxResults);
 }
