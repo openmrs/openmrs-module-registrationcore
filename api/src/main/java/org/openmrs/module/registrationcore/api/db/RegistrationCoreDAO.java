@@ -19,8 +19,4 @@ import org.openmrs.module.registrationcore.api.RegistrationCoreService;
  *  Database methods for {@link RegistrationCoreService}.
  */
 public interface RegistrationCoreDAO {
-	
-	/*
-	 * Add DAO methods here
-	 */
 }

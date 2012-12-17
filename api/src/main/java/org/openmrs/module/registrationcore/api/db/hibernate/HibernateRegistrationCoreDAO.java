@@ -19,24 +19,25 @@ import org.hibernate.SessionFactory;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 
 /**
- * It is a default implementation of  {@link RegistrationCoreDAO}.
+ * It is a default implementation of {@link RegistrationCoreDAO}.
  */
 public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
+	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	private SessionFactory sessionFactory;
 	
 	/**
-     * @param sessionFactory the sessionFactory to set
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-	    this.sessionFactory = sessionFactory;
-    }
-    
+	 * @param sessionFactory the sessionFactory to set
+	 */
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
 	/**
-     * @return the sessionFactory
-     */
-    public SessionFactory getSessionFactory() {
-	    return sessionFactory;
-    }
+	 * @return the sessionFactory
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
 }

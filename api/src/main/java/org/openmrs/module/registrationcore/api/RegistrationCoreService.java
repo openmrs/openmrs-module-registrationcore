@@ -14,12 +14,15 @@
 package org.openmrs.module.registrationcore.api;
 
 import java.util.List;
+import java.util.Map;
 
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured
@@ -50,4 +53,50 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @should set wasPerson field to true for an existing person on the registration event
 	 */
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation);
+	
+	/**
+	 * Returns a list of matching patients using the fast algorithm.
+	 * <p>
+	 * You can change the underlying implementation by calling
+	 * {@link #setFastSimilarPatientSearchAlgorithm(org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm)}.
+	 * 
+	 * @param patient
+	 * @param otherDataPoints
+	 * @param cutoff
+	 * @param maxResults
+	 * @return the list
+	 */
+	List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+	                                                     Double cutoff, Integer maxResults);
+	
+	/**
+	 * Returns a list of matching patients using the precise algorithm.
+	 * <p>
+	 * You can change the underlying implementation by calling
+	 * {@link #setPreciseSimilarPatientSearchAlgorithm(org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm)}.
+	 * 
+	 * @param patient
+	 * @param otherDataPoints
+	 * @param cutoff
+	 * @param maxResults
+	 * @return the list
+	 */
+	List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+	                                                        Double cutoff, Integer maxResults);
+	
+	/**
+	 * Allows to set an implementation for
+	 * {@link #findPreciseSimilarPatients(Patient, Map, Double, Integer)}
+	 * 
+	 * @param preciseSimilarPatientSearchAlgorithm
+	 */
+	void setPreciseSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm);
+	
+	/**
+	 * Allows to set an implementation for
+	 * {@link #findFastSimilarPatients(Patient, Map, Double, Integer)}
+	 * 
+	 * @param fastSimilarPatientSearchAlgorithm
+	 */
+	void setFastSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm);
 }

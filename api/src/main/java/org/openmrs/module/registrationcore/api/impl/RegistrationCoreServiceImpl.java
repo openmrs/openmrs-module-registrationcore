@@ -16,6 +16,7 @@ package org.openmrs.module.registrationcore.api.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -40,6 +41,8 @@ import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +78,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	/**
 	 * @param dao the dao to set
 	 */
+	private SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm;
+	
+	private SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm;
+	
 	public void setDao(RegistrationCoreDAO dao) {
 		this.dao = dao;
 	}
@@ -182,5 +189,27 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public boolean supportsPropertyName(String gpName) {
 		return RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID.equals(gpName);
+	}
+	
+	@Override
+    public void setFastSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm) {
+		this.fastSimilarPatientSearchAlgorithm = fastSimilarPatientSearchAlgorithm;
+	}
+	
+	@Override
+    public void setPreciseSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm) {
+		this.preciseSimilarPatientSearchAlgorithm = preciseSimilarPatientSearchAlgorithm;
+	}
+	
+	@Override
+	public List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+	                                                            Double cutoff, Integer maxResults) {
+		return fastSimilarPatientSearchAlgorithm.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+	}
+	
+	@Override
+	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+	                                                               Double cutoff, Integer maxResults) {
+		return preciseSimilarPatientSearchAlgorithm.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 }
