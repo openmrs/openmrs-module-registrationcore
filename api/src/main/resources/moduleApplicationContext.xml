@@ -32,13 +32,14 @@
 					</property>
 					<property name="target">
 						<bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.RegistrationCoreServiceImpl">
-							<property name="dao">
+							<constructor-arg>
 								<bean class="${project.parent.groupId}.${project.parent.artifactId}.api.db.hibernate.HibernateRegistrationCoreDAO">
 									<property name="sessionFactory">
 										<ref bean="sessionFactory" />
 									</property>
 								</bean>
-							</property>
+							</constructor-arg>
+							<constructor-arg ref="registrationcore.DefaultPatientSearch" />
 						</bean>
 					</property>
 					<property name="preInterceptors">

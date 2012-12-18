@@ -13,14 +13,15 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
-import java.util.Set;
+import java.util.List;
 
-import org.openmrs.Person;
-import org.openmrs.api.impl.BaseOpenmrsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Patient;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.openmrs.module.registrationcore.api.search.PatientSearch;
 
 /**
  * It is a default implementation of {@link RegistrationCoreService}.
@@ -29,27 +30,28 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	private RegistrationCoreDAO dao;
+	private final RegistrationCoreDAO dao;
 	
+	private final PatientSearch patientSearch;
+	
+	public RegistrationCoreServiceImpl(RegistrationCoreDAO dao, PatientSearch patientSearch) {
+		this.dao = dao;
+		this.patientSearch = patientSearch;
+	}
+
 	/**
-     * @param dao the dao to set
-     */
-    public void setDao(RegistrationCoreDAO dao) {
-	    this.dao = dao;
-    }
-    
-    /**
-     * @return the dao
-     */
-    public RegistrationCoreDAO getDao() {
-	    return dao;
-    }
-    
-	/**
-     * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#searchForSimilarPeople(org.openmrs.Person, Integer)
+     * @see org.openmrs.module.registrationcore.api.search.PatientSearch#findSimilarPatients(org.openmrs.Patient, java.lang.Integer)
      */
     @Override
-    public Set<Person> searchForSimilarPeople(Person person, Integer maxResults) {
-	    return dao.searchForSimilarPeople(person, maxResults);
+    public List<Patient> findSimilarPatients(Patient patient, Integer maxResults) {
+	    return patientSearch.findSimilarPatients(patient, maxResults);
+    }
+
+	/**
+     * @see org.openmrs.module.registrationcore.api.search.PatientSearch#findDuplicatePatients(org.openmrs.Patient, java.lang.Integer)
+     */
+    @Override
+    public List<Patient> findDuplicatePatients(Patient patient, Integer maxResults) {
+	    return patientSearch.findDuplicatePatients(patient, maxResults);
     }
 }

@@ -13,23 +13,10 @@
  */
 package org.openmrs.module.registrationcore.api.db;
 
-import java.util.Set;
-
-import org.openmrs.Person;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 
 /**
  *  Database methods for {@link RegistrationCoreService}.
  */
 public interface RegistrationCoreDAO {
-
-
-	/**
-     * Auto generated method comment
-     * 
-     * @param person
-	 * @param maxResults TODO
-     * @return
-     */
-    Set<Person> searchForSimilarPeople(Person person, Integer maxResults);
 }

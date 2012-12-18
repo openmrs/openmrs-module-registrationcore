@@ -13,17 +13,9 @@
  */
 package org.openmrs.module.registrationcore.api.db.hibernate;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Example;
-import org.openmrs.Person;
-import org.openmrs.PersonAddress;
-import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 
 /**
@@ -47,42 +39,5 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
 	 */
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
-	}
-	
-	/**
-	 * @see org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO#searchForSimilarPeople(org.openmrs.Person,
-	 *      Integer)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public Set<Person> searchForSimilarPeople(Person person, Integer maxResults) {
-		Criteria criteria = sessionFactory
-		        .getCurrentSession()
-		        .createCriteria(Person.class)
-		        .add(
-		            Example.create(person).excludeNone().excludeZeroes().excludeProperty("isPatient")
-		                    .excludeProperty("uuid").excludeProperty("personId"));
-		
-		if (person.getNames() != null && !person.getNames().isEmpty()) {
-			Criteria namesCriteria = criteria.createCriteria("names");
-			for (PersonName name : person.getNames()) {
-				namesCriteria.add(Example.create(name).excludeNone().excludeZeroes().excludeProperty("uuid")
-				        .excludeProperty("personNameId").excludeProperty("preferred"));
-			}
-		}
-		
-		if (person.getAddresses() != null && !person.getAddresses().isEmpty()) {
-			Criteria addressesCriteria = criteria.createCriteria("addresses");
-			for (PersonAddress address : person.getAddresses()) {
-				addressesCriteria.add(Example.create(address).excludeNone().excludeZeroes().excludeProperty("uuid")
-				        .excludeProperty("personAddressId").excludeProperty("preferred"));
-			}
-		}
-		
-		if (maxResults != null) {
-			criteria.setMaxResults(maxResults);
-		}
-		
-		return new HashSet<Person>(criteria.list());
 	}
 }
