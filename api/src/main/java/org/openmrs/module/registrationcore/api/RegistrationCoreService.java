@@ -13,11 +13,15 @@
  */
 package org.openmrs.module.registrationcore.api;
 
+import java.util.List;
+
+import org.openmrs.Patient;
+import org.openmrs.Relationship;
 import org.openmrs.api.OpenmrsService;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.
+ * This service exposes module's core functionality. It is a Spring managed bean which is configured
+ * in moduleApplicationContext.xml.
  * <p>
  * It can be accessed only via Context:<br>
  * <code>
@@ -26,11 +30,14 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  * @see org.openmrs.api.context.Context
  */
-@Transactional
 public interface RegistrationCoreService extends OpenmrsService {
-     
-	/*
-	 * Add service methods here
-	 * 
+	
+	/**
+	 * @param patient
+	 * @param relationships
+	 * @return
+	 * @should create a patient from record with relationships
+	 * @return the created patient
 	 */
+	public Patient registerPatient(Patient patient, List<Relationship> relationships);
 }
