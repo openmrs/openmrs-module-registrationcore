@@ -20,4 +20,6 @@ public final class RegistrationCoreConstants {
 	 */
 	public static final String GP_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
 	
+	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
+	
 }

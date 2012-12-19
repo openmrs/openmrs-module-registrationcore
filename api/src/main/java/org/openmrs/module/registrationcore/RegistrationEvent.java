@@ -41,8 +41,6 @@ public class RegistrationEvent implements Serializable {
 	
 	private Boolean wasAPerson = Boolean.FALSE;
 	
-	private List<String> errors;
-	
 	/**
 	 * @param patient
 	 */
@@ -132,19 +130,5 @@ public class RegistrationEvent implements Serializable {
 	 */
 	public void setWasAPerson(Boolean wasAPerson) {
 		this.wasAPerson = wasAPerson;
-	}
-	
-	/**
-	 * @return the errors
-	 */
-	public List<String> getErrors() {
-		return errors;
-	}
-	
-	/**
-	 * @param errors the errors to set
-	 */
-	public void setErrors(List<String> errors) {
-		this.errors = errors;
 	}
 }

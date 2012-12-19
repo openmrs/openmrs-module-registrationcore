@@ -71,6 +71,17 @@
 			<artifactId>idgen-api</artifactId>
 			<type>test-jar</type>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.openmrs</groupId>
+			<artifactId>event-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openmrs</groupId>
+			<artifactId>event-api</artifactId>
+			<type>test-jar</type>
+		</dependency>
 				
 		<!-- End OpenMRS core -->
 		

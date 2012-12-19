@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,9 +34,13 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.event.Event;
+import org.openmrs.event.Event.Action;
+import org.openmrs.event.EventMessage;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.RegistrationEvent;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +121,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		
 		String identifierString = iss.generateIdentifier(idSource, null);
 		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), idLocation);
+		pId.setDateCreated(new Date());
+		pId.setCreator(Context.getAuthenticatedUser());
 		patient.addIdentifier(pId);
+		
+		boolean wasAPerson = false;
+		//TODO fix this when creating a patient from a person is possible
+		wasAPerson = patient.getPersonId() != null;
+		
 		patient = patientService.savePatient(patient);
 		
 		if (relationships != null) {
@@ -131,7 +145,21 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 		}
 		
-		//TODO fire RegistrationEvent see https://tickets.openmrs.org/browse/RC-4
+		EventMessage eventMessage = new EventMessage();
+		eventMessage.put("patientUuid", patient.getUuid());
+		eventMessage.put("registererUuid", patient.getCreator().getUuid());
+		eventMessage.put("dateRegistered",
+		    new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
+		eventMessage.put("wasAPerson", wasAPerson);
+		ArrayList<String> relationshipUuids = new ArrayList<String>();
+		if (relationships != null) {
+			for (Relationship r : relationships) {
+				relationshipUuids.add(r.getUuid());
+			}
+			eventMessage.put("relationshipUuids", relationshipUuids);
+		}
+		
+		Event.fireEvent(Action.CREATED, RegistrationEvent.class, eventMessage);
 		
 		return patient;
 	}
