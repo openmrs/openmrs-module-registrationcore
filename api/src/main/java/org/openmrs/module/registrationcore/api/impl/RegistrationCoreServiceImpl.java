@@ -84,12 +84,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
-	 *      java.util.List)
+	 *      java.util.List, Location)
 	 */
 	@Override
-	public Patient registerPatient(Patient patient, List<Relationship> relationships) {
+	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation) {
 		if (log.isInfoEnabled())
 			log.info("Registering new patient..");
+		if (patient == null)
+			throw new APIException("Patient cannot be null");
 		
 		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
 		if (idSource == null) {
@@ -107,24 +109,24 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 		}
 		
-		//Should users define a global property for the location?
-		Location idLocation = locationService.getDefaultLocation();
-		if (idLocation == null)
-			throw new APIException("Failed to resolve location to associate to patient identifiers");
-		
+		if (identifierLocation == null) {
+			identifierLocation = locationService.getDefaultLocation();
+			if (identifierLocation == null)
+				throw new APIException("Failed to resolve location to associate to patient identifiers");
+		}
 		String identifierString = iss.generateIdentifier(idSource, null);
-		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), idLocation);
+		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
 		patient.addIdentifier(pId);
 		patient = patientService.savePatient(patient);
 		
 		if (relationships != null) {
 			for (Relationship relationship : relationships) {
-				//Callers are expected to set one side of the relationship so that
-				//we avoid bogus relationships where this patient is neither A nor B
 				if (relationship.getPersonA() == null) {
 					relationship.setPersonA(patient);
-				} else {
+				} else if (relationship.getPersonB() == null) {
 					relationship.setPersonB(patient);
+				} else {
+					throw new APIException("Only one side of a relationship should be specified");
 				}
 				
 				personService.saveRelationship(relationship);
