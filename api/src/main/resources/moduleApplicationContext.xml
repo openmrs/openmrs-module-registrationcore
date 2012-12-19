@@ -52,4 +52,13 @@
 		</property>
 	</bean>
 	
+	<!-- Module global property listeners -->
+	<bean id="registrationcoreEventListeners" parent="openmrsEventListeners">
+	    <property name="globalPropertyListeners">
+	        <list value-type="org.openmrs.api.GlobalPropertyListener">
+	            <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.RegistrationCoreServiceImpl" />
+	        </list>
+	    </property>
+	</bean>
+	
 </beans>
