@@ -40,7 +40,6 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @param relationships the relationships to save along with the patient
 	 * @return the created patient
 	 * @should create a patient from record with relationships
-	 * @return the created patient
 	 */
 	public Patient registerPatient(Patient patient, List<Relationship> relationships);
 }
