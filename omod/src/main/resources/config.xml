@@ -26,6 +26,15 @@
 		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.AdminList</class>
 	</extension>
 	
+	<!-- Global properties -->
+	<globalProperty>
+		<property>${project.parent.artifactId}.identifierSourceId</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies the identifier source to use when generating patient identifiers
+		</description>
+	</globalProperty>
+	
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				

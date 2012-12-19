@@ -13,11 +13,17 @@
  */
 package org.openmrs.module.registrationcore.api;
 
+import java.util.List;
+
+import org.openmrs.Location;
+import org.openmrs.Patient;
+import org.openmrs.Relationship;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.
+ * This service exposes module's core functionality. It is a Spring managed bean which is configured
+ * in moduleApplicationContext.xml.
  * <p>
  * It can be accessed only via Context:<br>
  * <code>
@@ -26,11 +32,20 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  * @see org.openmrs.api.context.Context
  */
-@Transactional
 public interface RegistrationCoreService extends OpenmrsService {
-     
-	/*
-	 * Add service methods here
+	
+	/**
+	 * Assigns an identifier to the patient and saves them in the database including the specified
+	 * relationships, the method always attempts to set the other side of each relationship
+	 * therefore callers of this method are required to set exactly one side
 	 * 
+	 * @param patient the patient to save
+	 * @param relationships the relationships to save along with the patient
+	 * @param identifierLocation the location to set for the patient identifier, if not specified,
+	 *            it defaults to the system default locale see
+	 *            {@link LocationService#getDefaultLocation()}
+	 * @return the created patient
+	 * @should create a patient from record with relationships
 	 */
+	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation);
 }

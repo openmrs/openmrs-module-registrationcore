@@ -34,6 +34,7 @@
 	
 	<properties>
 		<openMRSVersion>1.8.2</openMRSVersion>
+		<idgenVersion>2.3</idgenVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -97,6 +98,22 @@
 						
 			<!-- End OpenMRS core -->
 
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>idgen-api</artifactId>
+				<version>${idgenVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>idgen-api</artifactId>
+				<version>${idgenVersion}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 
