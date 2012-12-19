@@ -109,9 +109,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		
 		//Should users define a global property for the location?
 		Location idLocation = locationService.getDefaultLocation();
-		if (idLocation == null) {
+		if (idLocation == null)
 			throw new APIException("Failed to resolve location to associate to patient identifiers");
-		}
 		
 		String identifierString = iss.generateIdentifier(idSource, null);
 		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), idLocation);

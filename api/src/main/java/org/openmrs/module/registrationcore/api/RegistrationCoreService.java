@@ -33,9 +33,12 @@ import org.openmrs.api.OpenmrsService;
 public interface RegistrationCoreService extends OpenmrsService {
 	
 	/**
-	 * @param patient
-	 * @param relationships
-	 * @return
+	 * Assigns an identifier to the patient and saves them in the database including the specified
+	 * relationships
+	 * 
+	 * @param patient the patient to save
+	 * @param relationships the relationships to save along with the patient
+	 * @return the created patient
 	 * @should create a patient from record with relationships
 	 * @return the created patient
 	 */
