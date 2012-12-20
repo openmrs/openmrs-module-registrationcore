@@ -35,12 +35,10 @@ import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.event.Event;
-import org.openmrs.event.Event.Action;
 import org.openmrs.event.EventMessage;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.RegistrationEvent;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,7 +157,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			eventMessage.put("relationshipUuids", relationshipUuids);
 		}
 		
-		Event.fireEvent(Action.CREATED, RegistrationEvent.class, eventMessage);
+		Event.fireEvent(RegistrationCoreConstants.TOPIC_NAME, eventMessage);
 		
 		return patient;
 	}

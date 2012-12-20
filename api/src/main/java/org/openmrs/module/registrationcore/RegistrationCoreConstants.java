@@ -22,4 +22,6 @@ public final class RegistrationCoreConstants {
 	
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
 	
+	public static final String TOPIC_NAME = "org.openmrs.module.registrationcore.RegistrationEvent";
+	
 }
