@@ -13,12 +13,16 @@
  */
 package org.openmrs.module.registrationcore.api;
 
-import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.registrationcore.api.search.PatientSearch;
+import java.util.List;
+import java.util.Map;
 
+import org.openmrs.Patient;
+import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 /**
- * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.
+ * This service exposes module's core functionality. It is a Spring managed bean which is configured
+ * in moduleApplicationContext.xml.
  * <p>
  * It can be accessed only via Context:<br>
  * <code>
@@ -27,5 +31,29 @@ import org.openmrs.module.registrationcore.api.search.PatientSearch;
  * 
  * @see org.openmrs.api.context.Context
  */
-public interface RegistrationCoreService extends OpenmrsService, PatientSearch {
+public interface RegistrationCoreService extends OpenmrsService {
+	
+	/**
+	 * Returns a list of matching patients using the fast algorithm.
+	 * 
+	 * @param patient
+	 * @param otherDataPoints
+	 * @param cutoff
+	 * @param maxResults
+	 * @return the list
+	 */
+	List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+	                                                 Integer maxResults);
+
+	/**
+     * Returns a list of matching patients using the precise algorithm.
+     * 
+     * @param patient
+     * @param otherDataPoints
+     * @param cutoff
+     * @param maxResults
+     * @return the list
+     */
+    List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+                                                     Integer maxResults);
 }

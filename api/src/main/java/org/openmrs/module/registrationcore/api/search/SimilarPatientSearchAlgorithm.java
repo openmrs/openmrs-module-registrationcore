@@ -14,23 +14,16 @@
 package org.openmrs.module.registrationcore.api.search;
 
 import java.util.List;
+import java.util.Map;
 
 import org.openmrs.Patient;
 
 /**
- *
+ * Defines an interface for algorithms to find similar patients.
  */
-public interface PatientSearch {
+public interface SimilarPatientSearchAlgorithm {
 	
-	/**
-	 * Auto generated method comment
-	 * 
-	 * @param patient
-	 * @param maxResults
-	 * @return
-	 */
-	List<Patient> findSimilarPatients(Patient patient, Integer maxResults);
-	
-	List<Patient> findDuplicatePatients(Patient patient, Integer maxResults);
+	List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+	                                                 Integer maxResults);
 	
 }

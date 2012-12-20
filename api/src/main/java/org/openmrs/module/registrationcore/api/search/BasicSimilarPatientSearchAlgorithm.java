@@ -13,8 +13,11 @@
  */
 package org.openmrs.module.registrationcore.api.search;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -35,19 +38,19 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  *
  */
-@Service("registrationcore.DefaultPatientSearch")
-public class DefaultPatientSearch implements PatientSearch {
+@Service("registrationcore.BasicSimilarPatientSearchAlgorithm")
+public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchAlgorithm {
 	
 	private final SessionFactory sessionFactory;
 	
+	private final long TWO_WEEKS = 3600000L * 24 * 7 * 2;
+	
 	@Autowired
-	public DefaultPatientSearch(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+	public BasicSimilarPatientSearchAlgorithm(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	
 	/**
-	 * @see org.openmrs.module.registrationcore.api.search.PatientSearch#findSimilarPatients(org.openmrs.Patient,
-	 *      java.lang.Integer)
 	 * @should find by exact country and exact city
 	 * @should find by exact gender
 	 * @should find by partial given and partial family name
@@ -55,7 +58,8 @@ public class DefaultPatientSearch implements PatientSearch {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<Patient> findSimilarPatients(Patient patient, Integer maxResults) {
+	public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+	                                                        Double cutoff, Integer maxResults) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Patient.class);
 		
 		criteria.add(Restrictions.eq("voided", false));
@@ -65,9 +69,8 @@ public class DefaultPatientSearch implements PatientSearch {
 		}
 		
 		if (patient.getBirthdate() != null) {
-			long fourWeeks = 3600000L * 24 * 7 * 4;
 			Date birthdate = patient.getBirthdate();
-			addDateWithinPeriodRestriction(criteria, birthdate, fourWeeks);
+			addDateWithinPeriodRestriction(criteria, birthdate, TWO_WEEKS);
 		}
 		
 		if (patient.getNames() != null && !patient.getNames().isEmpty()) {
@@ -102,7 +105,86 @@ public class DefaultPatientSearch implements PatientSearch {
 		@SuppressWarnings("unchecked")
 		List<Patient> patients = criteria.list();
 		
-		return patients;
+		List<PatientAndMatchQuality> matches = new ArrayList<PatientAndMatchQuality>();
+		
+		for (Patient match : patients) {
+			List<String> matchedFields = new ArrayList<String>();
+			
+			double score = 0;
+			
+			long birthdateDistance = Math.abs(patient.getBirthdate().getTime() - match.getBirthdate().getTime());
+			if (birthdateDistance < TWO_WEEKS) {
+				matchedFields.add("birthdate");
+			}
+			double birthdateScore = 1.0 / Math.log((1.0 + birthdateDistance));
+			score += birthdateScore;
+			
+			for (PersonName patientName : patient.getNames()) {
+				for (PersonName matchName : match.getNames()) {
+					double familyNameScore = countStartWithScoreForField(matchName.getFamilyName(),
+					    patientName.getFamilyName());
+					if (familyNameScore != 0) {
+						score += familyNameScore;
+						matchedFields.add("names.familyName");
+					}
+					
+					double givenNameScore = countStartWithScoreForField(matchName.getFamilyName(),
+						patientName.getFamilyName());
+					if (givenNameScore != 0) {
+						matchedFields.add("names.givenName");
+						score += givenNameScore;
+					}
+					
+					double middleNameScore = countStartWithScoreForField(matchName.getFamilyName(),
+						patientName.getFamilyName());
+					if (middleNameScore != 0) {
+						matchedFields.add("names.middleName");
+						score += middleNameScore;
+					}
+				}
+			}
+			
+			for (PersonAddress patientAddress : patient.getAddresses()) {
+				for (PersonAddress matchAddress : match.getAddresses()) {
+					if (!StringUtils.isBlank(matchAddress.getCountry())
+					        && matchAddress.getCountry().equals(patientAddress.getCountry())) {
+						matchedFields.add("addresses.country");
+						score += 1;
+					}
+					
+					if (!StringUtils.isBlank(matchAddress.getCityVillage())
+					        && matchAddress.getCityVillage().equals(patientAddress.getCityVillage())) {
+						matchedFields.add("addresses.cityVillage");
+						score += 1;
+					}
+				}
+			}
+			
+			if (cutoff == null) {
+				matches.add(new PatientAndMatchQuality(match, score, matchedFields));
+			} else {
+				if (score >= cutoff) {
+					matches.add(new PatientAndMatchQuality(match, score, matchedFields));
+				}
+			}
+		}
+		
+		Collections.sort(matches);
+		
+		if (maxResults != null && matches.size() > maxResults) {
+			return matches.subList(0, maxResults);
+		} else {
+			return matches;
+		}
+	}
+	
+	private double countStartWithScoreForField(String value, String matches) {
+		if (!StringUtils.isBlank(value) && StringUtils.isBlank(matches)) {
+			if (value.startsWith(matches)) {
+				return 1;
+			}
+		}
+		return 0;
 	}
 	
 	private void addLikeIfNotBlankRestriction(Junction junction, String property, String value, MatchMode matchMode) {
@@ -112,72 +194,8 @@ public class DefaultPatientSearch implements PatientSearch {
 	}
 	
 	private void addDateWithinPeriodRestriction(Criteria criteria, Date birthdate, long period) {
-		long twoDays = 3600000L * 24 * 2;
-		long diff = (period + twoDays) / 2;
-		Date low = new Date(birthdate.getTime() - diff);
-		Date high = new Date(birthdate.getTime() + diff);
+		Date low = new Date(birthdate.getTime() - period);
+		Date high = new Date(birthdate.getTime() + period);
 		criteria.add(Restrictions.between("birthdate", low, high));
 	}
-	
-	/**
-	 * @see org.openmrs.module.registrationcore.api.search.PatientSearch#findDuplicatePatients(org.openmrs.Patient,
-	 *      java.lang.Integer)
-	 *      
-	 * @should find by exact country and exact city
-	 * @should find by exact gender
-	 * @should find by exact given and exact family name
-	 * @should find by birthday within three days
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<Patient> findDuplicatePatients(Patient patient, Integer maxResults) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Patient.class);
-		
-		criteria.add(Restrictions.eq("voided", false));
-		
-		if (!StringUtils.isBlank(patient.getGender())) {
-			criteria.add(Restrictions.eq("gender", patient.getGender()));
-		}
-		
-		if (patient.getBirthdate() != null) {
-			long week = 3600000 * 24 * 7;
-			Date birthdate = patient.getBirthdate();
-			addDateWithinPeriodRestriction(criteria, birthdate, week);
-		}
-		
-		if (patient.getNames() != null && !patient.getNames().isEmpty()) {
-			criteria.createAlias("names", "names");
-			for (PersonName name : patient.getNames()) {
-				criteria.add(Restrictions.eq("names.voided", false));
-				
-				Disjunction or = Restrictions.disjunction();
-				addLikeIfNotBlankRestriction(or, "names.middleName", name.getMiddleName(), MatchMode.START);
-				criteria.add(or);
-				
-				Conjunction and = Restrictions.conjunction();
-				addLikeIfNotBlankRestriction(and, "names.givenName", name.getGivenName(), MatchMode.EXACT);
-				addLikeIfNotBlankRestriction(and, "names.familyName", name.getFamilyName(), MatchMode.EXACT);
-				criteria.add(and);
-			}
-		}
-		
-		if (patient.getAddresses() != null && !patient.getAddresses().isEmpty()) {
-			criteria.createAlias("addresses", "addresses");
-			for (PersonAddress address : patient.getAddresses()) {
-				criteria.add(Restrictions.eq("addresses.voided", false));
-				
-				Conjunction and = Restrictions.conjunction();
-				addLikeIfNotBlankRestriction(and, "addresses.country", address.getCountry(), MatchMode.EXACT);
-				addLikeIfNotBlankRestriction(and, "addresses.cityVillage", address.getCityVillage(), MatchMode.EXACT);
-				
-				criteria.add(and);
-			}
-		}
-		
-		@SuppressWarnings("unchecked")
-		List<Patient> patients = criteria.list();
-		
-		return patients;
-	}
-	
 }
