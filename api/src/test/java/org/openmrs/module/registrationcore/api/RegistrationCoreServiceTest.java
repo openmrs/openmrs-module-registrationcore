@@ -109,7 +109,7 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 	@Verifies(value = "should fire an event when a patient is registered", method = "registerPatient(Patient,List<Relationship>)")
 	public void registerPatient_shouldFireAnEventWhenAPatientIsRegistered() throws Exception {
 		MockRegistrationEventListener listener = new MockRegistrationEventListener(1);
-		Event.subscribeTo(RegistrationCoreConstants.TOPIC_NAME, listener);
+		Event.subscribe(RegistrationCoreConstants.TOPIC_NAME, listener);
 		
 		Relationship r1 = new Relationship(null, personService.getPerson(2), personService.getRelationshipType(2));
 		Relationship r2 = new Relationship(personService.getPerson(7), null, personService.getRelationshipType(2));
@@ -131,14 +131,15 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 	}
 	
 	/**
-	 * @see {@link RegistrationCoreService#registerPatient(Patient,List<Relationship>)}
+	 * @see {@link RegistrationCoreService#registerPatient(Patient,List<Relationship>)} This needs
+	 *      to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
 	 */
 	@Test
 	@Ignore
 	@Verifies(value = "should set wasPerson field to true for an existing person on the registration event", method = "registerPatient(Patient,List<Relationship>)")
 	public void registerPatient_shouldSetWasPersonFieldToTrueForAnExistingPersonOnTheRegistrationEvent() throws Exception {
 		MockRegistrationEventListener listener = new MockRegistrationEventListener(1);
-		Event.subscribeTo(RegistrationCoreConstants.TOPIC_NAME, listener);
+		Event.subscribe(RegistrationCoreConstants.TOPIC_NAME, listener);
 		
 		Relationship r1 = new Relationship(null, personService.getPerson(2), personService.getRelationshipType(2));
 		Relationship r2 = new Relationship(personService.getPerson(7), null, personService.getRelationshipType(2));

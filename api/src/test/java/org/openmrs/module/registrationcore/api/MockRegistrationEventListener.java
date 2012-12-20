@@ -21,6 +21,7 @@ import javax.jms.Message;
 import junit.framework.Assert;
 
 import org.openmrs.event.MockEventListener;
+import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
 /**
  * Subclass of {@link MockEventListener} that extracts the patient registration pay load for testing
@@ -51,11 +52,11 @@ public class MockRegistrationEventListener extends MockEventListener {
 		super.onMessage(message);
 		MapMessage mapMessage = (MapMessage) message;
 		try {
-			patientUuid = mapMessage.getString("patientUuid");
-			relationshipUuids = (List<String>) mapMessage.getObject("relationshipUuids");
-			registererUuid = mapMessage.getString("registererUuid");
-			dateRegistered = mapMessage.getString("dateRegistered");
-			wasAPerson = mapMessage.getBoolean("wasAPerson");
+			patientUuid = mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID);
+			relationshipUuids = (List<String>) mapMessage.getObject(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS);
+			registererUuid = mapMessage.getString(RegistrationCoreConstants.KEY_REGISTERER_UUID);
+			dateRegistered = mapMessage.getString(RegistrationCoreConstants.KEY_DATE_REGISTERED);
+			wasAPerson = mapMessage.getBoolean(RegistrationCoreConstants.KEY_WAS_A_PERSON);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());

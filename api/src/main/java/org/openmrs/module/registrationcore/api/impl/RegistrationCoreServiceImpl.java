@@ -123,9 +123,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		pId.setCreator(Context.getAuthenticatedUser());
 		patient.addIdentifier(pId);
 		
-		boolean wasAPerson = false;
 		//TODO fix this when creating a patient from a person is possible
-		wasAPerson = patient.getPersonId() != null;
+		boolean wasAPerson = patient.getPersonId() != null;
 		
 		patient = patientService.savePatient(patient);
 		
@@ -144,17 +143,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 		
 		EventMessage eventMessage = new EventMessage();
-		eventMessage.put("patientUuid", patient.getUuid());
-		eventMessage.put("registererUuid", patient.getCreator().getUuid());
-		eventMessage.put("dateRegistered",
-		    new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
-		eventMessage.put("wasAPerson", wasAPerson);
+		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, new SimpleDateFormat(
+		        RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
+		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
 		ArrayList<String> relationshipUuids = new ArrayList<String>();
 		if (relationships != null) {
 			for (Relationship r : relationships) {
 				relationshipUuids.add(r.getUuid());
 			}
-			eventMessage.put("relationshipUuids", relationshipUuids);
+			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
 		}
 		
 		Event.fireEvent(RegistrationCoreConstants.TOPIC_NAME, eventMessage);
