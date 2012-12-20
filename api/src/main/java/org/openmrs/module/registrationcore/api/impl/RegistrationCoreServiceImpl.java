@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +33,8 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.event.Event;
+import org.openmrs.event.EventMessage;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
@@ -117,6 +121,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		String identifierString = iss.generateIdentifier(idSource, null);
 		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
 		patient.addIdentifier(pId);
+		
+		//TODO fix this when creating a patient from a person is possible
+		boolean wasAPerson = patient.getPersonId() != null;
+		
 		patient = patientService.savePatient(patient);
 		
 		if (relationships != null) {
@@ -133,7 +141,21 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 		}
 		
-		//TODO fire RegistrationEvent see https://tickets.openmrs.org/browse/RC-4
+		EventMessage eventMessage = new EventMessage();
+		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, new SimpleDateFormat(
+		        RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
+		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
+		ArrayList<String> relationshipUuids = new ArrayList<String>();
+		if (relationships != null) {
+			for (Relationship r : relationships) {
+				relationshipUuids.add(r.getUuid());
+			}
+			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
+		}
+		
+		Event.fireEvent(RegistrationCoreConstants.TOPIC_NAME, eventMessage);
 		
 		return patient;
 	}

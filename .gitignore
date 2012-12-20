@@ -43,3 +43,6 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+# Active mq ignores
+activemq-data

@@ -20,4 +20,18 @@ public final class RegistrationCoreConstants {
 	 */
 	public static final String GP_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
 	
+	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
+	
+	public static final String TOPIC_NAME = "org.openmrs.module.registrationcore.RegistrationEvent";
+	
+	public static final String KEY_PATIENT_UUID = "patientUuid";
+	
+	public static final String KEY_RELATIONSHIP_UUIDS = "relationshipUuids";
+	
+	public static final String KEY_REGISTERER_UUID = "registererUuid";
+	
+	public static final String KEY_DATE_REGISTERED = "dateRegistered";
+	
+	public static final String KEY_WAS_A_PERSON = "wasAPerson";
+	
 }
