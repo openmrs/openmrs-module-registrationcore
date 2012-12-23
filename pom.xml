@@ -36,6 +36,7 @@
 		<openMRSVersion>1.8.2</openMRSVersion>
 		<idgenVersion>2.3</idgenVersion>
 		<eventVersion>2.0.2-SNAPSHOT</eventVersion>
+		<restVersion>1.1</restVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -127,6 +128,30 @@
 				<groupId>org.openmrs</groupId>
 				<artifactId>event-api</artifactId>
 				<version>${eventVersion}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>webservices.rest-api</artifactId>
+				<version>${restVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>webservices.rest-omod</artifactId>
+				<version>${restVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>webservices.rest-omod</artifactId>
+				<version>${restVersion}</version>
 				<type>test-jar</type>
 				<scope>test</scope>
 			</dependency>
