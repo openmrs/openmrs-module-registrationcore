@@ -18,7 +18,13 @@
 	
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.RegistrationCoreActivator</activator>
-	
+    <require_modules>
+
+    <require_module version="${idgenVersion}">
+        org.openmrs.module.idgen
+    </require_module>
+    </require_modules>
+
 	
 	<!-- Adds link to admin page -->
 	<extension>
