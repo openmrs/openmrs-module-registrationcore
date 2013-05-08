@@ -18,43 +18,43 @@
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
 	<!-- Add here beans related to the API context -->
+    <bean id="registrationCoreService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.RegistrationCoreServiceImpl">
+                <property name="dao">
+                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.db.hibernate.HibernateRegistrationCoreDAO">
+                        <property name="sessionFactory">
+                            <ref bean="sessionFactory" />
+                        </property>
+                    </bean>
+                </property>
+                <property name="fastSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm"/>
+                <property name="preciseSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm" />
+            </bean>
+        </property>
+        <property name="preInterceptors">
+            <ref bean="serviceInterceptors" />
+        </property>
+        <property name="transactionAttributeSource">
+            <ref bean="transactionAttributeSource" />
+        </property>
+    </bean>
 
-	
-	<!-- Services accessible via Context.getService() -->
-	<bean parent="serviceContext">
-		<property name="moduleService">
-			<list>
-				<value>${project.parent.groupId}.${project.parent.artifactId}.api.RegistrationCoreService</value>
-				<bean
-					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-					<property name="transactionManager">
-						<ref bean="transactionManager" />
-					</property>
-					<property name="target">
-						<bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.RegistrationCoreServiceImpl">
-							<property name="dao">
-								<bean class="${project.parent.groupId}.${project.parent.artifactId}.api.db.hibernate.HibernateRegistrationCoreDAO">
-									<property name="sessionFactory">
-										<ref bean="sessionFactory" />
-									</property>
-								</bean>
-							</property>
-							<property name="fastSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm"/>
-							<property name="preciseSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm" />
-						</bean>
-					</property>
-					<property name="preInterceptors">
-						<ref bean="serviceInterceptors" />
-					</property>
-					<property name="transactionAttributeSource">
-						<ref bean="transactionAttributeSource" />
-					</property>
-				</bean>
-			</list>
-		</property>
-	</bean>
-	
-	<!-- Module global property listeners -->
+    <!-- Services accessible via Context.getService() -->
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>${project.parent.groupId}.${project.parent.artifactId}.api.RegistrationCoreService</value>
+                <ref local="registrationCoreService" />
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- Module global property listeners -->
 	<bean id="registrationcoreEventListeners" parent="openmrsEventListeners">
 	    <property name="globalPropertyListeners">
 	        <list value-type="org.openmrs.api.GlobalPropertyListener">
