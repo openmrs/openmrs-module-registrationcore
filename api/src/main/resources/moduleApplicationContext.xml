@@ -46,7 +46,7 @@
     <!-- Services accessible via Context.getService() -->
     <bean parent="serviceContext">
         <property name="moduleService">
-            <list merge="true">
+            <list>
                 <value>${project.parent.groupId}.${project.parent.artifactId}.api.RegistrationCoreService</value>
                 <ref local="registrationCoreService" />
             </list>

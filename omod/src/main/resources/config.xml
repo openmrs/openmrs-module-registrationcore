@@ -23,6 +23,9 @@
     <require_module version="${idgenVersion}">
         org.openmrs.module.idgen
     </require_module>
+        <require_module version="${eventVersion}">
+            org.openmrs.event
+        </require_module>
     </require_modules>
 
 	

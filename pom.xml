@@ -35,8 +35,8 @@
 
 	<properties>
 		<openMRSVersion>1.8.2</openMRSVersion>
-		<idgenVersion>2.3</idgenVersion>
-		<eventVersion>2.0.2-SNAPSHOT</eventVersion>
+		<idgenVersion>2.6-SNAPSHOT</idgenVersion>
+		<eventVersion>2.1</eventVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
