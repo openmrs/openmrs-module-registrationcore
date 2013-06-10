@@ -22,6 +22,7 @@ import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 
 /**
@@ -99,4 +100,35 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @param fastSimilarPatientSearchAlgorithm
 	 */
 	void setFastSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm);
+	
+	/**
+	 * Sets an implementation for searching similar patient names.
+	 * 
+	 * @param fastSimilarPatientSearchAlgorithm
+	 */
+	void setPatientNameSearch(PatientNameSearch patientNameSearch);
+	
+	/**
+	 * Searches for given names that are similar to a search phrase.
+	 * <p>
+	 * You can change the underlying implementation by calling
+	 * {@link #setPatientNameSearch(org.openmrs.module.registrationcore.api.search.PatientNameSearch)}.
+	 * </p>
+	 *
+	 * @param searchPhrase the search phrase.
+	 * @return list of given names that match the search phrase.
+	 */
+	List<String> findSimilarGivenNames(String searchPhrase);
+	
+	/**
+	 * Searches for family names that are similar to a search phrase.
+	 * <p>
+	 * You can change the underlying implementation by calling
+	 * {@link #setPatientNameSearch(org.openmrs.module.registrationcore.api.search.PatientNameSearch)}.
+	 * </p>
+	 * 
+	 * @param searchPhrase the search phrase.
+	 * @return list of given names that match the search phrase.
+	 */
+	List<String> findSimilarFamilyNames(String searchPhrase);
 }

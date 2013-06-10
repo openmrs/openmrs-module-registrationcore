@@ -33,6 +33,7 @@
                 </property>
                 <property name="fastSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm"/>
                 <property name="preciseSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm" />
+                <property name="patientNameSearch" ref="registrationcore.BasicPatientNameSearch" />
             </bean>
         </property>
         <property name="preInterceptors">

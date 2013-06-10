@@ -42,6 +42,7 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -81,6 +82,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm;
 	
 	private SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm;
+	
+	private PatientNameSearch patientNameSearch;
 	
 	public void setDao(RegistrationCoreDAO dao) {
 		this.dao = dao;
@@ -211,5 +214,29 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                               Double cutoff, Integer maxResults) {
 		return preciseSimilarPatientSearchAlgorithm.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+	}
+
+	/**
+	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#setPatientNameSearch(PatientNameSearch)
+	 */
+	@Override
+	public void setPatientNameSearch(PatientNameSearch patientNameSearch) {
+		this.patientNameSearch = patientNameSearch;
+	}
+
+	/**
+	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
+	 */
+	@Override
+	public List<String> findSimilarGivenNames(String searchPhrase) {
+		return patientNameSearch.findSimilarGivenNames(searchPhrase);
+	}
+
+	/**
+	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarFamilyNames(String)
+	 */
+	@Override
+	public List<String> findSimilarFamilyNames(String searchPhrase) {
+		return patientNameSearch.findSimilarFamilyNames(searchPhrase);
 	}
 }
