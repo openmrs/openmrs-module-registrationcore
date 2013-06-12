@@ -58,20 +58,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	
 	private RegistrationCoreDAO dao;
 	
-	@Autowired
-	@Qualifier("patientService")
 	private PatientService patientService;
 	
-	@Autowired
-	@Qualifier("personService")
 	private PersonService personService;
 	
-	@Autowired
-	@Qualifier("locationService")
 	private LocationService locationService;
 	
-	@Autowired
-	@Qualifier("adminService")
 	private AdministrationService adminService;
 	
 	private static IdentifierSource idSource;
@@ -96,6 +88,25 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return dao;
 	}
 	
+    public void setPatientService(PatientService patientService) {
+    	this.patientService = patientService;
+    }
+
+	
+    public void setPersonService(PersonService personService) {
+    	this.personService = personService;
+    }
+
+	
+    public void setLocationService(LocationService locationService) {
+    	this.locationService = locationService;
+    }
+
+	
+    public void setAdminService(AdministrationService adminService) {
+    	this.adminService = adminService;
+    }
+
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
 	 *      java.util.List, Location)
@@ -195,12 +206,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 	
 	@Override
-    public void setFastSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm) {
+	public void setFastSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm) {
 		this.fastSimilarPatientSearchAlgorithm = fastSimilarPatientSearchAlgorithm;
 	}
 	
 	@Override
-    public void setPreciseSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm) {
+	public void setPreciseSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm) {
 		this.preciseSimilarPatientSearchAlgorithm = preciseSimilarPatientSearchAlgorithm;
 	}
 	
@@ -215,7 +226,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	                                                               Double cutoff, Integer maxResults) {
 		return preciseSimilarPatientSearchAlgorithm.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
-
+	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#setPatientNameSearch(PatientNameSearch)
 	 */
@@ -223,7 +234,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void setPatientNameSearch(PatientNameSearch patientNameSearch) {
 		this.patientNameSearch = patientNameSearch;
 	}
-
+	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
 	 */
@@ -231,7 +242,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public List<String> findSimilarGivenNames(String searchPhrase) {
 		return patientNameSearch.findSimilarGivenNames(searchPhrase);
 	}
-
+	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarFamilyNames(String)
 	 */

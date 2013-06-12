@@ -31,6 +31,10 @@
                         </property>
                     </bean>
                 </property>
+                <property name="patientService" ref="patientService" />
+                <property name="personService" ref="personService" />
+                <property name="locationService" ref="locationService" />
+                <property name="adminService" ref="adminService" />
                 <property name="fastSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm"/>
                 <property name="preciseSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm" />
                 <property name="patientNameSearch" ref="registrationcore.BasicPatientNameSearch" />
