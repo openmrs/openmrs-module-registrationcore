@@ -29,6 +29,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
 import org.openmrs.PersonAddress;
+import org.openmrs.PersonAttribute;
 import org.openmrs.PersonName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -93,6 +94,20 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 			}
 		}
 		
+		if (patient.getAttributes() != null && !patient.getAttributes().isEmpty()) {
+			criteria.createAlias("attributes", "attributes");
+			
+			for (PersonAttribute attribute : patient.getAttributes()) {
+				criteria.add(Restrictions.eq("attributes.voided", false));
+				
+				Conjunction and = Restrictions.conjunction();
+				and.add(Restrictions.eq("attributes.attributeType", attribute.getAttributeType()));
+				addLikeIfNotBlankRestriction(and, "attributes.value", attribute.getValue(), MatchMode.START);
+				
+				criteria.add(and);
+			}
+		}
+		
 		if (patient.getAddresses() != null && !patient.getAddresses().isEmpty()) {
 			criteria.createAlias("addresses", "addresses");
 			for (PersonAddress address : patient.getAddresses()) {
@@ -101,6 +116,8 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 				Conjunction and = Restrictions.conjunction();
 				addLikeIfNotBlankRestriction(and, "addresses.country", address.getCountry(), MatchMode.EXACT);
 				addLikeIfNotBlankRestriction(and, "addresses.cityVillage", address.getCityVillage(), MatchMode.EXACT);
+				addLikeIfNotBlankRestriction(and, "addresses.address1", address.getAddress1(), MatchMode.START);
+				addLikeIfNotBlankRestriction(and, "addresses.address2", address.getAddress2(), MatchMode.START);
 				
 				criteria.add(and);
 			}
