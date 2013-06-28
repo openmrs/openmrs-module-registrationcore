@@ -115,7 +115,10 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 				
 				Conjunction and = Restrictions.conjunction();
 				addLikeIfNotBlankRestriction(and, "addresses.country", address.getCountry(), MatchMode.EXACT);
+				addLikeIfNotBlankRestriction(and, "addresses.stateProvince", address.getStateProvince(), MatchMode.EXACT);
+				addLikeIfNotBlankRestriction(and, "addresses.countyDistrict", address.getCountyDistrict(), MatchMode.EXACT);
 				addLikeIfNotBlankRestriction(and, "addresses.cityVillage", address.getCityVillage(), MatchMode.EXACT);
+				addLikeIfNotBlankRestriction(and, "addresses.postalCode", address.getPostalCode(), MatchMode.EXACT);
 				addLikeIfNotBlankRestriction(and, "addresses.address1", address.getAddress1(), MatchMode.START);
 				addLikeIfNotBlankRestriction(and, "addresses.address2", address.getAddress2(), MatchMode.START);
 				
