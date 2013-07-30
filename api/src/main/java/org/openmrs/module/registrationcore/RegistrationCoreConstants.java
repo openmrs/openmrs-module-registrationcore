@@ -33,5 +33,6 @@ public final class RegistrationCoreConstants {
 	public static final String KEY_DATE_REGISTERED = "dateRegistered";
 	
 	public static final String KEY_WAS_A_PERSON = "wasAPerson";
-	
+
+    public static final String GP_PATIENT_NAME_SEARCH = "registrationcore.patientNameSearch";
 }

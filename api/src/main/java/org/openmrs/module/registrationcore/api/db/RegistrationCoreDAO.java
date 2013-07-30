@@ -15,8 +15,15 @@ package org.openmrs.module.registrationcore.api.db;
 
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 
+import java.util.List;
+
 /**
  *  Database methods for {@link RegistrationCoreService}.
  */
 public interface RegistrationCoreDAO {
+
+    List<String> findExistingSimilarGivenNames(String searchPhrase);
+
+    List<String> findExistingSimilarFamilyNames(String searchPhrase);
+
 }

@@ -44,18 +44,23 @@ import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * It is a default implementation of {@link RegistrationCoreService}.
  */
 @Transactional
-public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements RegistrationCoreService, GlobalPropertyListener {
+public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements RegistrationCoreService, GlobalPropertyListener, ApplicationContextAware {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
-	
+
+    private ApplicationContext applicationContext;
+
 	private RegistrationCoreDAO dao;
 	
 	private PatientService patientService;
@@ -74,9 +79,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm;
 	
 	private SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm;
-	
-	private PatientNameSearch patientNameSearch;
-	
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
 	public void setDao(RegistrationCoreDAO dao) {
 		this.dao = dao;
 	}
@@ -196,6 +204,19 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void globalPropertyDeleted(String gpName) {
 		idSource = null;
 	}
+
+    private PatientNameSearch getPatientNameSearch() {
+        String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
+                "registrationcore.BasicPatientNameSearch");
+
+        Object bean = applicationContext.getBean(gp);
+        if (bean instanceof PatientNameSearch) {
+            return (PatientNameSearch) bean;
+        } else {
+            throw new IllegalArgumentException(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH + " must point to " +
+                    "a bean implementing PatientNameSearch");
+        }
+    }
 	
 	/**
 	 * @see org.openmrs.api.GlobalPropertyListener#supportsPropertyName(java.lang.String)
@@ -228,19 +249,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 	
 	/**
-	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#setPatientNameSearch(PatientNameSearch)
-	 */
-	@Override
-	public void setPatientNameSearch(PatientNameSearch patientNameSearch) {
-		this.patientNameSearch = patientNameSearch;
-	}
-	
-	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
 	 */
 	@Override
 	public List<String> findSimilarGivenNames(String searchPhrase) {
-		return patientNameSearch.findSimilarGivenNames(searchPhrase);
+		return getPatientNameSearch().findSimilarGivenNames(searchPhrase);
 	}
 	
 	/**
@@ -248,6 +261,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 */
 	@Override
 	public List<String> findSimilarFamilyNames(String searchPhrase) {
-		return patientNameSearch.findSimilarFamilyNames(searchPhrase);
+		return getPatientNameSearch().findSimilarFamilyNames(searchPhrase);
 	}
+
+
 }

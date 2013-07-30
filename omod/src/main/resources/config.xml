@@ -59,7 +59,15 @@
 			A comma separated list of common names to auto suggest for the family name field, when registering patients.
 		</description>
 	</globalProperty>
-	
+
+    <globalProperty>
+        <property>${project.parent.artifactId}.patientNameSearch</property>
+        <defaultValue>registrationcore.BasicPatientNameSearch</defaultValue>
+        <description>
+            Specifies a bean used for the auto suggest name feature.
+        </description>
+    </globalProperty>
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				

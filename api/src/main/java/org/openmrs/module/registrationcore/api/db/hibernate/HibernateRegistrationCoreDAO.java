@@ -15,8 +15,13 @@ package org.openmrs.module.registrationcore.api.db.hibernate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * It is a default implementation of {@link RegistrationCoreDAO}.
@@ -40,4 +45,38 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> findExistingSimilarGivenNames(String searchPhrase) {
+        List<String> results = new ArrayList<String>();
+
+        Query query = sessionFactory.getCurrentSession().createQuery("select givenName from PersonName where voided = 0 and " +
+                "upper(givenName) like upper(:query) group by givenName having count(*) > 5 order by count(*) desc");
+        query.setString("query", searchPhrase + "%");
+
+        List<Object> rows = query.list();
+        for (Object row: rows) {
+            results.add((String) row);
+        }
+
+        return results;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> findExistingSimilarFamilyNames(String searchPhrase) {
+        List<String> results = new ArrayList<String>();
+
+        Query query = sessionFactory.getCurrentSession().createQuery("select familyName from PersonName where voided = 0 and " +
+                "upper(familyName) like upper(:query) group by familyName having count(*) > 5 order by count(*) desc");
+        query.setString("query", searchPhrase + "%");
+
+        List<Object> rows = query.list();
+        for (Object row: rows) {
+            results.add((String) row);
+        }
+
+        return results;
+    }
 }

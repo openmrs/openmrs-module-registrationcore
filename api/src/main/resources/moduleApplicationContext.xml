@@ -24,20 +24,13 @@
         </property>
         <property name="target">
             <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.RegistrationCoreServiceImpl">
-                <property name="dao">
-                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.db.hibernate.HibernateRegistrationCoreDAO">
-                        <property name="sessionFactory">
-                            <ref bean="sessionFactory" />
-                        </property>
-                    </bean>
-                </property>
+                <property name="dao" ref="registrationCoreDAO" />
                 <property name="patientService" ref="patientService" />
                 <property name="personService" ref="personService" />
                 <property name="locationService" ref="locationService" />
                 <property name="adminService" ref="adminService" />
                 <property name="fastSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm"/>
                 <property name="preciseSimilarPatientSearchAlgorithm" ref="registrationcore.BasicSimilarPatientSearchAlgorithm" />
-                <property name="patientNameSearch" ref="registrationcore.BasicPatientNameSearch" />
             </bean>
         </property>
         <property name="preInterceptors">
@@ -58,6 +51,11 @@
         </property>
     </bean>
 
+    <bean name="registrationCoreDAO" class="${project.parent.groupId}.${project.parent.artifactId}.api.db.hibernate.HibernateRegistrationCoreDAO">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory" />
+        </property>
+    </bean>
 
     <!-- Module global property listeners -->
 	<bean id="registrationcoreEventListeners" parent="openmrsEventListeners">
