@@ -27,6 +27,10 @@
             org.openmrs.event
         </require_module>
     </require_modules>
+    
+    <aware_of_modules>
+       <aware_of_module version="${namephoneticsVersion}">org.openmrs.module.namephonetics</aware_of_module>
+	</aware_of_modules>
 
 	
 	<!-- Adds link to admin page -->
