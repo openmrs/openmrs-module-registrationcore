@@ -117,7 +117,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * You can change the underlying implementation by setting a global property.
 	 * 
 	 * @param searchPhrase the search phrase.
-	 * @return list of given names that match the search phrase.
+	 * @return list of family names that match the search phrase.
 	 */
 	List<String> findSimilarFamilyNames(String searchPhrase);
 }
