@@ -38,6 +38,7 @@ import org.openmrs.event.Event;
 import org.openmrs.event.EventMessage;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
+import org.openmrs.module.namephonetics.NamePhoneticsService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
@@ -45,8 +46,6 @@ import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,9 +57,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements RegistrationCoreService, GlobalPropertyListener, ApplicationContextAware {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
-
-    private ApplicationContext applicationContext;
-
+	
+	private ApplicationContext applicationContext;
+	
 	private RegistrationCoreDAO dao;
 	
 	private PatientService patientService;
@@ -79,12 +78,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm;
 	
 	private SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
+	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+	
 	public void setDao(RegistrationCoreDAO dao) {
 		this.dao = dao;
 	}
@@ -96,25 +95,22 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return dao;
 	}
 	
-    public void setPatientService(PatientService patientService) {
-    	this.patientService = patientService;
-    }
-
+	public void setPatientService(PatientService patientService) {
+		this.patientService = patientService;
+	}
 	
-    public void setPersonService(PersonService personService) {
-    	this.personService = personService;
-    }
-
+	public void setPersonService(PersonService personService) {
+		this.personService = personService;
+	}
 	
-    public void setLocationService(LocationService locationService) {
-    	this.locationService = locationService;
-    }
-
+	public void setLocationService(LocationService locationService) {
+		this.locationService = locationService;
+	}
 	
-    public void setAdminService(AdministrationService adminService) {
-    	this.adminService = adminService;
-    }
-
+	public void setAdminService(AdministrationService adminService) {
+		this.adminService = adminService;
+	}
+	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
 	 *      java.util.List, Location)
@@ -204,19 +200,19 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void globalPropertyDeleted(String gpName) {
 		idSource = null;
 	}
-
-    private PatientNameSearch getPatientNameSearch() {
-        String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
-                "registrationcore.BasicPatientNameSearch");
-
-        Object bean = applicationContext.getBean(gp);
-        if (bean instanceof PatientNameSearch) {
-            return (PatientNameSearch) bean;
-        } else {
-            throw new IllegalArgumentException(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH + " must point to " +
-                    "a bean implementing PatientNameSearch");
-        }
-    }
+	
+	private PatientNameSearch getPatientNameSearch() {
+		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
+		    "registrationcore.BasicPatientNameSearch");
+		
+		Object bean = applicationContext.getBean(gp);
+		if (bean instanceof PatientNameSearch) {
+			return (PatientNameSearch) bean;
+		} else {
+			throw new IllegalArgumentException(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH + " must point to "
+			        + "a bean implementing PatientNameSearch");
+		}
+	}
 	
 	/**
 	 * @see org.openmrs.api.GlobalPropertyListener#supportsPropertyName(java.lang.String)
@@ -253,6 +249,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 */
 	@Override
 	public List<String> findSimilarGivenNames(String searchPhrase) {
+		try {
+			//TODO special case for namephonetics because it is not aware of registrationcore
+			//and hence cannot implement PatientNameSearch which comes from registrationcore
+			//see RA-163
+			NamePhoneticsService service = Context.getService(NamePhoneticsService.class);
+			return service.findSimilarGivenNames(searchPhrase);
+		}
+		catch (NoClassDefFoundError ex) {
+			//namephonetics module is not installed. So just use the basic implementation.
+		}
+		
 		return getPatientNameSearch().findSimilarGivenNames(searchPhrase);
 	}
 	
@@ -261,8 +268,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 */
 	@Override
 	public List<String> findSimilarFamilyNames(String searchPhrase) {
+		try {
+			//TODO special case for namephonetics because it is not aware of registrationcore
+			//and hence cannot implement PatientNameSearch which comes from registrationcore
+			//see RA-163
+			NamePhoneticsService service = Context.getService(NamePhoneticsService.class);
+			return service.findSimilarFamilyNames(searchPhrase);
+		}
+		catch (NoClassDefFoundError ex) {
+			//namephonetics module is not installed. So just use the basic implementation.
+		}
+		
 		return getPatientNameSearch().findSimilarFamilyNames(searchPhrase);
 	}
-
-
 }

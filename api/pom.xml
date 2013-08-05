@@ -70,6 +70,14 @@
 			<artifactId>event-api</artifactId>
 			<type>test-jar</type>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>namephonetics-api</artifactId>
+			<version>${namephoneticsVersion}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
 				
 		<!-- End OpenMRS core -->
 		
