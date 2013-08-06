@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -123,7 +124,7 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 		Relationship r2 = new Relationship(personService.getPerson(7), null, personService.getRelationshipType(2));
 		Patient createdPatient = service.registerPatient(createBasicPatient(), Arrays.asList(r1, r2), null);
 		
-		listener.waitForEvents();
+		listener.waitForEvents(10, TimeUnit.SECONDS);
 		
 		assertEquals(createdPatient.getUuid(), listener.getPatientUuid());
 		assertEquals(createdPatient.getCreator().getUuid(), listener.getRegistererUuid());
@@ -157,7 +158,7 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 		assertNotNull(person);
 		service.registerPatient(createBasicPatient(), Arrays.asList(r1, r2), null);
 		
-		listener.waitForEvents();
+		listener.waitForEvents(10, TimeUnit.SECONDS);
 		assertTrue(listener.getWasAPerson());
 	}
 }
