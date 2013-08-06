@@ -71,6 +71,22 @@
             Specifies a bean used for the auto suggest name feature.
         </description>
     </globalProperty>
+    
+    <globalProperty>
+        <property>${project.parent.artifactId}.fastSimilarPatientSearchAlgorithm</property>
+        <defaultValue>registrationcore.BasicSimilarPatientSearchAlgorithm</defaultValue>
+        <description>
+            Specifies a bean used for the fast similar patient search algorithm.
+        </description>
+    </globalProperty>
+    
+    <globalProperty>
+        <property>${project.parent.artifactId}.preciseSimilarPatientSearchAlgorithm</property>
+        <defaultValue>registrationcore.BasicSimilarPatientSearchAlgorithm</defaultValue>
+        <description>
+            Specifies a bean used for the precise similar patient search algorithm.
+        </description>
+    </globalProperty>
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>

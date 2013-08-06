@@ -72,13 +72,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	
 	private static IdentifierSource idSource;
 	
-	/**
-	 * @param dao the dao to set
-	 */
-	private SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm;
-	
-	private SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm;
-	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
@@ -201,6 +194,32 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		idSource = null;
 	}
 	
+	private SimilarPatientSearchAlgorithm getFastSimilarPatientSearchAlgorithm() {
+		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_FAST_SIMILAR_PATIENT_SEARCH_ALGORITHM,
+		    "registrationcore.BasicSimilarPatientSearchAlgorithm");
+		
+		Object bean = applicationContext.getBean(gp);
+		if (bean instanceof SimilarPatientSearchAlgorithm) {
+			return (SimilarPatientSearchAlgorithm) bean;
+		} else {
+			throw new IllegalArgumentException(RegistrationCoreConstants.GP_FAST_SIMILAR_PATIENT_SEARCH_ALGORITHM
+			        + " must point to " + "a bean implementing SimilarPatientSearchAlgorithm");
+		}
+	}
+	
+	private SimilarPatientSearchAlgorithm getPreciseSimilarPatientSearchAlgorithm() {
+		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM,
+		    "registrationcore.BasicSimilarPatientSearchAlgorithm");
+		
+		Object bean = applicationContext.getBean(gp);
+		if (bean instanceof SimilarPatientSearchAlgorithm) {
+			return (SimilarPatientSearchAlgorithm) bean;
+		} else {
+			throw new IllegalArgumentException(RegistrationCoreConstants.GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM
+			        + " must point to " + "a bean implementing SimilarPatientSearchAlgorithm");
+		}
+	}
+	
 	private PatientNameSearch getPatientNameSearch() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
 		    "registrationcore.BasicPatientNameSearch");
@@ -223,25 +242,15 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 	
 	@Override
-	public void setFastSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm) {
-		this.fastSimilarPatientSearchAlgorithm = fastSimilarPatientSearchAlgorithm;
-	}
-	
-	@Override
-	public void setPreciseSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm) {
-		this.preciseSimilarPatientSearchAlgorithm = preciseSimilarPatientSearchAlgorithm;
-	}
-	
-	@Override
 	public List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                            Double cutoff, Integer maxResults) {
-		return fastSimilarPatientSearchAlgorithm.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		return getFastSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 	
 	@Override
 	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                               Double cutoff, Integer maxResults) {
-		return preciseSimilarPatientSearchAlgorithm.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		return getPreciseSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 	
 	/**

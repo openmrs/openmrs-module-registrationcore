@@ -35,4 +35,8 @@ public final class RegistrationCoreConstants {
 	public static final String KEY_WAS_A_PERSON = "wasAPerson";
 
     public static final String GP_PATIENT_NAME_SEARCH = "registrationcore.patientNameSearch";
+    
+    public static final String GP_FAST_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.fastSimilarPatientSearchAlgorithm";
+    
+    public static final String GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.preciseSimilarPatientSearchAlgorithm";
 }

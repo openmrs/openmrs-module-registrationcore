@@ -22,8 +22,6 @@ import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
-import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
-import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured
@@ -86,26 +84,10 @@ public interface RegistrationCoreService extends OpenmrsService {
 	                                                        Double cutoff, Integer maxResults);
 	
 	/**
-	 * Allows to set an implementation for
-	 * {@link #findPreciseSimilarPatients(Patient, Map, Double, Integer)}
-	 * 
-	 * @param preciseSimilarPatientSearchAlgorithm
-	 */
-	void setPreciseSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm preciseSimilarPatientSearchAlgorithm);
-	
-	/**
-	 * Allows to set an implementation for
-	 * {@link #findFastSimilarPatients(Patient, Map, Double, Integer)}
-	 * 
-	 * @param fastSimilarPatientSearchAlgorithm
-	 */
-	void setFastSimilarPatientSearchAlgorithm(SimilarPatientSearchAlgorithm fastSimilarPatientSearchAlgorithm);
-
-	/**
 	 * Searches for given names that are similar to a search phrase.
 	 * <p>
 	 * You can change the underlying implementation by setting a global property.
-     *
+	 * 
 	 * @param searchPhrase the search phrase.
 	 * @return list of given names that match the search phrase.
 	 */

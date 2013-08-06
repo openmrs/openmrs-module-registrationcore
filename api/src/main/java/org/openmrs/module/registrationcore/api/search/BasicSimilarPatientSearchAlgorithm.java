@@ -59,6 +59,41 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 	}
 	
 	/**
+	 * For adding criterion based on patient names.
+	 * 
+	 * @param criteria the criteria to add to the various name criterion.
+	 * @param patient the patient whose names to use for the criteria.
+	 * @return the criteria that has name based criterion added.
+	 */
+	protected Criteria addNameCriteria(Criteria criteria, Patient patient) {
+		if (patient.getNames() != null && !patient.getNames().isEmpty()) {
+			criteria.createAlias("names", "names");
+			for (PersonName name : patient.getNames()) {
+				criteria.add(Restrictions.eq("names.voided", false));
+				
+				Disjunction or = Restrictions.disjunction();
+				addLikeIfNotBlankRestriction(or, "names.givenName", name.getGivenName(), MatchMode.START);
+				addLikeIfNotBlankRestriction(or, "names.middleName", name.getMiddleName(), MatchMode.START);
+				addLikeIfNotBlankRestriction(or, "names.familyName", name.getFamilyName(), MatchMode.START);
+				criteria.add(or);
+			}
+		}
+		
+		return criteria;
+	}
+	
+	/**
+	 * For further filtering a list of patients based on properties for a given patient.
+	 * 
+	 * @param patients the patients to filter.
+	 * @param patient the patient whose properties to use for filtering.
+	 * @return the filtered list of patients.
+	 */
+	protected List<Patient> filterPatients(List<Patient> patients, Patient patient) {
+		return patients;
+	}
+	
+	/**
 	 * @should find by exact country and exact city
 	 * @should find by exact gender
 	 * @should find by partial given and partial family name
@@ -81,18 +116,7 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 			addDateWithinPeriodRestriction(criteria, birthdate, birthdateRangePeriod);
 		}
 		
-		if (patient.getNames() != null && !patient.getNames().isEmpty()) {
-			criteria.createAlias("names", "names");
-			for (PersonName name : patient.getNames()) {
-				criteria.add(Restrictions.eq("names.voided", false));
-				
-				Disjunction or = Restrictions.disjunction();
-				addLikeIfNotBlankRestriction(or, "names.givenName", name.getGivenName(), MatchMode.START);
-				addLikeIfNotBlankRestriction(or, "names.middleName", name.getMiddleName(), MatchMode.START);
-				addLikeIfNotBlankRestriction(or, "names.familyName", name.getFamilyName(), MatchMode.START);
-				criteria.add(or);
-			}
-		}
+		addNameCriteria(criteria, patient);
 		
 		if (patient.getAttributes() != null && !patient.getAttributes().isEmpty()) {
 			criteria.createAlias("attributes", "attributes");
@@ -128,6 +152,8 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 		
 		@SuppressWarnings("unchecked")
 		List<Patient> patients = criteria.list();
+		
+		patients = filterPatients(patients, patient);
 		
 		List<PatientAndMatchQuality> matches = new ArrayList<PatientAndMatchQuality>();
 		
