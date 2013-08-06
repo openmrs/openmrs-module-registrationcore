@@ -38,7 +38,6 @@ import org.openmrs.event.Event;
 import org.openmrs.event.EventMessage;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
-import org.openmrs.module.namephonetics.NamePhoneticsService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
@@ -258,17 +257,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 */
 	@Override
 	public List<String> findSimilarGivenNames(String searchPhrase) {
-		try {
-			//TODO special case for namephonetics because it is not aware of registrationcore
-			//and hence cannot implement PatientNameSearch which comes from registrationcore
-			//see RA-163
-			NamePhoneticsService service = Context.getService(NamePhoneticsService.class);
-			return service.findSimilarGivenNames(searchPhrase);
-		}
-		catch (NoClassDefFoundError ex) {
-			//namephonetics module is not installed. So just use the basic implementation.
-		}
-		
 		return getPatientNameSearch().findSimilarGivenNames(searchPhrase);
 	}
 	
@@ -277,17 +265,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 */
 	@Override
 	public List<String> findSimilarFamilyNames(String searchPhrase) {
-		try {
-			//TODO special case for namephonetics because it is not aware of registrationcore
-			//and hence cannot implement PatientNameSearch which comes from registrationcore
-			//see RA-163
-			NamePhoneticsService service = Context.getService(NamePhoneticsService.class);
-			return service.findSimilarFamilyNames(searchPhrase);
-		}
-		catch (NoClassDefFoundError ex) {
-			//namephonetics module is not installed. So just use the basic implementation.
-		}
-		
 		return getPatientNameSearch().findSimilarFamilyNames(searchPhrase);
 	}
 }
