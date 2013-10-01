@@ -23,9 +23,9 @@
 	</organization>
 
 	<scm>
-		<connection>scm:svn:https://svn.openmrs.org/openmrs-modules/registrationcore/trunk/</connection>
-		<developerConnection>scm:svn:https://svn.openmrs.org/openmrs-modules/registrationcore/trunk/</developerConnection>
-		<url>https://svn.openmrs.org/openmrs-modules/registrationcore/trunk/</url>
+		<connection>scm:git:https://github.com/openmrs/openmrs-module-registrationcore/</connection>
+		<developerConnection>scm:git:https://github.com/openmrs/openmrs-module-registrationcore/</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-registrationcore/</url>
 	</scm>
 
 	<modules>
