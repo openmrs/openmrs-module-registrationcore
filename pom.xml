@@ -37,7 +37,7 @@
 		<openMRSVersion>1.8.2</openMRSVersion>
 		<idgenVersion>2.3</idgenVersion>
 		<eventVersion>2.1</eventVersion>
-		<namephoneticsVersion>1.3.7-SNAPSHOT</namephoneticsVersion>
+		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
