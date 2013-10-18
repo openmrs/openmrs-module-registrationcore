@@ -124,7 +124,7 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 		Relationship r2 = new Relationship(personService.getPerson(7), null, personService.getRelationshipType(2));
 		Patient createdPatient = service.registerPatient(createBasicPatient(), Arrays.asList(r1, r2), null);
 		
-		listener.waitForEvents(10, TimeUnit.SECONDS);
+		listener.waitForEvents(15, TimeUnit.SECONDS);
 		
 		assertEquals(createdPatient.getUuid(), listener.getPatientUuid());
 		assertEquals(createdPatient.getCreator().getUuid(), listener.getRegistererUuid());

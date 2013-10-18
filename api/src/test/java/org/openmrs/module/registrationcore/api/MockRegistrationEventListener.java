@@ -29,15 +29,15 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
  */
 public class MockRegistrationEventListener extends MockEventListener {
 	
-	private String patientUuid;
+	private volatile String patientUuid;
 	
-	private List<String> relationshipUuids;
+	private volatile List<String> relationshipUuids;
 	
-	private String registererUuid;
+	private volatile String registererUuid;
 	
-	private String dateRegistered;
+	private volatile String dateRegistered;
 	
-	private Boolean wasAPerson = Boolean.FALSE;
+	private volatile Boolean wasAPerson = Boolean.FALSE;
 	
 	MockRegistrationEventListener(int expectedEventsCount) {
 		super(expectedEventsCount);
