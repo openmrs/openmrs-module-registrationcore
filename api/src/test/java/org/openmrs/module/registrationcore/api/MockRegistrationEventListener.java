@@ -49,18 +49,23 @@ public class MockRegistrationEventListener extends MockEventListener {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onMessage(Message message) {
-		super.onMessage(message);
 		MapMessage mapMessage = (MapMessage) message;
 		try {
 			patientUuid = mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID);
-			relationshipUuids = (List<String>) mapMessage.getObject(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS);
-			registererUuid = mapMessage.getString(RegistrationCoreConstants.KEY_REGISTERER_UUID);
-			dateRegistered = mapMessage.getString(RegistrationCoreConstants.KEY_DATE_REGISTERED);
-			wasAPerson = mapMessage.getBoolean(RegistrationCoreConstants.KEY_WAS_A_PERSON);
+			if (patientUuid != null) {
+				relationshipUuids = (List<String>) mapMessage.getObject(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS);
+				registererUuid = mapMessage.getString(RegistrationCoreConstants.KEY_REGISTERER_UUID);
+				dateRegistered = mapMessage.getString(RegistrationCoreConstants.KEY_DATE_REGISTERED);
+				wasAPerson = mapMessage.getBoolean(RegistrationCoreConstants.KEY_WAS_A_PERSON);
+
+				super.onMessage(message);
+			}
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
+
+
 	}
 	
 	/**
