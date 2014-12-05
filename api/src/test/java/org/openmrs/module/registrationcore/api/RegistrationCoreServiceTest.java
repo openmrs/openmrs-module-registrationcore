@@ -13,22 +13,13 @@
  */
 package org.openmrs.module.registrationcore.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -36,6 +27,7 @@ import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
@@ -46,6 +38,21 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link $ RegistrationCoreService} .
@@ -69,6 +76,10 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 	@Autowired
 	@Qualifier("locationService")
 	private LocationService locationService;
+
+    @Autowired
+    @Qualifier("encounterService")
+    private EncounterService encounterService;
 	
 	@Before
 	public void before() throws Exception {
@@ -138,11 +149,79 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 		}
 		assertEquals(relationshipUuids, listener.getRelationshipUuids());
 	}
-	
-	/**
-	 * @see {@link RegistrationCoreService#registerPatient(Patient,List<Relationship>)} This needs
-	 *      to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
-	 */
+
+    @Test
+    @Verifies(value = "should create a registration encounter of the specified type", method = "registerPatient")
+    public void registerPatient_shouldCreateRegistrationEncounter() throws Exception {
+        Location registrationLocation = locationService.getLocation(2);
+        EncounterType encounterType = encounterService.getEncounterType(1);
+        Date registrationDateTime = new DateTime(2014, 2, 2, 0, 0).toDate();
+
+        Patient createdPatient = service.registerPatient(createBasicPatient(), null, registrationLocation, encounterType,
+                registrationDateTime, registrationLocation);
+        assertNotNull(createdPatient.getPatientId());
+
+        List<Encounter> encounters = encounterService.getEncounters(createdPatient,null,null,null,null,null,null,false);
+        assertThat(encounters.size() , is(1));
+        assertThat(encounters.get(0).getEncounterType(), is(encounterType));
+        assertThat(encounters.get(0).getEncounterDatetime(), is(registrationDateTime));
+        assertThat(encounters.get(0).getLocation(), is(registrationLocation));
+
+    }
+
+    @Test
+    @Verifies(value = "should not create an encounter if registration encounter type is null", method = "registerPatient")
+    public void registerPatient_shouldNotCreateRegistrationEncounterIfEncounterTypeNull() throws Exception {
+        Location registrationLocation = locationService.getLocation(2);
+
+        Patient createdPatient = service.registerPatient(createBasicPatient(), null, registrationLocation, null,
+                null, registrationLocation);
+        assertNotNull(createdPatient.getPatientId());
+
+        List<Encounter> encounters = encounterService.getEncounters(createdPatient, null, null, null, null, null, null, false);
+        assertThat(encounters.size(), is(0));
+    }
+
+    @Test
+    @Verifies(value = "set encounter location to system default if null", method = "registerPatient")
+    public void registerPatient_shouldSetEncounterLocationToSystemDefaultIfNull() throws Exception {
+        Location registrationLocation = locationService.getLocation(2);
+        EncounterType encounterType = encounterService.getEncounterType(1);
+        Date registrationDateTime = new DateTime(2014, 2, 2, 0, 0).toDate();
+
+        Patient createdPatient = service.registerPatient(createBasicPatient(), null, registrationLocation, encounterType,
+                registrationDateTime, null);
+        assertNotNull(createdPatient.getPatientId());
+
+        List<Encounter> encounters = encounterService.getEncounters(createdPatient,null,null,null,null,null,null,false);
+        assertThat(encounters.size() , is(1));
+        assertThat(encounters.get(0).getEncounterType(), is(encounterType));
+        assertThat(encounters.get(0).getEncounterDatetime(), is(registrationDateTime));
+        assertThat(encounters.get(0).getLocation(), is(locationService.getDefaultLocation()));
+    }
+
+    @Test
+    @Verifies(value = "set encounter location to system default if null", method = "registerPatient")
+    public void registerPatient_shouldSetEncounterDateTimeToCurrentDateTimeIfNull() throws Exception {
+        Location registrationLocation = locationService.getLocation(2);
+        EncounterType encounterType = encounterService.getEncounterType(1);
+
+        Patient createdPatient = service.registerPatient(createBasicPatient(), null, registrationLocation, encounterType,
+                null, registrationLocation);
+        assertNotNull(createdPatient.getPatientId());
+
+        List<Encounter> encounters = encounterService.getEncounters(createdPatient,null,null,null,null,null,null,false);
+        assertThat(encounters.size() , is(1));
+        assertThat(encounters.get(0).getEncounterType(), is(encounterType));
+        assertTrue(Minutes.minutesBetween(new DateTime(encounters.get(0).getEncounterDatetime()), new DateTime()).isLessThan(Minutes.minutes(1)));
+        assertThat(encounters.get(0).getLocation(), is(registrationLocation));
+    }
+
+
+    /**
+         * @see {@link RegistrationCoreService#registerPatient(Patient,List<Relationship>)} This needs
+         *      to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
+         */
 	@Test
 	@Ignore
 	@Verifies(value = "should set wasPerson field to true for an existing person on the registration event", method = "registerPatient(Patient,List<Relationship>)")

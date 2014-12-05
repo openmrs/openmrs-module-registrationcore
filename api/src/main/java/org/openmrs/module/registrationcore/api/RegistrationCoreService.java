@@ -13,15 +13,17 @@
  */
 package org.openmrs.module.registrationcore.api;
 
-import java.util.List;
-import java.util.Map;
-
+import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured
@@ -52,6 +54,32 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @should set wasPerson field to true for an existing person on the registration event
 	 */
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation);
+
+    /**
+     * Assigns an identifier to the patient and saves them in the database including the specified
+     * relationships, the method always attempts to set the other side of each relationship
+     * therefore callers of this method are required to set exactly one side
+     *
+     * @param patient the patient to save
+     * @param relationships the relationships to save along with the patient
+     * @param identifierLocation the location to set for the patient identifier, if not specified,
+     *            it defaults to the system default locale see
+     *            {@link LocationService#getDefaultLocation()}
+     * @param registrationEncounterType the encounter type of the registration encounter to create
+     * @param registrationDatetime the datetime of the registration encounter
+     * @param registrationLocation the location of registration
+     * @return the created patient
+     * @should create a patient from record with relationships
+     * @should fire an event when a patient is registered
+     * @should set wasPerson field to true for an existing person on the registration event
+     * @should create a registration encounter of the specified type at the specified location
+     * @should not create an encounter if registration encounter type is null
+     * @should set encounter location to system default if null (and registration encountertype not null)
+     * @should set encounter datetime of registration encounter to current datetime if null (and registration encountertype not null)
+     */
+    public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation,
+                                   EncounterType registrationEncounterType, Date registrationDatetime,
+                                   Location registrationLocation);
 	
 	/**
 	 * Returns a list of matching patients using the fast algorithm.

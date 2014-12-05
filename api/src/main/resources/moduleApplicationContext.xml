@@ -29,6 +29,7 @@
                 <property name="personService" ref="personService" />
                 <property name="locationService" ref="locationService" />
                 <property name="adminService" ref="adminService" />
+                <property name="encounterService" ref="encounterService" />
             </bean>
         </property>
         <property name="preInterceptors">

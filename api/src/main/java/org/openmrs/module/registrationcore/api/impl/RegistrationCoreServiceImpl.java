@@ -13,14 +13,11 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -28,6 +25,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.Relationship;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.GlobalPropertyListener;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
@@ -49,6 +47,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 /**
  * It is a default implementation of {@link RegistrationCoreService}.
  */
@@ -68,7 +72,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private LocationService locationService;
 	
 	private AdministrationService adminService;
-	
+
+    private EncounterService encounterService;
+
 	private static IdentifierSource idSource;
 	
 	@Override
@@ -102,13 +108,19 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void setAdminService(AdministrationService adminService) {
 		this.adminService = adminService;
 	}
-	
-	/**
+
+    public void setEncounterService(EncounterService encounterService) {
+        this.encounterService = encounterService;
+    }
+
+    /**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
 	 *      java.util.List, Location)
 	 */
 	@Override
-	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation) {
+	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation,
+                                   EncounterType registrationEncounterType, Date registrationDatetime,
+                                   Location registrationLocation) {
 		if (log.isInfoEnabled())
 			log.info("Registering new patient..");
 		if (patient == null)
@@ -157,7 +169,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				personService.saveRelationship(relationship);
 			}
 		}
-		
+
+        // create registration encounter if necessary
+        if (registrationEncounterType != null) {
+            Encounter encounter = new Encounter();
+            encounter.setPatient(patient);
+            encounter.setEncounterType(registrationEncounterType);
+            encounter.setLocation(registrationLocation != null ? registrationLocation : locationService.getDefaultLocation());
+            encounter.setEncounterDatetime(registrationDatetime != null ? registrationDatetime : new Date());
+            encounterService.saveEncounter(encounter);
+        }
+
 		EventMessage eventMessage = new EventMessage();
 		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
@@ -176,8 +198,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		
 		return patient;
 	}
-	
-	/**
+
+    @Override
+    public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation) {
+        return registerPatient(patient, relationships, identifierLocation, null, null,null);
+    }
+
+    /**
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyChanged(org.openmrs.GlobalProperty)
 	 */
 	@Override
