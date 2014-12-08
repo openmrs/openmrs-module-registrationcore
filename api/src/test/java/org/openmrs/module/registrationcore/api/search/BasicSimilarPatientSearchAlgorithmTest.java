@@ -133,4 +133,12 @@ public class BasicSimilarPatientSearchAlgorithmTest extends BaseModuleContextSen
 		assertThat(bestPatient.getPersonName().getGivenName(), is("Sharolyne"));
 		assertThat(bestPatient.getPersonName().getFamilyName(), is("Lenye"));
 	}
+
+    @Test
+    public void findSimilarPatients_shouldReturnEmptyListIfNoDataToQueryOn() throws Exception {
+        Patient patient = new Patient();
+        assertThat(patientSearch.findSimilarPatients(patient, null, null, 10).size(), is(0));
+
+    }
+
 }
