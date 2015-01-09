@@ -208,7 +208,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	
 	private SimilarPatientSearchAlgorithm getPreciseSimilarPatientSearchAlgorithm() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM,
-		    "registrationcore.BasicSimilarPatientSearchAlgorithm");
+		    "registrationcore.BasicExactPatientSearchAlgorithm");
 		
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof SimilarPatientSearchAlgorithm) {

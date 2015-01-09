@@ -82,7 +82,7 @@
     
     <globalProperty>
         <property>${project.parent.artifactId}.preciseSimilarPatientSearchAlgorithm</property>
-        <defaultValue>registrationcore.BasicSimilarPatientSearchAlgorithm</defaultValue>
+        <defaultValue>registrationcore.BasicExactPatientSearchAlgorithm</defaultValue>
         <description>
             Specifies a bean used for the precise similar patient search algorithm.
         </description>
