@@ -39,7 +39,7 @@ import java.util.Map;
 /**
  * It's a default implementation of {@link SimilarPatientSearchAlgorithm}.
  * <p>
- * It searches by gender, birthdate within four weeks, family, given and middle name, country and
+ * It searches by gender, birthdate within +/- two weeks, family, given and middle name, country and
  * city.
  * <p>
  * Names are matched if they start with the given values.
