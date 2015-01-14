@@ -39,6 +39,7 @@ import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
+import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -102,13 +103,22 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void setAdminService(AdministrationService adminService) {
 		this.adminService = adminService;
 	}
-	
+
+    /**
+     * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
+     *      java.util.List, String, Location)
+     */
+    @Override
+    public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation) {
+        return registerPatient(patient, relationships, null, identifierLocation);
+    }
+
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
-	 *      java.util.List, Location)
+	 *      java.util.List, String, Location)
 	 */
 	@Override
-	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation) {
+	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation) {
 		if (log.isInfoEnabled())
 			log.info("Registering new patient..");
 		if (patient == null)
@@ -135,10 +145,18 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			if (identifierLocation == null)
 				throw new APIException("Failed to resolve location to associate to patient identifiers");
 		}
-		String identifierString = iss.generateIdentifier(idSource, null);
+
+        // generate identifier if necessary, otherwise validate
+        if (StringUtils.isBlank(identifierString)) {
+            identifierString = iss.generateIdentifier(idSource, null);
+        }
+        else {
+            PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
+        }
 		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
 		patient.addIdentifier(pId);
-		
+        pId.setPreferred(true);
+
 		//TODO fix this when creating a patient from a person is possible
 		boolean wasAPerson = patient.getPersonId() != null;
 		

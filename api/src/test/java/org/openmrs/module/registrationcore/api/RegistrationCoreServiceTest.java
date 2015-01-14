@@ -23,6 +23,7 @@ import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.InvalidCheckDigitException;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
@@ -110,7 +111,28 @@ public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest 
 		assertNotNull(personService.getPerson(createdPatient.getPersonId()));
 		assertEquals(2, personService.getRelationshipsByPerson(createdPatient).size());
 	}
-	
+
+    @Test
+    @Verifies(value = "should create a patient with manually entered identifier", method = "registerPatient(Patient,List<Relationship>, String identifier, Location)")
+    public void registerPatient_shouldCreateAPatientWithManuallyEnteredIdentifier() throws Exception {
+        Location location = locationService.getLocation(2);
+        Patient createdPatient = service.registerPatient(createBasicPatient(), null, "202-2", location);
+        assertNotNull(createdPatient.getPatientId());
+        assertNotNull(createdPatient.getPatientIdentifier());
+        assertEquals("202-2", createdPatient.getPatientIdentifier().getIdentifier());
+        assertEquals(location, createdPatient.getPatientIdentifier().getLocation());
+        assertNotNull(patientService.getPatient(createdPatient.getPatientId()));
+        assertNotNull(createdPatient.getPersonId());
+        assertNotNull(personService.getPerson(createdPatient.getPersonId()));
+    }
+
+    @Test(expected = InvalidCheckDigitException.class)
+    @Verifies(value = "should throw exception when invalid identifier", method = "registerPatient(Patient,List<Relationship>, String identifier, Location)")
+    public void registerPatient_shouldThrowExceptionWhenInvalidIdentifier() throws Exception {
+        Location location = locationService.getLocation(2);
+        service.registerPatient(createBasicPatient(), null, "bah", location);
+    }
+
 	/**
 	 * @see {@link RegistrationCoreService#registerPatient(Patient,List<Relationship>)}
 	 */

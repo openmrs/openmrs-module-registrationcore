@@ -52,7 +52,25 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @should set wasPerson field to true for an existing person on the registration event
 	 */
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation);
-	
+
+    /**
+     * Creates patient and saves them in the database, setting their identifier as specified instead of assigning
+     * automatically
+     *
+     * @param patient the patient to save
+     * @param relationships the relationships to save along with the patient
+     * @param identifier the identifier to use for the patient
+     * @param identifierLocation the location to set for the patient identifier, if not specified,
+     *            it defaults to the system default locale see
+     *            {@link LocationService#getDefaultLocation()}
+     * @return the created patient
+     * @should create a patient from record with relationships
+     * @should fire an event when a patient is registered
+     * @should set wasPerson field to true for an existing person on the registration event
+     * @should fail if identifier does not pass validation
+     */
+    public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation);
+
 	/**
 	 * Returns a list of matching patients using the fast algorithm.
 	 * <p>
