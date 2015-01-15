@@ -98,6 +98,7 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 	 * @should find by exact gender
 	 * @should find by partial given and partial family name
 	 * @should find by birthday within two weeks
+	 * @should find by phonetic name match
 	 */
 	@Override
 	@Transactional(readOnly = true)

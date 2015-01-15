@@ -3,6 +3,7 @@ package org.openmrs.module.registrationcore.api.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.openmrs.Patient;
@@ -86,5 +87,20 @@ public class NamePhoneticsPatientSearchAlgorithm extends BasicSimilarPatientSear
 		
 		//patient has no names to use for filtering. But is this possible anyway? :)
 		return patients;
+	}
+
+	/**
+	 * Returns a score higher than 0 if value and matches strings are not empty.
+	 *
+	 * @param value
+	 * @param matches
+	 * @return 0 if value or matches strings are empty else return 1
+	 */
+	@Override
+	public double countStartWithScoreForField(String value, String matches) {
+		if (!StringUtils.isBlank(value) && !StringUtils.isBlank(matches)) {
+			return 1;
+		}
+		return 0;
 	}
 }

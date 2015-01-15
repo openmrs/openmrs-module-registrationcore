@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="windows-1250"?>
+
+<dataset>
+
+  <global_property property="namephonetics.familyName2StringEncoder" property_value="Soundex" uuid="4f55827e-26fe-102b-80cb-0017a42631b3"/>
+  <global_property property="namephonetics.familyNameStringEncoder"  property_value="Soundex" uuid="4f45633e-26fe-102b-80cb-0017a86751b3"/>
+  <global_property property="namephonetics.givenNameStringEncoder"   property_value="Soundex" uuid="4f97442e-26fe-102b-80cb-0017a41371b3"/>
+  <global_property property="namephonetics.middleNameStringEncoder"  property_value="Soundex" uuid="4f34572e-26fe-102b-80cb-0017a44571b3"/>
+
+  <name_phonetics name_phonetics_id="1" rendered_string="J620" person_name_id="13" field="1" renderer_class_name="org.apache.commons.codec.language.Soundex"/>
+  <name_phonetics name_phonetics_id="2" rendered_string="R153" person_name_id="13" field="3" renderer_class_name="org.apache.commons.codec.language.Soundex"/>
+
+</dataset>

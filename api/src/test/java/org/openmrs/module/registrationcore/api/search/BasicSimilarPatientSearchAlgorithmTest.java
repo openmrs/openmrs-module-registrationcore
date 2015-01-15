@@ -23,6 +23,10 @@ public class BasicSimilarPatientSearchAlgorithmTest extends BaseModuleContextSen
 	@Autowired
 	@Qualifier("registrationcore.BasicSimilarPatientSearchAlgorithm")
 	SimilarPatientSearchAlgorithm patientSearch;
+
+	@Autowired
+	@Qualifier("registrationcore.NamePhoneticsPatientSearchAlgorithm")
+	SimilarPatientSearchAlgorithm namePhoneticsPatientSearch;
 	
 	@Autowired
 	@Qualifier("personService")
@@ -141,4 +145,25 @@ public class BasicSimilarPatientSearchAlgorithmTest extends BaseModuleContextSen
 
     }
 
+	/**
+	 * @see BasicSimilarPatientSearchAlgorithm#findSimilarPatients(Patient,Integer)
+	 * @verifies find by phonetic name match
+	 */
+	@Test
+	public void findSimilarPatients_shouldFindByPhoneticNameMatch() throws Exception {
+		executeDataSet("name_phonetics_dataset.xml");
+
+		Patient patient = new Patient();
+
+		PersonName name = new PersonName();
+		patient.addName(name);
+		name.setGivenName("Jarusz");
+		name.setFamilyName("Rapondee");
+
+		List<PatientAndMatchQuality> results = namePhoneticsPatientSearch.findSimilarPatients(patient, null, null, 10);
+
+		assertThat(results.size(), is(1));
+		assertThat(results.get(0).getPatient().getPersonName().getGivenName(), is("Jarus"));
+		assertThat(results.get(0).getPatient().getPersonName().getFamilyName(), is("Rapondi"));
+	}
 }
