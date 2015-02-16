@@ -14,11 +14,11 @@ import org.openmrs.Person;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.api.PersonService;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-public class BasicSimilarPatientSearchAlgorithmTest extends BaseModuleContextSensitiveTest {
+public class BasicSimilarPatientSearchAlgorithmTest extends RegistrationCoreSensitiveTestBase {
 	
 	@Autowired
 	@Qualifier("registrationcore.BasicSimilarPatientSearchAlgorithm")

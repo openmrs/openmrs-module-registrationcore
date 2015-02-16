@@ -1,5 +1,13 @@
 package org.openmrs.module.registrationcore.api.search;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -8,19 +16,11 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
-public class BasicExactPatientSearchAlgorithmTest extends BaseModuleContextSensitiveTest {
+public class BasicExactPatientSearchAlgorithmTest extends RegistrationCoreSensitiveTestBase {
 
     @Autowired
     private BasicExactPatientSearchAlgorithm algorithm;

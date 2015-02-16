@@ -13,24 +13,20 @@
  */
 package org.openmrs.module.registrationcore.api.search;
 
-import junit.framework.Assert;
-import org.hamcrest.MatcherAssert;
-import org.junit.Before;
-import org.junit.Test;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Tests ExistingPatientNameSearchTest
  */
-public class ExistingPatientNameSearchTest extends BaseModuleContextSensitiveTest {
+public class ExistingPatientNameSearchTest extends RegistrationCoreSensitiveTestBase {
 
     @Autowired
     ExistingPatientNameSearch search;

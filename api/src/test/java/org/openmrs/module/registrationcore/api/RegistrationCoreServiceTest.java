@@ -13,6 +13,19 @@
  */
 package org.openmrs.module.registrationcore.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,28 +43,14 @@ import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Tests {@link $ RegistrationCoreService} .
  */
-public class RegistrationCoreServiceTest extends BaseModuleContextSensitiveTest {
+public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBase {
 	
 	private RegistrationCoreService service;
 	

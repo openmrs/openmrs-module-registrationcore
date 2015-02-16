@@ -19,14 +19,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Tests BasicPatientNameSearch
  */
-public class BasicPatientNameSearchTest extends BaseModuleContextSensitiveTest{
+public class BasicPatientNameSearchTest extends RegistrationCoreSensitiveTestBase{
 
 	@Autowired
 	@Qualifier("registrationcore.BasicPatientNameSearch")
