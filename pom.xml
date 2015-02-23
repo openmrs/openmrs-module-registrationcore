@@ -22,9 +22,9 @@
 	</organization>
 
 	<scm>
-		<connection>scm:git:https://github.com/openmrs/openmrs-module-registrationcore/</connection>
-		<developerConnection>scm:git:https://github.com/openmrs/openmrs-module-registrationcore/</developerConnection>
-		<url>https://github.com/openmrs/openmrs-module-registrationcore/</url>
+		<connection>scm:git:git@github.com:openmrs/openmrs-module-registrationcore.git</connection>
+		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-registrationcore.git</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-registrationcore.git</url>
 	</scm>
 
 	<modules>
