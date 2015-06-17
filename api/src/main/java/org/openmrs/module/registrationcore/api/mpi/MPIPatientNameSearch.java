@@ -11,8 +11,10 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.registrationcore.api.search;
+package org.openmrs.module.registrationcore.api.mpi;
 
+
+import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 
 /**
  * An interface for finding similar patient names on remote MPI server.
