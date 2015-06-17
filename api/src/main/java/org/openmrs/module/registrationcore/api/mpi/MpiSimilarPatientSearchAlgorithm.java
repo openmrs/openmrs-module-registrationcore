@@ -14,10 +14,10 @@
 package org.openmrs.module.registrationcore.api.mpi;
 
 
-import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
+import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 
 /**
  * An interface for finding similar patient names on remote MPI server.
  */
-public interface MPIPatientNameSearch extends PatientNameSearch {
+public interface MpiSimilarPatientSearchAlgorithm extends SimilarPatientSearchAlgorithm {
 }
