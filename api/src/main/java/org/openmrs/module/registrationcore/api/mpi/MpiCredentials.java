@@ -1,6 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi;
 
-public class EMPICredentials {
+public class MpiCredentials {
 
     private String username;
 
@@ -8,7 +8,7 @@ public class EMPICredentials {
 
     private String token;
 
-    public EMPICredentials(String username, String password) {
+    public MpiCredentials(String username, String password) {
         this.username = username;
         this.password = password;
     }
