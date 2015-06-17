@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-@Service("registrationcore.EMPISimilarPatientSearch")
+@Service("registrationcore.OpenEmpiPatientSearchAlgorithm")
 public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
 
     private MpiCredentials credentials;
