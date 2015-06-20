@@ -1,10 +1,11 @@
-package org.openmrs.module.registrationcore.api.mpi;
+package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import org.openmrs.Patient;
+import org.openmrs.module.registrationcore.api.mpi.MpiCredentials;
+import org.openmrs.module.registrationcore.api.mpi.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
 
     private MpiCredentials credentials;
 
-    private String SERVER_URL = "http://178.62.213.106:8080";
-    private String AUTHENTICATION_URL = "/openempi-admin/openempi-ws-rest/security-resource/authenticate";
+
+    private Client client = Client.create(new DefaultClientConfig());
 
     @Override
     public List<PatientAndMatchQuality> findSimilarPatients(Patient patient,
@@ -27,17 +28,27 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
         if (credentials.getToken() == null) {
             processAuthentication();
         }
+        findPatients(patient);
         return null;
     }
 
-
     private void processAuthentication() {
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        WebResource service = client.resource(UriBuilder.fromUri(SERVER_URL + AUTHENTICATION_URL).build());
+        WebResource service = client.resource(
+                UriBuilder.fromUri(OpenEmpiVariables.getAuthenticationUrl()).build());
 
         String token = service.put(String.class, credentials);
         credentials.setToken(token);
+    }
+
+    private void findPatients(Patient patient) {
+        WebResource.Builder service = client.resource(
+                UriBuilder.fromUri(OpenEmpiVariables.getFindPatientsUrl()).build())
+                .header(OpenEmpiVariables.TOKEN_HEADER_KEY, credentials.getToken());
+
+        OpenEmpiPatientQuery patientQuery = PatientToQueryMapper.convert(patient);
+
+        String result = service.post(String.class, patientQuery);
+        //TODO return matched persons.
     }
 
     public void setCredentials(MpiCredentials credentials) {
