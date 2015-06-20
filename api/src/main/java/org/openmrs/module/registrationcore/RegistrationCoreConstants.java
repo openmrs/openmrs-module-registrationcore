@@ -39,4 +39,6 @@ public final class RegistrationCoreConstants {
     public static final String GP_FAST_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.fastSimilarPatientSearchAlgorithm";
     
     public static final String GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.preciseSimilarPatientSearchAlgorithm";
+
+	public static final String GP_MPI_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.mpiSimilarPatientSearchAlgorithm";
 }

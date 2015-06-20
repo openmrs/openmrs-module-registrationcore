@@ -100,7 +100,22 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 */
 	List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                        Double cutoff, Integer maxResults);
-	
+
+	/**
+	 * Query to MPI server and return a list of precise matching patients.
+	 * <p>
+	 * You can change the underlying implementation by calling
+	 * {@link #setMpiSimilarPatientSearchAlgorithm(org.openmrs.module.registrationcore.api.mpi.MpiSimilarPatientSearchAlgorithm)}.
+	 *
+	 * @param patient
+	 * @param otherDataPoints
+	 * @param cutoff
+	 * @param maxResults
+	 * @return the list
+	 */
+	List<PatientAndMatchQuality> findPreciseSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
+															Double cutoff, Integer maxResults);
+
 	/**
 	 * Searches for given names that are similar to a search phrase.
 	 * <p>
