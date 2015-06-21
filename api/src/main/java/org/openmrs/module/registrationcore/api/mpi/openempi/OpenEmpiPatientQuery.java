@@ -14,7 +14,7 @@ public class OpenEmpiPatientQuery {
 
     private String genderDescription;
 
-    private Date birthDate; //TODO: String?
+    private Date dateOfBirth;
 
     public String getFamilyName() {
         return familyName;
@@ -48,11 +48,11 @@ public class OpenEmpiPatientQuery {
         this.genderDescription = genderDescription;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
+    public Date getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }
