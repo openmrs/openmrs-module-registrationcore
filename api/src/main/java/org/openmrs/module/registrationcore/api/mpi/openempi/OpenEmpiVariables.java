@@ -5,7 +5,7 @@ public class OpenEmpiVariables {
     static final String TOKEN_HEADER_KEY = "OPENEMPI_SESSION_KEY";
 
     //TODO move to property
-    private static final String SERVER_URL = "http://178.62.213.106:8080/";
+    private static final String SERVER_URL = "http://188.166.56.70:8080/";
 
     private static final String REST_URL = "openempi-admin/openempi-ws-rest/";
 

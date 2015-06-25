@@ -11,11 +11,11 @@ public class PatientQueryMapper {
     public static OpenEmpiPatientQuery convert(Patient patient) {
         OpenEmpiPatientQuery patientQuery = new OpenEmpiPatientQuery();
 
-        patientQuery.setFamilyName(patient.getFamilyName());
-        patientQuery.setGivenName(patient.getGivenName());
-        patientQuery.setMiddleName(patient.getMiddleName());
-        patientQuery.setDateOfBirth(patient.getBirthdate());
-        patientQuery.setGenderDescription(patient.getGender());
+        patientQuery.setFamilyName("Zayats");
+        patientQuery.setGivenName("Roman");
+//        patientQuery.setMiddleName(patient.getMiddleName());
+//        patientQuery.setDateOfBirth(patient.getBirthdate());
+//        patientQuery.setGenderDescription(patient.getGender());
 
         return patientQuery;
     }

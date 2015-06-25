@@ -11,12 +11,9 @@ import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.UriBuilder;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Service("registrationcore.OpenEmpiPatientSearchAlgorithm")
+@Service("registrationcore.OpenEmpiExactPatientSearchAlgorithm")
 public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
 
     private MpiCredentials credentials;
@@ -27,6 +24,7 @@ public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSea
     public List<PatientAndMatchQuality> findSimilarPatients(Patient patient,
                                                             Map<String, Object> otherDataPoints,
                                                             Double cutoff, Integer maxResults) {
+        this.setCredentials(new MpiCredentials("admin", "admin"));
         if (credentials.getToken() == null) {
             processAuthentication();
         }
@@ -62,8 +60,7 @@ public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSea
 
     private List<OpenEmpiPatientQuery> getMatchedPatients(OpenEmpiPatientQuery patientQuery,
                                                           WebResource.Builder service, int maxResults) {
-        return service.post(new GenericType<List<OpenEmpiPatientQuery>>() {}, patientQuery)
-                .subList(0, maxResults);
+        return service.post(new GenericType<List<OpenEmpiPatientQuery>>() {}, patientQuery);
     }
 
     private List<PatientAndMatchQuality> convertMatchedPatients(List<OpenEmpiPatientQuery> mpiPatients,

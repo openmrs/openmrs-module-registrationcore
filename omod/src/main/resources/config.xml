@@ -88,6 +88,14 @@
         </description>
     </globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpiSimilarPatientSearchAlgorithm</property>
+		<defaultValue>registrationcore.OpenEmpiExactPatientSearchAlgorithm</defaultValue>
+		<description>
+			Specifies a bean used for the precise similar patient search algorithm.
+		</description>
+	</globalProperty>
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				
