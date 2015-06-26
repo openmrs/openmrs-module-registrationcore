@@ -19,7 +19,6 @@ import java.util.*;
 @Service("registrationcore.OpenEmpiExactPatientSearchAlgorithm")
 public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
 
-    String token = "F58C465C3045B63D7542F2D3BE9BA9DF";
     private MpiCredentials credentials;
 
     @Override
