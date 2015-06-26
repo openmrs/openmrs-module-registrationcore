@@ -2,7 +2,9 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.*;
 
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 
 public class PatientQueryMapper {
@@ -29,7 +31,7 @@ public class PatientQueryMapper {
 
         patient.setGender(patientQuery.getGender().getGenderCode());
 
-        patient.setBirthdate(patientQuery.getDateOfBirth());
+        setBirthdate(patientQuery, patient);
 
         setAddresses(patientQuery, patient);
         return patient;
@@ -56,5 +58,15 @@ public class PatientQueryMapper {
         address.setAddress1(patientQuery.getAddress1());
         addresses.add(address);
         patient.setAddresses(addresses);
+    }
+
+    private static void setBirthdate(OpenEmpiPatientQuery patientQuery, Patient patient) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(patientQuery.getDateOfBirth());
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date clearDate = calendar.getTime();
+        patient.setBirthdate(clearDate);
     }
 }
