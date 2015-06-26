@@ -12,7 +12,6 @@ public class OpenEmpiVariables {
     private static final String AUTHENTICATION_URL = "security-resource/authenticate";
 
     private static final String FIND_PATIENTS_URL = "person-query-resource/findPersonsByAttributes";
-    //TODO: URL for matchingPersons: "person-query-resource/findMatchingPersonsByAttributes"
 
     static String getAuthenticationUrl() {
         return SERVER_URL + REST_URL + AUTHENTICATION_URL;
