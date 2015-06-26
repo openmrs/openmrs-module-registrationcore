@@ -43,27 +43,8 @@ public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSea
         return result;
     }
 
-    private List<PatientAndMatchQuality> convertMpiPatients(List<OpenEmpiPatientQuery> mpiPatients,
-                                                            Double cutoff) {
-        List<String> matchedFields = Arrays.asList("personName", "gender", "birthdate");
-        List<PatientAndMatchQuality> result = new LinkedList<PatientAndMatchQuality>();
-        for (OpenEmpiPatientQuery mpiPatient : mpiPatients) {
-            Patient convertedPatient = PatientQueryMapper.convert(mpiPatient);
-            PatientAndMatchQuality resultPatient =
-                    new PatientAndMatchQuality(convertedPatient, cutoff, matchedFields);
-            result.add(resultPatient);
-        }
-        return result;
-    }
-
     private boolean isAuthenticated() {
         return credentials.getToken() != null;
-    }
-
-    private void subtractMpiPatients(List<OpenEmpiPatientQuery> mpiSimilarPatients, Integer maxResults) {
-        if (mpiSimilarPatients.size() > maxResults) {
-            mpiSimilarPatients = mpiSimilarPatients.subList(0, maxResults);
-        }
     }
 
     private void processAuthentication() throws AuthenticationException {
@@ -107,5 +88,24 @@ public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSea
 
     private OpenEmpiPatientQuery getPatientSimilarQuery(Patient patient) {
         return PatientQueryMapper.convert(patient);
+    }
+
+    private void subtractMpiPatients(List<OpenEmpiPatientQuery> mpiSimilarPatients, Integer maxResults) {
+        if (mpiSimilarPatients.size() > maxResults) {
+            mpiSimilarPatients = mpiSimilarPatients.subList(0, maxResults);
+        }
+    }
+
+    private List<PatientAndMatchQuality> convertMpiPatients(List<OpenEmpiPatientQuery> mpiPatients,
+                                                            Double cutoff) {
+        List<String> matchedFields = Arrays.asList("personName", "gender", "birthdate");
+        List<PatientAndMatchQuality> result = new LinkedList<PatientAndMatchQuality>();
+        for (OpenEmpiPatientQuery mpiPatient : mpiPatients) {
+            Patient convertedPatient = PatientQueryMapper.convert(mpiPatient);
+            PatientAndMatchQuality resultPatient =
+                    new PatientAndMatchQuality(convertedPatient, cutoff, matchedFields);
+            result.add(resultPatient);
+        }
+        return result;
     }
 }
