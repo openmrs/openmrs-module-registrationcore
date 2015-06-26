@@ -93,14 +93,14 @@ public class OpenEmpiPatientQuery {
 @XmlRootElement
 class Gender{
 
-    private String genderName;
+    private String genderCode;
 
-    public String getGenderName() {
-        return genderName;
+    public String getGenderCode() {
+        return genderCode;
     }
 
-    public void setGenderName(String genderName) {
-        this.genderName = genderName;
+    public void setGenderCode(String genderCode) {
+        this.genderCode = genderCode;
     }
 }
 

@@ -27,7 +27,7 @@ public class PatientQueryMapper {
 
         setIdentifiers(patientQuery, patient);
 
-        patient.setGender(patientQuery.getGender().getGenderName());
+        patient.setGender(patientQuery.getGender().getGenderCode());
 
         patient.setBirthdate(patientQuery.getDateOfBirth());
 
