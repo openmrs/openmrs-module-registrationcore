@@ -61,13 +61,18 @@ public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSea
     }
 
     private List<OpenEmpiPatientQuery> getMpiSimilarPatients(Patient patient) {
+        List<OpenEmpiPatientQuery> result = new LinkedList<OpenEmpiPatientQuery>();
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<OpenEmpiPatientQuery> request = getHttpEntityRequest(restTemplate, patient);
 
         OpenEmpiPeopleWrapper people = restTemplate.postForObject(OpenEmpiVariables.getFindPatientsUrl(),
                 request, OpenEmpiPeopleWrapper.class);
 
-        return people.getPeople();
+        if (people.getPeople() != null) {
+            result.addAll(people.getPeople());
+        }
+
+        return result;
     }
 
     private HttpEntity<OpenEmpiPatientQuery> getHttpEntityRequest(RestTemplate restTemplate, Patient patient) {
