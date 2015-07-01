@@ -76,7 +76,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * <p>
 	 * You can change the underlying implementation by calling
 	 * {@link #setFastSimilarPatientSearchAlgorithm(org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm)}.
-	 * 
+	 *
 	 * @param patient
 	 * @param otherDataPoints
 	 * @param cutoff
@@ -85,7 +85,9 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 */
 	List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                     Double cutoff, Integer maxResults);
-	
+
+	List<PatientAndMatchQuality> findProbablisticSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
+																	  Double cutoff, Integer maxResults);
 	/**
 	 * Returns a list of matching patients using the precise algorithm.
 	 * <p>
