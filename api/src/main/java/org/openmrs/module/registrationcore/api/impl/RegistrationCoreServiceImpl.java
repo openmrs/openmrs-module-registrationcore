@@ -273,8 +273,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public List<PatientAndMatchQuality> findProbablisticSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
 																			 Double cutoff, Integer maxResults) {
-		return null;
-
+		//TODO when will be used Probablistic match - create another service for querying to Probablistic url.
+		return getMpiSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 
 	@Override
