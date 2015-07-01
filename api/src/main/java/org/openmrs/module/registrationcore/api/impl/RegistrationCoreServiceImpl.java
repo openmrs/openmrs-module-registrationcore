@@ -271,6 +271,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	@Override
+	public List<PatientAndMatchQuality> findProbablisticSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
+																			 Double cutoff, Integer maxResults) {
+		return null;
+
+	}
+
+	@Override
 	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                               Double cutoff, Integer maxResults) {
 		return getPreciseSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
