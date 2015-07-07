@@ -26,7 +26,7 @@ public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSea
                                                             Map<String, Object> otherDataPoints,
                                                             Double cutoff, Integer maxResults) {
         //TODO mocking. Should be removed.
-        credentials = new MpiCredentials("admin", "admin");
+        credentials = new MpiCredentials("admin", "admin123");
 
         List<PatientAndMatchQuality> result;
         try {
