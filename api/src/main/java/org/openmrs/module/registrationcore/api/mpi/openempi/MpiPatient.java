@@ -2,7 +2,7 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
 
-public class OpenEmpiPatient extends Patient{
+public class MpiPatient extends Patient{
 
     private boolean mpiPatient;
 

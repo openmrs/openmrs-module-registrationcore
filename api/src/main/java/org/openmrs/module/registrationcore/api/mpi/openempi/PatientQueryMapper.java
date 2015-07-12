@@ -21,7 +21,7 @@ public class PatientQueryMapper {
     }
 
     public static Patient convert(OpenEmpiPatientQuery patientQuery) {
-        OpenEmpiPatient patient = new OpenEmpiPatient();
+        MpiPatient patient = new MpiPatient();
         patient.setMpiPatient(true);
 
         patient.setPatientId(patientQuery.getPersonId());
