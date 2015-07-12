@@ -16,6 +16,8 @@ public class OpenEmpiVariables {
     //TODO should be changed for Probablistic match.
     private static final String FIND_PROBABLISTIC_PATIENTS_URL = "person-query-resource/findPersonsByAttributes";
 
+    private static final String FIND_PATIENT_BY_ID_URL = "person-query-resource/loadPerson";
+
     static String getAuthenticationUrl() {
         return SERVER_URL + REST_URL + AUTHENTICATION_URL;
     }
@@ -26,5 +28,9 @@ public class OpenEmpiVariables {
 
     static String getProbablisticPatientsUrl() {
         return SERVER_URL + REST_URL + FIND_PROBABLISTIC_PATIENTS_URL;
+    }
+
+    static String getFindPatientByIdUrl() {
+        return SERVER_URL + REST_URL + FIND_PATIENT_BY_ID_URL;
     }
 }
