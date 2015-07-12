@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.*;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 
 import java.util.Calendar;
 import java.util.Collections;

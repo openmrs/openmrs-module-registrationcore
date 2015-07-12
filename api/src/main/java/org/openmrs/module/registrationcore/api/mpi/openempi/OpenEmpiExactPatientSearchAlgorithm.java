@@ -1,8 +1,8 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
-import org.openmrs.module.registrationcore.api.mpi.MpiCredentials;
-import org.openmrs.module.registrationcore.api.mpi.MpiSimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;

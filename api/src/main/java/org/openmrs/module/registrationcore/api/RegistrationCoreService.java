@@ -21,6 +21,7 @@ import org.openmrs.Patient;
 import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 /**
@@ -107,7 +108,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * Query to MPI server and return a list of precise matching patients.
 	 * <p>
 	 * You can change the underlying implementation by calling
-	 * {@link #setMpiSimilarPatientSearchAlgorithm(org.openmrs.module.registrationcore.api.mpi.MpiSimilarPatientSearchAlgorithm)}.
+	 * {@link #setMpiSimilarPatientSearchAlgorithm(MpiSimilarPatientSearchAlgorithm)}.
 	 *
 	 * @param patient
 	 * @param otherDataPoints

@@ -27,7 +27,7 @@ import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
-import org.openmrs.module.registrationcore.api.mpi.MpiSimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;

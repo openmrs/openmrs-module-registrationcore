@@ -1,4 +1,4 @@
-package org.openmrs.module.registrationcore.api.mpi.openempi;
+package org.openmrs.module.registrationcore.api.mpi.common;
 
 import org.openmrs.Patient;
 

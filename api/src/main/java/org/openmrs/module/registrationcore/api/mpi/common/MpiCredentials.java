@@ -1,4 +1,4 @@
-package org.openmrs.module.registrationcore.api.mpi;
+package org.openmrs.module.registrationcore.api.mpi.common;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

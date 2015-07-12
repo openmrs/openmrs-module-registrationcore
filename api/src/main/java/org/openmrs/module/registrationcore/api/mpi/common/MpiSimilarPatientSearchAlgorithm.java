@@ -11,7 +11,7 @@
  * <p/>
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.registrationcore.api.mpi;
+package org.openmrs.module.registrationcore.api.mpi.common;
 
 
 import org.openmrs.Patient;
