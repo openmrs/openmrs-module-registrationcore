@@ -14,6 +14,12 @@ public class RestQueryCreator {
 
     private MpiCredentials credentials;
 
+    public RestQueryCreator() {
+        //TODO this is mock. Should me changed to correct injecting.
+        credentials = new MpiCredentials("admin", "admin123");
+        credentials.setToken("DCBE246033E134DE2CA58163C7F5A1E6");
+    }
+
     public OpenEmpiPatientQuery getPatientById(String id) {
         RestTemplate restTemplate = new RestTemplate();
 
