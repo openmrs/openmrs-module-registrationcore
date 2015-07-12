@@ -43,6 +43,17 @@ public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSea
         return result;
     }
 
+    @Override
+    public List<PatientAndMatchQuality> findExactSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
+        //TODO should be changed to implementation which query to SimilarPatients, not exact.
+        return findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+    }
+
+    @Override
+    public Patient importMpiPatient(String patientId) {
+        return null;
+    }
+
     private boolean isAuthenticated() {
         return credentials.getToken() != null;
     }
