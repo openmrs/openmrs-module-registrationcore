@@ -2,9 +2,9 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -12,37 +12,47 @@ import java.util.List;
 
 public class RestQueryCreator {
 
-    public List<OpenEmpiPatientQuery> getPatients(MpiCredentials credentials, OpenEmpiPatientQuery query) {
+    private MpiCredentials credentials;
+
+    public OpenEmpiPatientQuery getPatientById(String id) {
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<OpenEmpiPatientQuery> request = getHttpEntityRequest(restTemplate, query, credentials);
+        HttpHeaders headers = getAuthenticationHeader();
 
-        OpenEmpiPeopleWrapper people = performPost(restTemplate, request);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-        return unwrapResult(people);
+        String findPatientByIdUrl = createGetPatientUrl(id);
+
+
+        ResponseEntity<OpenEmpiPatientQuery> person = restTemplate.exchange(findPatientByIdUrl, HttpMethod.GET,
+                entity, OpenEmpiPatientQuery.class);
+
+        return person.getBody();
     }
 
-    private HttpEntity<OpenEmpiPatientQuery> getHttpEntityRequest(RestTemplate restTemplate,
-                                                                  OpenEmpiPatientQuery query,
-                                                                  MpiCredentials credentials) {
-        MultiValueMap<String, String> headers = getAuthenticationHeader(restTemplate, credentials);
+    public List<OpenEmpiPatientQuery> findPatients(OpenEmpiPatientQuery query) {
+        RestTemplate restTemplate = new RestTemplate();
 
-        return new HttpEntity<OpenEmpiPatientQuery>(query, headers);
+        HttpHeaders headers = getAuthenticationHeader();
+
+        HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(query, headers);
+
+        ResponseEntity<OpenEmpiPeopleWrapper> people = restTemplate.exchange(OpenEmpiVariables.getExactPatientsUrl(), HttpMethod.POST, entity, OpenEmpiPeopleWrapper.class);
+
+        return unwrapResult(people.getBody());
     }
 
-    private MultiValueMap<String, String> getAuthenticationHeader(RestTemplate restTemplate,
-                                                                  MpiCredentials credentials) {
-        restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
-
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+    private HttpHeaders getAuthenticationHeader() {
+        HttpHeaders headers = new HttpHeaders();
         headers.add(OpenEmpiVariables.TOKEN_HEADER_KEY, credentials.getToken());
-
         return headers;
     }
 
-    private OpenEmpiPeopleWrapper performPost(RestTemplate restTemplate, HttpEntity<OpenEmpiPatientQuery> request) {
-        return restTemplate.postForObject(OpenEmpiVariables.getExactPatientsUrl(),
-                request, OpenEmpiPeopleWrapper.class);
+    private String createGetPatientUrl(String id) {
+        String url = OpenEmpiVariables.getFindPatientByIdUrl();
+        url += "?personId=";
+        url += id;
+        return url;
     }
 
     private List<OpenEmpiPatientQuery> unwrapResult(OpenEmpiPeopleWrapper people) {
@@ -53,4 +63,7 @@ public class RestQueryCreator {
         }
     }
 
+    public void setCredentials(MpiCredentials credentials) {
+        this.credentials = credentials;
+    }
 }
