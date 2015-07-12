@@ -231,7 +231,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private MpiSimilarPatientSearchAlgorithm getMpiSimilarPatientSearchAlgorithm() {
         String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_SIMILAR_PATIENT_SEARCH_ALGORITHM,
-                "registrationcore.OpenEmpiExactPatientSearchAlgorithm");
+                "registrationcore.OpenEmpiSimilarPatientSearchAlgorithm");
 
         Object bean = applicationContext.getBean(gp);
 
@@ -273,7 +273,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public List<PatientAndMatchQuality> findProbablisticSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
 																			 Double cutoff, Integer maxResults) {
-		//TODO when will be used Probablistic match - create another service for querying to Probablistic url.
 		return getMpiSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 
@@ -287,7 +286,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public List<PatientAndMatchQuality> findPreciseSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
                                                                         Double cutoff, Integer maxResults) {
 
-		return getMpiSimilarPatientSearchAlgorithm().findSimilarPatients(patient,otherDataPoints,cutoff,maxResults);
+		return getMpiSimilarPatientSearchAlgorithm().findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 
 	/**

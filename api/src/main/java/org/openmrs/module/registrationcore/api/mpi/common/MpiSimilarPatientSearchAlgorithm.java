@@ -29,6 +29,6 @@ public interface MpiSimilarPatientSearchAlgorithm {
     List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
                                                      Integer maxResults);
 
-    List<PatientAndMatchQuality> findExactSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-                                                          Integer maxResults);
+    List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+                                                            Integer maxResults);
 }

@@ -90,7 +90,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpiSimilarPatientSearchAlgorithm</property>
-		<defaultValue>registrationcore.OpenEmpiExactPatientSearchAlgorithm</defaultValue>
+		<defaultValue>registrationcore.OpenEmpiSimilarPatientSearchAlgorithm</defaultValue>
 		<description>
 			Specifies a bean used for the precise similar patient search algorithm.
 		</description>
