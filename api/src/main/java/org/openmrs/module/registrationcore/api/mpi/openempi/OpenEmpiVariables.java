@@ -9,9 +9,11 @@ public class OpenEmpiVariables {
 
     private static final String REST_URL = "openempi-admin/openempi-ws-rest/";
 
+    private static final String PERSON_QUERY_URL = "person-query-resource";
+
     private static final String AUTHENTICATION_URL = "security-resource/authenticate";
 
-    private static final String FIND_EXACT_PATIENTS_URL = "person-query-resource/findPersonsByAttributes";
+    private static final String FIND_EXACT_PATIENTS_URL = "/findPersonsByAttributes";
 
     //TODO should be changed for Probablistic match.
     private static final String FIND_PROBABLISTIC_PATIENTS_URL = "person-query-resource/findPersonsByAttributes";
@@ -23,14 +25,14 @@ public class OpenEmpiVariables {
     }
 
     static String getExactPatientsUrl() {
-        return SERVER_URL + REST_URL + FIND_EXACT_PATIENTS_URL;
+        return SERVER_URL + REST_URL + PERSON_QUERY_URL + FIND_EXACT_PATIENTS_URL;
     }
 
     static String getProbablisticPatientsUrl() {
-        return SERVER_URL + REST_URL + FIND_PROBABLISTIC_PATIENTS_URL;
+        return SERVER_URL + REST_URL + PERSON_QUERY_URL + FIND_PROBABLISTIC_PATIENTS_URL;
     }
 
     static String getFindPatientByIdUrl() {
-        return SERVER_URL + REST_URL + FIND_PATIENT_BY_ID_URL;
+        return SERVER_URL + REST_URL + PERSON_QUERY_URL + FIND_PATIENT_BY_ID_URL;
     }
 }
