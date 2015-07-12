@@ -10,10 +10,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Service("registrationcore.OpenEmpiExactPatientSearchAlgorithm")
-public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
+@Service("registrationcore.OpenEmpiSimilarPatientSearchAlgorithm")
+public class OpenEmpiSimilarPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
 
-    private RestQueryCreator restQueryCreator;
+    //TODO change to correct injecting.
+    private RestQueryCreator restQueryCreator = new RestQueryCreator();
 
     @Override
     public List<PatientAndMatchQuality> findSimilarPatients(Patient patient,
@@ -31,7 +32,7 @@ public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSea
     }
 
     @Override
-    public List<PatientAndMatchQuality> findExactSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
         //TODO should be changed to implementation which query to SimilarPatients, not exact.
         return findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
     }
