@@ -62,7 +62,7 @@ public class RestQueryCreator {
     }
 
     private List<OpenEmpiPatientQuery> unwrapResult(OpenEmpiPeopleWrapper people) {
-        if (people == null) {
+        if (people.getPeople() == null) {
             return Collections.emptyList();
         } else {
             return people.getPeople();
