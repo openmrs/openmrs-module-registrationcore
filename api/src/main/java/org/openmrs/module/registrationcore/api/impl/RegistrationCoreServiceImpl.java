@@ -231,7 +231,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private MpiSimilarPatientSearchAlgorithm getMpiSimilarPatientSearchAlgorithm() {
         String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_SIMILAR_PATIENT_SEARCH_ALGORITHM,
-                "registrationcore.OpenEmpiSimilarPatientSearchAlgorithm");
+                "registrationcore.OpenEmpiExactPatientSearchAlgorithm");
 
         Object bean = applicationContext.getBean(gp);
 

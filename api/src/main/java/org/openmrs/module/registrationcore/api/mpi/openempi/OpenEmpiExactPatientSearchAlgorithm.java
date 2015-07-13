@@ -10,8 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Service("registrationcore.OpenEmpiSimilarPatientSearchAlgorithm")
-public class OpenEmpiSimilarPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
+@Service("registrationcore.OpenEmpiExactPatientSearchAlgorithm")
+public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
 
     //TODO change to correct injecting.
     private RestQueryCreator restQueryCreator = new RestQueryCreator();
