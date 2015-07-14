@@ -20,6 +20,19 @@ public class RestQueryCreator {
         credentials.setToken("DCBE246033E134DE2CA58163C7F5A1E6");
     }
 
+    public void processAuthentication() throws RuntimeException {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> token = restTemplate
+                .exchange(OpenEmpiVariables.getAuthenticationUrl(),
+                        HttpMethod.PUT, new HttpEntity<MpiCredentials>(credentials), String.class);
+        String tokenValue = token.getBody();
+        if (tokenValue != null) {
+            credentials.setToken(tokenValue);
+        } else {
+            throw new RuntimeException("Can't perform authentication");
+        }
+    }
+
     public OpenEmpiPatientQuery getPatientById(String id) {
         RestTemplate restTemplate = new RestTemplate();
 
