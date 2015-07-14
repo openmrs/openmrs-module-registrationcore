@@ -63,6 +63,9 @@ public class PatientQueryMapper {
     }
 
     private static void setBirthdate(OpenEmpiPatientQuery patientQuery, Patient patient) {
+        if (patientQuery.getDateOfBirth() == null) {
+            return;
+        }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(patientQuery.getDateOfBirth());
         calendar.set(Calendar.HOUR, 0);
