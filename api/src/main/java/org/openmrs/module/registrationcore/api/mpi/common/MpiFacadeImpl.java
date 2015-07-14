@@ -25,16 +25,18 @@ public class MpiFacadeImpl implements MpiFacade {
 
     @Override
     public MpiPatient importMpiPatient(String patientId) {
-        return null;
+        return patientImporter.importMpiPatient(patientId);
     }
 
     @Override
-    public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        return null;
+    public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+                                                            Double cutoff, Integer maxResults) {
+        return searchAlgorithm.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
     }
 
     @Override
-    public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        return null;
+    public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+                                                                   Double cutoff, Integer maxResults) {
+        return searchAlgorithm.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
     }
 }
