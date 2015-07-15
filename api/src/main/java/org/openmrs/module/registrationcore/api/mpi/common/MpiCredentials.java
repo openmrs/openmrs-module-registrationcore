@@ -12,6 +12,7 @@ public class MpiCredentials {
     private String token;
 
     public MpiCredentials() {
+        //Is used for XML marshalling.
     }
 
     public MpiCredentials(String username, String password) {
