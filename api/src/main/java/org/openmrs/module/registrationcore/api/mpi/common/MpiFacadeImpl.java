@@ -9,17 +9,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-@Service("registrationcore.mpiFacade")
 public class MpiFacadeImpl implements MpiFacade {
 
     @Autowired
-    @Qualifier("registrationcore.OpenEmpiExactPatientSearchAlgorithm")
+    @Qualifier("mpiPatientSearcher")
     private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
     @Autowired
-    @Qualifier("MpiPatientImporter")
+    @Qualifier("mpiPatientImporter")
     private MpiPatientImporter patientImporter;
     @Autowired
-    @Qualifier("MpiAuthenticator")
+    @Qualifier("mpiAuthenticator")
     private MpiAuthenticator authenticator;
 
     @Override

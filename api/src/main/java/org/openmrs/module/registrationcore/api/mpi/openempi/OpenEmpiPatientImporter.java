@@ -3,9 +3,7 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service("MpiPatientImporter")
 public class OpenEmpiPatientImporter implements MpiPatientImporter {
 
     @Autowired

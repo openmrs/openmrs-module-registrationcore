@@ -64,4 +64,22 @@
 	    </property>
 	</bean>
 
+    <!-- Mpi implementation part -->
+
+    <bean id="mpiFacade" class="org.openmrs.module.registrationcore.api.mpi.common.MpiFacadeImpl"/>
+
+    <bean id="mpiAuthenticator"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiAuthenticator"/>
+
+    <bean id="mpiPatientImporter"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientImporter"/>
+
+    <bean id="mpiPatientSearcher"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiExactPatientSearchAlgorithm"/>
+
+    <bean id="restQueryCreator"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator"/>
+
+    <!-- Mpi implementation part -->
+
 </beans>
