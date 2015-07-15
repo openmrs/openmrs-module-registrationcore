@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class OpenEmpiExactPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
+public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
 
     @Autowired
     private RestQueryCreator restQueryCreator;

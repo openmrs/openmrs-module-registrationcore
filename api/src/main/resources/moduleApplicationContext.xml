@@ -76,7 +76,7 @@
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientImporter"/>
 
     <bean id="registrationcore.mpiPatientSearcher"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiExactPatientSearchAlgorithm"/>
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientSearchAlgorithm"/>
 
     <bean id="registrationcore.restQueryCreator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator"/>
