@@ -66,18 +66,18 @@
 
     <!-- Mpi implementation part -->
 
-    <bean id="mpiFacade" class="org.openmrs.module.registrationcore.api.mpi.common.MpiFacadeImpl"/>
+    <bean id="registrationcore.mpiFacade" class="org.openmrs.module.registrationcore.api.mpi.common.MpiFacadeImpl"/>
 
-    <bean id="mpiAuthenticator"
+    <bean id="registrationcore.mpiAuthenticator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiAuthenticator"/>
 
-    <bean id="mpiPatientImporter"
+    <bean id="registrationcore.mpiPatientImporter"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientImporter"/>
 
-    <bean id="mpiPatientSearcher"
+    <bean id="registrationcore.mpiPatientSearcher"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiExactPatientSearchAlgorithm"/>
 
-    <bean id="restQueryCreator"
+    <bean id="registrationcore.restQueryCreator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator"/>
 
     <!-- Mpi implementation part -->
