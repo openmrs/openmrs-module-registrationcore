@@ -66,7 +66,8 @@
 
     <!-- Mpi implementation part -->
 
-    <bean id="registrationcore.mpiFacade" class="org.openmrs.module.registrationcore.api.mpi.common.MpiFacadeImpl"/>
+    <bean id="registrationcore.mpiFacade"
+          class="org.openmrs.module.registrationcore.api.mpi.common.MpiFacadeImpl"/>
 
     <bean id="registrationcore.mpiAuthenticator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiAuthenticator"/>

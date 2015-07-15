@@ -27,6 +27,7 @@ import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
@@ -229,17 +230,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 	}
 
-	private MpiSimilarPatientSearchAlgorithm getMpiSimilarPatientSearchAlgorithm() {
-        String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_SIMILAR_PATIENT_SEARCH_ALGORITHM,
-                "registrationcore.OpenEmpiExactPatientSearchAlgorithm");
+	private MpiFacade getMpiFacade() {
+        String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_FACADE,
+                "registrationcore.mpiFacade");
 
         Object bean = applicationContext.getBean(gp);
 
-        if (bean instanceof MpiSimilarPatientSearchAlgorithm) {
-            return (MpiSimilarPatientSearchAlgorithm) bean;
+        if (bean instanceof MpiFacade) {
+            return (MpiFacade) bean;
         } else {
-            throw new IllegalArgumentException(RegistrationCoreConstants.GP_MPI_SIMILAR_PATIENT_SEARCH_ALGORITHM
-                    + " must point to " + "a bean implementing MpiSimilarPatientSearchAlgorithm");
+            throw new IllegalArgumentException(RegistrationCoreConstants.GP_MPI_FACADE
+                    + " must point to " + "a bean implementing MpiFacade");
         }
 	}
 
@@ -273,7 +274,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public List<PatientAndMatchQuality> findProbablisticSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
 																			 Double cutoff, Integer maxResults) {
-		return getMpiSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		return getMpiFacade().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 
 	@Override
@@ -285,8 +286,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public List<PatientAndMatchQuality> findPreciseSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
                                                                         Double cutoff, Integer maxResults) {
-
-		return getMpiSimilarPatientSearchAlgorithm().findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		return getMpiFacade().findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 
 	/**
