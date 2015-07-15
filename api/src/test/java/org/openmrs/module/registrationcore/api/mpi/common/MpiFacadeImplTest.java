@@ -17,19 +17,14 @@ public class MpiFacadeImplTest extends RegistrationCoreSensitiveTestBase {
     @Autowired
     private MpiFacade mpiFacade;
 
-//    @Test
-    public void testPerformCorrectAuthentication() throws Exception {
-        mpiFacade.performAuthentication();
-    }
-
-//    @Test
+    @Test
     public void testPerformCorrectSearchSimilar() throws Exception {
         Patient patient = createPatient();
         List<PatientAndMatchQuality> similarPatients = mpiFacade.findSimilarPatients(patient, null, null, 10);
         System.out.println(similarPatients.size());
     }
 
-//    @Test
+    @Test
     public void testPerformCorrectImport() throws Exception {
         MpiPatient mpiPatient = mpiFacade.importMpiPatient("2");
         System.out.println(mpiPatient.getFamilyName());

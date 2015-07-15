@@ -5,7 +5,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("MpiAuthenticator")
 public class OpenEmpiAuthenticator implements MpiAuthenticator {
 
     @Autowired

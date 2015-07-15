@@ -3,6 +3,7 @@ package org.openmrs.module.registrationcore.api.mpi.common;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +13,13 @@ import java.util.Map;
 public class MpiFacadeImpl implements MpiFacade {
 
     @Autowired
+    @Qualifier("registrationcore.OpenEmpiExactPatientSearchAlgorithm")
     private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
     @Autowired
+    @Qualifier("MpiPatientImporter")
     private MpiPatientImporter patientImporter;
     @Autowired
+    @Qualifier("MpiAuthenticator")
     private MpiAuthenticator authenticator;
 
     @Override
