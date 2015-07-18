@@ -4,6 +4,7 @@ import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -13,6 +14,7 @@ import java.util.Map;
 public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
 
     @Autowired
+    @Qualifier("registrationcore.restQueryCreator")
     private RestQueryCreator restQueryCreator;
 
     @Override

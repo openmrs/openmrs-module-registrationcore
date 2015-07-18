@@ -3,10 +3,12 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class OpenEmpiAuthenticator implements MpiAuthenticator {
 
     @Autowired
+    @Qualifier("registrationcore.restQueryCreator")
     private RestQueryCreator queryCreator;
     private boolean authenticated;
 
