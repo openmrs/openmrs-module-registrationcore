@@ -28,7 +28,7 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
@@ -308,5 +308,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public List<String> findSimilarFamilyNames(String searchPhrase) {
 		return getPatientNameSearch().findSimilarFamilyNames(searchPhrase);
+	}
+
+	@Override
+	public void importMpiPatient(String personId) {
+		MpiFacade mpiFacade = getMpiFacade();
+		MpiPatient importedPatient = mpiFacade.importMpiPatient(personId);
+		//Add OpenMRS local identifier:
+		importedPatient.addIdentifier(generateIdentifier(null, null));
+		patientService.savePatient(importedPatient);
 	}
 }
