@@ -11,10 +11,12 @@ import java.util.HashSet;
 public class RestQueryCreatorTest {
 
     private RestQueryCreator restQueryCreator;
+    private PatientQueryMapper patientQueryMapper;
 
     @Before
     public void setUp() throws Exception {
         restQueryCreator = createRequestCreator();
+        patientQueryMapper = new PatientQueryMapper();
     }
 
     //Used for development
@@ -32,7 +34,8 @@ public class RestQueryCreatorTest {
         names.add(name);
         patient.setNames(names);
 
-        restQueryCreator.findPatients(PatientQueryMapper.convert(patient));
+        patientQueryMapper = new PatientQueryMapper();
+        restQueryCreator.findPatients(patientQueryMapper.convert(patient));
     }
 
     private RestQueryCreator createRequestCreator() {

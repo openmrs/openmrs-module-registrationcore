@@ -10,7 +10,11 @@ import java.util.HashSet;
 
 public class PatientQueryMapper {
 
-    public static OpenEmpiPatientQuery convert(Patient patient) {
+    private Location location;
+
+    private PatientIdentifierType openEmpiIdentifierType;
+
+    public OpenEmpiPatientQuery convert(Patient patient) {
         OpenEmpiPatientQuery patientQuery = new OpenEmpiPatientQuery();
 
         patientQuery.setFamilyName(patient.getFamilyName());
@@ -21,7 +25,7 @@ public class PatientQueryMapper {
         return patientQuery;
     }
 
-    public static MpiPatient convert(OpenEmpiPatientQuery patientQuery) {
+    public MpiPatient convert(OpenEmpiPatientQuery patientQuery) {
         MpiPatient patient = new MpiPatient();
         patient.setMpiPatient(true);
 
@@ -29,7 +33,7 @@ public class PatientQueryMapper {
 
         setNames(patientQuery, patient);
 
-        setIdentifiers(patientQuery, patient);
+        setOpenEmpiId(patientQuery, patient);
 
         patient.setGender(patientQuery.getGender().getGenderCode());
 
@@ -39,22 +43,23 @@ public class PatientQueryMapper {
         return patient;
     }
 
-    private static void setNames(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setNames(OpenEmpiPatientQuery patientQuery, Patient patient) {
         PersonName names = new PersonName();
         names.setFamilyName(patientQuery.getFamilyName());
         names.setGivenName(patientQuery.getGivenName());
         patient.setNames(new HashSet<PersonName>(Collections.singleton(names)));
     }
 
-    private static void setIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
-        HashSet<PatientIdentifier> identifiers = new HashSet<PatientIdentifier>();
-        PatientIdentifier identifier = new PatientIdentifier();
-        identifier.setIdentifier(patientQuery.getPersonIdentifiers().getIdentifier());
-        identifiers.add(identifier);
-        patient.setIdentifiers(identifiers);
+    private void setOpenEmpiId(OpenEmpiPatientQuery patientQuery, Patient patient) {
+        Integer mpiPersonId = patientQuery.getPersonId();
+
+        PatientIdentifier identifier =
+                new PatientIdentifier(String.valueOf(mpiPersonId), openEmpiIdentifierType, location);
+
+        patient.addIdentifier(identifier);
     }
 
-    private static void setAddresses(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setAddresses(OpenEmpiPatientQuery patientQuery, Patient patient) {
         HashSet<PersonAddress> addresses = new HashSet<PersonAddress>();
         PersonAddress address = new PersonAddress();
         address.setAddress1(patientQuery.getAddress1());
@@ -62,7 +67,7 @@ public class PatientQueryMapper {
         patient.setAddresses(addresses);
     }
 
-    private static void setBirthdate(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setBirthdate(OpenEmpiPatientQuery patientQuery, Patient patient) {
         if (patientQuery.getDateOfBirth() == null) {
             return;
         }

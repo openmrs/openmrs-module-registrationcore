@@ -81,6 +81,9 @@
     <bean id="registrationcore.restQueryCreator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator"/>
 
+    <bean id="registrationcore.queryMapper"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientQueryMapper"/>
+
     <!-- Mpi implementation part -->
 
 </beans>
