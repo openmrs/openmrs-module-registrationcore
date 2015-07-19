@@ -3,6 +3,7 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
+import java.util.List;
 
 @XmlRootElement(name = "person")
 public class OpenEmpiPatientQuery {
@@ -21,7 +22,7 @@ public class OpenEmpiPatientQuery {
 
     private Gender gender;
 
-    private PersonIdentifiers personIdentifiers;
+    private List<PersonIdentifiers> personIdentifiers;
 
     public String getFamilyName() {
         return familyName;
@@ -81,11 +82,11 @@ public class OpenEmpiPatientQuery {
     }
 
     @XmlElement
-    public PersonIdentifiers getPersonIdentifiers() {
+    public List<PersonIdentifiers> getPersonIdentifiers() {
         return personIdentifiers;
     }
 
-    public void setPersonIdentifiers(PersonIdentifiers personIdentifiers) {
+    public void setPersonIdentifiers(List<PersonIdentifiers> personIdentifiers) {
         this.personIdentifiers = personIdentifiers;
     }
 }
@@ -106,8 +107,11 @@ class Gender{
 
 @XmlRootElement
 class PersonIdentifiers{
-
     private String identifier;
+
+    private Integer personIdentifierId;
+
+    private IdentifierDomain identifierDomain;
 
     public String getIdentifier() {
         return identifier;
@@ -115,5 +119,73 @@ class PersonIdentifiers{
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public Integer getPersonIdentifierId() {
+        return personIdentifierId;
+    }
+
+    public void setPersonIdentifierId(Integer personIdentifierId) {
+        this.personIdentifierId = personIdentifierId;
+    }
+
+    public IdentifierDomain getIdentifierDomain() {
+        return identifierDomain;
+    }
+
+    public void setIdentifierDomain(IdentifierDomain identifierDomain) {
+        this.identifierDomain = identifierDomain;
+    }
+}
+@XmlRootElement
+class IdentifierDomain {
+    private Integer identifierDomainId;
+
+    private String identifierDomainName;
+
+    private String namespaceIdentifier;
+
+    private String universalIdentifier;
+
+    private String universalIdentifierTypeCode;
+
+    public Integer getIdentifierDomainId() {
+        return identifierDomainId;
+    }
+
+    public void setIdentifierDomainId(Integer identifierDomainId) {
+        this.identifierDomainId = identifierDomainId;
+    }
+
+    public String getIdentifierDomainName() {
+        return identifierDomainName;
+    }
+
+    public void setIdentifierDomainName(String identifierDomainName) {
+        this.identifierDomainName = identifierDomainName;
+    }
+
+    public String getNamespaceIdentifier() {
+        return namespaceIdentifier;
+    }
+
+    public void setNamespaceIdentifier(String namespaceIdentifier) {
+        this.namespaceIdentifier = namespaceIdentifier;
+    }
+
+    public String getUniversalIdentifier() {
+        return universalIdentifier;
+    }
+
+    public void setUniversalIdentifier(String universalIdentifier) {
+        this.universalIdentifier = universalIdentifier;
+    }
+
+    public String getUniversalIdentifierTypeCode() {
+        return universalIdentifierTypeCode;
+    }
+
+    public void setUniversalIdentifierTypeCode(String universalIdentifierTypeCode) {
+        this.universalIdentifierTypeCode = universalIdentifierTypeCode;
     }
 }
