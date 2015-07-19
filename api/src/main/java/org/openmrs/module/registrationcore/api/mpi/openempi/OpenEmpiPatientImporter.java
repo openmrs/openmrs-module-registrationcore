@@ -11,9 +11,13 @@ public class OpenEmpiPatientImporter implements MpiPatientImporter {
     @Qualifier("registrationcore.restQueryCreator")
     private RestQueryCreator restQueryCreator;
 
+    @Autowired
+    @Qualifier("registrationcore.queryMapper")
+    private PatientQueryMapper queryMapper;
+
     @Override
     public MpiPatient importMpiPatient(String patientId) {
-        OpenEmpiPatientQuery patientById = restQueryCreator.getPatientById(patientId);
-        return PatientQueryMapper.convert(patientById);
+        OpenEmpiPatientQuery mpiPatient = restQueryCreator.getPatientById(patientId);
+        return queryMapper.convert(mpiPatient);
     }
 }
