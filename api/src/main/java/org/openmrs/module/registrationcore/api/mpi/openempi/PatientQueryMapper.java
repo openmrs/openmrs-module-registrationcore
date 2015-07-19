@@ -1,6 +1,12 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.*;
+import org.openmrs.api.APIException;
+import org.openmrs.api.LocationService;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.idgen.IdentifierSource;
+import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 
 import java.util.Calendar;
@@ -10,9 +16,33 @@ import java.util.HashSet;
 
 public class PatientQueryMapper {
 
-    private Location location;
+    private LocationService locationService;
 
-    private PatientIdentifierType openEmpiIdentifierType;
+    private Location identifierLocation;
+
+    private IdentifierSource openEmpiIdentifierSource;
+
+    private void validateInitialization() {
+        if (identifierLocation == null || openEmpiIdentifierSource == null)
+            init();
+    }
+
+    private void init() {
+        IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
+        //TODO move it to global settings.
+        // adminService.getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID);
+        String idSourceId = "2";
+        if (StringUtils.isBlank(idSourceId))
+            throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
+        try {
+            openEmpiIdentifierSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
+            if (openEmpiIdentifierSource == null)
+                throw new APIException("cannot find identifier source with id:" + idSourceId);
+        } catch (NumberFormatException e) {
+            throw new APIException("Identifier source id should be a number");
+        }
+        identifierLocation = locationService.getDefaultLocation();
+    }
 
     public OpenEmpiPatientQuery convert(Patient patient) {
         OpenEmpiPatientQuery patientQuery = new OpenEmpiPatientQuery();
@@ -26,6 +56,7 @@ public class PatientQueryMapper {
     }
 
     public MpiPatient convert(OpenEmpiPatientQuery patientQuery) {
+        validateInitialization();
         MpiPatient patient = new MpiPatient();
         patient.setMpiPatient(true);
 
@@ -54,7 +85,8 @@ public class PatientQueryMapper {
         Integer mpiPersonId = patientQuery.getPersonId();
 
         PatientIdentifier identifier =
-                new PatientIdentifier(String.valueOf(mpiPersonId), openEmpiIdentifierType, location);
+                new PatientIdentifier(String.valueOf(mpiPersonId),
+                        openEmpiIdentifierSource.getIdentifierType(), identifierLocation);
 
         patient.addIdentifier(identifier);
     }
@@ -78,5 +110,9 @@ public class PatientQueryMapper {
         calendar.set(Calendar.MILLISECOND, 0);
         Date clearDate = calendar.getTime();
         patient.setBirthdate(clearDate);
+    }
+
+    public void setLocationService(LocationService locationService) {
+        this.locationService = locationService;
     }
 }
