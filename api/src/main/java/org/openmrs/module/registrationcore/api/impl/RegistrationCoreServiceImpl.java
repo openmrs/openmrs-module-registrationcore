@@ -117,38 +117,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (patient == null)
 			throw new APIException("Patient cannot be null");
 
-		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
-		if (idSource == null) {
-			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID);
-			if (StringUtils.isBlank(idSourceId))
-				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
+		PatientIdentifier patientIdentifier = generateIdentifier(identifierString, identifierLocation);
+		patientIdentifier.setPreferred(true);
 
-			try {
-				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
-				if (idSource == null)
-					throw new APIException("cannot find identifier source with id:" + idSourceId);
-			}
-			catch (NumberFormatException e) {
-				throw new APIException("Identifier source id should be a number");
-			}
-		}
-
-		if (identifierLocation == null) {
-			identifierLocation = locationService.getDefaultLocation();
-			if (identifierLocation == null)
-				throw new APIException("Failed to resolve location to associate to patient identifiers");
-		}
-
-        // generate identifier if necessary, otherwise validate
-        if (StringUtils.isBlank(identifierString)) {
-            identifierString = iss.generateIdentifier(idSource, null);
-        }
-        else {
-            PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
-        }
-		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
-		patient.addIdentifier(pId);
-        pId.setPreferred(true);
+		patient.addIdentifier(patientIdentifier);
 
 		//TODO fix this when creating a patient from a person is possible
 		boolean wasAPerson = patient.getPersonId() != null;
@@ -202,6 +174,39 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public void globalPropertyDeleted(String gpName) {
 		idSource = null;
+	}
+
+	private PatientIdentifier generateIdentifier(String identifierString, Location identifierLocation){
+		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
+		if (idSource == null) {
+			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID);
+			if (StringUtils.isBlank(idSourceId))
+				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
+
+			try {
+				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
+				if (idSource == null)
+					throw new APIException("cannot find identifier source with id:" + idSourceId);
+			}
+			catch (NumberFormatException e) {
+				throw new APIException("Identifier source id should be a number");
+			}
+		}
+
+		if (identifierLocation == null) {
+			identifierLocation = locationService.getDefaultLocation();
+			if (identifierLocation == null)
+				throw new APIException("Failed to resolve location to associate to patient identifiers");
+		}
+
+		// generate identifier if necessary, otherwise validate
+		if (StringUtils.isBlank(identifierString)) {
+			identifierString = iss.generateIdentifier(idSource, null);
+		}
+		else {
+			PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
+		}
+		return new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
 	}
 
 	private SimilarPatientSearchAlgorithm getFastSimilarPatientSearchAlgorithm() {
