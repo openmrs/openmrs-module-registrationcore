@@ -41,6 +41,7 @@ public class PatientQueryMapper {
         } catch (NumberFormatException e) {
             throw new APIException("Identifier source id should be a number");
         }
+        //TODO change it to correct location
         identifierLocation = locationService.getDefaultLocation();
     }
 
