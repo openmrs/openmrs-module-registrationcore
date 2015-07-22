@@ -16,6 +16,7 @@
                 <property name="personService" ref="personService" />
                 <property name="locationService" ref="locationService" />
                 <property name="adminService" ref="adminService" />
+                <property name="identifierGenerator" ref="registrationcore.identifierGenerator"/>
             </bean>
         </property>
         <property name="preInterceptors">
@@ -24,6 +25,13 @@
         <property name="transactionAttributeSource">
             <ref bean="transactionAttributeSource" />
         </property>
+    </bean>
+    <bean id="registrationcore.identifierGenerator" class="org.openmrs.module.registrationcore.api.impl.IdentifierGenerator">
+        <property name="locationService" ref="locationService"/>
+        <property name="adminService" ref="adminService" />
+        <!-- doesn't work. Duno why.
+         <property name="identifierSourceService" ref="identifierSourceService"/>
+         -->
     </bean>
 
     <!-- Services accessible via Context.getService() -->
@@ -52,7 +60,6 @@
 	</bean>
 
     <!-- Mpi implementation part -->
-
     <bean id="registrationcore.mpiFacade"
           class="org.openmrs.module.registrationcore.api.mpi.common.MpiFacadeImpl"/>
 
@@ -72,7 +79,5 @@
           class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientQueryMapper">
         <property name="locationService" ref="locationService"/>
     </bean>
-
-    <!-- Mpi implementation part -->
 
 </beans>

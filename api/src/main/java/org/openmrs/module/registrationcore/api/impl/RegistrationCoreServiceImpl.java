@@ -65,6 +65,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private static IdentifierSource idSource;
 
+	private IdentifierGenerator identifierGenerator;
+
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
@@ -97,6 +99,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		this.adminService = adminService;
 	}
 
+	public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
+		this.identifierGenerator = identifierGenerator;
+	}
+
     /**
      * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
      *      java.util.List, String, Location)
@@ -117,7 +123,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (patient == null)
 			throw new APIException("Patient cannot be null");
 
-		PatientIdentifier patientIdentifier = generateIdentifier(identifierString, identifierLocation);
+		Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifier();
+		PatientIdentifier patientIdentifier = identifierGenerator.generateIdentifier(openMrsIdentifierId, identifierString, identifierLocation);
 		patientIdentifier.setPreferred(true);
 
 		patient.addIdentifier(patientIdentifier);
