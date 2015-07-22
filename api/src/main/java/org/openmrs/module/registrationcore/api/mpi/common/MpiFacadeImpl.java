@@ -21,7 +21,7 @@ public class MpiFacadeImpl implements MpiFacade {
     private MpiAuthenticator authenticator;
 
     @Override
-    public MpiPatient importMpiPatient(String patientId) {
+    public Patient importMpiPatient(String patientId) {
         validateAuthentication();
         return patientImporter.importMpiPatient(patientId);
     }

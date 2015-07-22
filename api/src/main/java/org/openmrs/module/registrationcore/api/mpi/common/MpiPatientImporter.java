@@ -1,6 +1,8 @@
 package org.openmrs.module.registrationcore.api.mpi.common;
 
+import org.openmrs.Patient;
+
 public interface MpiPatientImporter {
 
-    MpiPatient importMpiPatient(String patientId);
+    Patient importMpiPatient(String patientId);
 }

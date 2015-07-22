@@ -26,7 +26,7 @@ public class MpiFacadeImplTest extends RegistrationCoreSensitiveTestBase {
 
     @Test
     public void testPerformCorrectImport() throws Exception {
-        MpiPatient mpiPatient = mpiFacade.importMpiPatient("2");
+        Patient mpiPatient = mpiFacade.importMpiPatient("2");
         System.out.println(mpiPatient.getFamilyName());
     }
 

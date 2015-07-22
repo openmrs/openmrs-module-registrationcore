@@ -1,5 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
+import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class OpenEmpiPatientImporter implements MpiPatientImporter {
     private PatientQueryMapper queryMapper;
 
     @Override
-    public MpiPatient importMpiPatient(String patientId) {
+    public Patient importMpiPatient(String patientId) {
         OpenEmpiPatientQuery mpiPatient = restQueryCreator.getPatientById(patientId);
         return queryMapper.convert(mpiPatient);
     }
