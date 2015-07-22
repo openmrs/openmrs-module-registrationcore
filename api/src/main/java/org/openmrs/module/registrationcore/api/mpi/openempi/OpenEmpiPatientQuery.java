@@ -105,6 +105,7 @@ class Gender{
     }
 }
 
+//TODO rename it to PersinIdentifier
 @XmlRootElement
 class PersonIdentifiers{
     private String identifier;
