@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -183,39 +184,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		idSource = null;
 	}
 
-	private PatientIdentifier generateIdentifier(String identifierString, Location identifierLocation){
-		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
-		if (idSource == null) {
-			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID);
-			if (StringUtils.isBlank(idSourceId))
-				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
-
-			try {
-				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
-				if (idSource == null)
-					throw new APIException("cannot find identifier source with id:" + idSourceId);
-			}
-			catch (NumberFormatException e) {
-				throw new APIException("Identifier source id should be a number");
-			}
-		}
-
-		if (identifierLocation == null) {
-			identifierLocation = locationService.getDefaultLocation();
-			if (identifierLocation == null)
-				throw new APIException("Failed to resolve location to associate to patient identifiers");
-		}
-
-		// generate identifier if necessary, otherwise validate
-		if (StringUtils.isBlank(identifierString)) {
-			identifierString = iss.generateIdentifier(idSource, null);
-		}
-		else {
-			PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
-		}
-		return new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
-	}
-
 	private SimilarPatientSearchAlgorithm getFastSimilarPatientSearchAlgorithm() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_FAST_SIMILAR_PATIENT_SEARCH_ALGORITHM,
 		    "registrationcore.BasicSimilarPatientSearchAlgorithm");
@@ -320,9 +288,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public void importMpiPatient(String personId) {
 		MpiFacade mpiFacade = getMpiFacade();
-		MpiPatient importedPatient = mpiFacade.importMpiPatient(personId);
-		//Add OpenMRS local identifier:
-		importedPatient.addIdentifier(generateIdentifier(null, null));
+		Patient importedPatient = mpiFacade.importMpiPatient(personId);
 		patientService.savePatient(importedPatient);
 	}
 }
