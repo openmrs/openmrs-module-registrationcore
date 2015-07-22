@@ -1,48 +1,20 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
-import org.apache.commons.lang.StringUtils;
-import org.openmrs.*;
-import org.openmrs.api.APIException;
-import org.openmrs.api.LocationService;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.idgen.IdentifierSource;
-import org.openmrs.module.idgen.service.IdentifierSourceService;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PersonAddress;
+import org.openmrs.PersonName;
+import org.openmrs.module.registrationcore.api.impl.IdentifierGenerator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
+import java.util.*;
 
 public class PatientQueryMapper {
 
-    private LocationService locationService;
+    private IdentifierGenerator identifierGenerator;
 
-    private Location identifierLocation;
-
-    private IdentifierSource openEmpiIdentifierSource;
-
-    private void validateInitialization() {
-        if (identifierLocation == null || openEmpiIdentifierSource == null)
-            init();
-    }
-
-    private void init() {
-        IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
-        //TODO move it to global settings.
-        // adminService.getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID);
-        String idSourceId = "2";
-        if (StringUtils.isBlank(idSourceId))
-            throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
-        try {
-            openEmpiIdentifierSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
-            if (openEmpiIdentifierSource == null)
-                throw new APIException("cannot find identifier source with id:" + idSourceId);
-        } catch (NumberFormatException e) {
-            throw new APIException("Identifier source id should be a number");
-        }
-        //TODO change it to correct location
-        identifierLocation = locationService.getDefaultLocation();
+    public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
+        this.identifierGenerator = identifierGenerator;
     }
 
     public OpenEmpiPatientQuery convert(Patient patient) {
@@ -56,22 +28,29 @@ public class PatientQueryMapper {
         return patientQuery;
     }
 
-    public MpiPatient convert(OpenEmpiPatientQuery patientQuery) {
-        validateInitialization();
+    public Patient convert(OpenEmpiPatientQuery patientQuery) {
         MpiPatient patient = new MpiPatient();
+        patient = (MpiPatient) convertPatient(patient, patientQuery);
         patient.setMpiPatient(true);
+        return patient;
+    }
 
-        patient.setPatientId(patientQuery.getPersonId());
+    public Patient importPatient(OpenEmpiPatientQuery patientQuery) {
+        return convertPatient(new Patient(), patientQuery);
+    }
 
-        setNames(patientQuery, patient);
-
-        setOpenEmpiId(patientQuery, patient);
+    private Patient convertPatient(Patient patient, OpenEmpiPatientQuery patientQuery) {
+        patient.setDateCreated(new Date());
 
         patient.setGender(patientQuery.getGender().getGenderCode());
+
+        setNames(patientQuery, patient);
 
         setBirthdate(patientQuery, patient);
 
         setAddresses(patientQuery, patient);
+
+        setIdentifiers(patientQuery, patient);
         return patient;
     }
 
@@ -79,25 +58,7 @@ public class PatientQueryMapper {
         PersonName names = new PersonName();
         names.setFamilyName(patientQuery.getFamilyName());
         names.setGivenName(patientQuery.getGivenName());
-        patient.setNames(new HashSet<PersonName>(Collections.singleton(names)));
-    }
-
-    private void setOpenEmpiId(OpenEmpiPatientQuery patientQuery, Patient patient) {
-        Integer mpiPersonId = patientQuery.getPersonId();
-
-        PatientIdentifier identifier =
-                new PatientIdentifier(String.valueOf(mpiPersonId),
-                        openEmpiIdentifierSource.getIdentifierType(), identifierLocation);
-
-        patient.addIdentifier(identifier);
-    }
-
-    private void setAddresses(OpenEmpiPatientQuery patientQuery, Patient patient) {
-        HashSet<PersonAddress> addresses = new HashSet<PersonAddress>();
-        PersonAddress address = new PersonAddress();
-        address.setAddress1(patientQuery.getAddress1());
-        addresses.add(address);
-        patient.setAddresses(addresses);
+        patient.setNames(new TreeSet<PersonName>(Collections.singleton(names)));
     }
 
     private void setBirthdate(OpenEmpiPatientQuery patientQuery, Patient patient) {
@@ -113,7 +74,37 @@ public class PatientQueryMapper {
         patient.setBirthdate(clearDate);
     }
 
-    public void setLocationService(LocationService locationService) {
-        this.locationService = locationService;
+    private void setAddresses(OpenEmpiPatientQuery patientQuery, Patient patient) {
+        Set<PersonAddress> addresses = new TreeSet<PersonAddress>();
+        PersonAddress address = new PersonAddress();
+        address.setAddress1(patientQuery.getAddress1());
+        addresses.add(address);
+        patient.setAddresses(addresses);
+    }
+
+    private void setIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
+        setOpenMrsIdentifier(patient);
+        setImportedIdentifiers(patientQuery, patient);
+    }
+
+    private void setOpenMrsIdentifier(Patient patient) {
+        Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifier();
+        addIdentifier(patient, openMrsIdentifierId, null, true);
+    }
+
+    private void setImportedIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
+        for (PersonIdentifiers identifier : patientQuery.getPersonIdentifiers()) {
+            String idName = identifier.getIdentifierDomain().getIdentifierDomainName();
+            String idValue = identifier.getIdentifier();
+            Integer identifierId = identifierGenerator.getIdentifierIdByName(idName);
+            addIdentifier(patient, identifierId, idValue, false);
+        }
+    }
+
+    private void addIdentifier(Patient patient, Integer identifierId, String idValue, boolean preferred) {
+        PatientIdentifier identifier = identifierGenerator.generateIdentifier(identifierId, idValue, null);
+        if (preferred)
+            identifier.setPreferred(true);
+        patient.addIdentifier(identifier);
     }
 }

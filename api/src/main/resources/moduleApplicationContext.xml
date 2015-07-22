@@ -77,7 +77,7 @@
 
     <bean id="registrationcore.queryMapper"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientQueryMapper">
-        <property name="locationService" ref="locationService"/>
+        <property name="identifierGenerator" ref="registrationcore.identifierGenerator"/>
     </bean>
 
 </beans>
