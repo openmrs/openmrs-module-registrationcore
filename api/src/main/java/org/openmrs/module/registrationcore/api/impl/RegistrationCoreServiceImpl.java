@@ -20,7 +20,6 @@ import org.openmrs.api.*;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.event.Event;
 import org.openmrs.event.EventMessage;
-import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
