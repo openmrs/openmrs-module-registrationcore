@@ -6,6 +6,7 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
+import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
@@ -19,6 +20,24 @@ public class IdentifierGenerator {
     private IdentifierSourceService iss;
 
     private LocationService locationService;
+
+    private PatientService patientService;
+
+    public void setLocationService(LocationService locationService) {
+        this.locationService = locationService;
+    }
+
+    public void setIdentifierSourceService(IdentifierSourceService iss) {
+        this.iss = iss;
+    }
+
+    public void setAdminService(AdministrationService adminService) {
+        this.adminService = adminService;
+    }
+
+    public void setPatientService(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
     public Integer getOpenMrsIdentifier() {
         String propertyName = RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID;
@@ -89,17 +108,5 @@ public class IdentifierGenerator {
     private void validateIdentifierLocation(Location identifierLocation) {
         if (identifierLocation == null)
             throw new APIException("Failed to resolve location to associate to patient identifiers");
-    }
-
-    public void setLocationService(LocationService locationService) {
-        this.locationService = locationService;
-    }
-
-    public void setIdentifierSourceService(IdentifierSourceService iss) {
-        this.iss = iss;
-    }
-
-    public void setAdminService(AdministrationService adminService) {
-        this.adminService = adminService;
     }
 }

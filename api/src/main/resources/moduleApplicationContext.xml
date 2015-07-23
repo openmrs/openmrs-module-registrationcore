@@ -28,6 +28,7 @@
     <bean id="registrationcore.identifierGenerator" class="org.openmrs.module.registrationcore.api.impl.IdentifierGenerator">
         <property name="locationService" ref="locationService"/>
         <property name="adminService" ref="adminService" />
+        <property name="patientService" ref="patientService"/>
         <!-- doesn't work. Duno why.
          <property name="identifierSourceService" ref="identifierSourceService"/>
          -->
@@ -48,15 +49,6 @@
             <ref bean="sessionFactory" />
         </property>
     </bean>
-
-    <!-- Module global property listeners -->
-	<bean id="registrationcoreEventListeners" parent="openmrsEventListeners">
-	    <property name="globalPropertyListeners">
-	        <list value-type="org.openmrs.api.GlobalPropertyListener">
-	            <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.RegistrationCoreServiceImpl" />
-	        </list>
-	    </property>
-	</bean>
 
     <!-- Mpi implementation part -->
     <bean id="registrationcore.mpiFacade"
