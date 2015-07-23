@@ -13,26 +13,21 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
 import org.openmrs.api.*;
-import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.event.Event;
 import org.openmrs.event.EventMessage;
 import org.openmrs.module.idgen.IdentifierSource;
-import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
-import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -40,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
