@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
@@ -117,7 +118,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifier();
 		PatientIdentifier patientIdentifier;
-		if (identifierString == null) {
+		if (StringUtils.isBlank(identifierString)) {
 			patientIdentifier = identifierGenerator.generateIdentifier(openMrsIdentifierId, identifierLocation);
 		} else {
 			patientIdentifier = identifierGenerator.createIdentifier(openMrsIdentifierId, identifierString, identifierLocation);
