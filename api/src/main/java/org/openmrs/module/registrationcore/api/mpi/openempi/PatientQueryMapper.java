@@ -13,6 +13,7 @@ import java.util.*;
 
 public class PatientQueryMapper {
 
+    private static final String OPENMRS_IDENTIFIER_NAME = "OpenMRS";
     protected final Log log = LogFactory.getLog(this.getClass());
 
     private IdentifierGenerator identifierGenerator;
@@ -90,7 +91,7 @@ public class PatientQueryMapper {
 
     private boolean containsOpenMrsIdentifier(OpenEmpiPatientQuery patientQuery) {
         for (PersonIdentifier personIdentifier : patientQuery.getPersonIdentifiers()) {
-            if ("OpenMRS".equals(personIdentifier.getIdentifierDomain().getIdentifierDomainName())) {
+            if (OPENMRS_IDENTIFIER_NAME.equals(personIdentifier.getIdentifierDomain().getIdentifierDomainName())) {
                 return true;
             }
         }
@@ -98,24 +99,32 @@ public class PatientQueryMapper {
     }
 
     private void generateOpenMrsIdentifier(Patient patient) {
+        log.info("Generate OpenMRS identifier for imported Mpi patient.");
         Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifier();
-        addIdentifier(patient, openMrsIdentifierId, null, true);
+        PatientIdentifier identifier = identifierGenerator.generateIdentifier(openMrsIdentifierId, null);
+        identifier.setPreferred(true);
+        patient.addIdentifier(identifier);
     }
 
     private void setImportedIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
         for (PersonIdentifier identifier : patientQuery.getPersonIdentifiers()) {
-            String idName = identifier.getIdentifierDomain().getIdentifierDomainName();
-            String idValue = identifier.getIdentifier();
-            Integer identifierId = identifierGenerator.getIdentifierIdByName(idName);
-            addIdentifier(patient, identifierId, idValue, false);
+            String identifierName = identifier.getIdentifierDomain().getIdentifierDomainName();
+            Integer identifierId = identifierGenerator.getIdentifierIdByName(identifierName);
+            String identifierValue = identifier.getIdentifier();
+
+            PatientIdentifier patientIdentifier = createIdentifier(identifierName, identifierId, identifierValue);
+
+            patient.addIdentifier(patientIdentifier);
         }
     }
 
-    private void addIdentifier(Patient patient, Integer identifierId, String idValue, boolean preferred) {
-        log.info("Add identifier to imported Mpi patient. IdentifierId: " + identifierId + ". Identifier value: " + idValue + ". Prefered: " + preferred);
-        PatientIdentifier identifier = identifierGenerator.generateIdentifier(identifierId, idValue, null);
-        if (preferred)
+    private PatientIdentifier createIdentifier(String identifierName, Integer identifierId, String identifierValue) {
+        log.info("Create identifier for imported Mpi patient. Identifier name: " + identifierName + ". Identifier Id: "
+                + identifierId + ". Identifier value: " + identifierValue);
+        PatientIdentifier identifier = identifierGenerator.createIdentifier(identifierId, identifierValue, null);
+        if (OPENMRS_IDENTIFIER_NAME.equals(identifierName)) {
             identifier.setPreferred(true);
-        patient.addIdentifier(identifier);
+        }
+        return identifier;
     }
 }

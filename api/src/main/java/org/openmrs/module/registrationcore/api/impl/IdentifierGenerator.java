@@ -1,6 +1,5 @@
 package org.openmrs.module.registrationcore.api.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
@@ -40,25 +39,6 @@ public class IdentifierGenerator {
             throw new APIException("Identifier source id should be a number");
         }
         return idSourceId;
-    }
-
-    public PatientIdentifier generateIdentifier(Integer identifierId,
-                                                String identifierString,
-                                                Location location) {
-        validateIss();
-
-        IdentifierSource idSource = getSource(identifierId);
-
-        location = getLocation(location);
-
-        // generate identifier if necessary, otherwise validate
-        if (StringUtils.isBlank(identifierString)) {
-            identifierString = iss.generateIdentifier(idSource, null);
-        } else {
-            PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
-        }
-
-        return new PatientIdentifier(identifierString, idSource.getIdentifierType(), location);
     }
 
     public PatientIdentifier generateIdentifier(Integer identifierId, Location location) {
