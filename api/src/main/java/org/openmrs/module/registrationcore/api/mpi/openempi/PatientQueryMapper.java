@@ -92,7 +92,7 @@ public class PatientQueryMapper {
     }
 
     private void setImportedIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
-        for (PersonIdentifiers identifier : patientQuery.getPersonIdentifiers()) {
+        for (PersonIdentifier identifier : patientQuery.getPersonIdentifiers()) {
             String idName = identifier.getIdentifierDomain().getIdentifierDomainName();
             String idValue = identifier.getIdentifier();
             Integer identifierId = identifierGenerator.getIdentifierIdByName(idName);

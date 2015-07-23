@@ -55,7 +55,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private AdministrationService adminService;
 
-
 	private IdentifierGenerator identifierGenerator;
 
 	@Override

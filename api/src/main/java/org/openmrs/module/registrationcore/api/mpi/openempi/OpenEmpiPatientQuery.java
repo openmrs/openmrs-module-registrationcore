@@ -22,7 +22,7 @@ public class OpenEmpiPatientQuery {
 
     private Gender gender;
 
-    private List<PersonIdentifiers> personIdentifiers;
+    private List<PersonIdentifier> personIdentifiers;
 
     public String getFamilyName() {
         return familyName;
@@ -82,11 +82,11 @@ public class OpenEmpiPatientQuery {
     }
 
     @XmlElement
-    public List<PersonIdentifiers> getPersonIdentifiers() {
+    public List<PersonIdentifier> getPersonIdentifiers() {
         return personIdentifiers;
     }
 
-    public void setPersonIdentifiers(List<PersonIdentifiers> personIdentifiers) {
+    public void setPersonIdentifiers(List<PersonIdentifier> personIdentifiers) {
         this.personIdentifiers = personIdentifiers;
     }
 }
@@ -105,9 +105,8 @@ class Gender{
     }
 }
 
-//TODO rename it to PersinIdentifier
-@XmlRootElement
-class PersonIdentifiers{
+@XmlRootElement(name = "personIdentifiers")
+class PersonIdentifier {
     private String identifier;
 
     private Integer personIdentifierId;
