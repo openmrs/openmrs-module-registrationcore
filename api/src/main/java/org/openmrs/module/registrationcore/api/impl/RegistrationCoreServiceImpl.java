@@ -60,8 +60,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private PersonService personService;
 
-	private LocationService locationService;
-
 	private AdministrationService adminService;
 
 	private static IdentifierSource idSource;
@@ -90,10 +88,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	public void setPersonService(PersonService personService) {
 		this.personService = personService;
-	}
-
-	public void setLocationService(LocationService locationService) {
-		this.locationService = locationService;
 	}
 
 	public void setAdminService(AdministrationService adminService) {
