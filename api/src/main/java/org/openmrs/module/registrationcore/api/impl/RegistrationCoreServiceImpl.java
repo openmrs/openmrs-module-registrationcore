@@ -15,8 +15,14 @@ package org.openmrs.module.registrationcore.api.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.*;
-import org.openmrs.api.*;
+import org.openmrs.Location;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.Relationship;
+import org.openmrs.api.APIException;
+import org.openmrs.api.AdministrationService;
+import org.openmrs.api.PatientService;
+import org.openmrs.api.PersonService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.event.Event;
 import org.openmrs.event.EventMessage;
@@ -110,9 +116,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new APIException("Patient cannot be null");
 
 		Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifier();
-		PatientIdentifier patientIdentifier = identifierGenerator.generateIdentifier(openMrsIdentifierId, identifierString, identifierLocation);
+		PatientIdentifier patientIdentifier;
+		if (identifierString == null) {
+			patientIdentifier = identifierGenerator.generateIdentifier(openMrsIdentifierId, identifierLocation);
+		} else {
+			patientIdentifier = identifierGenerator.createIdentifier(openMrsIdentifierId, identifierString, identifierLocation);
+		}
 		patientIdentifier.setPreferred(true);
-
 		patient.addIdentifier(patientIdentifier);
 
 		//TODO fix this when creating a patient from a person is possible
