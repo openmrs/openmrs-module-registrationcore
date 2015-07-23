@@ -1,5 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
@@ -11,6 +13,8 @@ import java.util.*;
 
 public class PatientQueryMapper {
 
+    protected final Log log = LogFactory.getLog(this.getClass());
+
     private IdentifierGenerator identifierGenerator;
 
     public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
@@ -20,19 +24,14 @@ public class PatientQueryMapper {
     public OpenEmpiPatientQuery convert(Patient patient) {
         OpenEmpiPatientQuery patientQuery = new OpenEmpiPatientQuery();
 
+        //perform search by Family and Given names
         patientQuery.setFamilyName(patient.getFamilyName());
         patientQuery.setGivenName(patient.getGivenName());
-//        patientQuery.setMiddleName(patient.getMiddleName());
-//        patientQuery.setDateOfBirth(patient.getBirthdate());
-
         return patientQuery;
     }
 
     public Patient convert(OpenEmpiPatientQuery patientQuery) {
-        MpiPatient patient = new MpiPatient();
-        patient = (MpiPatient) convertPatient(patient, patientQuery);
-        patient.setMpiPatient(true);
-        return patient;
+        return convertPatient(new MpiPatient(), patientQuery);
     }
 
     public Patient importPatient(OpenEmpiPatientQuery patientQuery) {
@@ -102,6 +101,7 @@ public class PatientQueryMapper {
     }
 
     private void addIdentifier(Patient patient, Integer identifierId, String idValue, boolean preferred) {
+        log.info("Add identifier to imported Mpi patient. IdentifierId: " + identifierId + ". Identifier value: " + idValue + ". Prefered: " + preferred);
         PatientIdentifier identifier = identifierGenerator.generateIdentifier(identifierId, idValue, null);
         if (preferred)
             identifier.setPreferred(true);

@@ -2,15 +2,11 @@ package org.openmrs.module.registrationcore.api.mpi.common;
 
 import org.openmrs.Patient;
 
-public class MpiPatient extends Patient{
+public class MpiPatient extends Patient {
 
-    private boolean mpiPatient;
+    private static final boolean mpiPatient = true;
 
     public boolean getMpiPatient() {
         return mpiPatient;
-    }
-
-    public void setMpiPatient(boolean mpiPatient) {
-        this.mpiPatient = mpiPatient;
     }
 }
