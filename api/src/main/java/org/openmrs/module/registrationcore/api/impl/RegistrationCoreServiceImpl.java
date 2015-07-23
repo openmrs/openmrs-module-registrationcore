@@ -42,7 +42,7 @@ import java.util.Map;
  * It is a default implementation of {@link RegistrationCoreService}.
  */
 @Transactional
-public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements RegistrationCoreService, GlobalPropertyListener, ApplicationContextAware {
+public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements RegistrationCoreService, ApplicationContextAware {
 
 	protected final Log log = LogFactory.getLog(this.getClass());
 
@@ -56,7 +56,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private AdministrationService adminService;
 
-	private static IdentifierSource idSource;
 
 	private IdentifierGenerator identifierGenerator;
 
@@ -156,22 +155,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return patient;
 	}
 
-	/**
-	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyChanged(org.openmrs.GlobalProperty)
-	 */
-	@Override
-	public void globalPropertyChanged(GlobalProperty gp) {
-		idSource = null;
-	}
-
-	/**
-	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyDeleted(java.lang.String)
-	 */
-	@Override
-	public void globalPropertyDeleted(String gpName) {
-		idSource = null;
-	}
-
 	private SimilarPatientSearchAlgorithm getFastSimilarPatientSearchAlgorithm() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_FAST_SIMILAR_PATIENT_SEARCH_ALGORITHM,
 		    "registrationcore.BasicSimilarPatientSearchAlgorithm");
@@ -223,14 +206,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new IllegalArgumentException(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH + " must point to "
 			        + "a bean implementing PatientNameSearch");
 		}
-	}
-
-	/**
-	 * @see org.openmrs.api.GlobalPropertyListener#supportsPropertyName(java.lang.String)
-	 */
-	@Override
-	public boolean supportsPropertyName(String gpName) {
-		return RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID.equals(gpName);
 	}
 
 	@Override
