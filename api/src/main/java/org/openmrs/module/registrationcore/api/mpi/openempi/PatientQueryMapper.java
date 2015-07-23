@@ -82,11 +82,22 @@ public class PatientQueryMapper {
     }
 
     private void setIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
-        setOpenMrsIdentifier(patient);
+        if (!containsOpenMrsIdentifier(patientQuery)) {
+            generateOpenMrsIdentifier(patient);
+        }
         setImportedIdentifiers(patientQuery, patient);
     }
 
-    private void setOpenMrsIdentifier(Patient patient) {
+    private boolean containsOpenMrsIdentifier(OpenEmpiPatientQuery patientQuery) {
+        for (PersonIdentifier personIdentifier : patientQuery.getPersonIdentifiers()) {
+            if ("OpenMRS".equals(personIdentifier.getIdentifierDomain().getIdentifierDomainName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void generateOpenMrsIdentifier(Patient patient) {
         Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifier();
         addIdentifier(patient, openMrsIdentifierId, null, true);
     }
