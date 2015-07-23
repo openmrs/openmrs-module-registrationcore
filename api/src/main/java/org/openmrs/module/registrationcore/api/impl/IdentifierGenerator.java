@@ -3,6 +3,7 @@ package org.openmrs.module.registrationcore.api.impl;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
@@ -21,7 +22,6 @@ public class IdentifierGenerator {
     private LocationService locationService;
 
     public Integer getOpenMrsIdentifier() {
-        //TODO change it to RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + "OpenMRS"
         String propertyName = RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID;
         return getIdentifierIdFromProperties(propertyName);
     }
@@ -45,10 +45,7 @@ public class IdentifierGenerator {
     public PatientIdentifier generateIdentifier(Integer identifierId,
                                                 String identifierString,
                                                 Location location) {
-        //TODO should be replaced by correct injection.
-        if (iss == null) {
-            iss = Context.getService(IdentifierSourceService.class);
-        }
+        validateIss();
 
         IdentifierSource idSource = getSource(identifierId);
 
@@ -62,6 +59,32 @@ public class IdentifierGenerator {
         }
 
         return new PatientIdentifier(identifierString, idSource.getIdentifierType(), location);
+    }
+
+    public PatientIdentifier generateIdentifier(Integer identifierId, Location location) {
+        validateIss();
+
+        location = getLocation(location);
+
+        IdentifierSource idSource = getSource(identifierId);
+        String identifierValue = iss.generateIdentifier(idSource, null);
+
+        return new PatientIdentifier(identifierValue, idSource.getIdentifierType(), location);
+    }
+
+    public PatientIdentifier createIdentifier(Integer identifierId, String identifierValue, Location location) {
+        location = getLocation(location);
+
+        PatientIdentifierType identifierType = new PatientIdentifierType(identifierId);
+        PatientIdentifierValidator.validateIdentifier(identifierValue, identifierType);
+        return new PatientIdentifier(identifierValue, identifierType, location);
+    }
+
+    private void validateIss() {
+        //TODO should be replaced by correct injection.
+        if (iss == null) {
+            iss = Context.getService(IdentifierSourceService.class);
+        }
     }
 
     private IdentifierSource getSource(Integer identifierId) {
