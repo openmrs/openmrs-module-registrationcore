@@ -19,6 +19,6 @@ public class OpenEmpiPatientImporter implements MpiPatientImporter {
     @Override
     public Patient importMpiPatient(String patientId) {
         OpenEmpiPatientQuery mpiPatient = restQueryCreator.getPatientById(patientId);
-        return queryMapper.convert(mpiPatient);
+        return queryMapper.importPatient(mpiPatient);
     }
 }
