@@ -36,7 +36,11 @@ public class PatientQueryMapper {
     }
 
     public Patient importPatient(OpenEmpiPatientQuery patientQuery) {
-        return convertPatient(new Patient(), patientQuery);
+        Patient patient = convertPatient(new Patient(), patientQuery);
+        if (!containsOpenMrsIdentifier(patientQuery)) {
+            generateOpenMrsIdentifier(patient);
+        }
+        return patient;
     }
 
     private Patient convertPatient(Patient patient, OpenEmpiPatientQuery patientQuery) {
@@ -82,13 +86,6 @@ public class PatientQueryMapper {
         patient.setAddresses(addresses);
     }
 
-    private void setIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
-        if (!containsOpenMrsIdentifier(patientQuery)) {
-            generateOpenMrsIdentifier(patient);
-        }
-        setImportedIdentifiers(patientQuery, patient);
-    }
-
     private boolean containsOpenMrsIdentifier(OpenEmpiPatientQuery patientQuery) {
         for (PersonIdentifier personIdentifier : patientQuery.getPersonIdentifiers()) {
             if (OPENMRS_IDENTIFIER_NAME.equals(personIdentifier.getIdentifierDomain().getIdentifierDomainName())) {
@@ -106,7 +103,7 @@ public class PatientQueryMapper {
         patient.addIdentifier(identifier);
     }
 
-    private void setImportedIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
         for (PersonIdentifier identifier : patientQuery.getPersonIdentifiers()) {
             String identifierName = identifier.getIdentifierDomain().getIdentifierDomainName();
             Integer identifierId = identifierGenerator.getIdentifierIdByName(identifierName);
