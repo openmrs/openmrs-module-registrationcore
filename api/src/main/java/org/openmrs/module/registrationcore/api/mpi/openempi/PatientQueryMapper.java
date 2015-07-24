@@ -32,7 +32,9 @@ public class PatientQueryMapper {
     }
 
     public Patient convert(OpenEmpiPatientQuery patientQuery) {
-        return convertPatient(new MpiPatient(), patientQuery);
+        Patient patient = convertPatient(new MpiPatient(), patientQuery);
+        patient.setPatientId(patientQuery.getPersonId());
+        return patient;
     }
 
     public Patient importPatient(OpenEmpiPatientQuery patientQuery) {
