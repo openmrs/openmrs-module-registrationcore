@@ -33,7 +33,7 @@ public class PatientQueryMapper {
 
     public Patient convert(OpenEmpiPatientQuery patientQuery) {
         Patient patient = convertPatient(new MpiPatient(), patientQuery);
-        patient.setPatientId(patientQuery.getPersonId());
+        patient.setUuid(String.valueOf(patientQuery.getPersonId()));
         return patient;
     }
 
