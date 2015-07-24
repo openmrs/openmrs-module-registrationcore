@@ -156,5 +156,5 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * and save that patient to local DB.
 	 * @param personId
 	 */
-	Integer importMpiPatient(String personId);
+	String importMpiPatient(String personId);
 }
