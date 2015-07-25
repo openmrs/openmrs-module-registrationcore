@@ -9,8 +9,6 @@ public class MpiCredentials {
 
     private String password;
 
-    private String token;
-
     public MpiCredentials() {
         //Is used for XML marshalling.
     }
@@ -34,13 +32,5 @@ public class MpiCredentials {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 }
