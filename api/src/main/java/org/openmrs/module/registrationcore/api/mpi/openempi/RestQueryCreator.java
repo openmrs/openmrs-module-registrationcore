@@ -12,11 +12,11 @@ import java.util.List;
 
 public class RestQueryCreator {
 
-    public String processAuthentication(String username, String password) throws RuntimeException {
+    public String processAuthentication(MpiCredentials credentials) throws RuntimeException {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> token = restTemplate
                 .exchange(OpenEmpiVariables.getAuthenticationUrl(),
-                        HttpMethod.PUT, new HttpEntity<MpiCredentials>(new MpiCredentials(username, password)), String.class);
+                        HttpMethod.PUT, new HttpEntity<MpiCredentials>(credentials), String.class);
         String tokenValue = token.getBody();
         if (tokenValue != null) {
             return tokenValue;
