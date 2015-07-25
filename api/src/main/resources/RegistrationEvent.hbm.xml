@@ -16,5 +16,10 @@
 			length="38" unique="true" />
 	</class>
 -->
+    <joined-subclass name="org.openmrs.module.registrationcore.api.mpi.common.MpiPatient"
+                     table="patient"
+                     extends="org.openmrs.Patient">
+        <key column="patient_id"/>
+    </joined-subclass>
 
 </hibernate-mapping>
