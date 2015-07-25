@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,17 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
     @Qualifier("registrationcore.queryMapper")
     private PatientQueryMapper queryMapper;
 
+    @Autowired
+    @Qualifier("registrationcore.mpiAuthenticator")
+    private MpiAuthenticator authenticator;
+
     @Override
     public List<PatientAndMatchQuality> findSimilarPatients(Patient patient,
                                                             Map<String, Object> otherDataPoints,
                                                             Double cutoff, Integer maxResults) {
         OpenEmpiPatientQuery patientQuery = queryMapper.convert(patient);
 
-        List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator.findPatients(patientQuery);
+        List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator.findPatients(authenticator.getToken(), patientQuery);
 
         if (mpiPatients.size() > maxResults) {
             mpiPatients.subList(0, maxResults);
