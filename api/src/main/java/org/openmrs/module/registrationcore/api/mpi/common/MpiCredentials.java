@@ -33,4 +33,14 @@ public class MpiCredentials {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        MpiCredentials passedCredentials = (MpiCredentials) obj;
+        return passedCredentials.getUsername() != null && passedCredentials.getUsername().equals(this.username)
+                && passedCredentials.getPassword() != null && passedCredentials.getPassword().equals(this.password);
+    }
 }
