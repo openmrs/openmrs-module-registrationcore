@@ -21,7 +21,7 @@ public class OpenEmpiAuthenticator implements MpiAuthenticator {
 
     @Override
     public boolean isAuthenticated() {
-        return token == null;
+        return token != null;
     }
 
     @Override
