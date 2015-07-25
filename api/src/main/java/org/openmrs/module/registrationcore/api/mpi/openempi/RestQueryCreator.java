@@ -5,7 +5,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -13,31 +12,23 @@ import java.util.List;
 
 public class RestQueryCreator {
 
-    private MpiCredentials credentials;
-
-    public RestQueryCreator() {
-        //TODO this is mock. Should me changed to correct injecting.
-        credentials = new MpiCredentials("admin", "admin123");
-        credentials.setToken("DCBE246033E134DE2CA58163C7F5A1E6");
-    }
-
-    public void processAuthentication() throws RuntimeException {
+    public String processAuthentication(String username, String password) throws RuntimeException {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> token = restTemplate
                 .exchange(OpenEmpiVariables.getAuthenticationUrl(),
-                        HttpMethod.PUT, new HttpEntity<MpiCredentials>(credentials), String.class);
+                        HttpMethod.PUT, new HttpEntity<MpiCredentials>(new MpiCredentials(username, password)), String.class);
         String tokenValue = token.getBody();
         if (tokenValue != null) {
-            credentials.setToken(tokenValue);
+            return tokenValue;
         } else {
             throw new RuntimeException("Can't perform authentication");
         }
     }
 
-    public OpenEmpiPatientQuery getPatientById(String id) {
+    public OpenEmpiPatientQuery getPatientById(String token, String id) {
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = getAuthenticationHeader();
+        HttpHeaders headers = getAuthenticationHeader(token);
 
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
@@ -50,10 +41,10 @@ public class RestQueryCreator {
         return person.getBody();
     }
 
-    public List<OpenEmpiPatientQuery> findPatients(OpenEmpiPatientQuery query) {
+    public List<OpenEmpiPatientQuery> findPatients(String token, OpenEmpiPatientQuery query) {
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = getAuthenticationHeader();
+        HttpHeaders headers = getAuthenticationHeader(token);
 
         HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(query, headers);
 
@@ -62,9 +53,9 @@ public class RestQueryCreator {
         return unwrapResult(people.getBody());
     }
 
-    private HttpHeaders getAuthenticationHeader() {
+    private HttpHeaders getAuthenticationHeader(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(OpenEmpiVariables.TOKEN_HEADER_KEY, credentials.getToken());
+        headers.add(OpenEmpiVariables.TOKEN_HEADER_KEY, token);
         return headers;
     }
 
@@ -81,9 +72,5 @@ public class RestQueryCreator {
         } else {
             return people.getPeople();
         }
-    }
-
-    public void setCredentials(MpiCredentials credentials) {
-        this.credentials = credentials;
     }
 }
