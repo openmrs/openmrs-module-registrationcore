@@ -43,4 +43,9 @@ public final class RegistrationCoreConstants {
 	public static final String GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.preciseSimilarPatientSearchAlgorithm";
 
 	public static final String GP_MPI_FACADE = "registrationcore.mpiFacade";
+
+	public static final String GP_MPI_ACCESS_USERNAME = "registrationcore.mpi.username";
+
+	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
+
 }
