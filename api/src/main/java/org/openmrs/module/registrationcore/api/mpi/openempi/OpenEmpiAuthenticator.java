@@ -33,6 +33,14 @@ public class OpenEmpiAuthenticator implements MpiAuthenticator {
         }
     }
 
+    @Override
+    public String getToken() {
+        if (token == null) {
+            performAuthentication();
+        }
+        return token;
+    }
+
     private MpiCredentials getMpiCredentials() {
         String username = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME);
         String password = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD);

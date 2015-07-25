@@ -5,4 +5,6 @@ public interface MpiAuthenticator {
     boolean isAuthenticated();
 
     void performAuthentication();
+
+    String getToken();
 }
