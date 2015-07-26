@@ -46,8 +46,6 @@ public class PatientQueryMapper {
     }
 
     private Patient convertPatient(Patient patient, OpenEmpiPatientQuery patientQuery) {
-        patient.setDateCreated(new Date());
-
         patient.setGender(patientQuery.getGender().getGenderCode());
 
         setNames(patientQuery, patient);
