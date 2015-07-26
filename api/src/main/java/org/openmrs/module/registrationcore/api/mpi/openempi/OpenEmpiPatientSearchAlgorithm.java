@@ -35,7 +35,7 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
         List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator.findPatients(authenticator.getToken(), patientQuery);
 
         if (mpiPatients.size() > maxResults) {
-            mpiPatients.subList(0, maxResults);
+            mpiPatients = mpiPatients.subList(0, maxResults);
         }
 
         return convertMpiPatients(mpiPatients, cutoff);
