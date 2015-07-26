@@ -7,7 +7,6 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
@@ -15,11 +14,11 @@ import org.openmrs.validator.PatientIdentifierValidator;
 
 public class IdentifierGenerator {
 
-    private AdministrationService adminService;
+    private LocationService locationService;
 
     private IdentifierSourceService iss;
 
-    private LocationService locationService;
+    private AdministrationService adminService;
 
     private PatientService patientService;
 
@@ -61,8 +60,6 @@ public class IdentifierGenerator {
     }
 
     public PatientIdentifier generateIdentifier(Integer identifierId, Location location) {
-        validateIss();
-
         location = getLocation(location);
 
         IdentifierSource idSource = getSource(identifierId);
@@ -77,13 +74,6 @@ public class IdentifierGenerator {
         PatientIdentifierType identifierType = patientService.getPatientIdentifierType(identifierId);
         PatientIdentifierValidator.validateIdentifier(identifierValue, identifierType);
         return new PatientIdentifier(identifierValue, identifierType, location);
-    }
-
-    private void validateIss() {
-        //TODO should be replaced by correct injection.
-        if (iss == null) {
-            iss = Context.getService(IdentifierSourceService.class);
-        }
     }
 
     private IdentifierSource getSource(Integer identifierId) {

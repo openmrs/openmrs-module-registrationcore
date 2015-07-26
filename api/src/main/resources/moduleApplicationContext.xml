@@ -29,9 +29,7 @@
         <property name="locationService" ref="locationService"/>
         <property name="adminService" ref="adminService" />
         <property name="patientService" ref="patientService"/>
-        <!-- doesn't work. Duno why.
-         <property name="identifierSourceService" ref="identifierSourceService"/>
-         -->
+        <property name="identifierSourceService" ref="baseIdentifierSourceService"/>
     </bean>
 
     <!-- Services accessible via Context.getService() -->
