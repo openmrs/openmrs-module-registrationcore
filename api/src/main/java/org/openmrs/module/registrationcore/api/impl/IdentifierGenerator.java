@@ -7,6 +7,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
@@ -24,10 +25,6 @@ public class IdentifierGenerator {
 
     public void setLocationService(LocationService locationService) {
         this.locationService = locationService;
-    }
-
-    public void setIdentifierSourceService(IdentifierSourceService iss) {
-        this.iss = iss;
     }
 
     public void setAdminService(AdministrationService adminService) {
@@ -62,7 +59,7 @@ public class IdentifierGenerator {
     public PatientIdentifier generateIdentifier(Integer sourceId, Location location) {
         location = getLocation(location);
         IdentifierSource idSource = getSource(sourceId);
-        String identifierValue = iss.generateIdentifier(idSource, null);
+        String identifierValue = getIss().generateIdentifier(idSource, null);
 
         return new PatientIdentifier(identifierValue, idSource.getIdentifierType(), location);
     }
@@ -76,7 +73,7 @@ public class IdentifierGenerator {
     }
 
     private IdentifierSource getSource(Integer identifierId) {
-        IdentifierSource identifierSource = iss.getIdentifierSource(identifierId);
+        IdentifierSource identifierSource = getIss().getIdentifierSource(identifierId);
         validateIdentifierSource(identifierSource, identifierId);
         return identifierSource;
     }
@@ -97,5 +94,12 @@ public class IdentifierGenerator {
     private void validateIdentifierLocation(Location identifierLocation) {
         if (identifierLocation == null)
             throw new APIException("Failed to resolve location to associate to patient identifiers");
+    }
+
+    public IdentifierSourceService getIss() {
+        if (iss == null) {
+            iss = Context.getService(IdentifierSourceService.class);
+        }
+        return iss;
     }
 }

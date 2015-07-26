@@ -29,7 +29,6 @@
         <property name="locationService" ref="locationService"/>
         <property name="adminService" ref="adminService" />
         <property name="patientService" ref="patientService"/>
-        <property name="identifierSourceService" ref="baseIdentifierSourceService"/>
     </bean>
 
     <!-- Services accessible via Context.getService() -->
