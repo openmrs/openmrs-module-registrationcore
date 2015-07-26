@@ -1,30 +1,16 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
-import org.springframework.oxm.Unmarshaller;
 
-import javax.xml.transform.stream.StreamSource;
-import java.io.FileInputStream;
-import java.io.IOException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
 
 public class XmlMarshaller {
 
-    private Unmarshaller unmarshaller;
-
-    public void setUnmarshaller(Unmarshaller unmarshaller) {
-        this.unmarshaller = unmarshaller;
-    }
-
-    public OpenEmpiPatientQuery getQuery(String path) throws IOException {
-        FileInputStream is = null;
-        OpenEmpiPatientQuery query;
-        try {
-            is = new FileInputStream(path);
-            query = (OpenEmpiPatientQuery) this.unmarshaller.unmarshal(new StreamSource(is));
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        return query;
+    public OpenEmpiPatientQuery getQuery(String path) throws Exception {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource(path).getPath());
+        JAXBContext jaxbContext = JAXBContext.newInstance(OpenEmpiPatientQuery.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        return (OpenEmpiPatientQuery) jaxbUnmarshaller.unmarshal(file);
     }
 }
