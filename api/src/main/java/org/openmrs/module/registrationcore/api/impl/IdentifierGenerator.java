@@ -38,31 +38,31 @@ public class IdentifierGenerator {
         this.patientService = patientService;
     }
 
-    public Integer getOpenMrsIdentifier() {
+    public Integer getOpenMrsIdentifierSourceId() {
         String propertyName = RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID;
-        return getIdentifierIdFromProperties(propertyName);
+        return getProperty(propertyName);
     }
 
     public Integer getIdentifierIdByName(String identifierName) {
         String propertyName = RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + identifierName;
-        return getIdentifierIdFromProperties(propertyName);
+        return getProperty(propertyName);
     }
 
-    private Integer getIdentifierIdFromProperties(String propertyName) {
+    private Integer getProperty(String propertyName) {
         String propertyValue = adminService.getGlobalProperty(propertyName);
-        Integer idSourceId;
+        Integer intPropertyValue;
         try {
-            idSourceId = Integer.valueOf(propertyValue);
+            intPropertyValue = Integer.valueOf(propertyValue);
         } catch (NumberFormatException e) {
             throw new APIException("Identifier source id should be a number");
         }
-        return idSourceId;
+        return intPropertyValue;
     }
 
-    public PatientIdentifier generateIdentifier(Integer identifierId, Location location) {
+    public PatientIdentifier generateIdentifier(Integer sourceId, Location location) {
         location = getLocation(location);
 
-        IdentifierSource idSource = getSource(identifierId);
+        IdentifierSource idSource = getSource(sourceId);
         String identifierValue = iss.generateIdentifier(idSource, null);
 
         return new PatientIdentifier(identifierValue, idSource.getIdentifierType(), location);

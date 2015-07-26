@@ -97,7 +97,7 @@ public class PatientQueryMapper {
 
     private void generateOpenMrsIdentifier(Patient patient) {
         log.info("Generate OpenMRS identifier for imported Mpi patient.");
-        Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifier();
+        Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifierSourceId();
         PatientIdentifier identifier = identifierGenerator.generateIdentifier(openMrsIdentifierId, null);
         identifier.setPreferred(true);
         patient.addIdentifier(identifier);
