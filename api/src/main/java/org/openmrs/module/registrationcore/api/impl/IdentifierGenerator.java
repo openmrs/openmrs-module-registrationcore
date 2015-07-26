@@ -61,7 +61,6 @@ public class IdentifierGenerator {
 
     public PatientIdentifier generateIdentifier(Integer sourceId, Location location) {
         location = getLocation(location);
-
         IdentifierSource idSource = getSource(sourceId);
         String identifierValue = iss.generateIdentifier(idSource, null);
 
@@ -70,9 +69,9 @@ public class IdentifierGenerator {
 
     public PatientIdentifier createIdentifier(Integer identifierId, String identifierValue, Location location) {
         location = getLocation(location);
-
         PatientIdentifierType identifierType = patientService.getPatientIdentifierType(identifierId);
         PatientIdentifierValidator.validateIdentifier(identifierValue, identifierType);
+
         return new PatientIdentifier(identifierValue, identifierType, location);
     }
 
