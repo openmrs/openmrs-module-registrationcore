@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBase {
 
-    private static final String PATIENT_WITH_EXISTING_IDENTIFIERS = "patient_with_existing_id.xml";
+    private static final String PATIENT_WITH_EXISTING_IDENTIFIERS = "patient_without_openmrs_id.xml";
     private static final String GP_MPI_USERNAME = "mpi_username";
     private static final String GP_MPI_PASSWORD = "mpi_password";
     private static final String MPI_CUSTOM_IDENTIFIER_OPENEMPI_NAME = "OpenEMPI";
