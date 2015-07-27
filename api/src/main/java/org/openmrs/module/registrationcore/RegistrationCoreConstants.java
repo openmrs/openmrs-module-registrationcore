@@ -44,6 +44,8 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_FACADE = "registrationcore.mpiFacade";
 
+	public static final String GP_MPI_URL = "registrationcore.mpi.url";
+
 	public static final String GP_MPI_ACCESS_USERNAME = "registrationcore.mpi.username";
 
 	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
