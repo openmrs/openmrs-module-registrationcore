@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBase {
 
-    private static final String PATIENT_WITH_EXISTING_IDENTIFIERS = "patient_without_openmrs_id.xml";
+    private static final String PATIENT_WITHOUT_OPENMRS_ID = "patient_without_openmrs_id.xml";
     private static final String GP_MPI_USERNAME = "mpi_username";
     private static final String GP_MPI_PASSWORD = "mpi_password";
     private static final String MPI_CUSTOM_IDENTIFIER_OPENEMPI_NAME = "OpenEMPI";
@@ -98,7 +98,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     @Verifies(value = "should import patient from remote MPI server, map all patient identifiers and generate OpenMRS identifier", method = "importMpiPatient(String)")
     public void testPerformCorrectImportForPatientWithExistingIdentifiers() throws Exception {
         mockMpiAuthentication();
-        OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITH_EXISTING_IDENTIFIERS);
+        OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITHOUT_OPENMRS_ID);
         mockMpiResponse(mpiPatient);
 
         String uuid = service.importMpiPatient(MPI_PERSON_ID);
