@@ -81,7 +81,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
 
     private void executeDataSets() throws Exception {
         executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
-        executeDataSet("mpi_dataset.xml");
+        executeDataSet("identifiers.xml");
     }
 
     private void saveGlobalProperties() {
