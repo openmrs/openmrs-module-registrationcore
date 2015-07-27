@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
 
+    <Patient_identifier_type patient_identifier_type_id="3" uuid="0d47284f-9e9b-4a81-a88b-8bb42bc0a903" name="OpenMRS ID" description="OpenMRS patient identifier, with check-digit" check_digit="1"  creator="1" date_created="2015-07-27 11:28:30.489" required="0" retired="0"/>
     <Patient_identifier_type patient_identifier_type_id="4" uuid="0d47284f-9e9b-4a81-a88b-8bb42bc0a904" name="OpenEMPI ID" description="OpenEMPI patient identifier." check_digit="0"  creator="1" date_created="2015-07-27 11:28:30.489" required="0" retired="0"/>
     <Patient_identifier_type patient_identifier_type_id="5" uuid="0d47284f-9e9b-4a81-a88b-8bb42bc0a905" name="ECID" description="ECID identifier." check_digit="0" creator="1" date_created="2015-07-27 11:28:30.489" required="0" retired="0"/>
 

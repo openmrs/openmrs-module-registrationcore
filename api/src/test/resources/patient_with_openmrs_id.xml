@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<!-- This patient already has OpenMRS identifier and one mpi custom ECID identifier. -->
+<person>
+    <address1>Virginia</address1>
+    <dateOfBirth>1995-06-06T00:00:00-04:00</dateOfBirth>
+    <familyName>Johnson</familyName>
+    <gender>
+        <genderCd>2</genderCd>
+        <genderCode>M</genderCode>
+        <genderDescription>Male</genderDescription>
+        <genderName>Male</genderName>
+    </gender>
+    <givenName>Andrew</givenName>
+    <personId>1</personId>
+    <personIdentifiers>
+        <identifier>019bb820-1bd3-11e5-8a7f-040158db6201</identifier>
+        <identifierDomain>
+            <identifierDomainId>60</identifierDomainId>
+            <identifierDomainName>ECID</identifierDomainName>
+            <namespaceIdentifier>ECID</namespaceIdentifier>
+            <universalIdentifier>ECID</universalIdentifier>
+            <universalIdentifierTypeCode>ECID</universalIdentifierTypeCode>
+        </identifierDomain>
+        <personIdentifierId>3</personIdentifierId>
+    </personIdentifiers>
+    <personIdentifiers>
+        <identifier>1001NF</identifier>
+        <identifierDomain>
+            <identifierDomainId>13</identifierDomainId>
+            <identifierDomainName>OpenMRS</identifierDomainName>
+            <namespaceIdentifier>35a02490-5c20-11de-8ae4-001d60400e9e</namespaceIdentifier>
+            <universalIdentifier>35a02490-5c20-11de-8ae4-001d60400e9e</universalIdentifier>
+            <universalIdentifierTypeCode>OpenMRS</universalIdentifierTypeCode>
+        </identifierDomain>
+        <personIdentifierId>9</personIdentifierId>
+    </personIdentifiers>
+</person>

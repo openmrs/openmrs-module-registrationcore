@@ -35,6 +35,7 @@ import static org.mockito.Mockito.*;
 
 public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBase {
 
+    private static final String PATIENT_WITH_OPENMRS_ID = "patient_with_openmrs_id.xml";
     private static final String PATIENT_WITHOUT_OPENMRS_ID = "patient_without_openmrs_id.xml";
     private static final String GP_MPI_USERNAME = "mpi_username";
     private static final String GP_MPI_PASSWORD = "mpi_password";
@@ -72,7 +73,9 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         mockResTemplate();
         List<PatientIdentifierType> allPatientIdentifierTypes = patientService.getAllPatientIdentifierTypes();
         for (PatientIdentifierType allPatientIdentifierType : allPatientIdentifierTypes) {
+            System.out.println(allPatientIdentifierType.getId());
             System.out.println(allPatientIdentifierType);
+            System.out.println(allPatientIdentifierType.getRequired());
         }
     }
 
@@ -87,6 +90,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, GP_MPI_PASSWORD));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + MPI_CUSTOM_IDENTIFIER_OPENEMPI_NAME, MPI_CUSTOM_IDENTIFIER_OPENEMPI_ID));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + MPI_CUSTOM_IDENTIFIER_ECID_NAME, MPI_CUSTOM_IDENTIFIER_ECID_ID));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + "OpenMRS", "3"));
     }
 
     private void mockResTemplate() {
@@ -96,17 +100,14 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
 
     @Test
     @Verifies(value = "should import patient from remote MPI server, map all patient identifiers and generate OpenMRS identifier", method = "importMpiPatient(String)")
-    public void testPerformCorrectImportForPatientWithExistingIdentifiers() throws Exception {
+    public void testPerformCorrectImportForPatientWithoutOpenMrsIdentifier() throws Exception {
         mockMpiAuthentication();
         OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITHOUT_OPENMRS_ID);
         mockMpiResponse(mpiPatient);
 
         String uuid = service.importMpiPatient(MPI_PERSON_ID);
 
-        //verify querying to MPI server for 1: authentication. 2: get person by Id.
-        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class));
-        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class));
-
+        verifyRemoteMpiServerQuerying();
         Patient savedPatient = patientService.getPatientByUuid(uuid);
         assertNotNull(savedPatient.getPatientId());
         assertNotNull(savedPatient.getPersonId());
@@ -114,6 +115,30 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         assertEquals(savedPatient.getIdentifiers().size(), 3);
         assertEquals(savedPatient.getPatientIdentifier().getLocation(), locationService.getDefaultLocation());
         assertEqualsPatients(mpiPatient, savedPatient);
+    }
+
+    @Test
+    @Verifies(value = "should import patient from remote MPI server, ", method = "importMpiPatient(String)")
+    public void testPerformCorrectImportForPatientWithOpenMrsIdentifier() throws Exception {
+        mockMpiAuthentication();
+        OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
+        mockMpiResponse(mpiPatient);
+
+        String uuid = service.importMpiPatient(MPI_PERSON_ID);
+
+        verifyRemoteMpiServerQuerying();
+        Patient savedPatient = patientService.getPatientByUuid(uuid);
+        assertNotNull(savedPatient.getPatientId());
+        assertNotNull(savedPatient.getPersonId());
+        assertEquals(savedPatient.getIdentifiers().size(), 2);
+        assertEquals(savedPatient.getPatientIdentifier().getLocation(), locationService.getDefaultLocation());
+        assertEqualsPatients(mpiPatient, savedPatient);
+    }
+
+    private void verifyRemoteMpiServerQuerying() {
+        //verify querying to MPI server for 1: authentication. 2: get person by Id.
+        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class));
+        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class));
     }
 
     private void assertEqualsPatients(OpenEmpiPatientQuery mpiPatient, Patient savedPatient) {
