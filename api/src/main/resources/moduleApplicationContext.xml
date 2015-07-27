@@ -61,7 +61,9 @@
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientSearchAlgorithm"/>
 
     <bean id="registrationcore.restQueryCreator"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator"/>
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator">
+        <property name="adminService" ref="adminService"/>
+    </bean>
 
     <bean id="registrationcore.queryMapper"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientQueryMapper">
