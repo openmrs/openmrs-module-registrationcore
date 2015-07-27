@@ -108,13 +108,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         String uuid = service.importMpiPatient(MPI_PERSON_ID);
 
         verifyRemoteMpiServerQuerying();
-        Patient savedPatient = patientService.getPatientByUuid(uuid);
-        assertNotNull(savedPatient.getPatientId());
-        assertNotNull(savedPatient.getPersonId());
-        assertNotNull(savedPatient.getPatientIdentifier());
-        assertEquals(savedPatient.getIdentifiers().size(), 3);
-        assertEquals(savedPatient.getPatientIdentifier().getLocation(), locationService.getDefaultLocation());
-        assertEqualsPatients(mpiPatient, savedPatient);
+        assertPatientEquals(mpiPatient, uuid, 3);
     }
 
     @Test
@@ -127,17 +121,20 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         String uuid = service.importMpiPatient(MPI_PERSON_ID);
 
         verifyRemoteMpiServerQuerying();
+        assertPatientEquals(mpiPatient, uuid, 2);
+    }
+
+    private void assertPatientEquals(OpenEmpiPatientQuery mpiPatient, String uuid, int idCount) {
         Patient savedPatient = patientService.getPatientByUuid(uuid);
         assertNotNull(savedPatient.getPatientId());
         assertNotNull(savedPatient.getPersonId());
-        assertEquals(savedPatient.getIdentifiers().size(), 2);
+        assertEquals(savedPatient.getIdentifiers().size(), idCount);
+        assertNotNull(savedPatient.getPatientIdentifier());
         assertEquals(savedPatient.getPatientIdentifier().getLocation(), locationService.getDefaultLocation());
         assertEqualsPatients(mpiPatient, savedPatient);
     }
 
     private void verifyRemoteMpiServerQuerying() {
-        //verify querying to MPI server for 1: authentication. 2: get person by Id.
-        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class));
         verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class));
     }
 
