@@ -108,7 +108,8 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         String uuid = service.importMpiPatient(MPI_PERSON_ID);
 
         verifyRemoteMpiServerQuerying();
-        assertPatientEquals(mpiPatient, uuid, 3);
+        Patient savedPatient = patientService.getPatientByUuid(uuid);
+        assertPatientEquals(mpiPatient, savedPatient, 3);
     }
 
     @Test
@@ -121,21 +122,21 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         String uuid = service.importMpiPatient(MPI_PERSON_ID);
 
         verifyRemoteMpiServerQuerying();
-        assertPatientEquals(mpiPatient, uuid, 2);
+        Patient savedPatient = patientService.getPatientByUuid(uuid);
+        assertPatientEquals(mpiPatient, savedPatient, 2);
     }
 
-    private void assertPatientEquals(OpenEmpiPatientQuery mpiPatient, String uuid, int idCount) {
-        Patient savedPatient = patientService.getPatientByUuid(uuid);
+    private void verifyRemoteMpiServerQuerying() {
+        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class));
+    }
+
+    private void assertPatientEquals(OpenEmpiPatientQuery mpiPatient, Patient savedPatient, int idCount) {
         assertNotNull(savedPatient.getPatientId());
         assertNotNull(savedPatient.getPersonId());
         assertEquals(savedPatient.getIdentifiers().size(), idCount);
         assertNotNull(savedPatient.getPatientIdentifier());
         assertEquals(savedPatient.getPatientIdentifier().getLocation(), locationService.getDefaultLocation());
         assertEqualsPatients(mpiPatient, savedPatient);
-    }
-
-    private void verifyRemoteMpiServerQuerying() {
-        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class));
     }
 
     private void assertEqualsPatients(OpenEmpiPatientQuery mpiPatient, Patient savedPatient) {
