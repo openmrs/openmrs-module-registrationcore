@@ -12,8 +12,9 @@ import java.util.List;
 
 public class RestQueryCreator {
 
+    private RestTemplate restTemplate = new RestTemplate();
+
     public String processAuthentication(MpiCredentials credentials) throws RuntimeException {
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> token = restTemplate
                 .exchange(OpenEmpiVariables.getAuthenticationUrl(),
                         HttpMethod.PUT, new HttpEntity<MpiCredentials>(credentials), String.class);
@@ -26,8 +27,6 @@ public class RestQueryCreator {
     }
 
     public OpenEmpiPatientQuery getPatientById(String token, String id) {
-        RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = getAuthenticationHeader(token);
 
         HttpEntity<String> entity = new HttpEntity<String>(headers);
@@ -42,8 +41,6 @@ public class RestQueryCreator {
     }
 
     public List<OpenEmpiPatientQuery> findPatients(String token, OpenEmpiPatientQuery query) {
-        RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = getAuthenticationHeader(token);
 
         HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(query, headers);
