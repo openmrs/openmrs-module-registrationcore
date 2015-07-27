@@ -71,12 +71,6 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         saveGlobalProperties();
 
         mockResTemplate();
-        List<PatientIdentifierType> allPatientIdentifierTypes = patientService.getAllPatientIdentifierTypes();
-        for (PatientIdentifierType allPatientIdentifierType : allPatientIdentifierTypes) {
-            System.out.println(allPatientIdentifierType.getId());
-            System.out.println(allPatientIdentifierType);
-            System.out.println(allPatientIdentifierType.getRequired());
-        }
     }
 
     private void executeDataSets() throws Exception {
@@ -88,6 +82,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID, "1"));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME, GP_MPI_USERNAME));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, GP_MPI_PASSWORD));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_URL, "server.url"));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + MPI_CUSTOM_IDENTIFIER_OPENEMPI_NAME, MPI_CUSTOM_IDENTIFIER_OPENEMPI_ID));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + MPI_CUSTOM_IDENTIFIER_ECID_NAME, MPI_CUSTOM_IDENTIFIER_ECID_ID));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + "OpenMRS", "3"));
