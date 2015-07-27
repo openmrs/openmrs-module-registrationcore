@@ -26,14 +26,14 @@ public class RestQueryCreator {
         this.adminService = adminService;
     }
 
-    public String processAuthentication(MpiCredentials credentials) throws RuntimeException {
+    public String processAuthentication(MpiCredentials credentials) throws APIException {
         ResponseEntity<String> token = restTemplate.exchange(createAuthenticationUrl(),
                 HttpMethod.PUT, new HttpEntity<MpiCredentials>(credentials), String.class);
         String tokenValue = token.getBody();
         if (tokenValue != null) {
             return tokenValue;
         } else {
-            throw new RuntimeException("Can't perform authentication");
+            throw new APIException("Can't perform authentication");
         }
     }
 
