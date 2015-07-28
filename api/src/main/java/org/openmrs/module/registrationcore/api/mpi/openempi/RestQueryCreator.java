@@ -71,7 +71,7 @@ public class RestQueryCreator {
 
     private String createGetPatientUrl(String id) {
         String url = getServerUrl() + REST_URL + PERSON_QUERY_URL + FIND_PATIENT_BY_ID_URL;
-        url += "?personId" + id;
+        url += "?personId=" + id;
         return url;
     }
 
