@@ -115,8 +115,6 @@ public class PatientQueryMapperTest {
         Patient convertedPatient = queryMapper.importPatient(patientQuery);
 
         //verify correct querying to IdentifierGenerator class:
-        verify(identifierGenerator).createIdentifier(ECID_IDENTIFIER_TYPE_ID, ECID_IDENTIFIER_VALUE, null);
-        verify(identifierGenerator).createIdentifier(OPENEMPI_IDENTIFIER_TYPE_ID, OPENEMPI_IDENTIFIER_VALUE, null);
         verify(identifierGenerator).generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_ID, null);
         verify(openMrsIdentifier).setPreferred(true);
 
