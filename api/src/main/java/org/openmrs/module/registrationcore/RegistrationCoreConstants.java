@@ -50,4 +50,5 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
 
+	public static final String GP_FILTER_IDENTIFIER_TYPE_ID = "registrationcore.mpi.filterIdentifierId";
 }
