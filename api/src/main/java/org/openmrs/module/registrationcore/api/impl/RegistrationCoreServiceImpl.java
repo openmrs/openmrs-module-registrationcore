@@ -31,6 +31,7 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
+import org.openmrs.module.registrationcore.api.mpi.openempi.MatchedPatientFilter;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
@@ -41,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +65,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private AdministrationService adminService;
 
 	private IdentifierBuilder identifierBuilder;
+
+	private MatchedPatientFilter matchedPatientFilter;
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -220,25 +224,35 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                            Double cutoff, Integer maxResults) {
-		return getFastSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
-	}
+		List<PatientAndMatchQuality> matches = new LinkedList<PatientAndMatchQuality>();
 
-	@Override
-	public List<PatientAndMatchQuality> findProbablisticSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
-																			 Double cutoff, Integer maxResults) {
-		return getMpiFacade().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		List<PatientAndMatchQuality> localMatches = getFastSimilarPatientSearchAlgorithm()
+				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		matches.addAll(localMatches);
+
+		List<PatientAndMatchQuality> mpiMatches = getMpiFacade().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		matches.addAll(mpiMatches);
+
+		matchedPatientFilter.filter(matches);
+
+		return matches;
 	}
 
 	@Override
 	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                               Double cutoff, Integer maxResults) {
-		return getPreciseSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
-	}
+		List<PatientAndMatchQuality> matches = new LinkedList<PatientAndMatchQuality>();
 
-	@Override
-	public List<PatientAndMatchQuality> findPreciseSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
-                                                                        Double cutoff, Integer maxResults) {
-		return getMpiFacade().findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		List<PatientAndMatchQuality> localMatches = getPreciseSimilarPatientSearchAlgorithm()
+				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		matches.addAll(localMatches);
+
+		List<PatientAndMatchQuality> mpiMatches = getMpiFacade().findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		matches.addAll(mpiMatches);
+
+		matchedPatientFilter.filter(matches);
+
+		return matches;
 	}
 
 	/**

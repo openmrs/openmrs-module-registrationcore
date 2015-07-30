@@ -88,20 +88,6 @@ public interface RegistrationCoreService extends OpenmrsService {
 	                                                     Double cutoff, Integer maxResults);
 
 	/**
-	 * Query to MPI server and return a list of probably matched patients.
-	 * <p>
-	 * You can change the underlying implementation by calling
-	 * {@link #setMpiSimilarPatientSearchAlgorithm(MpiSimilarPatientSearchAlgorithm)}.
-	 *
-	 * @param patient
-	 * @param otherDataPoints
-	 * @param cutoff
-	 * @param maxResults
-	 * @return the list
-	 */
-	List<PatientAndMatchQuality> findProbablisticSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
-																	  Double cutoff, Integer maxResults);
-	/**
 	 * Returns a list of matching patients using the precise algorithm.
 	 * <p>
 	 * You can change the underlying implementation by calling
@@ -115,22 +101,6 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 */
 	List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                        Double cutoff, Integer maxResults);
-
-	/**
-	 * Query to MPI server and return a list of precise matching patients.
-	 * <p>
-	 * You can change the underlying implementation by calling
-	 * {@link #setMpiSimilarPatientSearchAlgorithm(MpiSimilarPatientSearchAlgorithm)}.
-	 *
-	 * @param patient
-	 * @param otherDataPoints
-	 * @param cutoff
-	 * @param maxResults
-	 * @return the list
-	 */
-	List<PatientAndMatchQuality> findPreciseSimilarPatientsOnMpi(Patient patient, Map<String, Object> otherDataPoints,
-															Double cutoff, Integer maxResults);
-
 	/**
 	 * Searches for given names that are similar to a search phrase.
 	 * <p>
