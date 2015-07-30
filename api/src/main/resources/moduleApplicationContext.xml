@@ -16,6 +16,7 @@
                 <property name="personService" ref="personService" />
                 <property name="adminService" ref="adminService" />
                 <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
+                <property name="matchedPatientFilter" ref="registrationcore.matchedPatientFilter"/>
             </bean>
         </property>
         <property name="preInterceptors">
@@ -25,10 +26,16 @@
             <ref bean="transactionAttributeSource" />
         </property>
     </bean>
+
     <bean id="registrationcore.identifierBuilder" class="org.openmrs.module.registrationcore.api.impl.IdentifierBuilder">
         <property name="locationService" ref="locationService"/>
         <property name="adminService" ref="adminService" />
         <property name="patientService" ref="patientService"/>
+    </bean>
+
+    <bean id="registrationcore.matchedPatientFilter"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.MatchedPatientFilter">
+        <property name="adminService" ref="adminService"/>
     </bean>
 
     <!-- Services accessible via Context.getService() -->

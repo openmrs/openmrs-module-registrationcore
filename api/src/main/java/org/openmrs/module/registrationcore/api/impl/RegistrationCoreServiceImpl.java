@@ -100,6 +100,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		this.identifierBuilder = identifierBuilder;
 	}
 
+	public void setMatchedPatientFilter(MatchedPatientFilter matchedPatientFilter) {
+		this.matchedPatientFilter = matchedPatientFilter;
+	}
+
     /**
      * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
      *      java.util.List, String, Location)
