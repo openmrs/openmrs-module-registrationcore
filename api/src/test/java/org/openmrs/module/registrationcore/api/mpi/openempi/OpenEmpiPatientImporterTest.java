@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
@@ -13,7 +12,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
-import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -23,8 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -47,6 +43,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     private static final String TOKEN_VALUE = "token_value";
 
     private RegistrationCoreService service;
+
     @Autowired
     @Qualifier("adminService")
     private AdministrationService adminService;
@@ -94,7 +91,6 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     }
 
     @Test
-    @Verifies(value = "should import patient from remote MPI server, map all patient identifiers and generate OpenMRS identifier", method = "importMpiPatient(String)")
     public void testPerformCorrectImportForPatientWithoutOpenMrsIdentifier() throws Exception {
         mockMpiAuthentication();
         OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITHOUT_OPENMRS_ID);
@@ -108,7 +104,6 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     }
 
     @Test
-    @Verifies(value = "should import patient from remote MPI server, ", method = "importMpiPatient(String)")
     public void testPerformCorrectImportForPatientWithOpenMrsIdentifier() throws Exception {
         mockMpiAuthentication();
         OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
