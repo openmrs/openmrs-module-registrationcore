@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class IdentifierGeneratorTest {
+public class IdentifierBuilderTest {
 
     private static final String OPENMRS_IDENTIFIER_SOURCE_ID = "1";
     private static final String OPENMRS_GENERATED_IDENTIFIER = "10012NF";
@@ -28,7 +28,7 @@ public class IdentifierGeneratorTest {
     private static final String CUSTOM_MPI_IDENTIFIER_ID = "2";
     private static final String CUSTOM_MPI_IDENTIFIER_VALUE = "16340061NF";
 
-    @InjectMocks private IdentifierGenerator generator;
+    @InjectMocks private IdentifierBuilder generator;
     @Mock private LocationService locationService;
     @Mock private IdentifierSourceService iss;
     @Mock private AdministrationService adminService;

@@ -62,7 +62,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private AdministrationService adminService;
 
-	private IdentifierGenerator identifierGenerator;
+	private IdentifierBuilder identifierBuilder;
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -92,8 +92,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		this.adminService = adminService;
 	}
 
-	public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
-		this.identifierGenerator = identifierGenerator;
+	public void setIdentifierBuilder(IdentifierBuilder identifierBuilder) {
+		this.identifierBuilder = identifierBuilder;
 	}
 
     /**
@@ -116,12 +116,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (patient == null)
 			throw new APIException("Patient cannot be null");
 
-		Integer openMrsIdentifierId = identifierGenerator.getOpenMrsIdentifierSourceId();
+		Integer openMrsIdentifierId = identifierBuilder.getOpenMrsIdentifierSourceId();
 		PatientIdentifier patientIdentifier;
 		if (StringUtils.isBlank(identifierString)) {
-			patientIdentifier = identifierGenerator.generateIdentifier(openMrsIdentifierId, identifierLocation);
+			patientIdentifier = identifierBuilder.generateIdentifier(openMrsIdentifierId, identifierLocation);
 		} else {
-			patientIdentifier = identifierGenerator.createIdentifier(openMrsIdentifierId, identifierString, identifierLocation);
+			patientIdentifier = identifierBuilder.createIdentifier(openMrsIdentifierId, identifierString, identifierLocation);
 		}
 		patientIdentifier.setPreferred(true);
 		patient.addIdentifier(patientIdentifier);

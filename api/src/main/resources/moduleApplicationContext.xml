@@ -15,7 +15,7 @@
                 <property name="patientService" ref="patientService" />
                 <property name="personService" ref="personService" />
                 <property name="adminService" ref="adminService" />
-                <property name="identifierGenerator" ref="registrationcore.identifierGenerator"/>
+                <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
             </bean>
         </property>
         <property name="preInterceptors">
@@ -25,7 +25,7 @@
             <ref bean="transactionAttributeSource" />
         </property>
     </bean>
-    <bean id="registrationcore.identifierGenerator" class="org.openmrs.module.registrationcore.api.impl.IdentifierGenerator">
+    <bean id="registrationcore.identifierBuilder" class="org.openmrs.module.registrationcore.api.impl.IdentifierBuilder">
         <property name="locationService" ref="locationService"/>
         <property name="adminService" ref="adminService" />
         <property name="patientService" ref="patientService"/>
@@ -67,7 +67,7 @@
 
     <bean id="registrationcore.queryMapper"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientQueryMapper">
-        <property name="identifierGenerator" ref="registrationcore.identifierGenerator"/>
+        <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
     </bean>
 
 </beans>

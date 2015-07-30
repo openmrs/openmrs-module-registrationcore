@@ -13,7 +13,7 @@ import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.validator.PatientIdentifierValidator;
 
-public class IdentifierGenerator {
+public class IdentifierBuilder {
 
     private LocationService locationService;
 

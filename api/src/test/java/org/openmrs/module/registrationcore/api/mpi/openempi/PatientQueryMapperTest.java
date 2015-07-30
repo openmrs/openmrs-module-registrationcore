@@ -9,7 +9,7 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonName;
-import org.openmrs.module.registrationcore.api.impl.IdentifierGenerator;
+import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
 
 import java.util.Collections;
 import java.util.TreeSet;
@@ -43,7 +43,7 @@ public class PatientQueryMapperTest {
 
     private XmlMarshaller xmlMarshaller = new XmlMarshaller();
     @InjectMocks private PatientQueryMapper queryMapper = new PatientQueryMapper();
-    @Mock private IdentifierGenerator identifierGenerator;
+    @Mock private IdentifierBuilder identifierBuilder;
 
     @Mock private PatientIdentifier ecidIdentifier;
     @Mock private PatientIdentifier openMrsIdentifier;
@@ -75,9 +75,9 @@ public class PatientQueryMapperTest {
 
         Patient convertedPatient = queryMapper.convert(patientQuery);
 
-        //verify correct querying to IdentifierGenerator class:
-        verify(identifierGenerator).createIdentifier(ECID_IDENTIFIER_TYPE_ID, ECID_IDENTIFIER_VALUE, null);
-        verify(identifierGenerator).createIdentifier(OPENMRS_IDENTIFIER_TYPE_ID, OPENMRS_IDENTIFIER_VALUE, null);
+        //verify correct querying to IdentifierBuilder class:
+        verify(identifierBuilder).createIdentifier(ECID_IDENTIFIER_TYPE_ID, ECID_IDENTIFIER_VALUE, null);
+        verify(identifierBuilder).createIdentifier(OPENMRS_IDENTIFIER_TYPE_ID, OPENMRS_IDENTIFIER_VALUE, null);
         verify(openMrsIdentifier).setPreferred(true);
 
         //verify actual fields:
@@ -94,12 +94,12 @@ public class PatientQueryMapperTest {
 
         Patient convertedPatient = queryMapper.importPatient(patientQuery);
 
-        //verify correct querying to IdentifierGenerator class:
-        verify(identifierGenerator).createIdentifier(ECID_IDENTIFIER_TYPE_ID, ECID_IDENTIFIER_VALUE, null);
-        verify(identifierGenerator).createIdentifier(OPENMRS_IDENTIFIER_TYPE_ID, OPENMRS_IDENTIFIER_VALUE, null);
+        //verify correct querying to IdentifierBuilder class:
+        verify(identifierBuilder).createIdentifier(ECID_IDENTIFIER_TYPE_ID, ECID_IDENTIFIER_VALUE, null);
+        verify(identifierBuilder).createIdentifier(OPENMRS_IDENTIFIER_TYPE_ID, OPENMRS_IDENTIFIER_VALUE, null);
         verify(openMrsIdentifier).setPreferred(true);
         //verify that wasn't interaction with generating identifier method:
-        verify(identifierGenerator, never()).generateIdentifier(anyInt(), any(Location.class));
+        verify(identifierBuilder, never()).generateIdentifier(anyInt(), any(Location.class));
 
         //verify actual fields:
         assertPatientEquals(patientQuery, convertedPatient);
@@ -114,8 +114,8 @@ public class PatientQueryMapperTest {
 
         Patient convertedPatient = queryMapper.importPatient(patientQuery);
 
-        //verify correct querying to IdentifierGenerator class:
-        verify(identifierGenerator).generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_ID, null);
+        //verify correct querying to IdentifierBuilder class:
+        verify(identifierBuilder).generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_ID, null);
         verify(openMrsIdentifier).setPreferred(true);
 
         //verify actual fields:
@@ -145,22 +145,22 @@ public class PatientQueryMapperTest {
     }
 
     private void mockIdentifierGeneratorGetIdentifierId() {
-        when(identifierGenerator.getIdentifierIdByName(OPEMMRS_IDENTIFIER_NAME)).thenReturn(OPENMRS_IDENTIFIER_TYPE_ID);
-        when(identifierGenerator.getIdentifierIdByName(ECID_IDENTIFIER_NAME)).thenReturn(ECID_IDENTIFIER_TYPE_ID);
-        when(identifierGenerator.getIdentifierIdByName(OPENEMPI_IDENTIFIER_NAME)).thenReturn(OPENEMPI_IDENTIFIER_TYPE_ID);
+        when(identifierBuilder.getIdentifierIdByName(OPEMMRS_IDENTIFIER_NAME)).thenReturn(OPENMRS_IDENTIFIER_TYPE_ID);
+        when(identifierBuilder.getIdentifierIdByName(ECID_IDENTIFIER_NAME)).thenReturn(ECID_IDENTIFIER_TYPE_ID);
+        when(identifierBuilder.getIdentifierIdByName(OPENEMPI_IDENTIFIER_NAME)).thenReturn(OPENEMPI_IDENTIFIER_TYPE_ID);
     }
 
     private void mockIdentifierGeneratorCreation() {
-        when(identifierGenerator.createIdentifier(eq(OPENMRS_IDENTIFIER_TYPE_ID), anyString(), any(Location.class)))
+        when(identifierBuilder.createIdentifier(eq(OPENMRS_IDENTIFIER_TYPE_ID), anyString(), any(Location.class)))
                 .thenReturn(openMrsIdentifier);
-        when(identifierGenerator.createIdentifier(eq(ECID_IDENTIFIER_TYPE_ID), anyString(), any(Location.class)))
+        when(identifierBuilder.createIdentifier(eq(ECID_IDENTIFIER_TYPE_ID), anyString(), any(Location.class)))
                 .thenReturn(ecidIdentifier);
-        when(identifierGenerator.createIdentifier(eq(OPENEMPI_IDENTIFIER_TYPE_ID), anyString(), any(Location.class)))
+        when(identifierBuilder.createIdentifier(eq(OPENEMPI_IDENTIFIER_TYPE_ID), anyString(), any(Location.class)))
                 .thenReturn(openEmpiIdentifier);
     }
 
     private void mockIdentifierGenerating() {
-        when(identifierGenerator.getOpenMrsIdentifierSourceId()).thenReturn(OPENMRS_IDENTIFIER_SOURCE_ID);
-        when(identifierGenerator.generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_ID, null)).thenReturn(openMrsIdentifier);
+        when(identifierBuilder.getOpenMrsIdentifierSourceId()).thenReturn(OPENMRS_IDENTIFIER_SOURCE_ID);
+        when(identifierBuilder.generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_ID, null)).thenReturn(openMrsIdentifier);
     }
 }
