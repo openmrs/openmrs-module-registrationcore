@@ -8,6 +8,8 @@ public class OpenEmpiVariables {
 
     static final String PERSON_QUERY_URL = "person-query-resource/";
 
+    static final String PERSON_MANAGER_URL = "person-manager-resource/";
+
     static final String AUTHENTICATION_URL = "security-resource/authenticate";
 
     static final String FIND_EXACT_PATIENTS_URL = "findPersonsByAttributes";
@@ -16,5 +18,7 @@ public class OpenEmpiVariables {
     static final String FIND_PROBABLISTIC_PATIENTS_URL = "findPersonsByAttributes";
 
     static final String FIND_PATIENT_BY_ID_URL = "loadPerson";
+
+    static final String IMPORT_PATIENT_URL = "importPatient";
 
 }

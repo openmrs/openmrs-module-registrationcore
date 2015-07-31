@@ -119,6 +119,24 @@ public class RestQueryCreatorTest {
         assertTrue(patients.size() == 0);
     }
 
+    @Test
+    public void testExportPatient() throws Exception {
+        mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
+        OpenEmpiPatientQuery query = createPatientQuery();
+
+        restQueryCreator.exportPatient(TOKEN_VALUE, query);
+
+        ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        //verify correct request creation:
+        verify(restTemplate).exchange(eq(createExportPatient()),
+                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(OpenEmpiPatientQuery.class));
+        //verify request body was set correctly:
+        assertEquals(argumentCaptor.getValue().getBody(), query);
+        //verify that header with token was sett:
+        assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
+
+    }
+
     private OpenEmpiPatientQuery createPatientQuery() {
         OpenEmpiPatientQuery query = new OpenEmpiPatientQuery();
         query.setGivenName(PATIENT_QUERY_GIVENNAME);
@@ -150,6 +168,10 @@ public class RestQueryCreatorTest {
 
     private String createFindPreciseSimilarPatient() {
         return getServerUrl() + REST_URL + PERSON_QUERY_URL + FIND_EXACT_PATIENTS_URL;
+    }
+
+    private String createExportPatient() {
+        return getServerUrl() + REST_URL + PERSON_MANAGER_URL + IMPORT_PATIENT_URL;
     }
 
     private HttpHeaders getAuthenticationHeader(String token) {
