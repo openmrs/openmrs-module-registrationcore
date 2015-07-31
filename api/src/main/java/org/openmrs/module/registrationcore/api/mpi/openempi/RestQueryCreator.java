@@ -1,10 +1,8 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
-import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.APIException;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,12 +16,11 @@ import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiVaria
 
 public class RestQueryCreator {
 
-    private AdministrationService adminService;
+    private MpiProperties properties;
     private RestTemplate restTemplate = new RestTemplate();
-    private String serverUrl;
 
-    public void setAdminService(AdministrationService adminService) {
-        this.adminService = adminService;
+    public void setProperties(MpiProperties properties) {
+        this.properties = properties;
     }
 
     public String processAuthentication(MpiCredentials credentials) throws APIException {
@@ -97,18 +94,7 @@ public class RestQueryCreator {
     }
 
     private String getServerUrl() {
-        if (serverUrl == null) {
-            serverUrl = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_URL);
-            validateServerUrl();
-            serverUrl = "http://" + serverUrl;
-        }
-        return serverUrl;
-    }
-
-    private void validateServerUrl() {
-        if (StringUtils.isBlank(serverUrl))
-            throw new APIException("Mpi server credentials are not set. Please fill "
-                    + RegistrationCoreConstants.GP_MPI_URL + " property");
+        return "http://" + properties.getServerUrl();
     }
 
     private List<OpenEmpiPatientQuery> unwrapResult(OpenEmpiPeopleWrapper people) {

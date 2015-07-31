@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Component("registrationcore.mpiProperties")
 public class MpiProperties extends ModuleProperties {
 
     private static final Map<String, String> MPI_PROPERTIES = new LinkedHashMap<String, String>();

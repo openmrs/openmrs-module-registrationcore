@@ -55,6 +55,9 @@
     </bean>
 
     <!-- Mpi implementation part -->
+    <bean id="registrationcore.mpiProperties"
+          class="org.openmrs.module.registrationcore.api.mpi.common.MpiProperties"/>
+
     <bean id="registrationcore.mpiFacade"
           class="org.openmrs.module.registrationcore.api.mpi.common.MpiFacadeImpl"/>
 
@@ -69,7 +72,7 @@
 
     <bean id="registrationcore.restQueryCreator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator">
-        <property name="adminService" ref="adminService"/>
+        <property name="properties" ref="registrationcore.mpiProperties"/>
     </bean>
 
     <bean id="registrationcore.queryMapper"
