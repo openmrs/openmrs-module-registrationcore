@@ -30,6 +30,30 @@ public class PatientIdentifierMapper {
         }
     }
 
+    private Pair<Integer, Integer> parseIdentifiers(String mappedIdentifiers) {
+        String local = getLocalPart(mappedIdentifiers);
+        String mpi = getMpiPart(mappedIdentifiers);
+        return createPair(local, mpi);
+    }
+
+    private String getLocalPart(String mappedIdentifiers) {
+        return mappedIdentifiers.substring(0, mappedIdentifiers.indexOf(SPLITTER_SIGN));
+    }
+
+    private String getMpiPart(String mappedIdentifiers) {
+        return mappedIdentifiers.substring(mappedIdentifiers.indexOf(SPLITTER_SIGN) + 1);
+    }
+
+    private Pair<Integer, Integer> createPair(String localString, String mpiString) {
+        try {
+            Integer local = Integer.valueOf(localString);
+            Integer mpi = Integer.valueOf(mpiString);
+            return new Pair<Integer, Integer>(local, mpi);
+        } catch (NumberFormatException e) {
+            throw new APIException("Can't create identifier pair for values: local= " + localString + ", mpi=" + mpiString);
+        }
+    }
+
     public Integer getMpiGlobalIdentifierDomainId() {
         String globalIdentifierIdString = administrationService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID);
         if (StringUtils.isNotEmpty(globalIdentifierIdString)) {
@@ -57,29 +81,5 @@ public class PatientIdentifierMapper {
                 return pair.snd;
         }
         return null;
-    }
-
-    private Pair<Integer, Integer> parseIdentifiers(String mappedIdentifiers) {
-        String local = getLocalPart(mappedIdentifiers);
-        String mpi = getMpiPart(mappedIdentifiers);
-        return createPair(local, mpi);
-    }
-
-    private Pair<Integer, Integer> createPair(String localString, String mpiString) {
-        try {
-            Integer local = Integer.valueOf(localString);
-            Integer mpi = Integer.valueOf(mpiString);
-            return new Pair<Integer, Integer>(local, mpi);
-        } catch (NumberFormatException e) {
-            throw new APIException("Can't create identifier pair for values: local= " + localString + ", mpi=" + mpiString);
-        }
-    }
-
-    private String getLocalPart(String mappedIdentifiers) {
-        return mappedIdentifiers.substring(0, mappedIdentifiers.indexOf(SPLITTER_SIGN));
-    }
-
-    private String getMpiPart(String mappedIdentifiers) {
-        return mappedIdentifiers.substring(mappedIdentifiers.indexOf(SPLITTER_SIGN) + 1);
     }
 }
