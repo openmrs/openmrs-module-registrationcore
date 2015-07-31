@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import com.sun.tools.javac.util.Pair;
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
@@ -26,6 +27,19 @@ public class PatientIdentifierMapper {
             String mappedIdentifiers = property.getPropertyValue();
             Pair<Integer, Integer> pair = parseIdentifiers(mappedIdentifiers);
             MAPPED_ID.add(pair);
+        }
+    }
+
+    public Integer getMpiGlobalIdentifierDomainId() {
+        String globalIdentifierIdString = administrationService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID);
+        if (StringUtils.isNotEmpty(globalIdentifierIdString)) {
+            try {
+                return Integer.valueOf(globalIdentifierIdString);
+            } catch (NumberFormatException e) {
+                throw new APIException("Incorrect mpi global property value. " + globalIdentifierIdString + "cannot be cast to Integer.");
+            }
+        } else {
+            throw new APIException("MPI Global Identifier Domain Id is missing");
         }
     }
 
