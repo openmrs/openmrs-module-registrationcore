@@ -19,6 +19,6 @@ public class OpenEmpiVariables {
 
     static final String FIND_PATIENT_BY_ID_URL = "loadPerson";
 
-    static final String IMPORT_PATIENT_URL = "importPatient";
+    static final String IMPORT_PERSON_URL = "importPerson";
 
 }

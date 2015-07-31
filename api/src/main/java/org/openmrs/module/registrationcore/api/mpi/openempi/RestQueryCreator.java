@@ -90,7 +90,7 @@ public class RestQueryCreator {
     }
 
     private String createExportPatient() {
-        return getServerUrl() + REST_URL + PERSON_MANAGER_URL + IMPORT_PATIENT_URL;
+        return getServerUrl() + REST_URL + PERSON_MANAGER_URL + IMPORT_PERSON_URL;
     }
 
     private String getServerUrl() {
