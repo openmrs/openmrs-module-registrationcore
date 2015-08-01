@@ -127,4 +127,10 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @param personId
 	 */
 	String importMpiPatient(String personId);
+
+	/**
+	 * Perform exporting patient to MPI server.
+	 * @param patient
+	 */
+	void exportPatient(Patient patient);
 }

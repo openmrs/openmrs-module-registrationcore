@@ -13,12 +13,18 @@ public class MpiFacadeImpl implements MpiFacade {
     @Autowired
     @Qualifier("registrationcore.mpiPatientSearcher")
     private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
+
     @Autowired
     @Qualifier("registrationcore.mpiPatientImporter")
     private MpiPatientImporter patientImporter;
+
     @Autowired
     @Qualifier("registrationcore.mpiAuthenticator")
     private MpiAuthenticator authenticator;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiPatientExport")
+    private MpiPatientExporter patientExport;
 
     @Override
     public Patient importMpiPatient(String patientId) {
@@ -38,6 +44,12 @@ public class MpiFacadeImpl implements MpiFacade {
                                                                    Double cutoff, Integer maxResults) {
         validateAuthentication();
         return searchAlgorithm.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+    }
+
+    @Override
+    public void export(Patient patient) {
+        validateAuthentication();
+        patientExport.export(patient);
     }
 
     private void validateAuthentication() {
