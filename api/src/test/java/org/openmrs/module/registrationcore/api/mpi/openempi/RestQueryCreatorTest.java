@@ -7,9 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.api.APIException;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,7 +37,7 @@ public class RestQueryCreatorTest {
     private static final String PATIENT_QUERY_FAMILYNAME = "Louis";
 
     @InjectMocks private RestQueryCreator restQueryCreator = new RestQueryCreator();
-    @Mock private AdministrationService adminService;
+    @Mock private MpiProperties mpiProperties;
     @Mock private RestTemplate restTemplate;
     @Mock private OpenEmpiPatientQuery patientQuery;
     @Mock private OpenEmpiPeopleWrapper peopleWrapper;
@@ -47,7 +47,7 @@ public class RestQueryCreatorTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockRestTemplate();
-        mockServerUrlProperty();
+        mockMpiProperties();
     }
 
     @Test
@@ -188,8 +188,8 @@ public class RestQueryCreatorTest {
         ReflectionTestUtils.setField(restQueryCreator, "restTemplate", restTemplate);
     }
 
-    private void mockServerUrlProperty() {
-        when(adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_URL)).thenReturn(SERVER_URL);
+    private void mockMpiProperties() {
+        when(mpiProperties.getServerUrl()).thenReturn(SERVER_URL);
     }
 
     private void mockPeopleWrapper(OpenEmpiPeopleWrapper peopleWrapper, List<OpenEmpiPatientQuery> patientQueryList) {
