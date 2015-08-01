@@ -54,19 +54,6 @@ public class PatientIdentifierMapper {
         }
     }
 
-    public Integer getMpiGlobalIdentifierDomainId() {
-        String globalIdentifierIdString = administrationService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID);
-        if (StringUtils.isNotEmpty(globalIdentifierIdString)) {
-            try {
-                return Integer.valueOf(globalIdentifierIdString);
-            } catch (NumberFormatException e) {
-                throw new APIException("Incorrect mpi global property value. " + globalIdentifierIdString + "cannot be cast to Integer.");
-            }
-        } else {
-            throw new APIException("MPI Global Identifier Domain Id is missing");
-        }
-    }
-
     public Integer getMappedLocalIdentifierTypeId(Integer mpiIdentifierTypeId) {
         for (Pair<Integer, Integer> pair : MAPPED_ID) {
             if (pair.snd.equals(mpiIdentifierTypeId))

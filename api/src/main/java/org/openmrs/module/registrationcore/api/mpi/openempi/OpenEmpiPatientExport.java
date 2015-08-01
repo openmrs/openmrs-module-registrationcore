@@ -2,13 +2,14 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.PatientExport;
 
 public class OpenEmpiPatientExport implements PatientExport {
 
     private OpenEmpiPatientQueryBuilder queryBuilder;
 
-    private PatientIdentifierMapper identifierMapper;
+    private MpiProperties mpiProperties;
 
     private MpiAuthenticator authenticator;
 
@@ -18,8 +19,8 @@ public class OpenEmpiPatientExport implements PatientExport {
         this.queryBuilder = queryBuilder;
     }
 
-    public void setPatientIdentifierMapper(PatientIdentifierMapper patientIdentifierMapper) {
-        this.identifierMapper = patientIdentifierMapper;
+    public void setMpiProperties(MpiProperties mpiProperties) {
+        this.mpiProperties = mpiProperties;
     }
 
     public void setMpiAuthenticator(MpiAuthenticator authenticator) {
@@ -39,7 +40,7 @@ public class OpenEmpiPatientExport implements PatientExport {
     }
 
     private void removeOpenEmpiGlobalIdentifier(OpenEmpiPatientQuery patientQuery) {
-        Integer mpiGlobalIdentifierId = identifierMapper.getMpiGlobalIdentifierDomainId();
+        Integer mpiGlobalIdentifierId = mpiProperties.getGlobalIdentifierDomainId();
         for (PersonIdentifier personIdentifier : patientQuery.getPersonIdentifiers()) {
             if (personIdentifier.getIdentifierDomain().getIdentifierDomainId().equals(mpiGlobalIdentifierId)) {
                 patientQuery.getPersonIdentifiers().remove(personIdentifier);

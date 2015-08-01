@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
 import java.util.LinkedList;
 
@@ -20,18 +21,18 @@ public class OpenEmpiPatientExportTest {
     private static final int MPI_GLOBAL_DOMAIN_ID = 13;
     @InjectMocks private OpenEmpiPatientExport patientExport = new OpenEmpiPatientExport();
     @Mock private OpenEmpiPatientQueryBuilder queryBuilder;
-    @Mock private PatientIdentifierMapper identifierMapper;
+    @Mock private MpiProperties mpiProperties;
     @Mock private MpiAuthenticator authenticator;
     @Mock private RestQueryCreator queryCreator;
     @Mock private Patient patient;
     @Mock private OpenEmpiPatientQuery query;
-
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockAuthentication();
         mockBuilder();
+        mockMpiProperties();
         mockQueryIdentifiers();
     }
 
@@ -43,12 +44,19 @@ public class OpenEmpiPatientExportTest {
         when(queryBuilder.build(patient)).thenReturn(query);
     }
 
+    private void mockMpiProperties() {
+        when(mpiProperties.getGlobalIdentifierDomainId()).thenReturn(MPI_GLOBAL_DOMAIN_ID);
+    }
+
     private void mockQueryIdentifiers() {
         LinkedList<PersonIdentifier> identifiers = new LinkedList<PersonIdentifier>();
-        PersonIdentifier identifier = mock(PersonIdentifier.class);
-        IdentifierDomain identifierDomain = mock(IdentifierDomain.class);
-        when(identifier.getIdentifierDomain()).thenReturn(identifierDomain);
-        when(identifierDomain.getIdentifierDomainId()).thenReturn(MPI_GLOBAL_DOMAIN_ID);
+
+        PersonIdentifier identifier = new PersonIdentifier();
+        IdentifierDomain identifierDomain = new IdentifierDomain();
+        identifierDomain.setIdentifierDomainId(MPI_GLOBAL_DOMAIN_ID);
+        identifier.setIdentifierDomain(identifierDomain);
+        identifiers.add(identifier);
+
         when(query.getPersonIdentifiers()).thenReturn(identifiers);
     }
 
