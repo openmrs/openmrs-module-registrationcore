@@ -1,11 +1,16 @@
 package org.openmrs.module.registrationcore.api.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
+import org.openmrs.event.Event;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -14,15 +19,18 @@ import javax.jms.Message;
 
 public class PatientCreationListener implements EventListener {
 
+    private static final Log log = LogFactory.getLog(this.getClass());
+
+    @Autowired
+    @Qualifier("registrationcore.mpiPatientExport")
     private MpiPatientExporter mpiPatientExporter;
+
+    @Autowired
+    @Qualifier("patientService")
     private PatientService patientService;
 
-    public void setMpiPatientExporter(MpiPatientExporter mpiPatientExporter) {
-        this.mpiPatientExporter = mpiPatientExporter;
-    }
-
-    public void setPatientService(PatientService patientService) {
-        this.patientService = patientService;
+    public void init() {
+        Event.subscribe(RegistrationCoreConstants.TOPIC_NAME, this);
     }
 
     @Override

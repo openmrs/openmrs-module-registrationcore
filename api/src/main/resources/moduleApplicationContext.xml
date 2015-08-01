@@ -71,7 +71,8 @@
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientExporter"/>
 
     <bean id="registrationcore.mpiPatientSearcher"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientSearchAlgorithm"/>
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientSearchAlgorithm"
+            init-method="">
 
     <!--help classes related to MPI implementation:-->
 
@@ -86,5 +87,8 @@
 
     <bean id="registrationcore.openEmpiPatientQueryBuilder"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientQueryBuilder"/>
+
+    <bean id="registrationcore.patientCreationListener"
+          class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener"/>
 
 </beans>
