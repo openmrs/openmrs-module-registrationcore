@@ -9,7 +9,7 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.mpi.common.PatientExport;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -24,7 +24,7 @@ public class PatientCreationListenerTest {
 
     @InjectMocks private PatientCreationListener patientCreationListener;
     @Mock private PatientService patientService;
-    @Mock private PatientExport patientExport;
+    @Mock private MpiPatientExporter mpiPatientExporter;
 
     @Mock private MapMessage mapMessage;
     @Mock private Message message;
@@ -54,7 +54,7 @@ public class PatientCreationListenerTest {
 
         patientCreationListener.onMessage(mapMessage);
 
-        verify(patientExport).export(patient);
+        verify(mpiPatientExporter).export(patient);
     }
 
 

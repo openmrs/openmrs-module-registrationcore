@@ -3,9 +3,9 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
-import org.openmrs.module.registrationcore.api.mpi.common.PatientExport;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
 
-public class OpenEmpiPatientExport implements PatientExport {
+public class OpenEmpiPatientExporter implements MpiPatientExporter {
 
     private OpenEmpiPatientQueryBuilder queryBuilder;
 

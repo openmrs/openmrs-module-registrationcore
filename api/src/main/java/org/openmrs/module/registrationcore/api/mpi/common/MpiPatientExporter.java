@@ -2,7 +2,7 @@ package org.openmrs.module.registrationcore.api.mpi.common;
 
 import org.openmrs.Patient;
 
-public interface PatientExport {
+public interface MpiPatientExporter {
 
     void export(Patient patient);
 }

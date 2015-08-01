@@ -5,7 +5,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.mpi.common.PatientExport;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -14,11 +14,11 @@ import javax.jms.Message;
 
 public class PatientCreationListener implements EventListener {
 
-    private PatientExport patientExport;
+    private MpiPatientExporter mpiPatientExporter;
     private PatientService patientService;
 
-    public void setPatientExport(PatientExport patientExport) {
-        this.patientExport = patientExport;
+    public void setMpiPatientExporter(MpiPatientExporter mpiPatientExporter) {
+        this.mpiPatientExporter = mpiPatientExporter;
     }
 
     public void setPatientService(PatientService patientService) {
@@ -33,7 +33,7 @@ public class PatientCreationListener implements EventListener {
         String patientUuid = getPatientUuid(mapMessage);
         Patient createdPatient = patientService.getPatientByUuid(patientUuid);
 
-        patientExport.export(createdPatient);
+        mpiPatientExporter.export(createdPatient);
     }
 
     private void validateMessage(Message message) {

@@ -19,7 +19,7 @@ public class OpenEmpiPatientExportTest {
 
     private static final String TOKEN = "token";
     private static final int MPI_GLOBAL_DOMAIN_ID = 13;
-    @InjectMocks private OpenEmpiPatientExport patientExport = new OpenEmpiPatientExport();
+    @InjectMocks private OpenEmpiPatientExporter patientExport = new OpenEmpiPatientExporter();
     @Mock private OpenEmpiPatientQueryBuilder queryBuilder;
     @Mock private MpiProperties mpiProperties;
     @Mock private MpiAuthenticator authenticator;
