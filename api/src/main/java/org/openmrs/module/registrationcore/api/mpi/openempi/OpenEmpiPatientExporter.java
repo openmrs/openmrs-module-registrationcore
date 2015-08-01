@@ -4,32 +4,26 @@ import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class OpenEmpiPatientExporter implements MpiPatientExporter {
 
+    @Autowired
+    @Qualifier("registrationcore.openEmpiPatientQueryBuilder")
     private OpenEmpiPatientQueryBuilder queryBuilder;
 
+    @Autowired
+    @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
+    @Autowired
+    @Qualifier("registrationcore.mpiAuthenticator")
     private MpiAuthenticator authenticator;
 
+    @Autowired
+    @Qualifier("registrationcore.restQueryCreator")
     private RestQueryCreator queryCreator;
-
-    public void setOpenEmpiPatientQueryBuilder(OpenEmpiPatientQueryBuilder queryBuilder) {
-        this.queryBuilder = queryBuilder;
-    }
-
-    public void setMpiProperties(MpiProperties mpiProperties) {
-        this.mpiProperties = mpiProperties;
-    }
-
-    public void setMpiAuthenticator(MpiAuthenticator authenticator) {
-        this.authenticator = authenticator;
-    }
-
-    public void setRestQueryCreator(RestQueryCreator queryCreator) {
-        this.queryCreator = queryCreator;
-    }
 
     @Override
     public void export(Patient patient) {

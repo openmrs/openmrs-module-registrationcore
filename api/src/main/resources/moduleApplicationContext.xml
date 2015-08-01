@@ -67,17 +67,24 @@
     <bean id="registrationcore.mpiPatientImporter"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientImporter"/>
 
+    <bean id="registrationcore.mpiPatientExport"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientExporter"/>
+
     <bean id="registrationcore.mpiPatientSearcher"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientSearchAlgorithm"/>
 
+    <!--help classes related to MPI implementation:-->
+
+    <bean id="registrationcore.identifierMapper"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper"/>
+
     <bean id="registrationcore.restQueryCreator"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator">
-        <property name="properties" ref="registrationcore.mpiProperties"/>
-    </bean>
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator"/>
 
     <bean id="registrationcore.queryMapper"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientQueryMapper">
-        <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
-    </bean>
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientQueryMapper"/>
+
+    <bean id="registrationcore.openEmpiPatientQueryBuilder"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientQueryBuilder"/>
 
 </beans>

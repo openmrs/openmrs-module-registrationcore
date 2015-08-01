@@ -3,17 +3,17 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.LinkedList;
 import java.util.Set;
 
 public class OpenEmpiPatientQueryBuilder {
 
+    @Autowired
+    @Qualifier("registrationcore.identifierMapper")
     private PatientIdentifierMapper identifierMapper;
-
-    public void setIdentifierMapper(PatientIdentifierMapper identifierMapper) {
-        this.identifierMapper = identifierMapper;
-    }
 
     public OpenEmpiPatientQuery build(Patient patient) {
         OpenEmpiPatientQuery query = new OpenEmpiPatientQuery();

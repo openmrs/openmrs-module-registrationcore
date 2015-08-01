@@ -14,9 +14,11 @@ public class OpenEmpiAuthenticator implements MpiAuthenticator {
     @Autowired
     @Qualifier("registrationcore.restQueryCreator")
     private RestQueryCreator queryCreator;
+
     @Autowired
     @Qualifier("adminService")
     private AdministrationService adminService;
+
     private String token;
 
     @Override
@@ -41,6 +43,7 @@ public class OpenEmpiAuthenticator implements MpiAuthenticator {
         return token;
     }
 
+    //TODO refactor to use MpiProeprties.
     private MpiCredentials getMpiCredentials() {
         String username = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME);
         String password = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD);

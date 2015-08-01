@@ -8,6 +8,8 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.*;
 
@@ -16,11 +18,9 @@ public class PatientQueryMapper {
     private static final String OPENMRS_IDENTIFIER_NAME = "OpenMRS";
     protected final Log log = LogFactory.getLog(this.getClass());
 
+    @Autowired
+    @Qualifier("registrationcore.identifierBuilder")
     private IdentifierBuilder identifierBuilder;
-
-    public void setIdentifierBuilder(IdentifierBuilder identifierBuilder) {
-        this.identifierBuilder = identifierBuilder;
-    }
 
     public OpenEmpiPatientQuery convert(Patient patient) {
         OpenEmpiPatientQuery patientQuery = new OpenEmpiPatientQuery();

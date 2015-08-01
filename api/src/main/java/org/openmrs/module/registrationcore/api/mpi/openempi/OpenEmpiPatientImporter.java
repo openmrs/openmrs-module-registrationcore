@@ -15,6 +15,7 @@ public class OpenEmpiPatientImporter implements MpiPatientImporter {
     @Autowired
     @Qualifier("registrationcore.queryMapper")
     private PatientQueryMapper queryMapper;
+
     @Autowired
     @Qualifier("registrationcore.mpiAuthenticator")
     private MpiAuthenticator authenticator;

@@ -3,6 +3,8 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,12 +18,11 @@ import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiVaria
 
 public class RestQueryCreator {
 
-    private MpiProperties properties;
     private RestTemplate restTemplate = new RestTemplate();
 
-    public void setProperties(MpiProperties properties) {
-        this.properties = properties;
-    }
+    @Autowired
+    @Qualifier("registrationcore.mpiProperties")
+    private MpiProperties properties;
 
     public String processAuthentication(MpiCredentials credentials) throws APIException {
         ResponseEntity<String> token = restTemplate.exchange(createAuthenticationUrl(),

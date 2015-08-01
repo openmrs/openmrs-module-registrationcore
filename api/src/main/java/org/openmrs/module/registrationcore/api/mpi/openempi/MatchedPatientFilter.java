@@ -66,6 +66,7 @@ public class MatchedPatientFilter {
             initializeFilterIdentifierType();
     }
 
+    //TODO refactor to use Global domain identifier from MpiProperties.
     private void initializeFilterIdentifierType() {
         String propertyValue = adminService.getGlobalProperty(RegistrationCoreConstants.GP_FILTER_IDENTIFIER_TYPE_ID);
         if (propertyValue == null)

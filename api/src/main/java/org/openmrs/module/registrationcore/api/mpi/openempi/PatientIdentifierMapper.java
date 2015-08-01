@@ -6,6 +6,8 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,12 +17,11 @@ public class PatientIdentifierMapper {
     private static final List<Pair<Integer, Integer>> MAPPED_ID = new LinkedList<Pair<Integer, Integer>>();
     private static final String SPLITTER_SIGN = ":";
 
+    @Autowired
+    @Qualifier("adminService")
     private AdministrationService administrationService;
 
-    public void setAdministrationService(AdministrationService administrationService) {
-        this.administrationService = administrationService;
-    }
-
+    //TODO refactor to use mpiProperties.
     public void init() {
         List<GlobalProperty> properties = administrationService.getGlobalPropertiesByPrefix(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP);
         for (GlobalProperty property : properties) {
