@@ -1,7 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
-import com.sun.tools.javac.util.Pair;
-import org.apache.commons.lang.StringUtils;
+import javafx.util.Pair;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
@@ -57,16 +56,16 @@ public class PatientIdentifierMapper {
 
     public Integer getMappedLocalIdentifierTypeId(Integer mpiIdentifierTypeId) {
         for (Pair<Integer, Integer> pair : MAPPED_ID) {
-            if (pair.snd.equals(mpiIdentifierTypeId))
-                return pair.fst;
+            if (pair.getValue().equals(mpiIdentifierTypeId))
+                return pair.getKey();
         }
         return null;
     }
 
     public Integer getMappedMpiIdentifierTypeId(Integer localIdentifierTypeId) {
         for (Pair<Integer, Integer> pair : MAPPED_ID) {
-            if (pair.fst.equals(localIdentifierTypeId))
-                return pair.snd;
+            if (pair.getKey().equals(localIdentifierTypeId))
+                return pair.getValue();
         }
         return null;
     }
