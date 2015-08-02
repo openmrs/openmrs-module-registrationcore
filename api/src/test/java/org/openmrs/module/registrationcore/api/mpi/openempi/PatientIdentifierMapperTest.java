@@ -5,15 +5,13 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.openmrs.GlobalProperty;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class PatientIdentifierMapperTest {
 
@@ -22,19 +20,23 @@ public class PatientIdentifierMapperTest {
     private static final Integer PROPERTY_MPI_PART = 2;
 
     @InjectMocks private PatientIdentifierMapper identifierMapper;
-    @Mock private AdministrationService administrationService;
+    @Mock private MpiProperties mpiProperties;
 
     @Before
     public void setUp() throws Exception {
         identifierMapper = new PatientIdentifierMapper();
         MockitoAnnotations.initMocks(this);
-        mockAdminService();
+        mockMpiProperties();
+    }
+
+    private void mockMpiProperties() {
+        when(mpiProperties.getLocalMpiIdentifierTypeMap()).thenReturn(Collections.singletonList(PROPERTY));
     }
 
     @Test
     public void testInit() throws Exception {
         identifierMapper.init();
-        verify(administrationService).getGlobalPropertiesByPrefix(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP);
+        verify(mpiProperties).getLocalMpiIdentifierTypeMap();
     }
 
     @Test
@@ -53,16 +55,5 @@ public class PatientIdentifierMapperTest {
         Integer localIdentifierTypeId = identifierMapper.getMappedLocalIdentifierTypeId(PROPERTY_MPI_PART);
 
         assertEquals(localIdentifierTypeId, PROPERTY_LOCAL_PART);
-    }
-
-    private void mockAdminService() {
-        List<GlobalProperty> globalProperties = new LinkedList<GlobalProperty>();
-
-        GlobalProperty property1 = mock(GlobalProperty.class);
-        when(property1.getPropertyValue()).thenReturn(PROPERTY);
-        globalProperties.add(property1);
-
-        when(administrationService.getGlobalPropertiesByPrefix(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP))
-                .thenReturn(globalProperties);
     }
 }
