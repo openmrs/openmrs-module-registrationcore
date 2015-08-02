@@ -10,7 +10,6 @@ import org.openmrs.event.Event;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
-import org.openmrs.util.PrivilegeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -32,34 +31,20 @@ public class PatientCreationListener implements EventListener {
     private PatientService patientService;
 
     public void init() {
-        log.error("Subscribing PatientCreationListener");
         Event.subscribe(RegistrationCoreConstants.TOPIC_NAME, this);
     }
 
     @Override
     public void onMessage(Message message) {
-        log.error("Handled creation patient message.");
-
+        log.info("Patient creation event handled, try perform export patient to MPI.");
         validateMessage(message);
-
         MapMessage mapMessage = (MapMessage) message;
         String patientUuid = getPatientUuid(mapMessage);
+
+        Context.openSession();
         Patient createdPatient = getPatient(patientUuid);
-
         mpiPatientExporter.export(createdPatient);
-    }
-
-    private Patient getPatient(String patientUuid) {
-        Patient createdPatient;
-        try {
-            Context.addProxyPrivilege(PrivilegeConstants.VIEW_PATIENTS);
-            Context.openSession();
-            createdPatient = patientService.getPatientByUuid(patientUuid);
-        } finally {
-            Context.closeSession();
-            Context.removeProxyPrivilege(PrivilegeConstants.VIEW_PATIENTS);
-        }
-        return createdPatient;
+        Context.closeSession();
     }
 
     private void validateMessage(Message message) {
@@ -73,5 +58,13 @@ public class PatientCreationListener implements EventListener {
         } catch (JMSException e) {
             throw new APIException("Exception while get uuid of created patient. " + e);
         }
+    }
+
+    private Patient getPatient(String patientUuid) {
+        Patient createdPatient;
+        //TODO fix it: Add Privelege role in correct way.
+        Context.authenticate("admin", "Admin123");
+        createdPatient = patientService.getPatientByUuid(patientUuid);
+        return createdPatient;
     }
 }
