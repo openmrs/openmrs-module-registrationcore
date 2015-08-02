@@ -1,6 +1,5 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
-import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +32,6 @@ public class OpenEmpiAuthenticator implements MpiAuthenticator {
 
     @Override
     public void performAuthentication() {
-        try {
-            token = queryCreator.processAuthentication(mpiProperties.getMpiCredentials());
-        } catch (RuntimeException e) {
-            throw new APIException("Exception while processing authentication to MPI server.");
-        }
+        token = queryCreator.processAuthentication(mpiProperties.getMpiCredentials());
     }
 }

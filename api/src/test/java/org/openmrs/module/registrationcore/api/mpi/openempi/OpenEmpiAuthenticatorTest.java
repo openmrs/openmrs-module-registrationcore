@@ -5,18 +5,15 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class OpenEmpiAuthenticatorTest {
@@ -26,6 +23,7 @@ public class OpenEmpiAuthenticatorTest {
     private static final String TOKEN_VALUE = "NotEmptyTokenValue";
     @Mock private RestQueryCreator queryCreator;
     @Mock private AdministrationService adminService;
+    @Mock private MpiProperties mpiProperties;
     @InjectMocks private OpenEmpiAuthenticator authenticator;
 
     @Before
@@ -42,6 +40,10 @@ public class OpenEmpiAuthenticatorTest {
         assertTrue(authenticated);
     }
 
+    private void mockTokenValue() {
+        ReflectionTestUtils.setField(authenticator, "token", TOKEN_VALUE);
+    }
+
     @Test
     public void testReturnFalseIfTokenIsNull() throws Exception {
         mockTokenEmpty();
@@ -49,6 +51,10 @@ public class OpenEmpiAuthenticatorTest {
         boolean authenticated = authenticator.isAuthenticated();
 
         assertFalse(authenticated);
+    }
+
+    private void mockTokenEmpty() {
+        ReflectionTestUtils.setField(authenticator, "token", null);
     }
 
     @Test
@@ -60,11 +66,8 @@ public class OpenEmpiAuthenticatorTest {
         verify(queryCreator).processAuthentication(eq(new MpiCredentials(MPI_ACCESS_USERNAME, MPI_ACCESS_PASSWORD)));
     }
 
-    @Test(expected = APIException.class)
-    public void testThrowExceptionOnInvalidCredentials() throws Exception {
-        mockInvalidCredentials();
-
-        authenticator.performAuthentication();
+    private void mockValidCredentials() {
+        when(mpiProperties.getMpiCredentials()).thenReturn(new MpiCredentials(MPI_ACCESS_USERNAME, MPI_ACCESS_PASSWORD));
     }
 
     @Test
@@ -83,23 +86,5 @@ public class OpenEmpiAuthenticatorTest {
 
         verify(queryCreator, never()).processAuthentication(any(MpiCredentials.class));
         assertEquals(TOKEN_VALUE, actualToken);
-    }
-
-    private void mockValidCredentials() {
-        when(adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME)).thenReturn(MPI_ACCESS_USERNAME);
-        when(adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD)).thenReturn(MPI_ACCESS_PASSWORD);
-    }
-
-    private void mockInvalidCredentials() {
-        when(adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME)).thenReturn(null);
-        when(adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD)).thenReturn("");
-    }
-
-    private void mockTokenValue() {
-        ReflectionTestUtils.setField(authenticator, "token", TOKEN_VALUE);
-    }
-
-    private void mockTokenEmpty() {
-        ReflectionTestUtils.setField(authenticator, "token", null);
     }
 }

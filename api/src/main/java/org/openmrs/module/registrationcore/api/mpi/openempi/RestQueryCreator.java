@@ -31,7 +31,7 @@ public class RestQueryCreator {
         if (tokenValue != null) {
             return tokenValue;
         } else {
-            throw new APIException("Can't perform authentication");
+            throw new APIException("Can't perform authentication to MPI server.");
         }
     }
 
