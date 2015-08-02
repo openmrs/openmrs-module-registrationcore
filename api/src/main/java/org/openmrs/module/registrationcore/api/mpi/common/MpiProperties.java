@@ -14,4 +14,14 @@ public class MpiProperties extends ModuleProperties {
         String propertyName = RegistrationCoreConstants.GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID;
         return getIntegerProperty(propertyName);
     }
+
+    public MpiCredentials getMpiCredentials() {
+        String usernamePropertyName = RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME;
+        String username = getProperty(usernamePropertyName);
+
+        String passwordPropertyName = RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD;
+        String password = getProperty(passwordPropertyName);
+
+        return new MpiCredentials(username, password);
+    }
 }
