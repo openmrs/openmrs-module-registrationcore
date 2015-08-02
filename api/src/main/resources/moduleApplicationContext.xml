@@ -42,6 +42,8 @@
         <property name="patientService" ref="patientService"/>
     </bean>
 
+    <bean id="registrationcore.coreProperties"
+          class="org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties"/>
 
     <!-- Services accessible via Context.getService() -->
     <bean parent="serviceContext">
