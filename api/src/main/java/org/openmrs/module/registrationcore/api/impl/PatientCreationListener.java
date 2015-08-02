@@ -22,13 +22,17 @@ public class PatientCreationListener implements EventListener {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
-    @Autowired
-    @Qualifier("registrationcore.mpiPatientExport")
     private MpiPatientExporter mpiPatientExporter;
 
-    @Autowired
-    @Qualifier("patientService")
     private PatientService patientService;
+
+    public void setMpiPatientExporter(MpiPatientExporter mpiPatientExporter) {
+        this.mpiPatientExporter = mpiPatientExporter;
+    }
+
+    public void setPatientService(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
     public void init() {
         Event.subscribe(RegistrationCoreConstants.TOPIC_NAME, this);

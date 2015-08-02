@@ -38,6 +38,13 @@
         <property name="adminService" ref="adminService"/>
     </bean>
 
+    <bean id="registrationcore.patientCreationListener"
+          class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener" init-method="init">
+        <property name="mpiPatientExporter" ref="registrationcore.mpiPatientExport"/>
+        <property name="patientService" ref="patientService"/>
+    </bean>
+
+
     <!-- Services accessible via Context.getService() -->
     <bean parent="serviceContext">
         <property name="moduleService">
@@ -86,8 +93,4 @@
 
     <bean id="registrationcore.openEmpiPatientQueryBuilder"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientQueryBuilder"/>
-
-    <bean id="registrationcore.patientCreationListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener" init-method="init"/>
-
 </beans>
