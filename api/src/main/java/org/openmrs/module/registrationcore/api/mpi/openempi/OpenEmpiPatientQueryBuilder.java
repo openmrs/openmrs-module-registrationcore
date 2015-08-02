@@ -1,5 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
@@ -10,6 +12,8 @@ import java.util.LinkedList;
 import java.util.Set;
 
 public class OpenEmpiPatientQueryBuilder {
+
+    private final Log log = LogFactory.getLog(this.getClass());
 
     @Autowired
     @Qualifier("registrationcore.identifierMapper")
@@ -66,6 +70,9 @@ public class OpenEmpiPatientQueryBuilder {
 
             if (mpiIdentifierTypeId != null) {
                 personIdentifiers.add(createPersonIdentifier(mpiIdentifierTypeId, identifier));
+            } else {
+                log.error("Do not add patient identifier type id: " + identifierTypeId + " to Exported patient. " +
+                        "Reason: there is no matched appropriate MPI identifier for this type.");
             }
         }
         query.setPersonIdentifiers(personIdentifiers);
