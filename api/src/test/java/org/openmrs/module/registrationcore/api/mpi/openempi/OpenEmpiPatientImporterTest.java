@@ -57,12 +57,15 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     @Autowired
     @Qualifier("adminService")
     private AdministrationService adminService;
+
     @Autowired
     @Qualifier("patientService")
     private PatientService patientService;
+
     @Autowired
     @Qualifier("locationService")
     private LocationService locationService;
+
     @Autowired
     private ApplicationContext context;
 
