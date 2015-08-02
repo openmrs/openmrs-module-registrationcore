@@ -18,7 +18,6 @@ public class OpenEmpiPatientImporter implements MpiPatientImporter {
     @Qualifier("registrationcore.restQueryCreator")
     private RestQueryCreator restQueryCreator;
 
-
     @Autowired
     @Qualifier("registrationcore.identifierBuilder")
     private IdentifierBuilder identifierBuilder;

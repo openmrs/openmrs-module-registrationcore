@@ -2,6 +2,7 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,10 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
     @Autowired
     @Qualifier("registrationcore.queryMapper")
     private PatientQueryMapper queryMapper;
+
+    @Autowired
+    @Qualifier("registrationcore.patientBuilder")
+    private PatientBuilder patientBuilder;
 
     @Autowired
     @Qualifier("registrationcore.mpiAuthenticator")
@@ -52,11 +57,18 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
         List<String> matchedFields = Arrays.asList("personName", "gender", "birthdate");
         List<PatientAndMatchQuality> result = new LinkedList<PatientAndMatchQuality>();
         for (OpenEmpiPatientQuery mpiPatient : mpiPatients) {
-            Patient convertedPatient = queryMapper.convert(mpiPatient);
+            Patient convertedPatient = convertMpiPatient(mpiPatient);
             PatientAndMatchQuality resultPatient =
                     new PatientAndMatchQuality(convertedPatient, cutoff, matchedFields);
             result.add(resultPatient);
         }
         return result;
+    }
+
+    private Patient convertMpiPatient(OpenEmpiPatientQuery mpiPatient) {
+        patientBuilder.setPatient(new MpiPatient());
+        Patient patient = patientBuilder.buildPatient(mpiPatient);
+        patient.setUuid(String.valueOf(mpiPatient.getPersonId()));
+        return patient;
     }
 }
