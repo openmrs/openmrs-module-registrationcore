@@ -35,10 +35,20 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     private static final String PATIENT_WITHOUT_OPENMRS_ID = "patient_without_openmrs_id.xml";
     private static final String GP_MPI_USERNAME = "mpi_username";
     private static final String GP_MPI_PASSWORD = "mpi_password";
-    private static final String MPI_CUSTOM_IDENTIFIER_OPENEMPI_NAME = "OpenEMPI";
-    private static final String MPI_CUSTOM_IDENTIFIER_OPENEMPI_ID = "4";
-    private static final String MPI_CUSTOM_IDENTIFIER_ECID_NAME = "ECID";
-    private static final String MPI_CUSTOM_IDENTIFIER_ECID_ID = "5";
+
+    //identifiers mapping:
+    private static final String MPI_IDENTIFIER_TYPE_OPENEMRS_NAME = "OpenMRS";
+    private static final String MPI_IDENTIFIER_TYPE_ID_OPENMRS = "13";
+    private static final String LOCAL_IDENTIFIER_TYPE_ID_OPENMRS = "3";
+
+    private static final String MPI_IDENTIFIER_TYPE_OPENEMPI_NAME = "OpenEMPI";
+    private static final String MPI_IDENTIFIER_TYPE_ID_OPENEMPI = "18";
+    private static final String LOCAL_IDENTIFIER_TYPE_ID_OPENEMPI = "4";
+
+    private static final String MPI_IDENTIFIER_TYPE_ECID_NAME = "ECID";
+    private static final String MPI_IDENTIFIER_TYPE_ID_ECID = "60";
+    private static final String LOCAL_IDENTIFIER_TYPE_ID_ECID = "5";
+
     private static final String MPI_PERSON_ID = "2";
     private static final String TOKEN_VALUE = "token_value";
 
@@ -80,9 +90,11 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME, GP_MPI_USERNAME));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, GP_MPI_PASSWORD));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_URL, "server.url"));
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + MPI_CUSTOM_IDENTIFIER_OPENEMPI_NAME, MPI_CUSTOM_IDENTIFIER_OPENEMPI_ID));
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + MPI_CUSTOM_IDENTIFIER_ECID_NAME, MPI_CUSTOM_IDENTIFIER_ECID_ID));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_COMMON + "OpenMRS", "3"));
+
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMRS_NAME, LOCAL_IDENTIFIER_TYPE_ID_OPENMRS + ":" + MPI_IDENTIFIER_TYPE_ID_OPENMRS));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMPI_NAME, LOCAL_IDENTIFIER_TYPE_ID_OPENEMPI + ":" + MPI_IDENTIFIER_TYPE_ID_OPENEMPI));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_ECID_NAME, LOCAL_IDENTIFIER_TYPE_ID_ECID + ":" + MPI_IDENTIFIER_TYPE_ID_ECID));
     }
 
     private void mockResTemplate() {
@@ -103,17 +115,16 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         assertPatientEquals(mpiPatient, savedPatient, 3);
     }
 
-    @Test
-    public void testPerformCorrectImportForPatientWithOpenMrsIdentifier() throws Exception {
-        mockMpiAuthentication();
-        OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
-        mockMpiResponse(mpiPatient);
+    @SuppressWarnings("unchecked")
+    private void mockMpiAuthentication() {
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(new ResponseEntity(TOKEN_VALUE, HttpStatus.OK));
+    }
 
-        String uuid = service.importMpiPatient(MPI_PERSON_ID);
-
-        verifyRemoteMpiServerQuerying();
-        Patient savedPatient = patientService.getPatientByUuid(uuid);
-        assertPatientEquals(mpiPatient, savedPatient, 2);
+    @SuppressWarnings("unchecked")
+    private void mockMpiResponse(Object response) {
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class)))
+                .thenReturn(new ResponseEntity(response, HttpStatus.OK));
     }
 
     private void verifyRemoteMpiServerQuerying() {
@@ -149,15 +160,16 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         throw new RuntimeException("Patient identifiers doesn't contains identifier: " + identifierName);
     }
 
-    @SuppressWarnings("unchecked")
-    private void mockMpiAuthentication() {
-        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(new ResponseEntity(TOKEN_VALUE, HttpStatus.OK));
-    }
+    @Test
+    public void testPerformCorrectImportForPatientWithOpenMrsIdentifier() throws Exception {
+        mockMpiAuthentication();
+        OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
+        mockMpiResponse(mpiPatient);
 
-    @SuppressWarnings("unchecked")
-    private void mockMpiResponse(Object response) {
-        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class)))
-                .thenReturn(new ResponseEntity(response, HttpStatus.OK));
+        String uuid = service.importMpiPatient(MPI_PERSON_ID);
+
+        verifyRemoteMpiServerQuerying();
+        Patient savedPatient = patientService.getPatientByUuid(uuid);
+        assertPatientEquals(mpiPatient, savedPatient, 2);
     }
 }

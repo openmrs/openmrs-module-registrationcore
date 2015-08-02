@@ -87,44 +87,6 @@ public class PatientQueryMapperTest {
         assertEquals(convertedPatient.getUuid(), PATIENT_WITH_OPENMRS_ID_PERSON_ID);
     }
 
-    @Test
-    public void testCorrectImportPatientWithoOpenMrsId() throws Exception {
-        OpenEmpiPatientQuery patientQuery = readPatient(PATIENT_WITH_OPENMRS_ID);
-        mockIdentifierGenerating();
-
-        Patient convertedPatient = queryMapper.importPatient(patientQuery);
-
-        //verify correct querying to IdentifierBuilder class:
-        verify(identifierBuilder).createIdentifier(ECID_IDENTIFIER_TYPE_ID, ECID_IDENTIFIER_VALUE, null);
-        verify(identifierBuilder).createIdentifier(OPENMRS_IDENTIFIER_TYPE_ID, OPENMRS_IDENTIFIER_VALUE, null);
-        verify(openMrsIdentifier).setPreferred(true);
-        //verify that wasn't interaction with generating identifier method:
-        verify(identifierBuilder, never()).generateIdentifier(anyInt(), any(Location.class));
-
-        //verify actual fields:
-        assertPatientEquals(patientQuery, convertedPatient);
-        assertTrue(convertedPatient.getIdentifiers().contains(openMrsIdentifier));
-        assertTrue(convertedPatient.getIdentifiers().contains(ecidIdentifier));
-    }
-
-    @Test
-    public void testCorrectImportPatientWithoutOpenMrsId() throws Exception {
-        OpenEmpiPatientQuery patientQuery = readPatient(PATIENT_WITHOUT_OPENMRS_ID);
-        mockIdentifierGenerating();
-
-        Patient convertedPatient = queryMapper.importPatient(patientQuery);
-
-        //verify correct querying to IdentifierBuilder class:
-        verify(identifierBuilder).generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_ID, null);
-        verify(openMrsIdentifier).setPreferred(true);
-
-        //verify actual fields:
-        assertPatientEquals(patientQuery, convertedPatient);
-        assertTrue(convertedPatient.getIdentifiers().contains(openMrsIdentifier));
-        assertTrue(convertedPatient.getIdentifiers().contains(ecidIdentifier));
-        assertTrue(convertedPatient.getIdentifiers().contains(openEmpiIdentifier));
-    }
-
     private void assertPatientEquals(OpenEmpiPatientQuery mpiPatient, Patient savedPatient) {
         assertEquals(mpiPatient.getGivenName(), savedPatient.getGivenName());
         assertEquals(mpiPatient.getFamilyName(), savedPatient.getFamilyName());

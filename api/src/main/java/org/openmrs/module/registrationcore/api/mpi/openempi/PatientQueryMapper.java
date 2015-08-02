@@ -37,14 +37,6 @@ public class PatientQueryMapper {
         return patient;
     }
 
-    public Patient importPatient(OpenEmpiPatientQuery patientQuery) {
-        Patient patient = convertPatient(new Patient(), patientQuery);
-        if (!containsOpenMrsIdentifier(patientQuery)) {
-            generateOpenMrsIdentifier(patient);
-        }
-        return patient;
-    }
-
     private Patient convertPatient(Patient patient, OpenEmpiPatientQuery patientQuery) {
         patient.setGender(patientQuery.getGender().getGenderCode());
 
@@ -84,23 +76,6 @@ public class PatientQueryMapper {
         address.setAddress1(patientQuery.getAddress1());
         addresses.add(address);
         patient.setAddresses(addresses);
-    }
-
-    private boolean containsOpenMrsIdentifier(OpenEmpiPatientQuery patientQuery) {
-        for (PersonIdentifier personIdentifier : patientQuery.getPersonIdentifiers()) {
-            if (OPENMRS_IDENTIFIER_NAME.equals(personIdentifier.getIdentifierDomain().getIdentifierDomainName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void generateOpenMrsIdentifier(Patient patient) {
-        log.info("Generate OpenMRS identifier for imported Mpi patient.");
-        Integer openMrsIdentifierId = identifierBuilder.getOpenMrsIdentifierSourceId();
-        PatientIdentifier identifier = identifierBuilder.generateIdentifier(openMrsIdentifierId, null);
-        identifier.setPreferred(true);
-        patient.addIdentifier(identifier);
     }
 
     private void setIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {

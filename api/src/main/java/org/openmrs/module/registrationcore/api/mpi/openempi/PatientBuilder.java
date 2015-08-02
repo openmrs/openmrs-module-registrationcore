@@ -26,6 +26,7 @@ public class PatientBuilder {
     private IdentifierBuilder identifierBuilder;
     private Patient patient;
 
+    //TODO this is workaround (Exception while saving MpiPatient). Fix to have possibility save instance of MpiPatient
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
