@@ -34,9 +34,7 @@
     </bean>
 
     <bean id="registrationcore.matchedPatientFilter"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.MatchedPatientFilter">
-        <property name="adminService" ref="adminService"/>
-    </bean>
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.MatchedPatientFilter"/>
 
     <bean id="registrationcore.patientCreationListener"
           class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener" init-method="init">
