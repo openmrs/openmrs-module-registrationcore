@@ -68,6 +68,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private MatchedPatientFilter matchedPatientFilter;
 
+	private RegistrationCoreProperties coreProperties;
+
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
@@ -104,7 +106,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		this.matchedPatientFilter = matchedPatientFilter;
 	}
 
-    /**
+	public void setCoreProperties(RegistrationCoreProperties coreProperties) {
+		this.coreProperties = coreProperties;
+	}
+
+	/**
      * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
      *      java.util.List, String, Location)
      */
@@ -124,7 +130,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (patient == null)
 			throw new APIException("Patient cannot be null");
 
-		Integer openMrsIdentifierId = identifierBuilder.getOpenMrsIdentifierSourceId();
+		Integer openMrsIdentifierId = coreProperties.getIdentifierSourceId();
 		PatientIdentifier patientIdentifier;
 		if (StringUtils.isBlank(identifierString)) {
 			patientIdentifier = identifierBuilder.generateIdentifier(openMrsIdentifierId, identifierLocation);
