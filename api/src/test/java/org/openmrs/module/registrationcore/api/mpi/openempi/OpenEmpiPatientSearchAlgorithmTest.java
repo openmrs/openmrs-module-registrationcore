@@ -27,7 +27,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
 
     @InjectMocks private OpenEmpiPatientSearchAlgorithm searchAlgorithm;
     @Mock private RestQueryCreator queryCreator;
-    @Mock private PatientQueryMapper queryMapper;
+    @Mock private RemoteQueryCreator queryMapper;
     @Mock private PatientBuilder patientBuilder;
     @Mock private MpiAuthenticator authenticator;
 
@@ -49,7 +49,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
 
         List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findSimilarPatients(patient, null, cutoff, MAX_RESULTS);
 
-        verify(queryMapper).convert(patient);
+        verify(queryMapper).create(patient);
         verify(queryCreator).findPatients(TOKEN_VALUE, patientQuery);
         verify(patientBuilder, times(MAX_RESULTS)).buildPatient(any(OpenEmpiPatientQuery.class));
         verify(mpiPatient, times(MAX_RESULTS)).setUuid(String.valueOf(MPI_PERSON_ID));
@@ -62,7 +62,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
     }
 
     private void mockPatientConversion() {
-        when(queryMapper.convert(patient)).thenReturn(patientQuery);
+        when(queryMapper.create(patient)).thenReturn(patientQuery);
     }
 
     private void mockAuthenticationToken() {

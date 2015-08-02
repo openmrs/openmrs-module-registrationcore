@@ -15,8 +15,8 @@ import java.util.TreeSet;
 
 import static org.junit.Assert.assertEquals;
 
-public class PatientQueryMapperTest {
-    @InjectMocks private PatientQueryMapper queryMapper = new PatientQueryMapper();
+public class RemoteQueryCreatorTest {
+    @InjectMocks private RemoteQueryCreator queryMapper = new RemoteQueryCreator();
     @Mock private IdentifierBuilder identifierBuilder;
 
     @Mock private PatientIdentifier ecidIdentifier;
@@ -34,7 +34,7 @@ public class PatientQueryMapperTest {
         String FamilyName = "Louis";
         Patient patient = createPatient(givenName, FamilyName);
 
-        OpenEmpiPatientQuery query = queryMapper.convert(patient);
+        OpenEmpiPatientQuery query = queryMapper.create(patient);
 
         assertEquals(patient.getGivenName(), query.getGivenName());
         assertEquals(patient.getFamilyName(), query.getFamilyName());

@@ -20,10 +20,6 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
     private RestQueryCreator restQueryCreator;
 
     @Autowired
-    @Qualifier("registrationcore.queryMapper")
-    private PatientQueryMapper queryMapper;
-
-    @Autowired
     @Qualifier("registrationcore.patientBuilder")
     private PatientBuilder patientBuilder;
 
@@ -31,11 +27,13 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
     @Qualifier("registrationcore.mpiAuthenticator")
     private MpiAuthenticator authenticator;
 
+    private RemoteQueryCreator queryMapper = new RemoteQueryCreator();
+
     @Override
     public List<PatientAndMatchQuality> findSimilarPatients(Patient patient,
                                                             Map<String, Object> otherDataPoints,
                                                             Double cutoff, Integer maxResults) {
-        OpenEmpiPatientQuery patientQuery = queryMapper.convert(patient);
+        OpenEmpiPatientQuery patientQuery = queryMapper.create(patient);
 
         List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator.findPatients(authenticator.getToken(), patientQuery);
 
