@@ -1,6 +1,5 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
-import javafx.util.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
@@ -16,7 +15,7 @@ public class PatientIdentifierMapper {
     private final Log log = LogFactory.getLog(this.getClass());
     private static final String SPLITTER_SIGN = ":";
     //first element ("key") - local, second element ("value") - mpi.
-    private static List<Pair<Integer, Integer>> MAPPED_ID;
+    private static List<IdentifierMapPair> MAPPED_ID;
 
     @Autowired
     @Qualifier("registrationcore.mpiProperties")
@@ -24,18 +23,18 @@ public class PatientIdentifierMapper {
 
     public Integer getMappedLocalIdentifierTypeId(Integer mpiIdentifierTypeId) {
         validateInit();
-        for (Pair<Integer, Integer> pair : MAPPED_ID) {
-            if (pair.getValue().equals(mpiIdentifierTypeId))
-                return pair.getKey();
+        for (IdentifierMapPair pair : MAPPED_ID) {
+            if (pair.mpiIdentifierId.equals(mpiIdentifierTypeId))
+                return pair.localIdentifierId;
         }
         return null;
     }
 
     public Integer getMappedMpiIdentifierTypeId(Integer localIdentifierTypeId) {
         validateInit();
-        for (Pair<Integer, Integer> pair : MAPPED_ID) {
-            if (pair.getKey().equals(localIdentifierTypeId))
-                return pair.getValue();
+        for (IdentifierMapPair pair : MAPPED_ID) {
+            if (pair.localIdentifierId.equals(localIdentifierTypeId))
+                return pair.mpiIdentifierId;
         }
         return null;
     }
@@ -48,19 +47,19 @@ public class PatientIdentifierMapper {
 
     //TODO refactor to perform initialization on refresh context.
     public void init() {
-        MAPPED_ID = new LinkedList<Pair<Integer, Integer>>();
-        log.error("start init method of PatientIdentifierMapper");
+        MAPPED_ID = new LinkedList<IdentifierMapPair>();
+        log.info("start init method of PatientIdentifierMapper");
         List<String> properties = mpiProperties.getLocalMpiIdentifierTypeMap();
         for (String mappedIdentifiers : properties) {
-            Pair<Integer, Integer> pair = parseIdentifiers(mappedIdentifiers);
+            IdentifierMapPair pair = parseIdentifiers(mappedIdentifiers);
             MAPPED_ID.add(pair);
 
-            log.error("Initialized local:mpi identifier type pair. Local: " + pair.getKey()
-                    + " , MPI: " + pair.getValue());
+            log.error("Initialized local:mpi identifier type pair. Local: " + pair.localIdentifierId
+                    + " , MPI: " + pair.mpiIdentifierId);
         }
     }
 
-    private Pair<Integer, Integer> parseIdentifiers(String mappedIdentifiers) {
+    private IdentifierMapPair parseIdentifiers(String mappedIdentifiers) {
         String local = getLocalPart(mappedIdentifiers);
         String mpi = getMpiPart(mappedIdentifiers);
         return createPair(local, mpi);
@@ -74,14 +73,26 @@ public class PatientIdentifierMapper {
         return mappedIdentifiers.substring(mappedIdentifiers.indexOf(SPLITTER_SIGN) + 1);
     }
 
-    private Pair<Integer, Integer> createPair(String localString, String mpiString) {
+    private IdentifierMapPair createPair(String localString, String mpiString) {
         try {
             Integer local = Integer.valueOf(localString);
             Integer mpi = Integer.valueOf(mpiString);
-            return new Pair<Integer, Integer>(local, mpi);
+            return  new IdentifierMapPair(local, mpi);
         } catch (NumberFormatException e) {
             throw new APIException("Can't create identifier pair for values: local= " +
                     localString + ", mpi=" + mpiString);
+        }
+    }
+
+    private class IdentifierMapPair{
+
+        public final Integer localIdentifierId;
+
+        public final Integer mpiIdentifierId;
+
+        public IdentifierMapPair(Integer localIdentifierId, Integer mpiIdentifierId) {
+            this.localIdentifierId = localIdentifierId;
+            this.mpiIdentifierId = mpiIdentifierId;
         }
     }
 }
