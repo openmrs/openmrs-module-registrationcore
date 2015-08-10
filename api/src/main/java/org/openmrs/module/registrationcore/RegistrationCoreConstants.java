@@ -26,7 +26,7 @@ public final class RegistrationCoreConstants {
 
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
 
-	public static final String TOPIC_NAME = "org.openmrs.module.registrationcore.RegistrationEvent";
+	public static final String REGISTRATION_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.RegistrationEvent";
 
 	public static final String KEY_PATIENT_UUID = "patientUuid";
 
@@ -52,6 +52,7 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
 
+	//TODO fix typo.
 	public static final String GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID = "registrtioncore.mpi.globalIdentifierDomainId";
 
 }

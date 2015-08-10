@@ -10,8 +10,6 @@ import org.openmrs.event.Event;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -35,7 +33,7 @@ public class PatientCreationListener implements EventListener {
     }
 
     public void init() {
-        Event.subscribe(RegistrationCoreConstants.TOPIC_NAME, this);
+        Event.subscribe(RegistrationCoreConstants.REGISTRATION_EVENT_TOPIC_NAME, this);
     }
 
     @Override
