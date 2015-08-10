@@ -28,6 +28,8 @@ public final class RegistrationCoreConstants {
 
 	public static final String REGISTRATION_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.RegistrationEvent";
 
+	public static final String EDIT_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.EditEvent";
+
 	public static final String KEY_PATIENT_UUID = "patientUuid";
 
 	public static final String KEY_RELATIONSHIP_UUIDS = "relationshipUuids";
