@@ -16,12 +16,17 @@ public class MatchedPatientFilter {
     @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
+    @Autowired
+    @Qualifier("registrationcore.identifierMapper")
+    private PatientIdentifierMapper identifierMapper;
+
     public void filter(List<PatientAndMatchQuality> patients) {
-        Integer globalIdentifierDomainId = mpiProperties.getGlobalIdentifierDomainId();
+        Integer mpiGlobalIdentifierId = mpiProperties.getGlobalIdentifierDomainId();
+        Integer mappedGlobalIdentifierId = identifierMapper.getMappedLocalIdentifierTypeId(mpiGlobalIdentifierId);
 
         for (PatientAndMatchQuality patientWrapper : patients) {
-            if (patientWrapper.getPatient().getPatientIdentifier(globalIdentifierDomainId) != null) {
-                filterPatientsWithSameIdentifier(globalIdentifierDomainId, patientWrapper, patients);
+            if (patientWrapper.getPatient().getPatientIdentifier(mappedGlobalIdentifierId) != null) {
+                filterPatientsWithSameIdentifier(mappedGlobalIdentifierId, patientWrapper, patients);
             }
         }
     }

@@ -23,8 +23,11 @@ public class MatchedPatientFilterTest {
 
     public static final Integer MPI_GLOBAL_IDENTIFIER_TYPE_ID = 5;
     private static final String PATIENT_IDENTIFIER_VALUE = "647f2ca0-3240-11e5-8a7f-040158db6201";
-    List<PatientAndMatchQuality> patients;
+    private static final int MAPPED_GLOBAL_IDENTIFIER_ID = 5;
+    private List<PatientAndMatchQuality> patients;
+
     @Mock private MpiProperties mpiProperties;
+    @Mock private PatientIdentifierMapper identifierMapper;
     @InjectMocks private MatchedPatientFilter filter;
 
     @Mock private PatientAndMatchQuality patientWrapper;
@@ -39,6 +42,7 @@ public class MatchedPatientFilterTest {
 
     private void mockProperty() {
         when(mpiProperties.getGlobalIdentifierDomainId()).thenReturn(MPI_GLOBAL_IDENTIFIER_TYPE_ID);
+        when(identifierMapper.getMappedLocalIdentifierTypeId(MPI_GLOBAL_IDENTIFIER_TYPE_ID)).thenReturn(MAPPED_GLOBAL_IDENTIFIER_ID);
     }
 
     @Test
@@ -65,7 +69,7 @@ public class MatchedPatientFilterTest {
                                                  PatientAndMatchQuality localPatientWrapper) {
         Patient patient = mock(patientClass);
         PatientIdentifier identifier = mock(PatientIdentifier.class);
-        when(patient.getPatientIdentifier(MPI_GLOBAL_IDENTIFIER_TYPE_ID)).thenReturn(identifier);
+        when(patient.getPatientIdentifier(MAPPED_GLOBAL_IDENTIFIER_ID)).thenReturn(identifier);
         when(identifier.getIdentifier()).thenReturn(PATIENT_IDENTIFIER_VALUE);
         when(localPatientWrapper.getPatient()).thenReturn(patient);
         return localPatientWrapper;
