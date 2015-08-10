@@ -45,7 +45,7 @@ public class PatientCreationListener implements EventListener {
 
         Context.openSession();
         Patient createdPatient = getPatient(patientUuid);
-        mpiPatientExporter.export(createdPatient);
+        mpiPatientExporter.exporPatient(createdPatient);
         Context.closeSession();
     }
 

@@ -292,6 +292,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public void exportPatient(Patient patient) {
 		MpiFacade mpiFacade = getMpiFacade();
-		mpiFacade.export(patient);
+		mpiFacade.exporPatient(patient);
 	}
 }

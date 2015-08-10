@@ -47,9 +47,9 @@ public class MpiFacadeImpl implements MpiFacade {
     }
 
     @Override
-    public void export(Patient patient) {
+    public void exporPatient(Patient patient) {
         validateAuthentication();
-        patientExport.export(patient);
+        patientExport.exporPatient(patient);
     }
 
     private void validateAuthentication() {

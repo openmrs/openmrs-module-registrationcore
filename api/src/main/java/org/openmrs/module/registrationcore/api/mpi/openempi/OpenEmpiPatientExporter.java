@@ -26,7 +26,7 @@ public class OpenEmpiPatientExporter implements MpiPatientExporter {
     private RestQueryCreator queryCreator;
 
     @Override
-    public void export(Patient patient) {
+    public void exporPatient(Patient patient) {
         OpenEmpiPatientQuery patientQuery = queryBuilder.build(patient);
         removeOpenEmpiGlobalIdentifier(patientQuery);
 
