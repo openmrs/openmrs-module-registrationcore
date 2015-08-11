@@ -42,6 +42,12 @@
         <property name="patientService" ref="patientService"/>
     </bean>
 
+    <bean id="registrationcore.patientEditListener"
+          class="org.openmrs.module.registrationcore.api.impl.PatientEditListener" init-method="init">
+        <property name="patientUpdater" ref="registrationcore.mpiPatientUpdater"/>
+        <property name="patientService" ref="patientService"/>
+    </bean>
+
     <bean id="registrationcore.coreProperties"
           class="org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties"/>
 
@@ -77,6 +83,9 @@
     <bean id="registrationcore.mpiPatientExport"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientExporter"/>
 
+    <bean id="registrationcore.mpiPatientUpdater"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientUpdater"/>
+
     <bean id="registrationcore.mpiPatientSearcher"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientSearchAlgorithm"/>
 
@@ -84,6 +93,9 @@
 
     <bean id="registrationcore.identifierMapper"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper"/>
+
+    <bean id="registrationcore.restUrlBuilder"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.RestUrlBuilder"/>
 
     <bean id="registrationcore.restQueryCreator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator"/>
