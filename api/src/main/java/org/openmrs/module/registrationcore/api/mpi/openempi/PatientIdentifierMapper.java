@@ -45,7 +45,6 @@ public class PatientIdentifierMapper {
         }
     }
 
-    //TODO refactor to perform initialization on refresh context.
     public void init() {
         MAPPED_ID = new LinkedList<IdentifierMapPair>();
         log.info("start init method of PatientIdentifierMapper");
