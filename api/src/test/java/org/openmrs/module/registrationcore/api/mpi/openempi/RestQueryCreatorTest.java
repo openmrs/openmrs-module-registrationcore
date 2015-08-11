@@ -7,9 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.api.APIException;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,20 +22,18 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiVariables.*;
 
 public class RestQueryCreatorTest {
 
     private static final String PASSWORD = "password";
     private static final String USERNAME = "username";
-    private static final String SERVER_URL = "server.url";
     private static final String TOKEN_VALUE = "tokenValue";
     private static final String PATIENT_ID = "13";
     private static final String PATIENT_QUERY_GIVENNAME = "Michael";
     private static final String PATIENT_QUERY_FAMILYNAME = "Louis";
 
     @InjectMocks private RestQueryCreator restQueryCreator = new RestQueryCreator();
-    @Mock private MpiProperties mpiProperties;
+    @Mock private RestUrlBuilder urlBuilder;
     @Mock private RestTemplate restTemplate;
     @Mock private OpenEmpiPatientQuery patientQuery;
     @Mock private OpenEmpiPeopleWrapper peopleWrapper;
@@ -47,22 +43,22 @@ public class RestQueryCreatorTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockRestTemplate();
-        mockMpiProperties();
     }
 
     @Test
     public void testProcessAuthentication() throws Exception {
+        String authUrl = "authUrl";
+        when(urlBuilder.createAuthenticationUrl()).thenReturn(authUrl);
         mockServerResponse(TOKEN_VALUE, String.class);
 
         String actualToken = restQueryCreator.processAuthentication(createCredentials());
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
-        verify(restTemplate).exchange(eq(createAuthenticationUrl()),
+        verify(restTemplate).exchange(eq(authUrl),
                 eq(HttpMethod.PUT), argumentCaptor.capture(), eq(String.class));
         //verify request body was set correctly
         assertEquals(argumentCaptor.getValue().getBody(), createCredentials());
-
         assertEquals(actualToken, TOKEN_VALUE);
     }
 
@@ -75,13 +71,15 @@ public class RestQueryCreatorTest {
 
     @Test
     public void testGetPatientById() throws Exception {
+        String patientUrl = "get_patient_url";
+        when(urlBuilder.createGetPatientUrl(PATIENT_ID)).thenReturn(patientUrl);
         mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
 
         OpenEmpiPatientQuery actualPatient = restQueryCreator.getPatientById(TOKEN_VALUE, PATIENT_ID);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
-        verify(restTemplate).exchange(eq(createGetPatientUrl(PATIENT_ID)),
+        verify(restTemplate).exchange(eq(patientUrl),
                 eq(HttpMethod.GET), argumentCaptor.capture(), eq(OpenEmpiPatientQuery.class));
         assertNull(argumentCaptor.getValue().getBody());
         //verify that header with token was sett:
@@ -91,6 +89,8 @@ public class RestQueryCreatorTest {
 
     @Test
     public void testFindPatients() throws Exception {
+        String findPrecise = "findPrecise";
+        when(urlBuilder.createFindPreciseSimilarPatientUrl()).thenReturn(findPrecise);
         mockPeopleWrapper(peopleWrapper, patientQueryList);
         mockServerResponse(peopleWrapper, OpenEmpiPeopleWrapper.class);
         OpenEmpiPatientQuery query = createPatientQuery();
@@ -99,7 +99,7 @@ public class RestQueryCreatorTest {
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
-        verify(restTemplate).exchange(eq(createFindPreciseSimilarPatient()),
+        verify(restTemplate).exchange(eq(findPrecise),
                 eq(HttpMethod.POST), argumentCaptor.capture(), eq(OpenEmpiPeopleWrapper.class));
         //verify request body was set correctly:
         assertEquals(argumentCaptor.getValue().getBody(), query);
@@ -121,6 +121,8 @@ public class RestQueryCreatorTest {
 
     @Test
     public void testExportPatient() throws Exception {
+        String exportUrl = "exportUrl";
+        when(urlBuilder.createExportPatientUrl()).thenReturn(exportUrl);
         mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
         OpenEmpiPatientQuery query = createPatientQuery();
 
@@ -128,7 +130,7 @@ public class RestQueryCreatorTest {
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
-        verify(restTemplate).exchange(eq(createExportPatient()),
+        verify(restTemplate).exchange(eq(exportUrl),
                 eq(HttpMethod.PUT), argumentCaptor.capture(), eq(OpenEmpiPatientQuery.class));
         //verify request body was set correctly:
         assertEquals(argumentCaptor.getValue().getBody(), query);
@@ -138,15 +140,16 @@ public class RestQueryCreatorTest {
 
     @Test
     public void testUpdatePatient() throws Exception {
+        String updateUrl = "updateUrl";
+        when(urlBuilder.createUpdatePatientUrl()).thenReturn(updateUrl);
         mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
-
         OpenEmpiPatientQuery query = createPatientQuery();
 
         restQueryCreator.updatePatient(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
-        verify(restTemplate).exchange(eq(createUpdatePatient()),
+        verify(restTemplate).exchange(eq(updateUrl),
                 eq(HttpMethod.PUT), argumentCaptor.capture(), eq(OpenEmpiPatientQuery.class));
         //verify request body was set correctly:
         assertEquals(argumentCaptor.getValue().getBody(), query);
@@ -173,44 +176,15 @@ public class RestQueryCreatorTest {
         return new MpiCredentials(USERNAME, PASSWORD);
     }
 
-    private String createAuthenticationUrl() {
-        return getServerUrl() + REST_URL + AUTHENTICATION_URL;
-    }
-
-    private String createGetPatientUrl(String id) {
-        String url = getServerUrl() + REST_URL + PERSON_QUERY_URL + FIND_PATIENT_BY_ID_URL;
-        url += "?personId=" + id;
-        return url;
-    }
-
-    private String createFindPreciseSimilarPatient() {
-        return getServerUrl() + REST_URL + PERSON_QUERY_URL + FIND_EXACT_PATIENTS_URL;
-    }
-
-    private String createExportPatient() {
-        return getServerUrl() + REST_URL + PERSON_MANAGER_URL + IMPORT_PERSON_URL;
-    }
-
-    private String createUpdatePatient() {
-        return getServerUrl() + REST_URL + PERSON_MANAGER_URL + UPDATE_PERSON_URL;
-    }
-
     private HttpHeaders getAuthenticationHeader(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(OpenEmpiVariables.TOKEN_HEADER_KEY, token);
         return headers;
     }
 
-    private String getServerUrl() {
-        return "http://" + SERVER_URL;
-    }
 
     private void mockRestTemplate() {
         ReflectionTestUtils.setField(restQueryCreator, "restTemplate", restTemplate);
-    }
-
-    private void mockMpiProperties() {
-        when(mpiProperties.getServerUrl()).thenReturn(SERVER_URL);
     }
 
     private void mockPeopleWrapper(OpenEmpiPeopleWrapper peopleWrapper, List<OpenEmpiPatientQuery> patientQueryList) {
