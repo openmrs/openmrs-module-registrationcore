@@ -54,7 +54,5 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
 
-	//TODO fix typo.
-	public static final String GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID = "registrtioncore.mpi.globalIdentifierDomainId";
-
+	public static final String GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID = "registrationcore.mpi.globalIdentifierDomainId";
 }
