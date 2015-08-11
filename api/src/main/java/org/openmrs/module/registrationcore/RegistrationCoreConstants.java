@@ -20,8 +20,6 @@ public final class RegistrationCoreConstants {
 	 */
 	public static final String GP_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
 
-	public static final String GP_IDENTIFIER_SOURCE_ID_COMMON = "registrationcore.mpi.import.identifierType.";
-
 	public static final String GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP = "registrationcore.local_mpi_identifierTypeMap.";
 
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
