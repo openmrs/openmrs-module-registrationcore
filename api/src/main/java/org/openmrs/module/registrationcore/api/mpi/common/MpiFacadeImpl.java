@@ -52,6 +52,11 @@ public class MpiFacadeImpl implements MpiFacade {
         patientExport.exportPatient(patient);
     }
 
+    @Override
+    public void updatePatient(Patient patient) {
+
+    }
+
     private void validateAuthentication() {
         if (!authenticator.isAuthenticated())
             authenticator.performAuthentication();

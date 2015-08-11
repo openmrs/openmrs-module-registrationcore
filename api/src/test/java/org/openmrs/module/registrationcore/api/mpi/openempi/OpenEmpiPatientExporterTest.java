@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class OpenEmpiPatientExportTest {
+public class OpenEmpiPatientExporterTest {
 
     private static final String TOKEN = "token";
     private static final int MPI_GLOBAL_DOMAIN_ID = 13;
@@ -69,5 +69,12 @@ public class OpenEmpiPatientExportTest {
 
         //assert that GlobalDomainIdentifier was removed before exportPatient:
         assertEquals(queryCaptor.getValue().getPersonIdentifiers().size(), 0);
+    }
+
+    @Test
+    public void testUpdatePatient() throws Exception {
+        patientExport.updatePatient(patient);
+
+        verify(queryCreator).updatePatient(TOKEN, query);
     }
 }

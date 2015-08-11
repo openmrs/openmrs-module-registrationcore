@@ -33,6 +33,13 @@ public class OpenEmpiPatientExporter implements MpiPatientExporter {
         queryCreator.exportPatient(authenticator.getToken(), patientQuery);
     }
 
+    @Override
+    public void updatePatient(Patient patient) {
+        OpenEmpiPatientQuery patientQuery = queryBuilder.build(patient);
+
+        queryCreator.updatePatient(authenticator.getToken(), patientQuery);
+    }
+
     private void removeOpenEmpiGlobalIdentifier(OpenEmpiPatientQuery patientQuery) {
         Integer mpiGlobalIdentifierId = mpiProperties.getGlobalIdentifierDomainId();
         for (PersonIdentifier personIdentifier : patientQuery.getPersonIdentifiers()) {
