@@ -31,7 +31,7 @@ public class PatientCreationListener extends PatientActionListener implements Ev
         log.info("Patient creation event handled, try perform export patient to MPI.");
         Context.openSession();
         Patient createdPatient = extractPatient(message);
-        mpiPatientExporter.exporPatient(createdPatient);
+        mpiPatientExporter.exportPatient(createdPatient);
         Context.closeSession();
     }
 }

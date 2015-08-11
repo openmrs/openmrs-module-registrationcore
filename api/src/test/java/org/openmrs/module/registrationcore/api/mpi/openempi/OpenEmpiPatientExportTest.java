@@ -62,12 +62,12 @@ public class OpenEmpiPatientExportTest {
 
     @Test
     public void testExportPatient() throws Exception {
-        patientExport.exporPatient(patient);
+        patientExport.exportPatient(patient);
 
         ArgumentCaptor<OpenEmpiPatientQuery> queryCaptor = ArgumentCaptor.forClass(OpenEmpiPatientQuery.class);
         verify(queryCreator).exportPatient(eq(TOKEN), queryCaptor.capture());
 
-        //assert that GlobalDomainIdentifier was removed before exporPatient:
+        //assert that GlobalDomainIdentifier was removed before exportPatient:
         assertEquals(queryCaptor.getValue().getPersonIdentifiers().size(), 0);
     }
 }

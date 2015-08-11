@@ -54,6 +54,6 @@ public class PatientCreationListenerTest {
 
         patientCreationListener.onMessage(mapMessage);
 
-        verify(mpiPatientExporter).exporPatient(patient);
+        verify(mpiPatientExporter).exportPatient(patient);
     }
 }

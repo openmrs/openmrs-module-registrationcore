@@ -4,5 +4,5 @@ import org.openmrs.Patient;
 
 public interface MpiPatientExporter {
 
-    void exporPatient(Patient patient);
+    void exportPatient(Patient patient);
 }
