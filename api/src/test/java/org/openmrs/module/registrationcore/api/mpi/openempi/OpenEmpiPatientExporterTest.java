@@ -70,11 +70,4 @@ public class OpenEmpiPatientExporterTest {
         //assert that GlobalDomainIdentifier was removed before exportPatient:
         assertEquals(queryCaptor.getValue().getPersonIdentifiers().size(), 0);
     }
-
-    @Test
-    public void testUpdatePatient() throws Exception {
-        patientExport.updatePatient(patient);
-
-        verify(queryCreator).updatePatient(TOKEN, query);
-    }
 }

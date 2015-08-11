@@ -2,8 +2,8 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -31,13 +31,6 @@ public class OpenEmpiPatientExporter implements MpiPatientExporter {
         removeOpenEmpiGlobalIdentifier(patientQuery);
 
         queryCreator.exportPatient(authenticator.getToken(), patientQuery);
-    }
-
-    @Override
-    public void updatePatient(Patient patient) {
-        OpenEmpiPatientQuery patientQuery = queryBuilder.build(patient);
-
-        queryCreator.updatePatient(authenticator.getToken(), patientQuery);
     }
 
     private void removeOpenEmpiGlobalIdentifier(OpenEmpiPatientQuery patientQuery) {
