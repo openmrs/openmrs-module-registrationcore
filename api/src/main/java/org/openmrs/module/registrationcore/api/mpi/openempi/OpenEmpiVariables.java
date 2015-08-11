@@ -21,4 +21,5 @@ public class OpenEmpiVariables {
 
     static final String IMPORT_PERSON_URL = "importPerson";
 
+    static final String UPDATE_PERSON_URL = "updatePerson";
 }

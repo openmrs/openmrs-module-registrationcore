@@ -70,12 +70,26 @@ public class RestQueryCreator {
                     "Check if patient with same identifiers do not exist on MPI server.");
     }
 
+    public void updatePatient(String token, OpenEmpiPatientQuery patientQuery) {
+        HttpHeaders headers = getAuthenticationHeader(token);
+
+        HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(patientQuery, headers);
+
+        ResponseEntity<OpenEmpiPatientQuery> personResponse = restTemplate.exchange(createUpdatePatient(),
+                HttpMethod.PUT, entity, OpenEmpiPatientQuery.class);
+
+        if (personResponse.getBody() == null)
+            throw new APIException("Fail while Patient export to Mpi server. " +
+                    "Check if patient with same identifiers do not exist on MPI server.");
+    }
+
     private HttpHeaders getAuthenticationHeader(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(OpenEmpiVariables.TOKEN_HEADER_KEY, token);
         return headers;
     }
 
+    //TODO move URL creation in separate class.
     private String createAuthenticationUrl() {
         return getServerUrl() + REST_URL + AUTHENTICATION_URL;
     }
@@ -92,6 +106,10 @@ public class RestQueryCreator {
 
     private String createExportPatient() {
         return getServerUrl() + REST_URL + PERSON_MANAGER_URL + IMPORT_PERSON_URL;
+    }
+
+    private String createUpdatePatient() {
+        return getServerUrl() + REST_URL + PERSON_MANAGER_URL + UPDATE_PERSON_URL;
     }
 
     private String getServerUrl() {

@@ -134,7 +134,24 @@ public class RestQueryCreatorTest {
         assertEquals(argumentCaptor.getValue().getBody(), query);
         //verify that header with token was sett:
         assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
+    }
 
+    @Test
+    public void testUpdatePatient() throws Exception {
+        mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
+
+        OpenEmpiPatientQuery query = createPatientQuery();
+
+        restQueryCreator.updatePatient(TOKEN_VALUE, query);
+
+        ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        //verify correct request creation:
+        verify(restTemplate).exchange(eq(createUpdatePatient()),
+                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(OpenEmpiPatientQuery.class));
+        //verify request body was set correctly:
+        assertEquals(argumentCaptor.getValue().getBody(), query);
+        //verify that header with token was sett:
+        assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
     }
 
     private OpenEmpiPatientQuery createPatientQuery() {
@@ -172,6 +189,10 @@ public class RestQueryCreatorTest {
 
     private String createExportPatient() {
         return getServerUrl() + REST_URL + PERSON_MANAGER_URL + IMPORT_PERSON_URL;
+    }
+
+    private String createUpdatePatient() {
+        return getServerUrl() + REST_URL + PERSON_MANAGER_URL + UPDATE_PERSON_URL;
     }
 
     private HttpHeaders getAuthenticationHeader(String token) {
