@@ -27,7 +27,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
 
     @InjectMocks private OpenEmpiPatientSearchAlgorithm searchAlgorithm;
     @Mock private RestQueryCreator queryCreator;
-    @Mock private RemoteQueryCreator queryMapper;
+    @Mock private FindPatientQueryBuilder queryMapper;
     @Mock private PatientBuilder patientBuilder;
     @Mock private MpiAuthenticator authenticator;
 

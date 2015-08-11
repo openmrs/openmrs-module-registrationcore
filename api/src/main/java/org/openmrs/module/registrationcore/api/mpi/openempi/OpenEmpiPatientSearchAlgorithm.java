@@ -27,7 +27,7 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
     @Qualifier("registrationcore.mpiAuthenticator")
     private MpiAuthenticator authenticator;
 
-    private RemoteQueryCreator queryMapper = new RemoteQueryCreator();
+    private FindPatientQueryBuilder queryMapper = new FindPatientQueryBuilder();
 
     @Override
     public List<PatientAndMatchQuality> findSimilarPatients(Patient patient,

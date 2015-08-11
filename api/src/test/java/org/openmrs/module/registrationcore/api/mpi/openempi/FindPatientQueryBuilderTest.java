@@ -15,8 +15,8 @@ import java.util.TreeSet;
 
 import static org.junit.Assert.assertEquals;
 
-public class RemoteQueryCreatorTest {
-    @InjectMocks private RemoteQueryCreator queryMapper = new RemoteQueryCreator();
+public class FindPatientQueryBuilderTest {
+    @InjectMocks private FindPatientQueryBuilder queryMapper = new FindPatientQueryBuilder();
     @Mock private IdentifierBuilder identifierBuilder;
 
     @Mock private PatientIdentifier ecidIdentifier;

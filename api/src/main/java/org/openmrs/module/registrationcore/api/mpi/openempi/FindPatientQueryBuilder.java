@@ -2,7 +2,7 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
 
-public class RemoteQueryCreator {
+public class FindPatientQueryBuilder {
 
     public OpenEmpiPatientQuery create(Patient patient) {
         OpenEmpiPatientQuery patientQuery = new OpenEmpiPatientQuery();
