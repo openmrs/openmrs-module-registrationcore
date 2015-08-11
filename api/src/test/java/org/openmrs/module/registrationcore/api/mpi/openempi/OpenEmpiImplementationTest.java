@@ -1,4 +1,4 @@
-package org.openmrs.module.registrationcore.api.mpi.common;
+package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,6 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiImplementation;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -14,11 +19,11 @@ import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class MpiFacadeImplTest {
+public class OpenEmpiImplementationTest {
 
     private static final String PATIENT_ID = "13";
 
-    @InjectMocks private MpiFacade mpiFacade = new MpiFacadeImpl();
+    @InjectMocks private MpiFacade mpiFacade = new OpenEmpiImplementation();
     @Mock private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
     @Mock private MpiPatientImporter patientImporter;
     @Mock private MpiAuthenticator authenticator;

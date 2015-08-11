@@ -68,11 +68,11 @@
     </bean>
 
     <!-- Mpi implementation part -->
+    <bean id="mpi.implementation.OpenEMPI"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiImplementation"/>
+
     <bean id="registrationcore.mpiProperties"
           class="org.openmrs.module.registrationcore.api.mpi.common.MpiProperties"/>
-
-    <bean id="registrationcore.mpiFacade"
-          class="org.openmrs.module.registrationcore.api.mpi.common.MpiFacadeImpl"/>
 
     <bean id="registrationcore.mpiAuthenticator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiAuthenticator"/>

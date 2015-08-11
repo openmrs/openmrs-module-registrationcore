@@ -1,6 +1,10 @@
-package org.openmrs.module.registrationcore.api.mpi.common;
+package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,7 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.List;
 import java.util.Map;
 
-public class MpiFacadeImpl implements MpiFacade {
+public class OpenEmpiImplementation implements MpiFacade {
 
     @Autowired
     @Qualifier("registrationcore.mpiPatientSearcher")
