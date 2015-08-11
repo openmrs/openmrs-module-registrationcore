@@ -204,20 +204,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 	}
 
-	private MpiFacade getMpiFacade() {
-        String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_MPI_FACADE,
-                "registrationcore.mpiFacade");
-
-        Object bean = applicationContext.getBean(gp);
-
-        if (bean instanceof MpiFacade) {
-            return (MpiFacade) bean;
-        } else {
-            throw new IllegalArgumentException(RegistrationCoreConstants.GP_MPI_FACADE
-                    + " must point to " + "a bean implementing MpiFacade");
-        }
-	}
-
 	private PatientNameSearch getPatientNameSearch() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
 		    "registrationcore.BasicPatientNameSearch");
@@ -240,10 +226,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 		matches.addAll(localMatches);
 
-		List<PatientAndMatchQuality> mpiMatches = getMpiFacade().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
-		matches.addAll(mpiMatches);
+		if (coreProperties.getMpiFacade() != null) {
+			List<PatientAndMatchQuality> mpiMatches = coreProperties.getMpiFacade()
+					.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+			matches.addAll(mpiMatches);
 
-		matchedPatientFilter.filter(matches);
+			matchedPatientFilter.filter(matches);
+		}
 
 		return matches;
 	}
@@ -257,10 +246,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 		matches.addAll(localMatches);
 
-		List<PatientAndMatchQuality> mpiMatches = getMpiFacade().findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
-		matches.addAll(mpiMatches);
+		if (coreProperties.getMpiFacade() != null) {
+			List<PatientAndMatchQuality> mpiMatches = coreProperties.getMpiFacade()
+					.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+			matches.addAll(mpiMatches);
 
-		matchedPatientFilter.filter(matches);
+			matchedPatientFilter.filter(matches);
+		}
 
 		return matches;
 	}
@@ -283,9 +275,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	@Override
 	public String importMpiPatient(String personId) {
-		MpiFacade mpiFacade = getMpiFacade();
-		Patient importedPatient = mpiFacade.importMpiPatient(personId);
-		Patient patient = patientService.savePatient(importedPatient);
-		return patient.getUuid();
+		if (coreProperties.getMpiFacade() != null) {
+			MpiFacade mpiFacade = coreProperties.getMpiFacade();
+			Patient importedPatient = mpiFacade.importMpiPatient(personId);
+			Patient patient = patientService.savePatient(importedPatient);
+			return patient.getUuid();
+		} else {
+			//should not pass here since "importPatient" performs only when MpiFacade is not null
+			return null;
+		}
 	}
 }
