@@ -56,6 +56,4 @@ public class PatientCreationListenerTest {
 
         verify(mpiPatientExporter).exporPatient(patient);
     }
-
-
 }
