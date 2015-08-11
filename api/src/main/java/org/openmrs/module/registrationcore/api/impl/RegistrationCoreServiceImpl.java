@@ -288,10 +288,4 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		Patient patient = patientService.savePatient(importedPatient);
 		return patient.getUuid();
 	}
-
-	@Override
-	public void exportPatient(Patient patient) {
-		MpiFacade mpiFacade = getMpiFacade();
-		mpiFacade.exportPatient(patient);
-	}
 }
