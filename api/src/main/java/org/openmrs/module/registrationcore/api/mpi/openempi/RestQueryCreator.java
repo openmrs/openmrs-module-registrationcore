@@ -4,10 +4,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -75,13 +72,12 @@ public class RestQueryCreator {
         HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(patientQuery, headers);
 
         String url = urlBuilder.createUpdatePatientUrl();
-        ResponseEntity<OpenEmpiPatientQuery> personResponse = restTemplate.exchange(url,
-                HttpMethod.PUT, entity, OpenEmpiPatientQuery.class);
+        ResponseEntity<String> response = restTemplate.exchange(url,
+                HttpMethod.PUT, entity, String.class);
 
-        //TODO check it:
-        if (personResponse.getBody() == null)
-            throw new APIException("Fail while Patient export to Mpi server. " +
-                    "Check if patient with same identifiers do not exist on MPI server.");
+        if (response.getStatusCode() != HttpStatus.NO_CONTENT)
+            throw new APIException("Fail while Patient update on Mpi server. " +
+                    "Check if patient with same identifiers exist in  MPI server.");
     }
 
     private HttpHeaders getAuthenticationHeader(String token) {

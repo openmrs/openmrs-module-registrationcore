@@ -1,15 +1,16 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.mockito.Mockito.when;
 
 //perform actual querying to remote server.
+//Use this tests for testing real querying to MPI server.
 public class RestQueryCreatorIntegrationTest {
     private static final String PATIENT_WITH_OPENMRS_ID = "patient_with_openmrs_id.xml";
     private static final String SERVER_URL = "188.166.56.70:8080/openempi-admin";
@@ -18,31 +19,34 @@ public class RestQueryCreatorIntegrationTest {
 
     private XmlMarshaller xmlMarshaller = new XmlMarshaller();
     @Mock private MpiProperties properties;
+    private RestUrlBuilder urlBuilder = new RestUrlBuilder();
     @InjectMocks private RestQueryCreator queryCreator;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        mockProperties();
-    }
-
-    private void mockProperties() {
         when(properties.getServerUrl()).thenReturn(SERVER_URL);
+        ReflectionTestUtils.setField(urlBuilder, "properties", properties);
+        ReflectionTestUtils.setField(queryCreator, "urlBuilder", urlBuilder);
     }
 
-//    @Test
-    //Use this test for testing real querying to MPI server.
+    //    @Test
     public void testPerformExport() throws Exception {
-        OpenEmpiPatientQuery person = createPerson();
+        OpenEmpiPatientQuery person = getPerson();
+        removeGlobalIdentifier(person);
 
         queryCreator.exportPatient(TOKEN, person);
     }
 
-    private OpenEmpiPatientQuery createPerson() throws Exception {
+    //    @Test
+    public void testPerformUpdate() throws Exception {
         OpenEmpiPatientQuery person = getPerson();
-        removeGlobalIdentifier(person);
-        return person;
+
+        person.setGivenName("Daniel");
+        person.setFamilyName("Ocean");
+
+        queryCreator.updatePatient(TOKEN, person);
     }
 
     private OpenEmpiPatientQuery getPerson() throws Exception {
