@@ -22,6 +22,10 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return getIntegerProperty(propertyName);
     }
 
+    public boolean isMpiEnabled() {
+        return getMpiFacade() != null;
+    }
+
     public MpiFacade getMpiFacade() {
         String propertyName = RegistrationCoreConstants.GP_MPI_FACADE;
         String beanId = null;
