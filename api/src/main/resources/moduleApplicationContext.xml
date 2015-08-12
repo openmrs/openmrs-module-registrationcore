@@ -68,7 +68,7 @@
     </bean>
 
     <!-- Mpi implementation part -->
-    <bean id="mpi.implementation.OpenEMPI"
+    <bean id="registrationcore.mpi.implementation.OpenEMPI"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiImplementation"/>
 
     <bean id="registrationcore.mpiProperties"
