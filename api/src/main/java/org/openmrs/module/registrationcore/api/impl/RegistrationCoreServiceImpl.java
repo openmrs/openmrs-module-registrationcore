@@ -282,7 +282,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			return patient.getUuid();
 		} else {
 			//should not pass here since "importPatient" performs only when MpiFacade is not null
-			return null;
+			throw new APIException("Should not perform 'importMpiPatient' when MPI is disabled");
 		}
 	}
 }
