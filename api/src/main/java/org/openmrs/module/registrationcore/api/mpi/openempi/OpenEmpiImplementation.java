@@ -1,10 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.mpi.common.*;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,12 +12,20 @@ import java.util.Map;
 public class OpenEmpiImplementation implements MpiFacade {
 
     @Autowired
-    @Qualifier("registrationcore.mpiPatientSearcher")
-    private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
-
-    @Autowired
     @Qualifier("registrationcore.mpiPatientImporter")
     private MpiPatientImporter patientImporter;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiPatientExporter")
+    private MpiPatientExporter patientExporter;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiPatientUpdater")
+    private MpiPatientUpdater patientUpdater;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiPatientSearcher")
+    private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
 
     @Autowired
     @Qualifier("registrationcore.mpiAuthenticator")
@@ -30,6 +35,18 @@ public class OpenEmpiImplementation implements MpiFacade {
     public Patient importMpiPatient(String patientId) {
         validateAuthentication();
         return patientImporter.importMpiPatient(patientId);
+    }
+
+    @Override
+    public void exportPatient(Patient patient) {
+        validateAuthentication();
+        patientExporter.exportPatient(patient);
+    }
+
+    @Override
+    public void updatePatient(Patient patient) {
+        validateAuthentication();
+        patientUpdater.updatePatient(patient);
     }
 
     @Override
