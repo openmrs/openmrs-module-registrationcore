@@ -7,7 +7,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.event.Event;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
 
 import javax.jms.Message;
 
@@ -16,10 +15,10 @@ public class PatientCreationListener extends PatientActionListener implements Ev
 
     private final Log log = LogFactory.getLog(this.getClass());
 
-    private MpiPatientExporter mpiPatientExporter;
+    private RegistrationCoreProperties coreProperties;
 
-    public void setMpiPatientExporter(MpiPatientExporter mpiPatientExporter) {
-        this.mpiPatientExporter = mpiPatientExporter;
+    public void setCoreProperties(RegistrationCoreProperties coreProperties) {
+        this.coreProperties = coreProperties;
     }
 
     public void init() {
@@ -28,10 +27,12 @@ public class PatientCreationListener extends PatientActionListener implements Ev
 
     @Override
     public void onMessage(Message message) {
-        log.info("Patient creation event handled, try perform export patient to MPI.");
-        Context.openSession();
-        Patient createdPatient = extractPatient(message);
-        mpiPatientExporter.exportPatient(createdPatient);
-        Context.closeSession();
+        if (coreProperties.isMpiEnabled()) {
+            log.info("Patient creation event handled, try perform export patient to MPI.");
+            Context.openSession();
+            Patient createdPatient = extractPatient(message);
+            coreProperties.getMpiFacade().exportPatient(createdPatient);
+            Context.closeSession();
+        }
     }
 }

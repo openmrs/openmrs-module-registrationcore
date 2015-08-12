@@ -9,12 +9,13 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,7 +25,8 @@ public class PatientCreationListenerTest {
 
     @InjectMocks private PatientCreationListener patientCreationListener;
     @Mock private PatientService patientService;
-    @Mock private MpiPatientExporter mpiPatientExporter;
+    @Mock private RegistrationCoreProperties coreProperties;
+    @Mock private MpiFacade mpiFacade;
 
     @Mock private MapMessage mapMessage;
     @Mock private Message message;
@@ -33,6 +35,8 @@ public class PatientCreationListenerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        when(coreProperties.isMpiEnabled()).thenReturn(true);
+        when(coreProperties.getMpiFacade()).thenReturn(mpiFacade);
     }
 
     @Test(expected = APIException.class)
@@ -54,6 +58,15 @@ public class PatientCreationListenerTest {
 
         patientCreationListener.onMessage(mapMessage);
 
-        verify(mpiPatientExporter).exportPatient(patient);
+        verify(mpiFacade).exportPatient(patient);
+    }
+
+    @Test
+    public void testDoNotPerformExportIfMpiIsDissabled() throws Exception {
+        when(coreProperties.isMpiEnabled()).thenReturn(false);
+
+        patientCreationListener.onMessage(mapMessage);
+
+        verify(mpiFacade, never());
     }
 }

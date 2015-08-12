@@ -38,7 +38,7 @@
 
     <bean id="registrationcore.patientCreationListener"
           class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener" init-method="init">
-        <property name="mpiPatientExporter" ref="registrationcore.mpiPatientExport"/>
+        <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
     </bean>
 
@@ -80,7 +80,7 @@
     <bean id="registrationcore.mpiPatientImporter"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientImporter"/>
 
-    <bean id="registrationcore.mpiPatientExport"
+    <bean id="registrationcore.mpiPatientExporter"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientExporter"/>
 
     <bean id="registrationcore.mpiPatientUpdater"
