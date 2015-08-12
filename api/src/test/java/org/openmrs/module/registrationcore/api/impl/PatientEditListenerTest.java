@@ -8,15 +8,12 @@ import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientUpdater;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
 
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PatientEditListenerTest {
 
@@ -24,7 +21,8 @@ public class PatientEditListenerTest {
 
     @InjectMocks private PatientEditListener patientEditListener;
     @Mock private PatientService patientService;
-    @Mock private MpiPatientUpdater patientUpdater;
+    @Mock private RegistrationCoreProperties coreProperties;
+    @Mock private MpiFacade mpiFacade;
 
     @Mock private MapMessage mapMessage;
     @Mock private Message message;
@@ -33,15 +31,26 @@ public class PatientEditListenerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        when(coreProperties.getMpiFacade()).thenReturn(mpiFacade);
     }
 
     @Test
     public void testPerformUpdate() throws Exception {
+        when(coreProperties.isMpiEnabled()).thenReturn(true);
         when(mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID)).thenReturn(PATIENT_UUID_EXAMPLE);
         when(patientService.getPatientByUuid(PATIENT_UUID_EXAMPLE)).thenReturn(patient);
 
         patientEditListener.onMessage(message);
 
-        verify(patientUpdater).updatePatient(patient);
+        verify(mpiFacade).updatePatient(patient);
+    }
+
+    @Test
+    public void testDoNotPerformUpdateOnMpiDisabled() throws Exception {
+        when(coreProperties.isMpiEnabled()).thenReturn(false);
+
+        patientEditListener.onMessage(message);
+
+        verify(mpiFacade, never());
     }
 }
