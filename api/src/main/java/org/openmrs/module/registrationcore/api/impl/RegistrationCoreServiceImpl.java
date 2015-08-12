@@ -226,7 +226,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 		matches.addAll(localMatches);
 
-		if (coreProperties.getMpiFacade() != null) {
+		if (coreProperties.isMpiEnabled()) {
 			List<PatientAndMatchQuality> mpiMatches = coreProperties.getMpiFacade()
 					.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
@@ -246,7 +246,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 		matches.addAll(localMatches);
 
-		if (coreProperties.getMpiFacade() != null) {
+		if (coreProperties.isMpiEnabled()) {
 			List<PatientAndMatchQuality> mpiMatches = coreProperties.getMpiFacade()
 					.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
@@ -275,7 +275,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	@Override
 	public String importMpiPatient(String personId) {
-		if (coreProperties.getMpiFacade() != null) {
+		if (coreProperties.isMpiEnabled()) {
 			MpiFacade mpiFacade = coreProperties.getMpiFacade();
 			Patient importedPatient = mpiFacade.importMpiPatient(personId);
 			Patient patient = patientService.savePatient(importedPatient);
