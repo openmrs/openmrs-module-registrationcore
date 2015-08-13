@@ -44,7 +44,7 @@
 
     <bean id="registrationcore.patientEditListener"
           class="org.openmrs.module.registrationcore.api.impl.PatientEditListener" init-method="init">
-        <property name="patientUpdater" ref="registrationcore.mpiPatientUpdater"/>
+        <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
     </bean>
 
