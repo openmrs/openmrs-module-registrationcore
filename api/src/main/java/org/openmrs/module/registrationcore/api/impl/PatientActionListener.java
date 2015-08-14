@@ -42,11 +42,12 @@ public abstract class PatientActionListener implements EventListener {
     }
 
     private Patient getPatient(String patientUuid) {
-        Patient createdPatient;
-        //TODO fix it: Add Privelege role in correct way.
-        Context.authenticate("admin", "Admin123");
-        createdPatient = patientService.getPatientByUuid(patientUuid);
-        return createdPatient;
+        try {
+            Context.addProxyPrivilege("Get Patients");
+            return patientService.getPatientByUuid(patientUuid);
+        } finally {
+            Context.removeProxyPrivilege("Get Patients");
+        }
     }
 
     private String getPatientUuid(MapMessage mapMessage) {
