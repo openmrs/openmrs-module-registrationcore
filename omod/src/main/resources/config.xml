@@ -96,6 +96,54 @@
 		</description>
 	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.globalIdentifierDomainId</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies main identifier on MPI server
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.local_mpi_identifierTypeMap.</property>
+		<defaultValue></defaultValue>
+		<description>
+			Part of local:mpi identifier map. Used for converting MPI to local identifiers
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.implementation</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies a bean name of MPI implementation
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.registrationcore.mpi.url</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies url to MPI server
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.registrationcore.mpi.username</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies username for authentication to MPI server
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.registrationcore.mpi.username</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies password for authentication to MPI server
+		</description>
+	</globalProperty>
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				
