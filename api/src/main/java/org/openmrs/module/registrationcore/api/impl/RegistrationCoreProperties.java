@@ -27,16 +27,14 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
     }
 
     public MpiFacade getMpiFacade() {
-        String propertyName = RegistrationCoreConstants.GP_MPI_FACADE;
-        String beanId = null;
-
+        String propertyName = RegistrationCoreConstants.GP_MPI_IMPLEMENTATION;
+        Object bean;
         try {
-            beanId = getProperty(propertyName);
+            String beanId = getProperty(propertyName);
+            bean = applicationContext.getBean(beanId);
         } catch (APIException e) {
             return null;
         }
-
-        Object bean = applicationContext.getBean(beanId);
         if (!(bean instanceof MpiFacade))
             throw new IllegalArgumentException(propertyName
                     + " must point to bean implementing MpiFacade");

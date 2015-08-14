@@ -14,6 +14,7 @@ import javax.jms.Message;
 public abstract class PatientActionListener implements EventListener {
 
     protected RegistrationCoreProperties coreProperties;
+
     private PatientService patientService;
 
     public void setPatientService(PatientService patientService) {

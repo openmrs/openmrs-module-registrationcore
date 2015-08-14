@@ -20,8 +20,6 @@ public final class RegistrationCoreConstants {
 	 */
 	public static final String GP_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
 
-	public static final String GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP = "registrationcore.local_mpi_identifierTypeMap.";
-
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
 
 	public static final String REGISTRATION_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.RegistrationEvent";
@@ -44,13 +42,15 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.preciseSimilarPatientSearchAlgorithm";
 
-	public static final String GP_MPI_FACADE = "registrationcore.mpi.implementation";
+	public static final String GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID = "registrationcore.mpi.globalIdentifierDomainId";
+
+	public static final String GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP = "registrationcore.local_mpi_identifierTypeMap.";
+
+	public static final String GP_MPI_IMPLEMENTATION = "registrationcore.mpi.implementation";
 
 	public static final String GP_MPI_URL = "registrationcore.mpi.url";
 
 	public static final String GP_MPI_ACCESS_USERNAME = "registrationcore.mpi.username";
 
 	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
-
-	public static final String GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID = "registrationcore.mpi.globalIdentifierDomainId";
 }
