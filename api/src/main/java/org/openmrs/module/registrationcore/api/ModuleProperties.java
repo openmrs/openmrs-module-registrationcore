@@ -21,7 +21,7 @@ public abstract class ModuleProperties {
         }
     }
 
-    private String getProperty(String propertyName) {
+    protected String getProperty(String propertyName) {
         String propertyValue = administrationService.getGlobalProperty(propertyName);
         if (StringUtils.isBlank(propertyValue))
             throw new APIException("Property value for '" + propertyName + "' is not set");
