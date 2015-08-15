@@ -6,12 +6,7 @@ import org.openmrs.api.AdministrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public abstract class ModuleProperties {
-
-    private static final Map<String, String> PROPERTIES = new LinkedHashMap<String, String>();
 
     @Autowired
     @Qualifier("adminService")
@@ -26,19 +21,7 @@ public abstract class ModuleProperties {
         }
     }
 
-    protected String getProperty(String propertyName) {
-        if (PROPERTIES.get(propertyName) == null) {
-            initializeProperty(propertyName);
-        }
-        return PROPERTIES.get(propertyName);
-    }
-
-    private void initializeProperty(String propertyName) {
-        String propertyValue = readProperty(propertyName);
-        PROPERTIES.put(propertyName, propertyValue);
-    }
-
-    private String readProperty(String propertyName) {
+    private String getProperty(String propertyName) {
         String propertyValue = administrationService.getGlobalProperty(propertyName);
         if (StringUtils.isBlank(propertyValue))
             throw new APIException("Property value for '" + propertyName + "' is not set");
