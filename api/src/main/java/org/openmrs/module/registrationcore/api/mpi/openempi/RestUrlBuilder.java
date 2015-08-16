@@ -22,7 +22,7 @@ public class RestUrlBuilder {
         return url;
     }
 
-    public String createFindPreciseSimilarPatientUrl() {
+    public String createFindPreciseSimilarPatientsUrl() {
         return getServerUrl() + REST_URL + PERSON_QUERY_URL + FIND_EXACT_PATIENTS_URL;
     }
 

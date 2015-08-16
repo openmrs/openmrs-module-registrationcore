@@ -90,7 +90,7 @@ public class RestQueryCreatorTest {
     @Test
     public void testFindPatients() throws Exception {
         String findPrecise = "findPrecise";
-        when(urlBuilder.createFindPreciseSimilarPatientUrl()).thenReturn(findPrecise);
+        when(urlBuilder.createFindPreciseSimilarPatientsUrl()).thenReturn(findPrecise);
         mockPeopleWrapper(peopleWrapper, patientQueryList);
         mockServerResponse(peopleWrapper, OpenEmpiPeopleWrapper.class);
         OpenEmpiPatientQuery query = createPatientQuery();

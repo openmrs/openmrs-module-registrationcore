@@ -46,7 +46,7 @@ public class RestQueryCreator {
         HttpHeaders headers = getAuthenticationHeader(token);
         HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(query, headers);
 
-        String url = urlBuilder.createFindPreciseSimilarPatientUrl();
+        String url = urlBuilder.createFindPreciseSimilarPatientsUrl();
         ResponseEntity<OpenEmpiPeopleWrapper> people = restTemplate.exchange(url,
                 HttpMethod.POST, entity, OpenEmpiPeopleWrapper.class);
 
