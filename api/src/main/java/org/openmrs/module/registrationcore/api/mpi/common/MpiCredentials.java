@@ -2,6 +2,9 @@ package org.openmrs.module.registrationcore.api.mpi.common;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Defines credentials class which holds required credentials for authentication to MPi server.
+ */
 @XmlRootElement(name = "authenticationRequest")
 public class MpiCredentials {
 
@@ -9,10 +12,18 @@ public class MpiCredentials {
 
     private String password;
 
+    /**
+     * Default constructor
+     */
     public MpiCredentials() {
         //Is used for XML marshalling.
     }
 
+    /**
+     * Constructor with username & password
+     * @param username
+     * @param password
+     */
     public MpiCredentials(String username, String password) {
         this.username = username;
         this.password = password;
