@@ -3,7 +3,7 @@ package org.openmrs.module.registrationcore.api.impl;
 import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -26,7 +26,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return getMpiFacade() != null;
     }
 
-    public MpiFacade getMpiFacade() {
+    public MpiProvider getMpiFacade() {
         String propertyName = RegistrationCoreConstants.GP_MPI_IMPLEMENTATION;
         Object bean;
         try {
@@ -35,10 +35,10 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         } catch (APIException e) {
             return null;
         }
-        if (!(bean instanceof MpiFacade))
+        if (!(bean instanceof MpiProvider))
             throw new IllegalArgumentException(propertyName
-                    + " must point to bean implementing MpiFacade");
+                    + " must point to bean implementing MpiProvider");
 
-        return (MpiFacade) bean;
+        return (MpiProvider) bean;
     }
 }

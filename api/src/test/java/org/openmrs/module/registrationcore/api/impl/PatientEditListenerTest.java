@@ -8,7 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 
 import javax.jms.MapMessage;
 import javax.jms.Message;
@@ -22,7 +22,7 @@ public class PatientEditListenerTest {
     @InjectMocks private PatientEditListener patientEditListener;
     @Mock private PatientService patientService;
     @Mock private RegistrationCoreProperties coreProperties;
-    @Mock private MpiFacade mpiFacade;
+    @Mock private MpiProvider mpiProvider;
 
     @Mock private MapMessage mapMessage;
     @Mock private Message message;
@@ -31,7 +31,7 @@ public class PatientEditListenerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        when(coreProperties.getMpiFacade()).thenReturn(mpiFacade);
+        when(coreProperties.getMpiFacade()).thenReturn(mpiProvider);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class PatientEditListenerTest {
 
         patientEditListener.onMessage(message);
 
-        verify(mpiFacade).updatePatient(patient);
+        verify(mpiProvider).updatePatient(patient);
     }
 
     @Test
@@ -51,6 +51,6 @@ public class PatientEditListenerTest {
 
         patientEditListener.onMessage(message);
 
-        verify(mpiFacade, never());
+        verify(mpiProvider, never());
     }
 }

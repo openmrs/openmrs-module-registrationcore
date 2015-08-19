@@ -7,10 +7,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
-import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiImplementation;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class OpenEmpiImplementationTest {
 
     private static final String PATIENT_ID = "13";
 
-    @InjectMocks private MpiFacade mpiFacade = new OpenEmpiImplementation();
+    @InjectMocks private MpiProvider mpiProvider = new OpenEmpiImplementation();
     @Mock private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
     @Mock private MpiPatientImporter patientImporter;
     @Mock private MpiAuthenticator authenticator;
@@ -45,7 +44,7 @@ public class OpenEmpiImplementationTest {
         Patient mockPatient = mock(Patient.class);
         when(patientImporter.importMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
 
-        Patient patient = mpiFacade.importMpiPatient(PATIENT_ID);
+        Patient patient = mpiProvider.importMpiPatient(PATIENT_ID);
 
         verify(authenticator).performAuthentication();
         verify(patientImporter).importMpiPatient(PATIENT_ID);
@@ -58,7 +57,7 @@ public class OpenEmpiImplementationTest {
         Patient mockPatient = mock(Patient.class);
         when(patientImporter.importMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
 
-        mpiFacade.importMpiPatient(PATIENT_ID);
+        mpiProvider.importMpiPatient(PATIENT_ID);
 
         verify(authenticator, never()).performAuthentication();
     }
@@ -69,7 +68,7 @@ public class OpenEmpiImplementationTest {
         when(searchAlgorithm.findSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        List<PatientAndMatchQuality> similarPatients = mpiFacade.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        List<PatientAndMatchQuality> similarPatients = mpiProvider.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
         verify(authenticator).performAuthentication();
         verify(searchAlgorithm).findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);
@@ -81,7 +80,7 @@ public class OpenEmpiImplementationTest {
         when(searchAlgorithm.findSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        mpiFacade.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        mpiProvider.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 
         verify(authenticator, never()).performAuthentication();
     }
@@ -92,7 +91,7 @@ public class OpenEmpiImplementationTest {
         when(searchAlgorithm.findPreciseSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        List<PatientAndMatchQuality> similarPatients = mpiFacade.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        List<PatientAndMatchQuality> similarPatients = mpiProvider.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
         verify(authenticator).performAuthentication();
         verify(searchAlgorithm).findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);
@@ -105,7 +104,7 @@ public class OpenEmpiImplementationTest {
         when(searchAlgorithm.findPreciseSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        mpiFacade.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        mpiProvider.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 
         verify(authenticator, never()).performAuthentication();
     }

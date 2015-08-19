@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.List;
 import java.util.Map;
 
-public class OpenEmpiImplementation implements MpiFacade {
+public class OpenEmpiImplementation implements MpiProvider {
 
     @Autowired
     @Qualifier("registrationcore.mpiPatientImporter")

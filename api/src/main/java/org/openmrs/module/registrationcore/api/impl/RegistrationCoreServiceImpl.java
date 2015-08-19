@@ -30,7 +30,7 @@ import org.openmrs.event.EventMessage;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiFacade;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.mpi.openempi.MatchedPatientFilter;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
@@ -276,12 +276,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public String importMpiPatient(String personId) {
 		if (coreProperties.isMpiEnabled()) {
-			MpiFacade mpiFacade = coreProperties.getMpiFacade();
-			Patient importedPatient = mpiFacade.importMpiPatient(personId);
+			MpiProvider mpiProvider = coreProperties.getMpiFacade();
+			Patient importedPatient = mpiProvider.importMpiPatient(personId);
 			Patient patient = patientService.savePatient(importedPatient);
 			return patient.getUuid();
 		} else {
-			//should not pass here since "importPatient" performs only when MpiFacade is not null
+			//should not pass here since "importPatient" performs only when MpiProvider is not null
 			throw new APIException("Should not perform 'importMpiPatient' when MPI is disabled");
 		}
 	}
