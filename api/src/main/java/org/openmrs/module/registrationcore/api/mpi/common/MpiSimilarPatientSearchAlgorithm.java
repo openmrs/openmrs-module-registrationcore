@@ -21,14 +21,32 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An MPI interface, which provide finding similar and exact matched patients, and also provide importing
- * patient by Id.
+ * This service provide finding precise similar and probably similar matched patients.
  */
 public interface MpiSimilarPatientSearchAlgorithm {
 
+    /**
+     * Perform search on MPI server for probably similar patients.
+     *
+     * @param patient
+     * @param otherDataPoints
+     * @param cutoff
+     * @param maxResults
+     * @return list of possible matched patients
+     */
     List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
                                                      Integer maxResults);
 
+    /**
+     * Perform search on MPI server for precise similar patients.
+     * You would use this to perform one final check before actually creating a patient, after all data has been filled.
+     *
+     * @param patient
+     * @param otherDataPoints
+     * @param cutoff
+     * @param maxResults
+     * @return list of possible matched patients
+     */
     List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
                                                             Integer maxResults);
 }
