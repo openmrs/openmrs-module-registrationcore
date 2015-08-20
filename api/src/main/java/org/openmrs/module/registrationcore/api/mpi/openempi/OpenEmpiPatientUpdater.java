@@ -17,13 +17,13 @@ public class OpenEmpiPatientUpdater implements MpiPatientUpdater {
     private MpiAuthenticator authenticator;
 
     @Autowired
-    @Qualifier("registrationcore.restQueryCreator")
-    private RestQueryCreator queryCreator;
+    @Qualifier("registrationcore.restQueryExecutor")
+    private RestQueryExecutor queryExecutor;
 
     @Override
     public void updatePatient(Patient patient) {
         OpenEmpiPatientQuery patientQuery = queryBuilder.build(patient);
 
-        queryCreator.updatePatient(authenticator.getToken(), patientQuery);
+        queryExecutor.updatePatient(authenticator.getToken(), patientQuery);
     }
 }

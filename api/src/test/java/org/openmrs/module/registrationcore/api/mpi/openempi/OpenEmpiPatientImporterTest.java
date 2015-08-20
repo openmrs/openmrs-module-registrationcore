@@ -100,8 +100,8 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     }
 
     private void mockResTemplate() {
-        RestQueryCreator queryCreator = (RestQueryCreator) context.getBean("registrationcore.restQueryCreator");
-        ReflectionTestUtils.setField(queryCreator, "restTemplate", mockRestTemplate);
+        RestQueryExecutor queryExecutor = (RestQueryExecutor) context.getBean("registrationcore.restQueryCreator");
+        ReflectionTestUtils.setField(queryExecutor, "restTemplate", mockRestTemplate);
     }
 
     @Test

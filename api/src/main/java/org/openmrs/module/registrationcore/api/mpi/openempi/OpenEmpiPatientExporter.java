@@ -22,15 +22,15 @@ public class OpenEmpiPatientExporter implements MpiPatientExporter {
     private MpiAuthenticator authenticator;
 
     @Autowired
-    @Qualifier("registrationcore.restQueryCreator")
-    private RestQueryCreator queryCreator;
+    @Qualifier("registrationcore.restQueryExecutor")
+    private RestQueryExecutor queryExecutor;
 
     @Override
     public void exportPatient(Patient patient) {
         OpenEmpiPatientQuery patientQuery = queryBuilder.build(patient);
         removeOpenEmpiGlobalIdentifier(patientQuery);
 
-        queryCreator.exportPatient(authenticator.getToken(), patientQuery);
+        queryExecutor.exportPatient(authenticator.getToken(), patientQuery);
     }
 
     private void removeOpenEmpiGlobalIdentifier(OpenEmpiPatientQuery patientQuery) {

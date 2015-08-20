@@ -26,7 +26,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
     private static final int MPI_PERSON_ID = 143;
 
     @InjectMocks private OpenEmpiPatientSearchAlgorithm searchAlgorithm;
-    @Mock private RestQueryCreator queryCreator;
+    @Mock private RestQueryExecutor queryCreator;
     @Mock private FindPatientQueryBuilder queryMapper;
     @Mock private PatientBuilder patientBuilder;
     @Mock private MpiAuthenticator authenticator;

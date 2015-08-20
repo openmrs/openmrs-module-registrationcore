@@ -17,7 +17,7 @@ public class OpenEmpiPatientUpdaterTest {
 
     @Mock private OpenEmpiPatientQueryBuilder queryBuilder;
     @Mock private MpiAuthenticator authenticator;
-    @Mock private RestQueryCreator queryCreator;
+    @Mock private RestQueryExecutor queryCreator;
     @InjectMocks private OpenEmpiPatientUpdater patientUpdater;
 
     @Mock private Patient patient;

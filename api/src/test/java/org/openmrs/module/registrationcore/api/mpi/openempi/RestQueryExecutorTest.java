@@ -23,7 +23,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-public class RestQueryCreatorTest {
+public class RestQueryExecutorTest {
 
     private static final String PASSWORD = "password";
     private static final String USERNAME = "username";
@@ -32,7 +32,7 @@ public class RestQueryCreatorTest {
     private static final String PATIENT_QUERY_GIVENNAME = "Michael";
     private static final String PATIENT_QUERY_FAMILYNAME = "Louis";
 
-    @InjectMocks private RestQueryCreator restQueryCreator = new RestQueryCreator();
+    @InjectMocks private RestQueryExecutor restQueryExecutor = new RestQueryExecutor();
     @Mock private RestUrlBuilder urlBuilder;
     @Mock private RestTemplate restTemplate;
     @Mock private OpenEmpiPatientQuery patientQuery;
@@ -51,7 +51,7 @@ public class RestQueryCreatorTest {
         when(urlBuilder.createAuthenticationUrl()).thenReturn(authUrl);
         mockServerResponse(TOKEN_VALUE, String.class);
 
-        String actualToken = restQueryCreator.processAuthentication(createCredentials());
+        String actualToken = restQueryExecutor.processAuthentication(createCredentials());
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
@@ -66,7 +66,7 @@ public class RestQueryCreatorTest {
     public void testProcessAuthenticationThrowExceptionOnInvalidToken() throws Exception {
         mockServerResponse(null, String.class);
 
-        restQueryCreator.processAuthentication(createCredentials());
+        restQueryExecutor.processAuthentication(createCredentials());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class RestQueryCreatorTest {
         when(urlBuilder.createGetPatientUrl(PATIENT_ID)).thenReturn(patientUrl);
         mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
 
-        OpenEmpiPatientQuery actualPatient = restQueryCreator.getPatientById(TOKEN_VALUE, PATIENT_ID);
+        OpenEmpiPatientQuery actualPatient = restQueryExecutor.getPatientById(TOKEN_VALUE, PATIENT_ID);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
@@ -95,7 +95,7 @@ public class RestQueryCreatorTest {
         mockServerResponse(peopleWrapper, OpenEmpiPeopleWrapper.class);
         OpenEmpiPatientQuery query = createPatientQuery();
 
-        List<OpenEmpiPatientQuery> patients = restQueryCreator.findPreciseSimilarPatients(TOKEN_VALUE, query);
+        List<OpenEmpiPatientQuery> patients = restQueryExecutor.findPreciseSimilarPatients(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
@@ -114,7 +114,7 @@ public class RestQueryCreatorTest {
         mockServerResponse(peopleWrapper, OpenEmpiPeopleWrapper.class);
         OpenEmpiPatientQuery query = createPatientQuery();
 
-        List<OpenEmpiPatientQuery> patients = restQueryCreator.findPreciseSimilarPatients(TOKEN_VALUE, query);
+        List<OpenEmpiPatientQuery> patients = restQueryExecutor.findPreciseSimilarPatients(TOKEN_VALUE, query);
 
         assertTrue(patients.size() == 0);
     }
@@ -126,7 +126,7 @@ public class RestQueryCreatorTest {
         mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
         OpenEmpiPatientQuery query = createPatientQuery();
 
-        restQueryCreator.exportPatient(TOKEN_VALUE, query);
+        restQueryExecutor.exportPatient(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
@@ -145,7 +145,7 @@ public class RestQueryCreatorTest {
         mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
         OpenEmpiPatientQuery query = createPatientQuery();
 
-        restQueryCreator.updatePatient(TOKEN_VALUE, query);
+        restQueryExecutor.updatePatient(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
@@ -184,7 +184,7 @@ public class RestQueryCreatorTest {
 
 
     private void mockRestTemplate() {
-        ReflectionTestUtils.setField(restQueryCreator, "restTemplate", restTemplate);
+        ReflectionTestUtils.setField(restQueryExecutor, "restTemplate", restTemplate);
     }
 
     private void mockPeopleWrapper(OpenEmpiPeopleWrapper peopleWrapper, List<OpenEmpiPatientQuery> patientQueryList) {

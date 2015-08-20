@@ -10,8 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.List;
 
-//TODO rename it to executor.
-public class RestQueryCreator {
+public class RestQueryExecutor {
 
     @Autowired
     @Qualifier("registrationcore.restUrlBuilder")

@@ -20,7 +20,7 @@ public class RestQueryCreatorIntegrationTest {
     private XmlMarshaller xmlMarshaller = new XmlMarshaller();
     @Mock private MpiProperties properties;
     private RestUrlBuilder urlBuilder = new RestUrlBuilder();
-    @InjectMocks private RestQueryCreator queryCreator;
+    @InjectMocks private RestQueryExecutor queryCreator;
 
     @Before
     public void setUp() throws Exception {

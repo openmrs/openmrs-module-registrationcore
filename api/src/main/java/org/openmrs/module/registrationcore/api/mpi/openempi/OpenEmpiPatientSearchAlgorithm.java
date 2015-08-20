@@ -16,8 +16,8 @@ import java.util.Map;
 public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
 
     @Autowired
-    @Qualifier("registrationcore.restQueryCreator")
-    private RestQueryCreator restQueryCreator;
+    @Qualifier("registrationcore.restQueryExecutor")
+    private RestQueryExecutor queryExecutor;
 
     @Autowired
     @Qualifier("registrationcore.patientBuilder")
@@ -35,7 +35,7 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
                                                             Double cutoff, Integer maxResults) {
         OpenEmpiPatientQuery patientQuery = queryMapper.create(patient);
 
-        List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator
+        List<OpenEmpiPatientQuery> mpiPatients = queryExecutor
                 .findProbablySimilarPatients(authenticator.getToken(), patientQuery);
 
         mpiPatients = limitResults(maxResults, mpiPatients);
@@ -49,7 +49,7 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
                                                                    Double cutoff, Integer maxResults) {
         OpenEmpiPatientQuery patientQuery = queryMapper.create(patient);
 
-        List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator
+        List<OpenEmpiPatientQuery> mpiPatients = queryExecutor
                 .findPreciseSimilarPatients(authenticator.getToken(), patientQuery);
 
         mpiPatients = limitResults(maxResults, mpiPatients);

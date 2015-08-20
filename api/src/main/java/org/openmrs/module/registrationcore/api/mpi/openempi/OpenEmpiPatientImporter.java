@@ -16,8 +16,8 @@ public class OpenEmpiPatientImporter implements MpiPatientImporter {
     private final Log log = LogFactory.getLog(this.getClass());
 
     @Autowired
-    @Qualifier("registrationcore.restQueryCreator")
-    private RestQueryCreator restQueryCreator;
+    @Qualifier("registrationcore.restQueryExecutor")
+    private RestQueryExecutor queryExecutor;
 
     @Autowired
     @Qualifier("registrationcore.identifierBuilder")
@@ -37,7 +37,7 @@ public class OpenEmpiPatientImporter implements MpiPatientImporter {
 
     @Override
     public Patient importMpiPatient(String patientId) {
-        OpenEmpiPatientQuery mpiPatient = restQueryCreator.getPatientById(authenticator.getToken(), patientId);
+        OpenEmpiPatientQuery mpiPatient = queryExecutor.getPatientById(authenticator.getToken(), patientId);
 
         return createPatient(mpiPatient);
     }

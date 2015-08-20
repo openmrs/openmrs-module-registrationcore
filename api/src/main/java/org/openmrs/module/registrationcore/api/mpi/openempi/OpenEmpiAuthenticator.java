@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class OpenEmpiAuthenticator implements MpiAuthenticator {
 
     @Autowired
-    @Qualifier("registrationcore.restQueryCreator")
-    private RestQueryCreator queryCreator;
+    @Qualifier("registrationcore.restQueryExecutor")
+    private RestQueryExecutor queryExecutor;
 
     @Autowired
     @Qualifier("registrationcore.mpiProperties")
@@ -32,6 +32,6 @@ public class OpenEmpiAuthenticator implements MpiAuthenticator {
 
     @Override
     public void performAuthentication() {
-        token = queryCreator.processAuthentication(mpiProperties.getMpiCredentials());
+        token = queryExecutor.processAuthentication(mpiProperties.getMpiCredentials());
     }
 }

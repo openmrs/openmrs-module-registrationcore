@@ -23,7 +23,7 @@ public class OpenEmpiPatientExporterTest {
     @Mock private OpenEmpiPatientQueryBuilder queryBuilder;
     @Mock private MpiProperties mpiProperties;
     @Mock private MpiAuthenticator authenticator;
-    @Mock private RestQueryCreator queryCreator;
+    @Mock private RestQueryExecutor queryCreator;
     @Mock private Patient patient;
     @Mock private OpenEmpiPatientQuery query;
 

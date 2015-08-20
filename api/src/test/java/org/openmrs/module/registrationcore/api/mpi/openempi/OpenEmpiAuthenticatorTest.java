@@ -21,7 +21,7 @@ public class OpenEmpiAuthenticatorTest {
     private static final String MPI_ACCESS_USERNAME = "username";
     private static final String MPI_ACCESS_PASSWORD = "password";
     private static final String TOKEN_VALUE = "NotEmptyTokenValue";
-    @Mock private RestQueryCreator queryCreator;
+    @Mock private RestQueryExecutor queryCreator;
     @Mock private AdministrationService adminService;
     @Mock private MpiProperties mpiProperties;
     @InjectMocks private OpenEmpiAuthenticator authenticator;

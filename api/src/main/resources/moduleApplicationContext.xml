@@ -97,8 +97,8 @@
     <bean id="registrationcore.restUrlBuilder"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.RestUrlBuilder"/>
 
-    <bean id="registrationcore.restQueryCreator"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryCreator"/>
+    <bean id="registrationcore.restQueryExecutor"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.RestQueryExecutor"/>
 
     <bean id="registrationcore.patientBuilder"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.PatientBuilder"/>
