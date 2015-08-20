@@ -25,7 +25,7 @@ public class OpenEmpiImplementation implements MpiProvider {
 
     @Autowired
     @Qualifier("registrationcore.mpiPatientSearcher")
-    private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
+    private MpiSimilarPatientsSearcher searchAlgorithm;
 
     @Autowired
     @Qualifier("registrationcore.mpiAuthenticator")
@@ -50,10 +50,10 @@ public class OpenEmpiImplementation implements MpiProvider {
     }
 
     @Override
-    public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
-                                                            Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findProbablySimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+                                                                    Double cutoff, Integer maxResults) {
         validateAuthentication();
-        return searchAlgorithm.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        return searchAlgorithm.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
     }
 
     @Override

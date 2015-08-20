@@ -87,7 +87,7 @@
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientUpdater"/>
 
     <bean id="registrationcore.mpiPatientSearcher"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientSearchAlgorithm"/>
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientsSearcher"/>
 
     <!--help classes related to MPI implementation:-->
 

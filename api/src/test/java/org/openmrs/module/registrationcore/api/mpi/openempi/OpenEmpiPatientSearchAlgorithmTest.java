@@ -25,7 +25,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
     private static final List<String> MATCHED_FIELDS = Arrays.asList("personName", "gender", "birthdate");
     private static final int MPI_PERSON_ID = 143;
 
-    @InjectMocks private OpenEmpiPatientSearchAlgorithm searchAlgorithm;
+    @InjectMocks private OpenEmpiPatientsSearcher searchAlgorithm;
     @Mock private RestQueryExecutor queryCreator;
     @Mock private FindPatientQueryBuilder queryMapper;
     @Mock private PatientBuilder patientBuilder;
@@ -48,7 +48,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         List<OpenEmpiPatientQuery> patients = createPatients(MAX_RESULTS + 2);
         when(queryCreator.findProbablySimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
 
-        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findSimilarPatients(patient, null, cutoff, MAX_RESULTS);
+        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findProbablySimilarPatients(patient, null, cutoff, MAX_RESULTS);
 
         verify(queryMapper).create(patient);
         verify(queryCreator).findProbablySimilarPatients(TOKEN_VALUE, patientQuery);

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * This service provide finding precise similar and probably similar matched patients.
  */
-public interface MpiSimilarPatientSearchAlgorithm {
+public interface MpiSimilarPatientsSearcher {
 
     /**
      * Perform search on MPI server for probably similar patients.
@@ -34,8 +34,8 @@ public interface MpiSimilarPatientSearchAlgorithm {
      * @param maxResults
      * @return list of possible matched patients
      */
-    List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-                                                     Integer maxResults);
+    List<PatientAndMatchQuality> findProbablySimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+                                                             Integer maxResults);
 
     /**
      * Perform search on MPI server for precise similar patients.

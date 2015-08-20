@@ -3,7 +3,7 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAlgorithm {
+public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Autowired
     @Qualifier("registrationcore.restQueryExecutor")
@@ -30,9 +30,9 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
     private FindPatientQueryBuilder queryMapper = new FindPatientQueryBuilder();
 
     @Override
-    public List<PatientAndMatchQuality> findSimilarPatients(Patient patient,
-                                                            Map<String, Object> otherDataPoints,
-                                                            Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findProbablySimilarPatients(Patient patient,
+                                                                    Map<String, Object> otherDataPoints,
+                                                                    Double cutoff, Integer maxResults) {
         OpenEmpiPatientQuery patientQuery = queryMapper.create(patient);
 
         List<OpenEmpiPatientQuery> mpiPatients = queryExecutor

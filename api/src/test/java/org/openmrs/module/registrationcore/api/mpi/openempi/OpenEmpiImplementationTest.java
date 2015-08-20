@@ -9,7 +9,7 @@ import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class OpenEmpiImplementationTest {
     private static final String PATIENT_ID = "13";
 
     @InjectMocks private MpiProvider mpiProvider = new OpenEmpiImplementation();
-    @Mock private MpiSimilarPatientSearchAlgorithm searchAlgorithm;
+    @Mock private MpiSimilarPatientsSearcher searchAlgorithm;
     @Mock private MpiPatientImporter patientImporter;
     @Mock private MpiAuthenticator authenticator;
 
@@ -65,22 +65,22 @@ public class OpenEmpiImplementationTest {
     @Test
     public void testFindSimilarPatients() throws Exception {
         mockAuthentication(false);
-        when(searchAlgorithm.findSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+        when(searchAlgorithm.findProbablySimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        List<PatientAndMatchQuality> similarPatients = mpiProvider.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        List<PatientAndMatchQuality> similarPatients = mpiProvider.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
         verify(authenticator).performAuthentication();
-        verify(searchAlgorithm).findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        verify(searchAlgorithm).findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);
     }
 
     @Test
     public void testFindSimilarPatientsDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
         mockAuthentication(true);
-        when(searchAlgorithm.findSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+        when(searchAlgorithm.findProbablySimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        mpiProvider.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        mpiProvider.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 
         verify(authenticator, never()).performAuthentication();
     }
