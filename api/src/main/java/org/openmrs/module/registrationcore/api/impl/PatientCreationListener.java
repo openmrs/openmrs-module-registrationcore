@@ -17,7 +17,6 @@ public class PatientCreationListener extends PatientActionListener {
 
     @Override
     public void performMpiAction(Patient createdPatient) {
-        log.error("patient creator: " + createdPatient.getCreator());
         coreProperties.getMpiProvider().exportPatient(createdPatient);
     }
 }
