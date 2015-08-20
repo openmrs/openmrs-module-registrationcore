@@ -60,7 +60,7 @@ public class PatientCreationListenerTest {
     }
 
     @Test
-    public void testDoNotPerformExportIfMpiIsDissabled() throws Exception {
+    public void testDoNotPerformExportIfMpiIsDisabled() throws Exception {
         when(coreProperties.isMpiEnabled()).thenReturn(false);
 
         patientCreationListener.onMessage(mapMessage);
