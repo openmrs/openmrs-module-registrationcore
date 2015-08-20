@@ -41,13 +41,36 @@ public class OpenEmpiPatientSearchAlgorithmTest {
     }
 
     @Test
-    public void testFindSimilarPatientsReturnMoreThanMaxValue() throws Exception {
+    public void testFindSimilarPatientsReturnLessEqualThanMaxValue() throws Exception {
         mockPatientConversion();
         mockAuthenticationToken();
-        mockPatientsResult(createPatients(MAX_RESULTS + 2));
         mockPatientBuild();
+        List<OpenEmpiPatientQuery> patients = createPatients(MAX_RESULTS + 2);
+        when(queryCreator.findProbablySimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
 
         List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findSimilarPatients(patient, null, cutoff, MAX_RESULTS);
+
+        verify(queryMapper).create(patient);
+        verify(queryCreator).findProbablySimilarPatients(TOKEN_VALUE, patientQuery);
+        verify(patientBuilder, times(MAX_RESULTS)).buildPatient(any(OpenEmpiPatientQuery.class));
+        verify(mpiPatient, times(MAX_RESULTS)).setUuid(String.valueOf(MPI_PERSON_ID));
+        assertTrue(actualPatients.size() == MAX_RESULTS);
+        for (PatientAndMatchQuality actualPatient : actualPatients) {
+            assertEquals(actualPatient.getPatient(), mpiPatient);
+            assertEquals(actualPatient.getMatchedFields(), MATCHED_FIELDS);
+            assertEquals(actualPatient.getScore(), cutoff);
+        }
+    }
+
+    @Test
+    public void testFindPreciseSimilarPatientsReturnLessEqualThanMaxValue() throws Exception {
+        mockPatientConversion();
+        mockAuthenticationToken();
+        mockPatientBuild();
+        List<OpenEmpiPatientQuery> patients = createPatients(MAX_RESULTS + 2);
+        when(queryCreator.findPreciseSimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
+
+        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findPreciseSimilarPatients(patient, null, cutoff, MAX_RESULTS);
 
         verify(queryMapper).create(patient);
         verify(queryCreator).findPreciseSimilarPatients(TOKEN_VALUE, patientQuery);
@@ -67,10 +90,6 @@ public class OpenEmpiPatientSearchAlgorithmTest {
 
     private void mockAuthenticationToken() {
         when(authenticator.getToken()).thenReturn(TOKEN_VALUE);
-    }
-
-    private void mockPatientsResult(List<OpenEmpiPatientQuery> patientsResult) {
-        when(queryCreator.findPreciseSimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patientsResult);
     }
 
     private List<OpenEmpiPatientQuery> createPatients(int count) {
