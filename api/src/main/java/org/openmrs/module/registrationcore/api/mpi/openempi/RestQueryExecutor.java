@@ -52,7 +52,7 @@ public class RestQueryExecutor {
         return findPatients(token, url, query);
     }
 
-    public void exportPatient(String token, OpenEmpiPatientQuery patientQuery) {
+    public OpenEmpiPatientQuery exportPatient(String token, OpenEmpiPatientQuery patientQuery) {
         HttpHeaders headers = getAuthenticationHeader(token);
         HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(patientQuery, headers);
 
@@ -63,6 +63,7 @@ public class RestQueryExecutor {
         if (personResponse.getBody() == null)
             throw new APIException("Fail while Patient export to Mpi server. " +
                     "Check if patient with same identifiers do not exist on MPI server.");
+        return personResponse.getBody();
     }
 
     public void updatePatient(String token, OpenEmpiPatientQuery patientQuery) {
