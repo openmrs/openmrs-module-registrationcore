@@ -32,7 +32,7 @@ public class PatientEditListenerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        when(coreProperties.getMpiFacade()).thenReturn(mpiProvider);
+        when(coreProperties.getMpiProvider()).thenReturn(mpiProvider);
     }
 
     @Test

@@ -13,6 +13,6 @@ public class PatientCreationListener extends PatientActionListener {
 
     @Override
     public void performMpiAction(Patient createdPatient) {
-        coreProperties.getMpiFacade().exportPatient(createdPatient);
+        coreProperties.getMpiProvider().exportPatient(createdPatient);
     }
 }

@@ -227,7 +227,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		matches.addAll(localMatches);
 
 		if (coreProperties.isMpiEnabled()) {
-			List<PatientAndMatchQuality> mpiMatches = coreProperties.getMpiFacade()
+			List<PatientAndMatchQuality> mpiMatches = coreProperties.getMpiProvider()
 					.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
 
@@ -247,7 +247,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		matches.addAll(localMatches);
 
 		if (coreProperties.isMpiEnabled()) {
-			List<PatientAndMatchQuality> mpiMatches = coreProperties.getMpiFacade()
+			List<PatientAndMatchQuality> mpiMatches = coreProperties.getMpiProvider()
 					.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
 
@@ -276,7 +276,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public String importMpiPatient(String personId) {
 		if (coreProperties.isMpiEnabled()) {
-			MpiProvider mpiProvider = coreProperties.getMpiFacade();
+			MpiProvider mpiProvider = coreProperties.getMpiProvider();
 			Patient importedPatient = mpiProvider.importMpiPatient(personId);
 			Patient patient = patientService.savePatient(importedPatient);
 			return patient.getUuid();

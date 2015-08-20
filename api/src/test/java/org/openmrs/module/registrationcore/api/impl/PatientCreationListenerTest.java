@@ -34,7 +34,7 @@ public class PatientCreationListenerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(coreProperties.isMpiEnabled()).thenReturn(true);
-        when(coreProperties.getMpiFacade()).thenReturn(mpiProvider);
+        when(coreProperties.getMpiProvider()).thenReturn(mpiProvider);
     }
 
     @Test(expected = APIException.class)

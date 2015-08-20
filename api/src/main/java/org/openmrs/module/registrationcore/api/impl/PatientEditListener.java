@@ -12,6 +12,6 @@ public class PatientEditListener extends PatientActionListener {
 
     @Override
     public void performMpiAction(Patient editedPatient) {
-        coreProperties.getMpiFacade().updatePatient(editedPatient);
+        coreProperties.getMpiProvider().updatePatient(editedPatient);
     }
 }

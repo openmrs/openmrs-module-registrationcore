@@ -23,10 +23,10 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
     }
 
     public boolean isMpiEnabled() {
-        return getMpiFacade() != null;
+        return getMpiProvider() != null;
     }
 
-    public MpiProvider getMpiFacade() {
+    public MpiProvider getMpiProvider() {
         String propertyName = RegistrationCoreConstants.GP_MPI_IMPLEMENTATION;
         Object bean;
         try {
