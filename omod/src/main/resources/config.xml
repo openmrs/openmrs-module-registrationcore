@@ -136,6 +136,14 @@
 		</description>
 	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.registrationcore.mpi.probablyMatchEnabled</property>
+		<defaultValue>false</defaultValue>
+		<description>
+			Specifies if probably matching should be used
+		</description>
+	</globalProperty>
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				
