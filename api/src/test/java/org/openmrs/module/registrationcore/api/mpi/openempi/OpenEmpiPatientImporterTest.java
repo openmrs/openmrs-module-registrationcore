@@ -89,6 +89,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     }
 
     private void saveGlobalProperties() {
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_IMPLEMENTATION, "registrationcore.mpi.implementation.OpenEMPI"));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID, "1"));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME, GP_MPI_USERNAME));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, GP_MPI_PASSWORD));
@@ -100,7 +101,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
     }
 
     private void mockResTemplate() {
-        RestQueryExecutor queryExecutor = (RestQueryExecutor) context.getBean("registrationcore.restQueryCreator");
+        RestQueryExecutor queryExecutor = (RestQueryExecutor) context.getBean("registrationcore.restQueryExecutor");
         ReflectionTestUtils.setField(queryExecutor, "restTemplate", mockRestTemplate);
     }
 
