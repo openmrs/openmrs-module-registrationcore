@@ -105,14 +105,6 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.local_mpi_identifierTypeMap.</property>
-		<defaultValue></defaultValue>
-		<description>
-			Part of local:mpi identifier map. Used for converting MPI to local identifiers
-		</description>
-	</globalProperty>
-
-	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.implementation</property>
 		<defaultValue></defaultValue>
 		<description>
