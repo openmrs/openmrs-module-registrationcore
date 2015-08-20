@@ -113,7 +113,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.registrationcore.mpi.url</property>
+		<property>${project.parent.artifactId}.mpi.url</property>
 		<defaultValue></defaultValue>
 		<description>
 			Specifies url to MPI server
@@ -121,7 +121,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.registrationcore.mpi.username</property>
+		<property>${project.parent.artifactId}.mpi.username</property>
 		<defaultValue></defaultValue>
 		<description>
 			Specifies username for authentication to MPI server
@@ -129,7 +129,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.registrationcore.mpi.username</property>
+		<property>${project.parent.artifactId}.mpi.username</property>
 		<defaultValue></defaultValue>
 		<description>
 			Specifies password for authentication to MPI server
@@ -137,7 +137,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.registrationcore.mpi.probablyMatchEnabled</property>
+		<property>${project.parent.artifactId}.mpi.probablyMatchEnabled</property>
 		<defaultValue>false</defaultValue>
 		<description>
 			Specifies if probably matching should be used
