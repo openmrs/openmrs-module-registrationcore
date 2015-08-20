@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.common;
 
 import org.openmrs.GlobalProperty;
+import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
 
@@ -37,5 +38,16 @@ public class MpiProperties extends ModuleProperties {
             result.add(property.getPropertyValue());
         }
         return result;
+    }
+
+    public boolean isProbablyMatchingEnabled() {
+        String propertyName = RegistrationCoreConstants.GP_PROBABLY_MATCH_ENABLED;
+        try {
+            String isEnabled = getProperty(propertyName);
+            return Boolean.getBoolean(isEnabled);
+        } catch (APIException e) {
+            //If exception is thrown if property is missed, so by default return false;
+            return false;
+        }
     }
 }

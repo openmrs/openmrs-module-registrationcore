@@ -31,6 +31,10 @@ public class OpenEmpiImplementation implements MpiProvider {
     @Qualifier("registrationcore.mpiAuthenticator")
     private MpiAuthenticator authenticator;
 
+    @Autowired
+    @Qualifier("registrationcore.mpiProperties")
+    private MpiProperties mpiProperties;
+
     @Override
     public Patient importMpiPatient(String patientId) {
         validateAuthentication();
@@ -53,7 +57,11 @@ public class OpenEmpiImplementation implements MpiProvider {
     public List<PatientAndMatchQuality> findProbablySimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
                                                                     Double cutoff, Integer maxResults) {
         validateAuthentication();
-        return searchAlgorithm.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        if (mpiProperties.isProbablyMatchingEnabled()) {
+            return searchAlgorithm.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        } else {
+            return searchAlgorithm.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        }
     }
 
     @Override
