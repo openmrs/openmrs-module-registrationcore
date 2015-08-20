@@ -59,6 +59,8 @@ public class OpenEmpiPatientExporter implements MpiPatientExporter {
     private void updatePatientPersonIdentifier(Patient patient, Integer personId) {
         grandPrivileges();
         try {
+            //TODO figure out how to solve saving patient with null creator.
+            Context.authenticate("admin", "Admin123");
             setPersonIdentifier(patient, personId);
             updatePatient(patient);
         } finally {
