@@ -7,6 +7,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -24,9 +25,13 @@ public class PatientBuilder {
     @Autowired
     @Qualifier("registrationcore.identifierBuilder")
     private IdentifierBuilder identifierBuilder;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiProperties")
+    private MpiProperties mpiProperties;
+
     private Patient patient;
 
-    //TODO this is workaround (Exception while saving MpiPatient). Fix to have possibility save instance of MpiPatient
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
@@ -73,6 +78,11 @@ public class PatientBuilder {
     }
 
     private void setIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
+        setMpiPatientIdentifiers(patientQuery, patient);
+        setMpiPersonIdentifier(patientQuery, patient);
+    }
+
+    private void setMpiPatientIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
         for (PersonIdentifier identifier : patientQuery.getPersonIdentifiers()) {
             String mpiIdentifierTypeName = identifier.getIdentifierDomain().getIdentifierDomainName();
             Integer mpiIdentifierTypeId = identifier.getIdentifierDomain().getIdentifierDomainId();
@@ -83,6 +93,12 @@ public class PatientBuilder {
 
             patient.addIdentifier(patientIdentifier);
         }
+    }
+
+    private void setMpiPersonIdentifier(OpenEmpiPatientQuery patientQuery, Patient patient) {
+        Integer personIdentifierId = mpiProperties.getMpiPersonIdentifierId();
+        PatientIdentifier identifier = createIdentifier("Person identifier", personIdentifierId, String.valueOf(patientQuery.getPersonId()));
+        patient.getIdentifiers().add(identifier);
     }
 
     private PatientIdentifier createIdentifier(String identifierName, Integer identifierId, String identifierValue) {

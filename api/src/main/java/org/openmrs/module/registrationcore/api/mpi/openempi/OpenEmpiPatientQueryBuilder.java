@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -18,6 +19,10 @@ public class OpenEmpiPatientQueryBuilder {
     @Autowired
     @Qualifier("registrationcore.identifierMapper")
     private PatientIdentifierMapper identifierMapper;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiProperties")
+    private MpiProperties mpiProperties;
 
     public OpenEmpiPatientQuery build(Patient patient) {
         OpenEmpiPatientQuery query = new OpenEmpiPatientQuery();
@@ -66,6 +71,11 @@ public class OpenEmpiPatientQueryBuilder {
         for (PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
             Integer identifierTypeId = patientIdentifier.getIdentifierType().getId();
             String identifier = patientIdentifier.getIdentifier();
+            if (identifierTypeId.equals(mpiProperties.getMpiPersonIdentifierId())) {
+                //person identifier should be placed in separate field, not in list of identifiers.
+                setPersonIdentifier(identifier, query);
+                continue;
+            }
             Integer mpiIdentifierTypeId = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeId);
 
             if (mpiIdentifierTypeId != null) {
@@ -76,6 +86,11 @@ public class OpenEmpiPatientQueryBuilder {
             }
         }
         query.setPersonIdentifiers(personIdentifiers);
+    }
+
+    private void setPersonIdentifier(String identifier, OpenEmpiPatientQuery patientQuery) {
+        log.error("set person idetnfier: " + identifier);
+        patientQuery.setPersonId(Integer.parseInt(identifier));
     }
 
     private PersonIdentifier createPersonIdentifier(Integer mpiIdentifierTypeId, String identifier) {
