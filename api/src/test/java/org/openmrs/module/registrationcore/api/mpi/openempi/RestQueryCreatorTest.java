@@ -95,7 +95,7 @@ public class RestQueryCreatorTest {
         mockServerResponse(peopleWrapper, OpenEmpiPeopleWrapper.class);
         OpenEmpiPatientQuery query = createPatientQuery();
 
-        List<OpenEmpiPatientQuery> patients = restQueryCreator.findPatients(TOKEN_VALUE, query);
+        List<OpenEmpiPatientQuery> patients = restQueryCreator.findPreciseSimilarPatients(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
@@ -114,7 +114,7 @@ public class RestQueryCreatorTest {
         mockServerResponse(peopleWrapper, OpenEmpiPeopleWrapper.class);
         OpenEmpiPatientQuery query = createPatientQuery();
 
-        List<OpenEmpiPatientQuery> patients = restQueryCreator.findPatients(TOKEN_VALUE, query);
+        List<OpenEmpiPatientQuery> patients = restQueryCreator.findPreciseSimilarPatients(TOKEN_VALUE, query);
 
         assertTrue(patients.size() == 0);
     }

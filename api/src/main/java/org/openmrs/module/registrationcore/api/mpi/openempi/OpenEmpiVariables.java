@@ -12,10 +12,9 @@ public class OpenEmpiVariables {
 
     static final String AUTHENTICATION_URL = "security-resource/authenticate";
 
-    static final String FIND_EXACT_PATIENTS_URL = "findPersonsByAttributes";
+    static final String FIND_PRECISE_SIMILAR_PATIENTS_URL = "findPersonsByAttributes";
 
-    //TODO should be changed for Probablistic match.
-    static final String FIND_PROBABLISTIC_PATIENTS_URL = "findPersonsByAttributes";
+    static final String FIND_PROBABLY_SIMILAR_PATIENTS_URL = "findMatchingPersonsByAttributes";
 
     static final String FIND_PATIENT_BY_ID_URL = "loadPerson";
 

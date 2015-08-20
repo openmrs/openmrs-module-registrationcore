@@ -50,7 +50,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findSimilarPatients(patient, null, cutoff, MAX_RESULTS);
 
         verify(queryMapper).create(patient);
-        verify(queryCreator).findPatients(TOKEN_VALUE, patientQuery);
+        verify(queryCreator).findPreciseSimilarPatients(TOKEN_VALUE, patientQuery);
         verify(patientBuilder, times(MAX_RESULTS)).buildPatient(any(OpenEmpiPatientQuery.class));
         verify(mpiPatient, times(MAX_RESULTS)).setUuid(String.valueOf(MPI_PERSON_ID));
         assertTrue(actualPatients.size() == MAX_RESULTS);
@@ -70,7 +70,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
     }
 
     private void mockPatientsResult(List<OpenEmpiPatientQuery> patientsResult) {
-        when(queryCreator.findPatients(TOKEN_VALUE, patientQuery)).thenReturn(patientsResult);
+        when(queryCreator.findPreciseSimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patientsResult);
     }
 
     private List<OpenEmpiPatientQuery> createPatients(int count) {

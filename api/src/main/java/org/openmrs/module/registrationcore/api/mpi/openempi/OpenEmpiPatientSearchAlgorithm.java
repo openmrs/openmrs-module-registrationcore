@@ -35,19 +35,26 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
                                                             Double cutoff, Integer maxResults) {
         OpenEmpiPatientQuery patientQuery = queryMapper.create(patient);
 
-        List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator.findPatients(authenticator.getToken(), patientQuery);
+        List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator
+                .findProbablySimilarPatients(authenticator.getToken(), patientQuery);
 
-        if (mpiPatients.size() > maxResults) {
-            mpiPatients = mpiPatients.subList(0, maxResults);
-        }
+        mpiPatients = limitResults(maxResults, mpiPatients);
 
         return convertMpiPatients(mpiPatients, cutoff);
     }
 
     @Override
-    public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        //TODO should be changed to implementation which query to SimilarPatients, not exact.
-        return findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+    public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient,
+                                                                   Map<String, Object> otherDataPoints,
+                                                                   Double cutoff, Integer maxResults) {
+        OpenEmpiPatientQuery patientQuery = queryMapper.create(patient);
+
+        List<OpenEmpiPatientQuery> mpiPatients = restQueryCreator
+                .findPreciseSimilarPatients(authenticator.getToken(), patientQuery);
+
+        mpiPatients = limitResults(maxResults, mpiPatients);
+
+        return convertMpiPatients(mpiPatients, cutoff);
     }
 
     private List<PatientAndMatchQuality> convertMpiPatients(List<OpenEmpiPatientQuery> mpiPatients,
@@ -61,6 +68,10 @@ public class OpenEmpiPatientSearchAlgorithm implements MpiSimilarPatientSearchAl
             result.add(resultPatient);
         }
         return result;
+    }
+
+    private List<OpenEmpiPatientQuery> limitResults(Integer maxResults, List<OpenEmpiPatientQuery> mpiPatients) {
+        return mpiPatients.size() > maxResults ? mpiPatients.subList(0, maxResults) : mpiPatients;
     }
 
     private Patient convertMpiPatient(OpenEmpiPatientQuery mpiPatient) {

@@ -23,7 +23,11 @@ public class RestUrlBuilder {
     }
 
     public String createFindPreciseSimilarPatientsUrl() {
-        return getServerUrl() + REST_URL + PERSON_QUERY_URL + FIND_EXACT_PATIENTS_URL;
+        return getServerUrl() + REST_URL + PERSON_QUERY_URL + FIND_PRECISE_SIMILAR_PATIENTS_URL;
+    }
+
+    public String createFindProbablySimilarPatientsUrl() {
+        return getServerUrl() + REST_URL + PERSON_QUERY_URL + FIND_PROBABLY_SIMILAR_PATIENTS_URL;
     }
 
     public String createExportPatientUrl() {

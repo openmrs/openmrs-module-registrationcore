@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.List;
 
+//TODO rename it to executor.
 public class RestQueryCreator {
 
     @Autowired
@@ -42,15 +43,14 @@ public class RestQueryCreator {
         return person.getBody();
     }
 
-    public List<OpenEmpiPatientQuery> findPatients(String token, OpenEmpiPatientQuery query) {
-        HttpHeaders headers = getAuthenticationHeader(token);
-        HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(query, headers);
-
+    public List<OpenEmpiPatientQuery> findPreciseSimilarPatients(String token, OpenEmpiPatientQuery query) {
         String url = urlBuilder.createFindPreciseSimilarPatientsUrl();
-        ResponseEntity<OpenEmpiPeopleWrapper> people = restTemplate.exchange(url,
-                HttpMethod.POST, entity, OpenEmpiPeopleWrapper.class);
+        return findPatients(token, url, query);
+    }
 
-        return unwrapResult(people.getBody());
+    public List<OpenEmpiPatientQuery> findProbablySimilarPatients(String token, OpenEmpiPatientQuery query) {
+        String url = urlBuilder.createFindProbablySimilarPatientsUrl();
+        return findPatients(token, url, query);
     }
 
     public void exportPatient(String token, OpenEmpiPatientQuery patientQuery) {
@@ -92,5 +92,15 @@ public class RestQueryCreator {
         } else {
             return people.getPeople();
         }
+    }
+
+    private List<OpenEmpiPatientQuery> findPatients(String token, String url, OpenEmpiPatientQuery query) {
+        HttpHeaders headers = getAuthenticationHeader(token);
+        HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(query, headers);
+
+        ResponseEntity<OpenEmpiPeopleWrapper> people = restTemplate.exchange(url,
+                HttpMethod.POST, entity, OpenEmpiPeopleWrapper.class);
+
+        return unwrapResult(people.getBody());
     }
 }
