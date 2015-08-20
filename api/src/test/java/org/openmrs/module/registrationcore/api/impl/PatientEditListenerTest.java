@@ -51,6 +51,6 @@ public class PatientEditListenerTest {
 
         patientEditListener.onMessage(message);
 
-        verify(mpiProvider, never());
+        verify(mpiProvider, never()).updatePatient(patient);
     }
 }

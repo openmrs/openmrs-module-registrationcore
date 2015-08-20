@@ -8,10 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiCredentials;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,6 +35,7 @@ public class RestQueryExecutorTest {
     @Mock private OpenEmpiPatientQuery patientQuery;
     @Mock private OpenEmpiPeopleWrapper peopleWrapper;
     @Mock private List<OpenEmpiPatientQuery> patientQueryList;
+    private ResponseEntity response;
 
     @Before
     public void setUp() throws Exception {
@@ -142,7 +140,8 @@ public class RestQueryExecutorTest {
     public void testUpdatePatient() throws Exception {
         String updateUrl = "updateUrl";
         when(urlBuilder.createUpdatePatientUrl()).thenReturn(updateUrl);
-        mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
+        mockServerResponse(patientQuery, String.class);
+        when(response.getStatusCode()).thenReturn(HttpStatus.NO_CONTENT);
         OpenEmpiPatientQuery query = createPatientQuery();
 
         restQueryExecutor.updatePatient(TOKEN_VALUE, query);
@@ -150,7 +149,7 @@ public class RestQueryExecutorTest {
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
         verify(restTemplate).exchange(eq(updateUrl),
-                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(OpenEmpiPatientQuery.class));
+                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(String.class));
         //verify request body was set correctly:
         assertEquals(argumentCaptor.getValue().getBody(), query);
         //verify that header with token was sett:
@@ -165,7 +164,7 @@ public class RestQueryExecutorTest {
     }
 
     private void mockServerResponse(Object body, Class<?> value) {
-        ResponseEntity response = mock(ResponseEntity.class);
+        response = mock(ResponseEntity.class);
         when(response.getBody()).thenReturn(body);
         when(restTemplate.exchange(anyString(),
                 any(HttpMethod.class), any(HttpEntity.class), eq(value)))
