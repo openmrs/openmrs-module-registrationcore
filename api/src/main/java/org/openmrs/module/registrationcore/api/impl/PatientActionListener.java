@@ -25,14 +25,17 @@ public abstract class PatientActionListener implements EventListener {
         this.coreProperties = coreProperties;
     }
 
+    public abstract void performMpiAction(Patient patient);
+
     @Override
     public void onMessage(Message message) {
+        Context.openSession();
         if (coreProperties.isMpiEnabled()) {
-            performMpiAction(message);
+            Patient patient = extractPatient(message);
+            performMpiAction(patient);
         }
+        Context.closeSession();
     }
-
-    public abstract void performMpiAction(Message message);
 
     protected Patient extractPatient(Message message) {
         validateMessage(message);
