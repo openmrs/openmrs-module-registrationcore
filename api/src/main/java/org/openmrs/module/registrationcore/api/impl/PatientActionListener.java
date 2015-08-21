@@ -15,7 +15,7 @@ public abstract class PatientActionListener implements EventListener {
 
     protected RegistrationCoreProperties coreProperties;
 
-    private PatientService patientService;
+    protected PatientService patientService;
 
     public void setPatientService(PatientService patientService) {
         this.patientService = patientService;
@@ -25,24 +25,40 @@ public abstract class PatientActionListener implements EventListener {
         this.coreProperties = coreProperties;
     }
 
-    public abstract void performMpiAction(Patient patient);
-
     @Override
     public void onMessage(Message message) {
-        Context.openSession();
         if (coreProperties.isMpiEnabled()) {
-            Patient patient = extractPatient(message);
-            performMpiAction(patient);
+            Context.openSession();
+            try {
+                performMpiAction(message);
+            } finally {
+                Context.closeSession();
+            }
         }
-        Context.closeSession();
     }
+
+    public abstract void performMpiAction(Message message);
 
     protected Patient extractPatient(Message message) {
         validateMessage(message);
 
-        String patientUuid = getPatientUuid((MapMessage) message);
+        String patientUuid = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_PATIENT_UUID);
 
         return getPatient(patientUuid);
+    }
+
+    protected String getMessagePropertyValue(Message message, String propertyName) {
+        validateMessage(message);
+        try {
+            return ((MapMessage) message).getString(propertyName);
+        } catch (JMSException e) {
+            throw new APIException("Exception while get uuid of created patient from JMS message. " + e);
+        }
+    }
+
+    private void validateMessage(Message message) {
+        if (!(message instanceof MapMessage))
+            throw new APIException("Event message should be MapMessage, but it isn't");
     }
 
     private Patient getPatient(String patientUuid) {
@@ -52,18 +68,5 @@ public abstract class PatientActionListener implements EventListener {
         } finally {
             Context.removeProxyPrivilege("Get Patients");
         }
-    }
-
-    private String getPatientUuid(MapMessage mapMessage) {
-        try {
-            return mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID);
-        } catch (JMSException e) {
-            throw new APIException("Exception while get uuid of created patient. " + e);
-        }
-    }
-
-    private void validateMessage(Message message) {
-        if (!(message instanceof MapMessage))
-            throw new APIException("Event message should be MapMessage, but it isn't");
     }
 }

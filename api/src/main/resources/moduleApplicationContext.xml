@@ -40,6 +40,9 @@
           class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener" init-method="init">
         <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
+        <property name="mpiProperties" ref="registrationcore.mpiProperties"/>
+        <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
+        <property name="userService" ref="userService"/>
     </bean>
 
     <bean id="registrationcore.patientEditListener"

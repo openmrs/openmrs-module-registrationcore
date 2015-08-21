@@ -4,6 +4,8 @@ import org.openmrs.Patient;
 import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
+import javax.jms.Message;
+
 public class PatientEditListener extends PatientActionListener {
 
     public void init() {
@@ -11,7 +13,8 @@ public class PatientEditListener extends PatientActionListener {
     }
 
     @Override
-    public void performMpiAction(Patient editedPatient) {
-        coreProperties.getMpiProvider().updatePatient(editedPatient);
+    public void performMpiAction(Message message) {
+        Patient patient = extractPatient(message);
+        coreProperties.getMpiProvider().updatePatient(patient);
     }
 }
