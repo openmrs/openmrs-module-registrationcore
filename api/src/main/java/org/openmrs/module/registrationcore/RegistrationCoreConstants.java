@@ -32,6 +32,8 @@ public final class RegistrationCoreConstants {
 
 	public static final String KEY_REGISTERER_UUID = "registererUuid";
 
+	public static final String KEY_REGISTERER_ID = "registererId";
+
 	public static final String KEY_DATE_REGISTERED = "dateRegistered";
 
 	public static final String KEY_WAS_A_PERSON = "wasAPerson";

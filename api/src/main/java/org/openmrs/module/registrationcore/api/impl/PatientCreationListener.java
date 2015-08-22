@@ -40,10 +40,14 @@ public class PatientCreationListener extends PatientActionListener {
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);
 
-        OpenEmpiPatientQuery exportedPatientQuery = coreProperties.getMpiProvider()
-                .exportPatient(patient);
+        OpenEmpiPatientQuery exportedPatientQuery = pushPatientToMpiServer(patient);
 
         updatePatient(patient, message, exportedPatientQuery.getPersonId());
+    }
+
+    private OpenEmpiPatientQuery pushPatientToMpiServer(Patient patient) {
+        return coreProperties.getMpiProvider()
+                .exportPatient(patient);
     }
 
     private void updatePatient(Patient patient, Message message, Integer personId) {
@@ -58,8 +62,8 @@ public class PatientCreationListener extends PatientActionListener {
     }
 
     private User extractPatientCreator(Message message) {
-        String creatorUuid = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_DATE_REGISTERED);
-        return userService.getUserByUuid(creatorUuid);
+        String creatorId = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_REGISTERER_ID);
+        return userService.getUser(Integer.parseInt(creatorId));
     }
 
     private void addPersonIdentifier(Patient patient, User creator, Integer personId) {
@@ -80,6 +84,7 @@ public class PatientCreationListener extends PatientActionListener {
         Context.addProxyPrivilege("Get Locations");
         Context.addProxyPrivilege("Add Patient Identifiers");
         Context.addProxyPrivilege("Edit Patient Identifiers");
+        Context.addProxyPrivilege("Get Patients");
         Context.addProxyPrivilege("Add Patients");
         Context.addProxyPrivilege("Edit Patients");
     }
@@ -90,6 +95,7 @@ public class PatientCreationListener extends PatientActionListener {
         Context.removeProxyPrivilege("Get Locations");
         Context.removeProxyPrivilege("Add Patient Identifiers");
         Context.removeProxyPrivilege("Edit Patient Identifiers");
+        Context.removeProxyPrivilege("Get Patients");
         Context.removeProxyPrivilege("Add Patients");
         Context.removeProxyPrivilege("Edit Patients");
     }
