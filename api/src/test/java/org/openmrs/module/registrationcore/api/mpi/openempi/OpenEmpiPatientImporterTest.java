@@ -51,6 +51,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
 
     private static final String MPI_PERSON_ID = "2";
     private static final String TOKEN_VALUE = "token_value";
+    private static final String PERSON_IDENTIFIER_TYPE_ID = "6";
 
     private RegistrationCoreService service;
 
@@ -94,6 +95,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME, GP_MPI_USERNAME));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, GP_MPI_PASSWORD));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_URL, "server.url"));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_ID, PERSON_IDENTIFIER_TYPE_ID));
 
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMRS_NAME, LOCAL_IDENTIFIER_TYPE_ID_OPENMRS + ":" + MPI_IDENTIFIER_TYPE_ID_OPENMRS));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMPI_NAME, LOCAL_IDENTIFIER_TYPE_ID_OPENEMPI + ":" + MPI_IDENTIFIER_TYPE_ID_OPENEMPI));
@@ -115,7 +117,7 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
 
         verifyRemoteMpiServerQuerying();
         Patient savedPatient = patientService.getPatientByUuid(uuid);
-        assertPatientEquals(mpiPatient, savedPatient, 3);
+        assertPatientEquals(mpiPatient, savedPatient, 4);
     }
 
     @SuppressWarnings("unchecked")
@@ -173,6 +175,6 @@ public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBa
 
         verifyRemoteMpiServerQuerying();
         Patient savedPatient = patientService.getPatientByUuid(uuid);
-        assertPatientEquals(mpiPatient, savedPatient, 2);
+        assertPatientEquals(mpiPatient, savedPatient, 3);
     }
 }
