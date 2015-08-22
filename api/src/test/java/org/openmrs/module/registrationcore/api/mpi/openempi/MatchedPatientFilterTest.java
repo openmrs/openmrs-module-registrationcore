@@ -21,9 +21,8 @@ import static org.mockito.Mockito.*;
 
 public class MatchedPatientFilterTest {
 
-    public static final Integer MPI_GLOBAL_IDENTIFIER_TYPE_ID = 5;
-    private static final String PATIENT_IDENTIFIER_VALUE = "647f2ca0-3240-11e5-8a7f-040158db6201";
-    private static final int MAPPED_GLOBAL_IDENTIFIER_ID = 5;
+    public static final Integer PERSON_IDENTIFIER_TYPE_ID = 5;
+    private static final String PERSON_IDENTIFIER = "4";
     private List<PatientAndMatchQuality> patients;
 
     @Mock private MpiProperties mpiProperties;
@@ -41,16 +40,15 @@ public class MatchedPatientFilterTest {
     }
 
     private void mockProperty() {
-        when(mpiProperties.getGlobalIdentifierDomainId()).thenReturn(MPI_GLOBAL_IDENTIFIER_TYPE_ID);
-        when(identifierMapper.getMappedLocalIdentifierTypeId(MPI_GLOBAL_IDENTIFIER_TYPE_ID)).thenReturn(MAPPED_GLOBAL_IDENTIFIER_ID);
+        when(mpiProperties.getMpiPersonIdentifierId()).thenReturn(PERSON_IDENTIFIER_TYPE_ID);
     }
 
     @Test
     public void testFilterPatientsWithSimilarIdentifiers() throws Exception {
         generatePatients(Patient.class, MpiPatient.class);
+
         filter.filter(patients);
 
-        verify(mpiProperties).getGlobalIdentifierDomainId();
         assertTrue(patients.contains(patientWrapper));
         assertFalse(patients.contains(mpiPatientWrapper));
     }
@@ -69,8 +67,8 @@ public class MatchedPatientFilterTest {
                                                  PatientAndMatchQuality localPatientWrapper) {
         Patient patient = mock(patientClass);
         PatientIdentifier identifier = mock(PatientIdentifier.class);
-        when(patient.getPatientIdentifier(MAPPED_GLOBAL_IDENTIFIER_ID)).thenReturn(identifier);
-        when(identifier.getIdentifier()).thenReturn(PATIENT_IDENTIFIER_VALUE);
+        when(patient.getPatientIdentifier(PERSON_IDENTIFIER_TYPE_ID)).thenReturn(identifier);
+        when(identifier.getIdentifier()).thenReturn(PERSON_IDENTIFIER);
         when(localPatientWrapper.getPatient()).thenReturn(patient);
         return localPatientWrapper;
     }
