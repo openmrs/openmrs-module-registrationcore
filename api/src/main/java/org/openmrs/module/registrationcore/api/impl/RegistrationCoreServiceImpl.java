@@ -164,6 +164,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		//TODO incorrect set of "UUID" each time it generates new RANDOM value, instead of set uuid of creator.
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, String.valueOf(patient.getCreator().getId()));
 		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, new SimpleDateFormat(
 		        RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
 		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
