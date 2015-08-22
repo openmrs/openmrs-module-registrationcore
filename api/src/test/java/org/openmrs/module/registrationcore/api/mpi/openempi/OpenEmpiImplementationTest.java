@@ -6,10 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
+import org.openmrs.module.registrationcore.api.mpi.common.*;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -26,6 +23,7 @@ public class OpenEmpiImplementationTest {
     @Mock private MpiSimilarPatientsSearcher searchAlgorithm;
     @Mock private MpiPatientImporter patientImporter;
     @Mock private MpiAuthenticator authenticator;
+    @Mock private MpiProperties mpiProperties;
 
     @Mock private List<PatientAndMatchQuality> listPatients;
     @Mock private Map<String, Object> otherDataPoints;
@@ -64,6 +62,7 @@ public class OpenEmpiImplementationTest {
 
     @Test
     public void testFindSimilarPatients() throws Exception {
+        mockProbablyMatchingEnabled(true);
         mockAuthentication(false);
         when(searchAlgorithm.findProbablySimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
@@ -76,6 +75,7 @@ public class OpenEmpiImplementationTest {
 
     @Test
     public void testFindSimilarPatientsDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
+        mockProbablyMatchingEnabled(true);
         mockAuthentication(true);
         when(searchAlgorithm.findProbablySimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
@@ -86,7 +86,18 @@ public class OpenEmpiImplementationTest {
     }
 
     @Test
+    public void testPerformExactlyMatchingSearchIfProbablyMatchingIsDisabled() throws Exception {
+        mockProbablyMatchingEnabled(false);
+        mockAuthentication(true);
+
+        mpiProvider.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+
+        verify(searchAlgorithm).findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+    }
+
+    @Test
     public void testFindPreciseSimilarPatients() throws Exception {
+        mockProbablyMatchingEnabled(false);
         mockAuthentication(false);
         when(searchAlgorithm.findPreciseSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
@@ -95,7 +106,6 @@ public class OpenEmpiImplementationTest {
         verify(authenticator).performAuthentication();
         verify(searchAlgorithm).findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);
-
     }
 
     @Test
@@ -111,5 +121,9 @@ public class OpenEmpiImplementationTest {
 
     private void mockAuthentication(boolean authenticated) {
         when(authenticator.isAuthenticated()).thenReturn(authenticated);
+    }
+
+    private void mockProbablyMatchingEnabled(boolean b) {
+        when(mpiProperties.isProbablyMatchingEnabled()).thenReturn(b);
     }
 }
