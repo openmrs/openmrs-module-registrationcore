@@ -96,7 +96,7 @@ public class PatientBuilder {
     }
 
     private void setMpiPersonIdentifier(OpenEmpiPatientQuery patientQuery, Patient patient) {
-        Integer personIdentifierId = mpiProperties.getMpiPersonIdentifierId();
+        Integer personIdentifierId = mpiProperties.getMpiPersonIdentifierTypeId();
         PatientIdentifier identifier = createIdentifier("Person identifier", personIdentifierId, String.valueOf(patientQuery.getPersonId()));
         patient.getIdentifiers().add(identifier);
     }

@@ -73,7 +73,7 @@ public class PatientCreationListener extends PatientActionListener {
 
     private PatientIdentifier createPersonIdentifier(User creator, Integer personId) {
         PatientIdentifier personIdentifier = identifierBuilder
-                .createIdentifier(mpiProperties.getMpiPersonIdentifierId(), String.valueOf(personId), null);
+                .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeId(), String.valueOf(personId), null);
         personIdentifier.setCreator(creator);
         return personIdentifier;
     }

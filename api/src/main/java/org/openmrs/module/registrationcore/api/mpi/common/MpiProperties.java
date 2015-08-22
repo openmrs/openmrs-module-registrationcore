@@ -20,7 +20,7 @@ public class MpiProperties extends ModuleProperties {
         return getIntegerProperty(propertyName);
     }
 
-    public Integer getMpiPersonIdentifierId() {
+    public Integer getMpiPersonIdentifierTypeId() {
         String propertyName = RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_ID;
         return getIntegerProperty(propertyName);
     }

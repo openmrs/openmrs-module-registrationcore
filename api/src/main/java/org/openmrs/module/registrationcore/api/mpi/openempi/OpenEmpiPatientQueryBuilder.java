@@ -71,7 +71,7 @@ public class OpenEmpiPatientQueryBuilder {
         for (PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
             Integer identifierTypeId = patientIdentifier.getIdentifierType().getId();
             String identifier = patientIdentifier.getIdentifier();
-            if (identifierTypeId.equals(mpiProperties.getMpiPersonIdentifierId())) {
+            if (identifierTypeId.equals(mpiProperties.getMpiPersonIdentifierTypeId())) {
                 //person identifier should be placed in separate field, not in list of identifiers.
                 setPersonIdentifier(identifier, query);
                 continue;

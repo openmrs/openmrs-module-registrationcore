@@ -40,7 +40,7 @@ public class MatchedPatientFilterTest {
     }
 
     private void mockProperty() {
-        when(mpiProperties.getMpiPersonIdentifierId()).thenReturn(PERSON_IDENTIFIER_TYPE_ID);
+        when(mpiProperties.getMpiPersonIdentifierTypeId()).thenReturn(PERSON_IDENTIFIER_TYPE_ID);
     }
 
     @Test

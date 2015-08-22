@@ -17,7 +17,7 @@ public class MatchedPatientFilter {
     private MpiProperties mpiProperties;
 
     public void filter(List<PatientAndMatchQuality> patients) {
-        Integer filterIdentifierId = mpiProperties.getMpiPersonIdentifierId();
+        Integer filterIdentifierId = mpiProperties.getMpiPersonIdentifierTypeId();
 
         for (PatientAndMatchQuality patientWrapper : patients) {
             if (patientWrapper.getPatient().getPatientIdentifier(filterIdentifierId) != null) {
