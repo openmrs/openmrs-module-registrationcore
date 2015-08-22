@@ -46,8 +46,7 @@ public class PatientCreationListener extends PatientActionListener {
     }
 
     private OpenEmpiPatientQuery pushPatientToMpiServer(Patient patient) {
-        return coreProperties.getMpiProvider()
-                .exportPatient(patient);
+        return coreProperties.getMpiProvider().exportPatient(patient);
     }
 
     private void updatePatient(Patient patient, Message message, Integer personId) {
