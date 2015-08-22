@@ -9,6 +9,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class OpenEmpiPatientQueryBuilderTest {
 
     private static final Integer LOCAL_IDENTIFIER_TYPE_ID = 5;
-    private static final Integer MPI_DEITNFIER_TYPE_ID = 6;
+    private static final Integer MPI_IDENTIFIER_TYPE_ID = 6;
     private static final String IDENTIFIER_VALUE = "identifierValue";
 
     private static final String FAMILY_NAME = "familyName";
@@ -27,14 +28,17 @@ public class OpenEmpiPatientQueryBuilderTest {
     private static final String MIDDLE_NAME = "middleName";
     private static final String GENDER_CODE = "M";
     private static final Date BIRTHDATE = new Date();
+    private static final Integer PERSON_IDENTIFIER_TYPE = 6;
 
     @InjectMocks OpenEmpiPatientQueryBuilder queryBuilder;
     @Mock PatientIdentifierMapper identifierMapper;
+    @Mock private MpiProperties mpiProperties;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockIdentifierMapper();
+        when(mpiProperties.getMpiPersonIdentifierTypeId()).thenReturn(PERSON_IDENTIFIER_TYPE);
     }
 
     @Test
@@ -51,9 +55,8 @@ public class OpenEmpiPatientQueryBuilderTest {
 
         assertEquals(patient.getBirthdate(), query.getDateOfBirth());
 
-
         PersonIdentifier personIdentifier = query.getPersonIdentifiers().get(0);
-        assertEquals(personIdentifier.getIdentifierDomain().getIdentifierDomainId(), MPI_DEITNFIER_TYPE_ID);
+        assertEquals(personIdentifier.getIdentifierDomain().getIdentifierDomainId(), MPI_IDENTIFIER_TYPE_ID);
         assertEquals(personIdentifier.getIdentifier(), IDENTIFIER_VALUE);
     }
 
@@ -79,6 +82,6 @@ public class OpenEmpiPatientQueryBuilderTest {
     }
 
     private void mockIdentifierMapper() {
-        when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_ID)).thenReturn(MPI_DEITNFIER_TYPE_ID);
+        when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_ID)).thenReturn(MPI_IDENTIFIER_TYPE_ID);
     }
 }

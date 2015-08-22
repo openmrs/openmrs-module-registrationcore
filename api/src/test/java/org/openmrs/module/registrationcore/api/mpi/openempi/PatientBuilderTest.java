@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,10 +25,12 @@ public class PatientBuilderTest {
     private static final int MPI_ECID_IDENTIFIER_TYPE_ID = 60;
     private static final String PATIENT_OPENMRS_IDENTIFIER_VALUE = "1001NF";
     private static final String PATIENT_ECID_IDENTIFIER_VALUE = "019bb820-1bd3-11e5-8a7f-040158db6201";
+    private static final int PERSON_IDENTIFIER_TYPE_ID = 6;
 
     @InjectMocks private PatientBuilder patientBuilder;
     @Mock private PatientIdentifierMapper identifierMapper;
     @Mock private IdentifierBuilder identifierBuilder;
+    @Mock private MpiProperties mpiProperties;
     private XmlMarshaller xmlMarshaller = new XmlMarshaller();
 
 
@@ -39,6 +42,7 @@ public class PatientBuilderTest {
         MockitoAnnotations.initMocks(this);
         mockIdentifierMapper();
         mockIdentifierBuilder();
+        when(mpiProperties.getMpiPersonIdentifierTypeId()).thenReturn(PERSON_IDENTIFIER_TYPE_ID);
     }
 
     private void mockIdentifierMapper() {
