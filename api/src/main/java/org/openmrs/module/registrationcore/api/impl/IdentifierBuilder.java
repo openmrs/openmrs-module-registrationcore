@@ -11,6 +11,9 @@ import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.validator.PatientIdentifierValidator;
 
+/**
+ * This service perform creating and generating identifiers.
+ */
 public class IdentifierBuilder {
 
     private LocationService locationService;
@@ -27,6 +30,13 @@ public class IdentifierBuilder {
         this.patientService = patientService;
     }
 
+    /**
+     * Generate new identifier
+     *
+     * @param sourceId identifier source id
+     * @param location identifier location
+     * @return generated patient identifier
+     */
     public PatientIdentifier generateIdentifier(Integer sourceId, Location location) {
         location = getLocation(location);
         IdentifierSource idSource = getSource(sourceId);
@@ -35,6 +45,14 @@ public class IdentifierBuilder {
         return new PatientIdentifier(identifierValue, idSource.getIdentifierType(), location);
     }
 
+    /**
+     * Create identifier with existing value.
+     *
+     * @param identifierId    identifier type id
+     * @param identifierValue identifier value
+     * @param location        identifier location
+     * @return created patient identifier
+     */
     public PatientIdentifier createIdentifier(Integer identifierId, String identifierValue, Location location) {
         location = getLocation(location);
         PatientIdentifierType identifierType = patientService.getPatientIdentifierType(identifierId);

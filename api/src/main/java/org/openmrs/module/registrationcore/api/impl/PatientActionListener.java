@@ -11,6 +11,9 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
+/**
+ * Abstract class for event listening.
+ */
 public abstract class PatientActionListener implements EventListener {
 
     protected RegistrationCoreProperties coreProperties;
@@ -37,6 +40,11 @@ public abstract class PatientActionListener implements EventListener {
         }
     }
 
+    /**
+     * Perform mpi action.
+     *
+     * @param message message with properties.
+     */
     public abstract void performMpiAction(Message message);
 
     protected Patient extractPatient(Message message) {

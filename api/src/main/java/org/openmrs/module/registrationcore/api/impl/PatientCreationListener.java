@@ -12,6 +12,11 @@ import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientQuery
 
 import javax.jms.Message;
 
+/**
+ * This class listen for patient creation event.
+ * If MPI is enabled it perform export patient to MPI,
+ * and perform update for local patient with new one patient identifier.
+ */
 public class PatientCreationListener extends PatientActionListener {
 
     private MpiProperties mpiProperties;
@@ -32,10 +37,19 @@ public class PatientCreationListener extends PatientActionListener {
         this.userService = userService;
     }
 
+    /**
+     * Subscribes for patient creation event.
+     */
     public void init() {
         Event.subscribe(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, this);
     }
 
+    /**
+     * Export patient to MPI server & update local
+     * patient with new one patient identifier.
+     *
+     * @param message message with properties.
+     */
     @Override
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);

@@ -31,16 +31,16 @@ import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
  * <code>
  * Context.getService(RegistrationCoreService.class).someMethod();
  * </code>
- * 
+ *
  * @see org.openmrs.api.context.Context
  */
 public interface RegistrationCoreService extends OpenmrsService {
-	
+
 	/**
 	 * Assigns an identifier to the patient and saves them in the database including the specified
 	 * relationships, the method always attempts to set the other side of each relationship
 	 * therefore callers of this method are required to set exactly one side
-	 * 
+	 *
 	 * @param patient the patient to save
 	 * @param relationships the relationships to save along with the patient
 	 * @param identifierLocation the location to set for the patient identifier, if not specified,
@@ -91,7 +91,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * <p>
 	 * You can change the underlying implementation by calling
 	 * {@link #setPreciseSimilarPatientSearchAlgorithm(org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm)}.
-	 * 
+	 *
 	 * @param patient
 	 * @param otherDataPoints
 	 * @param cutoff
@@ -104,17 +104,17 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * Searches for given names that are similar to a search phrase.
 	 * <p>
 	 * You can change the underlying implementation by setting a global property.
-	 * 
+	 *
 	 * @param searchPhrase the search phrase.
 	 * @return list of given names that match the search phrase.
 	 */
 	List<String> findSimilarGivenNames(String searchPhrase);
-	
+
 	/**
 	 * Searches for family names that are similar to a search phrase.
 	 * <p>
 	 * You can change the underlying implementation by setting a global property.
-	 * 
+	 *
 	 * @param searchPhrase the search phrase.
 	 * @return list of family names that match the search phrase.
 	 */
@@ -123,7 +123,9 @@ public interface RegistrationCoreService extends OpenmrsService {
 	/**
 	 * Query to MPI server to find patient with Id "patientId"
 	 * and save that patient to local DB.
-	 * @param personId
+     *
+	 * @param personId person identifier of patient which should be imported
+	 * @return uuid of imported patient
 	 */
 	String importMpiPatient(String personId);
 }
