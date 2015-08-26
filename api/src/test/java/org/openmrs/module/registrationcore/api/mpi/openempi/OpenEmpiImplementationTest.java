@@ -64,12 +64,12 @@ public class OpenEmpiImplementationTest {
     public void testFindSimilarPatients() throws Exception {
         mockProbablyMatchingEnabled(true);
         mockAuthentication(false);
-        when(searchAlgorithm.findProbablySimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+        when(searchAlgorithm.findSimilarMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        List<PatientAndMatchQuality> similarPatients = mpiProvider.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        List<PatientAndMatchQuality> similarPatients = mpiProvider.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         verify(authenticator).performAuthentication();
-        verify(searchAlgorithm).findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        verify(searchAlgorithm).findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);
     }
 
@@ -77,10 +77,10 @@ public class OpenEmpiImplementationTest {
     public void testFindSimilarPatientsDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
         mockProbablyMatchingEnabled(true);
         mockAuthentication(true);
-        when(searchAlgorithm.findProbablySimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+        when(searchAlgorithm.findSimilarMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        mpiProvider.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        mpiProvider.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
 
         verify(authenticator, never()).performAuthentication();
     }
@@ -90,31 +90,31 @@ public class OpenEmpiImplementationTest {
         mockProbablyMatchingEnabled(false);
         mockAuthentication(true);
 
-        mpiProvider.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        mpiProvider.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
 
-        verify(searchAlgorithm).findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        verify(searchAlgorithm).findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
     }
 
     @Test
     public void testFindPreciseSimilarPatients() throws Exception {
         mockProbablyMatchingEnabled(false);
         mockAuthentication(false);
-        when(searchAlgorithm.findPreciseSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+        when(searchAlgorithm.findPreciseSimilarMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        List<PatientAndMatchQuality> similarPatients = mpiProvider.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        List<PatientAndMatchQuality> similarPatients = mpiProvider.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         verify(authenticator).performAuthentication();
-        verify(searchAlgorithm).findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        verify(searchAlgorithm).findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);
     }
 
     @Test
     public void testFindPreciseSimilarPatientsDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
         mockAuthentication(true);
-        when(searchAlgorithm.findPreciseSimilarPatients(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+        when(searchAlgorithm.findPreciseSimilarMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        mpiProvider.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        mpiProvider.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
 
         verify(authenticator, never()).performAuthentication();
     }

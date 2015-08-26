@@ -231,7 +231,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		if (registrationCoreProperties.isMpiEnabled()) {
 			List<PatientAndMatchQuality> mpiMatches = registrationCoreProperties.getMpiProvider()
-					.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+					.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
 
 			matchedPatientFilter.filter(matches);
@@ -251,7 +251,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		if (registrationCoreProperties.isMpiEnabled()) {
 			List<PatientAndMatchQuality> mpiMatches = registrationCoreProperties.getMpiProvider()
-					.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+					.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
 
 			matchedPatientFilter.filter(matches);

@@ -48,7 +48,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         List<OpenEmpiPatientQuery> patients = createPatients(MAX_RESULTS + 2);
         when(queryCreator.findProbablySimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
 
-        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findProbablySimilarPatients(patient, null, cutoff, MAX_RESULTS);
+        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findSimilarMatches(patient, null, cutoff, MAX_RESULTS);
 
         verify(queryMapper).create(patient);
         verify(queryCreator).findProbablySimilarPatients(TOKEN_VALUE, patientQuery);
@@ -70,7 +70,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         List<OpenEmpiPatientQuery> patients = createPatients(MAX_RESULTS + 2);
         when(queryCreator.findPreciseSimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
 
-        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findPreciseSimilarPatients(patient, null, cutoff, MAX_RESULTS);
+        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findPreciseSimilarMatches(patient, null, cutoff, MAX_RESULTS);
 
         verify(queryMapper).create(patient);
         verify(queryCreator).findPreciseSimilarPatients(TOKEN_VALUE, patientQuery);

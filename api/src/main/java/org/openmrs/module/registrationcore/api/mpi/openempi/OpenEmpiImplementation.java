@@ -54,21 +54,21 @@ public class OpenEmpiImplementation implements MpiProvider {
     }
 
     @Override
-    public List<PatientAndMatchQuality> findProbablySimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
-                                                                    Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
+                                                           Double cutoff, Integer maxResults) {
         validateAuthentication();
         if (mpiProperties.isProbablyMatchingEnabled()) {
-            return searchAlgorithm.findProbablySimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+            return searchAlgorithm.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         } else {
-            return searchAlgorithm.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+            return searchAlgorithm.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         }
     }
 
     @Override
-    public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
-                                                                   Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findPreciseSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
+                                                                  Double cutoff, Integer maxResults) {
         validateAuthentication();
-        return searchAlgorithm.findPreciseSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+        return searchAlgorithm.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
     }
 
     private void validateAuthentication() {
