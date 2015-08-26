@@ -74,7 +74,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	public void before() throws Exception {
 		executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
 		service = Context.getService(RegistrationCoreService.class);
-		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID, "1"));
+		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
 	}
 	
 	private Patient createBasicPatient() {

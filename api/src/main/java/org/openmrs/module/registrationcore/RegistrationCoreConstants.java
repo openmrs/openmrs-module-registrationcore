@@ -18,7 +18,7 @@ public final class RegistrationCoreConstants {
 	/**
 	 * Specifies the identifier source to use when generating patient identifiers
 	 */
-	public static final String GP_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
+	public static final String GP_OPENMRS_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
 
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
 

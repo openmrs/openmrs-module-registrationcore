@@ -130,7 +130,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (patient == null)
 			throw new APIException("Patient cannot be null");
 
-		Integer openMrsIdentifierId = registrationCoreProperties.getIdentifierSourceId();
+		Integer openMrsIdentifierId = registrationCoreProperties.getOpenMrsIdentifierSourceId();
 		PatientIdentifier patientIdentifier;
 		if (StringUtils.isBlank(identifierString)) {
 			patientIdentifier = identifierBuilder.generateIdentifier(openMrsIdentifierId, identifierLocation);

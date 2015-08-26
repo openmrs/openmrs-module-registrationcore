@@ -17,8 +17,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         this.applicationContext = applicationContext;
     }
 
-    public Integer getIdentifierSourceId() {
-        String propertyName = RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID;
+    public Integer getOpenMrsIdentifierSourceId() {
+        String propertyName = RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID;
         return getIntegerProperty(propertyName);
     }
 
