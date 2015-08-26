@@ -67,7 +67,7 @@ public class PatientCreationListener extends PatientActionListener {
         grantPrivileges();
         try {
             User creator = extractPatientCreator(message);
-            addPersonIdentifier(patient, creator, personId);
+            patient.addIdentifier(createPersonIdentifier(creator, personId));
             patientService.savePatient(patient);
         } finally {
             resetPrivileges();
@@ -77,11 +77,6 @@ public class PatientCreationListener extends PatientActionListener {
     private User extractPatientCreator(Message message) {
         String creatorId = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_REGISTERER_ID);
         return userService.getUser(Integer.parseInt(creatorId));
-    }
-
-    private void addPersonIdentifier(Patient patient, User creator, Integer personId) {
-        PatientIdentifier personIdentifier = createPersonIdentifier(creator, personId);
-        patient.getIdentifiers().add(personIdentifier);
     }
 
     private PatientIdentifier createPersonIdentifier(User creator, Integer personId) {
