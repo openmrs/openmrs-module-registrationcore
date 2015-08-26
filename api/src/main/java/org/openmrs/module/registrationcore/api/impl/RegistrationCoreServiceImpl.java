@@ -176,7 +176,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
 		}
 
-		Event.fireEvent(RegistrationCoreConstants.REGISTRATION_EVENT_TOPIC_NAME, eventMessage);
+		Event.fireEvent(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, eventMessage);
 
 		return patient;
 	}

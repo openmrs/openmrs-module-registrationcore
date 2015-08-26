@@ -33,7 +33,7 @@ public class PatientCreationListener extends PatientActionListener {
     }
 
     public void init() {
-        Event.subscribe(RegistrationCoreConstants.REGISTRATION_EVENT_TOPIC_NAME, this);
+        Event.subscribe(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, this);
     }
 
     @Override

@@ -22,9 +22,9 @@ public final class RegistrationCoreConstants {
 
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
 
-	public static final String REGISTRATION_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.RegistrationEvent";
+	public static final String PATIENT_REGISTRATION_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.PatientRegistrationEvent";
 
-	public static final String EDIT_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.EditEvent";
+	public static final String PATIENT_EDIT_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.PatientEditEvent";
 
 	public static final String KEY_PATIENT_UUID = "patientUuid";
 

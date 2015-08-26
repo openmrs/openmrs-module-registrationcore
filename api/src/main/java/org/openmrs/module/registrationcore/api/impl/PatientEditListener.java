@@ -9,7 +9,7 @@ import javax.jms.Message;
 public class PatientEditListener extends PatientActionListener {
 
     public void init() {
-        Event.subscribe(RegistrationCoreConstants.EDIT_EVENT_TOPIC_NAME, this);
+        Event.subscribe(RegistrationCoreConstants.PATIENT_EDIT_EVENT_TOPIC_NAME, this);
     }
 
     @Override
