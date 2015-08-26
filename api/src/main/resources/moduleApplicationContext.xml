@@ -17,7 +17,7 @@
                 <property name="adminService" ref="adminService" />
                 <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
                 <property name="matchedPatientFilter" ref="registrationcore.matchedPatientFilter"/>
-                <property name="coreProperties" ref="registrationcore.coreProperties"/>
+                <property name="registrationCoreProperties" ref="registrationcore.coreProperties"/>
             </bean>
         </property>
         <property name="preInterceptors">
