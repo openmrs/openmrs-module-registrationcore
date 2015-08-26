@@ -64,7 +64,7 @@ public class PatientCreationListener extends PatientActionListener {
     }
 
     private void updatePatient(Patient patient, Message message, Integer personId) {
-        grandPrivileges();
+        grantPrivileges();
         try {
             User creator = extractPatientCreator(message);
             addPersonIdentifier(patient, creator, personId);
@@ -91,13 +91,14 @@ public class PatientCreationListener extends PatientActionListener {
         return personIdentifier;
     }
 
-    private void grandPrivileges() {
+    private void grantPrivileges() {
         Context.addProxyPrivilege("Get Users");
         Context.addProxyPrivilege("Get Identifier Types");
         Context.addProxyPrivilege("Get Locations");
         Context.addProxyPrivilege("Add Patient Identifiers");
         Context.addProxyPrivilege("Edit Patient Identifiers");
         Context.addProxyPrivilege("Get Patients");
+        Context.addProxyPrivilege("View Patients");
         Context.addProxyPrivilege("Add Patients");
         Context.addProxyPrivilege("Edit Patients");
     }
@@ -109,6 +110,7 @@ public class PatientCreationListener extends PatientActionListener {
         Context.removeProxyPrivilege("Add Patient Identifiers");
         Context.removeProxyPrivilege("Edit Patient Identifiers");
         Context.removeProxyPrivilege("Get Patients");
+        Context.removeProxyPrivilege("View Patients");
         Context.removeProxyPrivilege("Add Patients");
         Context.removeProxyPrivilege("Edit Patients");
     }
