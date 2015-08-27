@@ -37,26 +37,26 @@ public class OpenEmpiConnector implements MpiProvider {
 
     @Override
     public Patient fetchMpiPatient(String patientId) {
-        validateAuthentication();
+        authenticateIfNeeded();
         return patientImporter.fetchMpiPatient(patientId);
     }
 
     @Override
     public String exportPatient(Patient patient) {
-        validateAuthentication();
+        authenticateIfNeeded();
         return patientExporter.exportPatient(patient);
     }
 
     @Override
     public void updatePatient(Patient patient) {
-        validateAuthentication();
+        authenticateIfNeeded();
         patientUpdater.updatePatient(patient);
     }
 
     @Override
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
                                                            Double cutoff, Integer maxResults) {
-        validateAuthentication();
+        authenticateIfNeeded();
         if (mpiProperties.isProbabilisticMatchingEnabled()) {
             return searchAlgorithm.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         } else {
@@ -67,11 +67,11 @@ public class OpenEmpiConnector implements MpiProvider {
     @Override
     public List<PatientAndMatchQuality> findPreciseSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
                                                                   Double cutoff, Integer maxResults) {
-        validateAuthentication();
+        authenticateIfNeeded();
         return searchAlgorithm.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
     }
 
-    private void validateAuthentication() {
+    private void authenticateIfNeeded() {
         if (!authenticator.isAuthenticated())
             authenticator.performAuthentication();
     }
