@@ -12,8 +12,8 @@ import java.util.Map;
 public class OpenEmpiImplementation implements MpiProvider {
 
     @Autowired
-    @Qualifier("registrationcore.mpiPatientImporter")
-    private MpiPatientImporter patientImporter;
+    @Qualifier("registrationcore.mpiPatientFetcher")
+    private MpiPatientFetcher patientImporter;
 
     @Autowired
     @Qualifier("registrationcore.mpiPatientExporter")
@@ -36,9 +36,9 @@ public class OpenEmpiImplementation implements MpiProvider {
     private MpiProperties mpiProperties;
 
     @Override
-    public Patient importMpiPatient(String patientId) {
+    public Patient fetchMpiPatient(String patientId) {
         validateAuthentication();
-        return patientImporter.importMpiPatient(patientId);
+        return patientImporter.fetchMpiPatient(patientId);
     }
 
     @Override

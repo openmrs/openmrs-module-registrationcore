@@ -5,5 +5,5 @@ package org.openmrs.module.registrationcore.api.mpi.common;
  * by Global Properties.
  */
 public interface MpiProvider extends MpiSimilarPatientsSearcher,
-        MpiPatientImporter, MpiPatientExporter, MpiPatientUpdater {
+        MpiPatientFetcher, MpiPatientExporter, MpiPatientUpdater {
 }

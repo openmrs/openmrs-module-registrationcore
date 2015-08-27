@@ -280,12 +280,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public String importMpiPatient(String personId) {
 		if (registrationCoreProperties.isMpiEnabled()) {
 			MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
-			Patient importedPatient = mpiProvider.importMpiPatient(personId);
+			Patient importedPatient = mpiProvider.fetchMpiPatient(personId);
 			Patient patient = patientService.savePatient(importedPatient);
 			return patient.getUuid();
 		} else {
 			//should not pass here since "importPatient" performs only when MpiProvider is not null
-			throw new APIException("Should not perform 'importMpiPatient' when MPI is disabled");
+			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
 		}
 	}
 }

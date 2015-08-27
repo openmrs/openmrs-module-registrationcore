@@ -7,11 +7,11 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientImporter;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-public class OpenEmpiPatientImporter implements MpiPatientImporter {
+public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
@@ -36,7 +36,7 @@ public class OpenEmpiPatientImporter implements MpiPatientImporter {
     private RegistrationCoreProperties coreProperties;
 
     @Override
-    public Patient importMpiPatient(String patientId) {
+    public Patient fetchMpiPatient(String patientId) {
         OpenEmpiPatientQuery mpiPatient = queryExecutor.getPatientById(authenticator.getToken(), patientId);
 
         return createPatient(mpiPatient);

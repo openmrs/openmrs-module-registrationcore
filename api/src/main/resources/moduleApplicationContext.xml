@@ -80,8 +80,8 @@
     <bean id="registrationcore.mpiAuthenticator"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiAuthenticator"/>
 
-    <bean id="registrationcore.mpiPatientImporter"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientImporter"/>
+    <bean id="registrationcore.mpiPatientFetcher"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientFetcher"/>
 
     <bean id="registrationcore.mpiPatientExporter"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientExporter"/>

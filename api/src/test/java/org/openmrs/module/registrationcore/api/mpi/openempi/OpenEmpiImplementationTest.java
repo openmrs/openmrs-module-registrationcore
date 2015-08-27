@@ -21,7 +21,7 @@ public class OpenEmpiImplementationTest {
 
     @InjectMocks private MpiProvider mpiProvider = new OpenEmpiImplementation();
     @Mock private MpiSimilarPatientsSearcher searchAlgorithm;
-    @Mock private MpiPatientImporter patientImporter;
+    @Mock private MpiPatientFetcher patientImporter;
     @Mock private MpiAuthenticator authenticator;
     @Mock private MpiProperties mpiProperties;
 
@@ -40,12 +40,12 @@ public class OpenEmpiImplementationTest {
     public void testImportMpiPatient() throws Exception {
         mockAuthentication(false);
         Patient mockPatient = mock(Patient.class);
-        when(patientImporter.importMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
+        when(patientImporter.fetchMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
 
-        Patient patient = mpiProvider.importMpiPatient(PATIENT_ID);
+        Patient patient = mpiProvider.fetchMpiPatient(PATIENT_ID);
 
         verify(authenticator).performAuthentication();
-        verify(patientImporter).importMpiPatient(PATIENT_ID);
+        verify(patientImporter).fetchMpiPatient(PATIENT_ID);
         assertEquals(patient, mockPatient);
     }
 
@@ -53,9 +53,9 @@ public class OpenEmpiImplementationTest {
     public void testImportDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
         mockAuthentication(true);
         Patient mockPatient = mock(Patient.class);
-        when(patientImporter.importMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
+        when(patientImporter.fetchMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
 
-        mpiProvider.importMpiPatient(PATIENT_ID);
+        mpiProvider.fetchMpiPatient(PATIENT_ID);
 
         verify(authenticator, never()).performAuthentication();
     }
