@@ -39,10 +39,10 @@ public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
     public Patient fetchMpiPatient(String patientId) {
         OpenEmpiPatientQuery mpiPatient = queryExecutor.getPatientById(authenticator.getToken(), patientId);
 
-        return createPatient(mpiPatient);
+        return buildPatient(mpiPatient);
     }
 
-    private Patient createPatient(OpenEmpiPatientQuery mpiPatient) {
+    private Patient buildPatient(OpenEmpiPatientQuery mpiPatient) {
         patientBuilder.setPatient(new Patient());
         Patient patient = patientBuilder.buildPatient(mpiPatient);
 

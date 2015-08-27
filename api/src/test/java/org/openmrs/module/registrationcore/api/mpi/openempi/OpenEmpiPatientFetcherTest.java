@@ -29,7 +29,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-public class OpenEmpiPatientImporterTest extends RegistrationCoreSensitiveTestBase {
+public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBase {
 
     private static final String PATIENT_WITH_OPENMRS_ID = "patient_with_openmrs_id.xml";
     private static final String PATIENT_WITHOUT_OPENMRS_ID = "patient_without_openmrs_id.xml";
