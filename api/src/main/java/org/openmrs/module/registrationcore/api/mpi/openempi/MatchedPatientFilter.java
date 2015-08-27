@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
+//TODO create interface
 public class MatchedPatientFilter {
 
     @Autowired
@@ -21,12 +22,12 @@ public class MatchedPatientFilter {
 
         for (PatientAndMatchQuality patientWrapper : patients) {
             if (patientWrapper.getPatient().getPatientIdentifier(filterIdentifierId) != null) {
-                filterPatientsWithSameIdentifier(filterIdentifierId, patientWrapper, patients);
+                removePatientsWithSameIdentifier(filterIdentifierId, patientWrapper, patients);
             }
         }
     }
 
-    private void filterPatientsWithSameIdentifier(Integer globalIdentifierDomainId, PatientAndMatchQuality initialPatient,
+    private void removePatientsWithSameIdentifier(Integer globalIdentifierDomainId, PatientAndMatchQuality initialPatient,
                                                   List<PatientAndMatchQuality> patients) {
         String initialPatientIdentifier = initialPatient.getPatient().getPatientIdentifier(globalIdentifierDomainId)
                 .getIdentifier();
