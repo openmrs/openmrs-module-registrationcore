@@ -10,7 +10,7 @@ public interface MpiPatientFetcher {
     /**
      * Perform query to mpi server to get patient by identifier & convert it to local patient.
      * @param patientId patient identifier
-     * @return converted patient
+     * @return converted patient not yet saved to local DB.
      */
     Patient fetchMpiPatient(String patientId);
 }
