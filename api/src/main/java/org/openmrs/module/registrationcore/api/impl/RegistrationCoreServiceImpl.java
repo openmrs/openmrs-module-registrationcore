@@ -30,8 +30,9 @@ import org.openmrs.event.EventMessage;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
-import org.openmrs.module.registrationcore.api.mpi.openempi.MatchedPatientFilter;
+import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientFilter;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
@@ -66,7 +67,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private IdentifierBuilder identifierBuilder;
 
-	private MatchedPatientFilter matchedPatientFilter;
+	private MpiPatientFilter mpiPatientFilter;
 
 	private RegistrationCoreProperties registrationCoreProperties;
 
@@ -102,8 +103,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		this.identifierBuilder = identifierBuilder;
 	}
 
-	public void setMatchedPatientFilter(MatchedPatientFilter matchedPatientFilter) {
-		this.matchedPatientFilter = matchedPatientFilter;
+	public void setMpiPatientFilter(MpiPatientFilter mpiPatientFilter) {
+		this.mpiPatientFilter = mpiPatientFilter;
 	}
 
 	public void setRegistrationCoreProperties(RegistrationCoreProperties coreProperties) {
@@ -234,7 +235,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 					.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
 
-			matchedPatientFilter.filter(matches);
+			mpiPatientFilter.filter(matches);
 		}
 
 		return matches;
@@ -254,7 +255,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 					.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
 
-			matchedPatientFilter.filter(matches);
+			mpiPatientFilter.filter(matches);
 		}
 
 		return matches;

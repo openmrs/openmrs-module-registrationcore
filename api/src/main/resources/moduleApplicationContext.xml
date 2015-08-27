@@ -16,7 +16,7 @@
                 <property name="personService" ref="personService" />
                 <property name="adminService" ref="adminService" />
                 <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
-                <property name="matchedPatientFilter" ref="registrationcore.matchedPatientFilter"/>
+                <property name="mpiPatientFilter" ref="registrationcore.openEmpiPatientFilter"/>
                 <property name="registrationCoreProperties" ref="registrationcore.coreProperties"/>
             </bean>
         </property>
@@ -32,9 +32,6 @@
         <property name="locationService" ref="locationService"/>
         <property name="patientService" ref="patientService"/>
     </bean>
-
-    <bean id="registrationcore.matchedPatientFilter"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.MatchedPatientFilter"/>
 
     <bean id="registrationcore.patientCreationListener"
           class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener" init-method="init">
@@ -108,4 +105,7 @@
 
     <bean id="registrationcore.openEmpiPatientQueryBuilder"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientQueryBuilder"/>
+
+    <bean id="registrationcore.openEmpiPatientFilter"
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientFilter"/>
 </beans>

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MatchedPatientFilterTest {
+public class OpenEmpiPatientFilterTest {
 
     public static final Integer PERSON_IDENTIFIER_TYPE_ID = 5;
     private static final String PERSON_IDENTIFIER = "4";
@@ -27,14 +27,14 @@ public class MatchedPatientFilterTest {
 
     @Mock private MpiProperties mpiProperties;
     @Mock private PatientIdentifierMapper identifierMapper;
-    @InjectMocks private MatchedPatientFilter filter;
+    @InjectMocks private OpenEmpiPatientFilter filter;
 
     @Mock private PatientAndMatchQuality patientWrapper;
     @Mock private PatientAndMatchQuality mpiPatientWrapper;
 
     @Before
     public void setUp() throws Exception {
-        filter = new MatchedPatientFilter();
+        filter = new OpenEmpiPatientFilter();
         MockitoAnnotations.initMocks(this);
         mockProperty();
     }

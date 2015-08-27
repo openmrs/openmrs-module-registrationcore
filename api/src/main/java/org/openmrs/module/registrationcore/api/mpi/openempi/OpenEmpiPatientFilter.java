@@ -2,6 +2,7 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
-//TODO create interface
-public class MatchedPatientFilter {
+/**
+ * Performs filter by OpenEmpi person identifier.
+ */
+public class OpenEmpiPatientFilter implements MpiPatientFilter {
 
     @Autowired
     @Qualifier("registrationcore.mpiProperties")
