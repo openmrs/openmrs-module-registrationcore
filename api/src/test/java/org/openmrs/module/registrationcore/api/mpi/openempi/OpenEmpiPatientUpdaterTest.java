@@ -21,7 +21,7 @@ public class OpenEmpiPatientUpdaterTest {
     @InjectMocks private OpenEmpiPatientUpdater patientUpdater;
 
     @Mock private Patient patient;
-    @Mock private OpenEmpiPatientQuery query;
+    @Mock private OpenEmpiPatientResult query;
 
     @Before
     public void setUp() throws Exception {

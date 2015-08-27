@@ -37,12 +37,12 @@ public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
 
     @Override
     public Patient fetchMpiPatient(String patientId) {
-        OpenEmpiPatientQuery mpiPatient = queryExecutor.getPatientById(authenticator.getToken(), patientId);
+        OpenEmpiPatientResult mpiPatient = queryExecutor.getPatientById(authenticator.getToken(), patientId);
 
         return buildPatient(mpiPatient);
     }
 
-    private Patient buildPatient(OpenEmpiPatientQuery mpiPatient) {
+    private Patient buildPatient(OpenEmpiPatientResult mpiPatient) {
         patientBuilder.setPatient(new Patient());
         Patient patient = patientBuilder.buildPatient(mpiPatient);
 

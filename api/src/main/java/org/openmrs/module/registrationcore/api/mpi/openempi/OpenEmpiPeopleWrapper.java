@@ -7,14 +7,14 @@ import java.util.List;
 @XmlRootElement(name = "people")
 public class OpenEmpiPeopleWrapper {
 
-    private List<OpenEmpiPatientQuery> people;
+    private List<OpenEmpiPatientResult> people;
 
     @XmlElement(name = "person")
-    public List<OpenEmpiPatientQuery> getPeople() {
+    public List<OpenEmpiPatientResult> getPeople() {
         return people;
     }
 
-    public void setPeople(List<OpenEmpiPatientQuery> people) {
+    public void setPeople(List<OpenEmpiPatientResult> people) {
         this.people = people;
     }
 }

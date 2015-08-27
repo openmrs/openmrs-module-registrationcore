@@ -1,7 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.common;
 
 import org.openmrs.Patient;
-import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientQuery;
 
 /**
  * This service perform export patient to Mpi server.

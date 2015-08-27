@@ -59,7 +59,7 @@ public class PatientBuilderTest {
 
     @Test
     public void testBuildPatient() throws Exception {
-        OpenEmpiPatientQuery query = readPatient(PATIENT_WITH_OPENMRS_ID);
+        OpenEmpiPatientResult query = readPatient(PATIENT_WITH_OPENMRS_ID);
 
         patientBuilder.setPatient(new Patient());
         Patient patient = patientBuilder.buildPatient(query);
@@ -75,7 +75,7 @@ public class PatientBuilderTest {
         assertTrue(patient.getIdentifiers().contains(ecidIdentifier));
     }
 
-    private OpenEmpiPatientQuery readPatient(String path) throws Exception {
+    private OpenEmpiPatientResult readPatient(String path) throws Exception {
         return xmlMarshaller.getQuery(path);
     }
 }

@@ -34,7 +34,7 @@ public class FindPatientQueryBuilderTest {
         String FamilyName = "Louis";
         Patient patient = createPatient(givenName, FamilyName);
 
-        OpenEmpiPatientQuery query = queryMapper.create(patient);
+        OpenEmpiPatientResult query = queryMapper.create(patient);
 
         assertEquals(patient.getGivenName(), query.getGivenName());
         assertEquals(patient.getFamilyName(), query.getFamilyName());

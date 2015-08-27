@@ -24,8 +24,8 @@ public class OpenEmpiPatientQueryBuilder {
     @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
-    public OpenEmpiPatientQuery build(Patient patient) {
-        OpenEmpiPatientQuery query = new OpenEmpiPatientQuery();
+    public OpenEmpiPatientResult build(Patient patient) {
+        OpenEmpiPatientResult query = new OpenEmpiPatientResult();
 
         setGender(query, patient);
 
@@ -40,23 +40,23 @@ public class OpenEmpiPatientQueryBuilder {
         return query;
     }
 
-    private void setGender(OpenEmpiPatientQuery query, Patient patient) {
+    private void setGender(OpenEmpiPatientResult query, Patient patient) {
         Gender gender = new Gender();
         gender.setGenderCode(patient.getGender());
         query.setGender(gender);
     }
 
-    private void setNames(OpenEmpiPatientQuery query, Patient patient) {
+    private void setNames(OpenEmpiPatientResult query, Patient patient) {
         query.setFamilyName(patient.getFamilyName());
         query.setGivenName(patient.getGivenName());
         query.setMiddleName(patient.getMiddleName());
     }
 
-    private void setBirthdate(OpenEmpiPatientQuery query, Patient patient) {
+    private void setBirthdate(OpenEmpiPatientResult query, Patient patient) {
         query.setDateOfBirth(patient.getBirthdate());
     }
 
-    private void setAddresses(OpenEmpiPatientQuery query, Patient patient) {
+    private void setAddresses(OpenEmpiPatientResult query, Patient patient) {
         //TODO improve it by setting all available addresses.
         Set<PersonAddress> addresses = patient.getAddresses();
         for (PersonAddress address : addresses) {
@@ -65,7 +65,7 @@ public class OpenEmpiPatientQueryBuilder {
         }
     }
 
-    private void setIdentifiers(OpenEmpiPatientQuery query, Patient patient) {
+    private void setIdentifiers(OpenEmpiPatientResult query, Patient patient) {
         LinkedList<PersonIdentifier> personIdentifiers = new LinkedList<PersonIdentifier>();
 
         for (PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
@@ -88,7 +88,7 @@ public class OpenEmpiPatientQueryBuilder {
         query.setPersonIdentifiers(personIdentifiers);
     }
 
-    private void setPersonIdentifier(String identifier, OpenEmpiPatientQuery patientQuery) {
+    private void setPersonIdentifier(String identifier, OpenEmpiPatientResult patientQuery) {
         log.error("set person idetnfier: " + identifier);
         patientQuery.setPersonId(Integer.parseInt(identifier));
     }

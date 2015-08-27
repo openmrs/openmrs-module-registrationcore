@@ -17,7 +17,7 @@ import java.util.HashSet;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class OpenEmpiPatientQueryBuilderTest {
+public class OpenEmpiPatientResultBuilderTest {
 
     private static final Integer LOCAL_IDENTIFIER_TYPE_ID = 5;
     private static final Integer MPI_IDENTIFIER_TYPE_ID = 6;
@@ -45,7 +45,7 @@ public class OpenEmpiPatientQueryBuilderTest {
     public void testCorrectPatientConverting() throws Exception {
         Patient patient = createPatient();
 
-        OpenEmpiPatientQuery query = queryBuilder.build(patient);
+        OpenEmpiPatientResult query = queryBuilder.build(patient);
 
         assertEquals(patient.getGender(), query.getGender().getGenderCode());
 

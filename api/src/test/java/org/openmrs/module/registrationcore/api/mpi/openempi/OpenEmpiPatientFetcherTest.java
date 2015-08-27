@@ -110,7 +110,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
     @Test
     public void testPerformCorrectImportForPatientWithoutOpenMrsIdentifier() throws Exception {
         mockMpiAuthentication();
-        OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITHOUT_OPENMRS_ID);
+        OpenEmpiPatientResult mpiPatient = marshaller.getQuery(PATIENT_WITHOUT_OPENMRS_ID);
         mockMpiResponse(mpiPatient);
 
         String uuid = service.importMpiPatient(MPI_PERSON_ID);
@@ -128,15 +128,15 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
 
     @SuppressWarnings("unchecked")
     private void mockMpiResponse(Object response) {
-        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class)))
+        when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientResult.class)))
                 .thenReturn(new ResponseEntity(response, HttpStatus.OK));
     }
 
     private void verifyRemoteMpiServerQuerying() {
-        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientQuery.class));
+        verify(mockRestTemplate).exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(OpenEmpiPatientResult.class));
     }
 
-    private void assertPatientEquals(OpenEmpiPatientQuery mpiPatient, Patient savedPatient, int idCount) {
+    private void assertPatientEquals(OpenEmpiPatientResult mpiPatient, Patient savedPatient, int idCount) {
         assertNotNull(savedPatient.getPatientId());
         assertNotNull(savedPatient.getPersonId());
         assertEquals(savedPatient.getIdentifiers().size(), idCount);
@@ -145,7 +145,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
         assertEqualsPatients(mpiPatient, savedPatient);
     }
 
-    private void assertEqualsPatients(OpenEmpiPatientQuery mpiPatient, Patient savedPatient) {
+    private void assertEqualsPatients(OpenEmpiPatientResult mpiPatient, Patient savedPatient) {
         assertEquals(mpiPatient.getGivenName(), savedPatient.getGivenName());
         assertEquals(mpiPatient.getFamilyName(), savedPatient.getFamilyName());
         assertEquals(mpiPatient.getGender().getGenderCode(), savedPatient.getGender());
@@ -168,7 +168,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
     @Test
     public void testPerformCorrectImportForPatientWithOpenMrsIdentifier() throws Exception {
         mockMpiAuthentication();
-        OpenEmpiPatientQuery mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
+        OpenEmpiPatientResult mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
         mockMpiResponse(mpiPatient);
 
         String uuid = service.importMpiPatient(MPI_PERSON_ID);

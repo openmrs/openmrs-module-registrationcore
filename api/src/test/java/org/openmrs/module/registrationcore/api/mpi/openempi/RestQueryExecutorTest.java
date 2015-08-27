@@ -32,9 +32,9 @@ public class RestQueryExecutorTest {
     @InjectMocks private RestQueryExecutor restQueryExecutor = new RestQueryExecutor();
     @Mock private RestUrlBuilder urlBuilder;
     @Mock private RestTemplate restTemplate;
-    @Mock private OpenEmpiPatientQuery patientQuery;
+    @Mock private OpenEmpiPatientResult patientQuery;
     @Mock private OpenEmpiPeopleWrapper peopleWrapper;
-    @Mock private List<OpenEmpiPatientQuery> patientQueryList;
+    @Mock private List<OpenEmpiPatientResult> patientQueryList;
     private ResponseEntity response;
 
     @Before
@@ -71,14 +71,14 @@ public class RestQueryExecutorTest {
     public void testGetPatientById() throws Exception {
         String patientUrl = "get_patient_url";
         when(urlBuilder.createGetPatientUrl(PATIENT_ID)).thenReturn(patientUrl);
-        mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
+        mockServerResponse(patientQuery, OpenEmpiPatientResult.class);
 
-        OpenEmpiPatientQuery actualPatient = restQueryExecutor.getPatientById(TOKEN_VALUE, PATIENT_ID);
+        OpenEmpiPatientResult actualPatient = restQueryExecutor.getPatientById(TOKEN_VALUE, PATIENT_ID);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
         verify(restTemplate).exchange(eq(patientUrl),
-                eq(HttpMethod.GET), argumentCaptor.capture(), eq(OpenEmpiPatientQuery.class));
+                eq(HttpMethod.GET), argumentCaptor.capture(), eq(OpenEmpiPatientResult.class));
         assertNull(argumentCaptor.getValue().getBody());
         //verify that header with token was sett:
         assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
@@ -91,9 +91,9 @@ public class RestQueryExecutorTest {
         when(urlBuilder.createFindPreciseSimilarPatientsUrl()).thenReturn(findPrecise);
         mockPeopleWrapper(peopleWrapper, patientQueryList);
         mockServerResponse(peopleWrapper, OpenEmpiPeopleWrapper.class);
-        OpenEmpiPatientQuery query = createPatientQuery();
+        OpenEmpiPatientResult query = createPatientQuery();
 
-        List<OpenEmpiPatientQuery> patients = restQueryExecutor.findPreciseSimilarPatients(TOKEN_VALUE, query);
+        List<OpenEmpiPatientResult> patients = restQueryExecutor.findPreciseSimilarPatients(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
@@ -110,9 +110,9 @@ public class RestQueryExecutorTest {
     public void testFindPatientsReturnEmptyListOnNullPatient() throws Exception {
         mockPeopleWrapper(peopleWrapper, null);
         mockServerResponse(peopleWrapper, OpenEmpiPeopleWrapper.class);
-        OpenEmpiPatientQuery query = createPatientQuery();
+        OpenEmpiPatientResult query = createPatientQuery();
 
-        List<OpenEmpiPatientQuery> patients = restQueryExecutor.findPreciseSimilarPatients(TOKEN_VALUE, query);
+        List<OpenEmpiPatientResult> patients = restQueryExecutor.findPreciseSimilarPatients(TOKEN_VALUE, query);
 
         assertTrue(patients.size() == 0);
     }
@@ -121,15 +121,15 @@ public class RestQueryExecutorTest {
     public void testExportPatient() throws Exception {
         String exportUrl = "exportUrl";
         when(urlBuilder.createExportPatientUrl()).thenReturn(exportUrl);
-        mockServerResponse(patientQuery, OpenEmpiPatientQuery.class);
-        OpenEmpiPatientQuery query = createPatientQuery();
+        mockServerResponse(patientQuery, OpenEmpiPatientResult.class);
+        OpenEmpiPatientResult query = createPatientQuery();
 
         restQueryExecutor.exportPatient(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         //verify correct request creation:
         verify(restTemplate).exchange(eq(exportUrl),
-                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(OpenEmpiPatientQuery.class));
+                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(OpenEmpiPatientResult.class));
         //verify request body was set correctly:
         assertEquals(argumentCaptor.getValue().getBody(), query);
         //verify that header with token was sett:
@@ -142,7 +142,7 @@ public class RestQueryExecutorTest {
         when(urlBuilder.createUpdatePatientUrl()).thenReturn(updateUrl);
         mockServerResponse(patientQuery, String.class);
         when(response.getStatusCode()).thenReturn(HttpStatus.NO_CONTENT);
-        OpenEmpiPatientQuery query = createPatientQuery();
+        OpenEmpiPatientResult query = createPatientQuery();
 
         restQueryExecutor.updatePatient(TOKEN_VALUE, query);
 
@@ -156,8 +156,8 @@ public class RestQueryExecutorTest {
         assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
     }
 
-    private OpenEmpiPatientQuery createPatientQuery() {
-        OpenEmpiPatientQuery query = new OpenEmpiPatientQuery();
+    private OpenEmpiPatientResult createPatientQuery() {
+        OpenEmpiPatientResult query = new OpenEmpiPatientResult();
         query.setGivenName(PATIENT_QUERY_GIVENNAME);
         query.setFamilyName(PATIENT_QUERY_FAMILYNAME);
         return query;
@@ -186,7 +186,7 @@ public class RestQueryExecutorTest {
         ReflectionTestUtils.setField(restQueryExecutor, "restTemplate", restTemplate);
     }
 
-    private void mockPeopleWrapper(OpenEmpiPeopleWrapper peopleWrapper, List<OpenEmpiPatientQuery> patientQueryList) {
+    private void mockPeopleWrapper(OpenEmpiPeopleWrapper peopleWrapper, List<OpenEmpiPatientResult> patientQueryList) {
         when(peopleWrapper.getPeople()).thenReturn(patientQueryList);
     }
 }

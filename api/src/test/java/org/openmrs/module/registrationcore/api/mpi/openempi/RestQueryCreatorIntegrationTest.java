@@ -33,7 +33,7 @@ public class RestQueryCreatorIntegrationTest {
 
     //    @Test
     public void testPerformExport() throws Exception {
-        OpenEmpiPatientQuery person = getPerson();
+        OpenEmpiPatientResult person = getPerson();
         removeGlobalIdentifier(person);
 
         queryCreator.exportPatient(TOKEN, person);
@@ -41,7 +41,7 @@ public class RestQueryCreatorIntegrationTest {
 
     //    @Test
     public void testPerformUpdate() throws Exception {
-        OpenEmpiPatientQuery person = getPerson();
+        OpenEmpiPatientResult person = getPerson();
 
         person.setGivenName("Daniel");
         person.setFamilyName("Ocean");
@@ -49,11 +49,11 @@ public class RestQueryCreatorIntegrationTest {
         queryCreator.updatePatient(TOKEN, person);
     }
 
-    private OpenEmpiPatientQuery getPerson() throws Exception {
+    private OpenEmpiPatientResult getPerson() throws Exception {
         return xmlMarshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
     }
 
-    private void removeGlobalIdentifier(OpenEmpiPatientQuery person) {
+    private void removeGlobalIdentifier(OpenEmpiPatientResult person) {
         for (PersonIdentifier personIdentifier : person.getPersonIdentifiers()) {
             if (personIdentifier.getIdentifierDomain().getIdentifierDomainId().equals(OPENEMPI_GLOBAL_DOMAIN_ID)) {
                 person.getPersonIdentifiers().remove(personIdentifier);

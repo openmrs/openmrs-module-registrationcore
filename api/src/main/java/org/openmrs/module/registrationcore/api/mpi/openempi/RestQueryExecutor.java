@@ -31,34 +31,34 @@ public class RestQueryExecutor {
         }
     }
 
-    public OpenEmpiPatientQuery getPatientById(String token, String id) {
+    public OpenEmpiPatientResult getPatientById(String token, String id) {
         HttpHeaders headers = getAuthenticationHeader(token);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
         String url = urlBuilder.createGetPatientUrl(id);
-        ResponseEntity<OpenEmpiPatientQuery> person = restTemplate.exchange(url,
-                HttpMethod.GET, entity, OpenEmpiPatientQuery.class);
+        ResponseEntity<OpenEmpiPatientResult> person = restTemplate.exchange(url,
+                HttpMethod.GET, entity, OpenEmpiPatientResult.class);
 
         return person.getBody();
     }
 
-    public List<OpenEmpiPatientQuery> findPreciseSimilarPatients(String token, OpenEmpiPatientQuery query) {
+    public List<OpenEmpiPatientResult> findPreciseSimilarPatients(String token, OpenEmpiPatientResult query) {
         String url = urlBuilder.createFindPreciseSimilarPatientsUrl();
         return findPatients(token, url, query);
     }
 
-    public List<OpenEmpiPatientQuery> findProbablySimilarPatients(String token, OpenEmpiPatientQuery query) {
+    public List<OpenEmpiPatientResult> findProbablySimilarPatients(String token, OpenEmpiPatientResult query) {
         String url = urlBuilder.createFindProbablySimilarPatientsUrl();
         return findPatients(token, url, query);
     }
 
-    public OpenEmpiPatientQuery exportPatient(String token, OpenEmpiPatientQuery patientQuery) {
+    public OpenEmpiPatientResult exportPatient(String token, OpenEmpiPatientResult patientQuery) {
         HttpHeaders headers = getAuthenticationHeader(token);
-        HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(patientQuery, headers);
+        HttpEntity<OpenEmpiPatientResult> entity = new HttpEntity<OpenEmpiPatientResult>(patientQuery, headers);
 
         String url = urlBuilder.createExportPatientUrl();
-        ResponseEntity<OpenEmpiPatientQuery> personResponse = restTemplate.exchange(url,
-                HttpMethod.PUT, entity, OpenEmpiPatientQuery.class);
+        ResponseEntity<OpenEmpiPatientResult> personResponse = restTemplate.exchange(url,
+                HttpMethod.PUT, entity, OpenEmpiPatientResult.class);
 
         if (personResponse.getBody() == null)
             throw new APIException("Fail while Patient export to Mpi server. " +
@@ -66,10 +66,10 @@ public class RestQueryExecutor {
         return personResponse.getBody();
     }
 
-    public void updatePatient(String token, OpenEmpiPatientQuery patientQuery) {
+    public void updatePatient(String token, OpenEmpiPatientResult patientQuery) {
         HttpHeaders headers = getAuthenticationHeader(token);
 
-        HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(patientQuery, headers);
+        HttpEntity<OpenEmpiPatientResult> entity = new HttpEntity<OpenEmpiPatientResult>(patientQuery, headers);
 
         String url = urlBuilder.createUpdatePatientUrl();
         ResponseEntity<String> response = restTemplate.exchange(url,
@@ -86,7 +86,7 @@ public class RestQueryExecutor {
         return headers;
     }
 
-    private List<OpenEmpiPatientQuery> unwrapResult(OpenEmpiPeopleWrapper people) {
+    private List<OpenEmpiPatientResult> unwrapResult(OpenEmpiPeopleWrapper people) {
         if (people.getPeople() == null) {
             return Collections.emptyList();
         } else {
@@ -94,9 +94,9 @@ public class RestQueryExecutor {
         }
     }
 
-    private List<OpenEmpiPatientQuery> findPatients(String token, String url, OpenEmpiPatientQuery query) {
+    private List<OpenEmpiPatientResult> findPatients(String token, String url, OpenEmpiPatientResult query) {
         HttpHeaders headers = getAuthenticationHeader(token);
-        HttpEntity<OpenEmpiPatientQuery> entity = new HttpEntity<OpenEmpiPatientQuery>(query, headers);
+        HttpEntity<OpenEmpiPatientResult> entity = new HttpEntity<OpenEmpiPatientResult>(query, headers);
 
         ResponseEntity<OpenEmpiPeopleWrapper> people = restTemplate.exchange(url,
                 HttpMethod.POST, entity, OpenEmpiPeopleWrapper.class);

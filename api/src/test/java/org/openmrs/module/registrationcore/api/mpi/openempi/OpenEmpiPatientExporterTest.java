@@ -26,8 +26,8 @@ public class OpenEmpiPatientExporterTest {
     @Mock private MpiAuthenticator authenticator;
     @Mock private RestQueryExecutor queryCreator;
     @Mock private Patient patient;
-    @Mock private OpenEmpiPatientQuery query;
-    @Mock private OpenEmpiPatientQuery queryResult;
+    @Mock private OpenEmpiPatientResult query;
+    @Mock private OpenEmpiPatientResult queryResult;
 
     @Before
     public void setUp() throws Exception {
@@ -43,7 +43,7 @@ public class OpenEmpiPatientExporterTest {
     public void testExportPatient() throws Exception {
         patientExport.exportPatient(patient);
 
-        ArgumentCaptor<OpenEmpiPatientQuery> queryCaptor = ArgumentCaptor.forClass(OpenEmpiPatientQuery.class);
+        ArgumentCaptor<OpenEmpiPatientResult> queryCaptor = ArgumentCaptor.forClass(OpenEmpiPatientResult.class);
         verify(queryCreator).exportPatient(eq(TOKEN), queryCaptor.capture());
 
         //assert that GlobalDomainIdentifier was removed before exportPatient:

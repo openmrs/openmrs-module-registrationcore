@@ -32,7 +32,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
     @Mock private MpiAuthenticator authenticator;
 
     @Mock private Patient patient;
-    @Mock private OpenEmpiPatientQuery patientQuery;
+    @Mock private OpenEmpiPatientResult patientQuery;
     @Mock private Patient mpiPatient;
 
     @Before
@@ -45,14 +45,14 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         mockPatientConversion();
         mockAuthenticationToken();
         mockPatientBuild();
-        List<OpenEmpiPatientQuery> patients = createPatients(MAX_RESULTS + 2);
+        List<OpenEmpiPatientResult> patients = createPatients(MAX_RESULTS + 2);
         when(queryCreator.findProbablySimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
 
         List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findSimilarMatches(patient, null, cutoff, MAX_RESULTS);
 
         verify(queryMapper).create(patient);
         verify(queryCreator).findProbablySimilarPatients(TOKEN_VALUE, patientQuery);
-        verify(patientBuilder, times(MAX_RESULTS)).buildPatient(any(OpenEmpiPatientQuery.class));
+        verify(patientBuilder, times(MAX_RESULTS)).buildPatient(any(OpenEmpiPatientResult.class));
         verify(mpiPatient, times(MAX_RESULTS)).setUuid(String.valueOf(MPI_PERSON_ID));
         assertTrue(actualPatients.size() == MAX_RESULTS);
         for (PatientAndMatchQuality actualPatient : actualPatients) {
@@ -67,14 +67,14 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         mockPatientConversion();
         mockAuthenticationToken();
         mockPatientBuild();
-        List<OpenEmpiPatientQuery> patients = createPatients(MAX_RESULTS + 2);
+        List<OpenEmpiPatientResult> patients = createPatients(MAX_RESULTS + 2);
         when(queryCreator.findPreciseSimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
 
         List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findExactMatches(patient, null, cutoff, MAX_RESULTS);
 
         verify(queryMapper).create(patient);
         verify(queryCreator).findPreciseSimilarPatients(TOKEN_VALUE, patientQuery);
-        verify(patientBuilder, times(MAX_RESULTS)).buildPatient(any(OpenEmpiPatientQuery.class));
+        verify(patientBuilder, times(MAX_RESULTS)).buildPatient(any(OpenEmpiPatientResult.class));
         verify(mpiPatient, times(MAX_RESULTS)).setUuid(String.valueOf(MPI_PERSON_ID));
         assertTrue(actualPatients.size() == MAX_RESULTS);
         for (PatientAndMatchQuality actualPatient : actualPatients) {
@@ -92,10 +92,10 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         when(authenticator.getToken()).thenReturn(TOKEN_VALUE);
     }
 
-    private List<OpenEmpiPatientQuery> createPatients(int count) {
-        List<OpenEmpiPatientQuery> patientsResult = new LinkedList<OpenEmpiPatientQuery>();
+    private List<OpenEmpiPatientResult> createPatients(int count) {
+        List<OpenEmpiPatientResult> patientsResult = new LinkedList<OpenEmpiPatientResult>();
         for (int i = 0; i < count; i++) {
-            OpenEmpiPatientQuery patientQuery = mock(OpenEmpiPatientQuery.class);
+            OpenEmpiPatientResult patientQuery = mock(OpenEmpiPatientResult.class);
             when(patientQuery.getPersonId()).thenReturn(MPI_PERSON_ID);
             patientsResult.add(patientQuery);
         }
@@ -103,6 +103,6 @@ public class OpenEmpiPatientSearchAlgorithmTest {
     }
 
     private void mockPatientBuild() {
-        when(patientBuilder.buildPatient(any(OpenEmpiPatientQuery.class))).thenReturn(mpiPatient);
+        when(patientBuilder.buildPatient(any(OpenEmpiPatientResult.class))).thenReturn(mpiPatient);
     }
 }

@@ -22,7 +22,7 @@ public class OpenEmpiPatientUpdater implements MpiPatientUpdater {
 
     @Override
     public void updatePatient(Patient patient) {
-        OpenEmpiPatientQuery patientQuery = queryBuilder.build(patient);
+        OpenEmpiPatientResult patientQuery = queryBuilder.build(patient);
 
         queryExecutor.updatePatient(authenticator.getToken(), patientQuery);
     }

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @XmlRootElement(name = "person")
-public class OpenEmpiPatientQuery {
+public class OpenEmpiPatientResult {
 
     private Integer personId;
 

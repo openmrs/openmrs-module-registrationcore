@@ -36,7 +36,7 @@ public class PatientBuilder {
         this.patient = patient;
     }
 
-    public Patient buildPatient(OpenEmpiPatientQuery patientQuery) {
+    public Patient buildPatient(OpenEmpiPatientResult patientQuery) {
         patient.setGender(patientQuery.getGender().getGenderCode());
 
         setNames(patientQuery, patient);
@@ -49,14 +49,14 @@ public class PatientBuilder {
         return patient;
     }
 
-    private void setNames(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setNames(OpenEmpiPatientResult patientQuery, Patient patient) {
         PersonName names = new PersonName();
         names.setFamilyName(patientQuery.getFamilyName());
         names.setGivenName(patientQuery.getGivenName());
         patient.setNames(new TreeSet<PersonName>(Collections.singleton(names)));
     }
 
-    private void setBirthdate(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setBirthdate(OpenEmpiPatientResult patientQuery, Patient patient) {
         if (patientQuery.getDateOfBirth() == null) {
             return;
         }
@@ -69,7 +69,7 @@ public class PatientBuilder {
         patient.setBirthdate(clearDate);
     }
 
-    private void setAddresses(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setAddresses(OpenEmpiPatientResult patientQuery, Patient patient) {
         Set<PersonAddress> addresses = new TreeSet<PersonAddress>();
         PersonAddress address = new PersonAddress();
         address.setAddress1(patientQuery.getAddress1());
@@ -77,12 +77,12 @@ public class PatientBuilder {
         patient.setAddresses(addresses);
     }
 
-    private void setIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setIdentifiers(OpenEmpiPatientResult patientQuery, Patient patient) {
         setMpiPatientIdentifiers(patientQuery, patient);
         setMpiPersonIdentifier(patientQuery, patient);
     }
 
-    private void setMpiPatientIdentifiers(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setMpiPatientIdentifiers(OpenEmpiPatientResult patientQuery, Patient patient) {
         for (PersonIdentifier identifier : patientQuery.getPersonIdentifiers()) {
             String mpiIdentifierTypeName = identifier.getIdentifierDomain().getIdentifierDomainName();
             Integer mpiIdentifierTypeId = identifier.getIdentifierDomain().getIdentifierDomainId();
@@ -95,7 +95,7 @@ public class PatientBuilder {
         }
     }
 
-    private void setMpiPersonIdentifier(OpenEmpiPatientQuery patientQuery, Patient patient) {
+    private void setMpiPersonIdentifier(OpenEmpiPatientResult patientQuery, Patient patient) {
         Integer personIdentifierId = mpiProperties.getMpiPersonIdentifierTypeId();
         PatientIdentifier identifier = createIdentifier("Person identifier", personIdentifierId, String.valueOf(patientQuery.getPersonId()));
         patient.getIdentifiers().add(identifier);

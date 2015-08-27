@@ -7,10 +7,10 @@ import java.io.File;
 
 public class XmlMarshaller {
 
-    public OpenEmpiPatientQuery getQuery(String path) throws Exception {
+    public OpenEmpiPatientResult getQuery(String path) throws Exception {
         File file = new File(ClassLoader.getSystemClassLoader().getResource(path).getPath());
-        JAXBContext jaxbContext = JAXBContext.newInstance(OpenEmpiPatientQuery.class);
+        JAXBContext jaxbContext = JAXBContext.newInstance(OpenEmpiPatientResult.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (OpenEmpiPatientQuery) jaxbUnmarshaller.unmarshal(file);
+        return (OpenEmpiPatientResult) jaxbUnmarshaller.unmarshal(file);
     }
 }
