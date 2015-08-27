@@ -12,7 +12,7 @@ public interface MpiPatientExporter {
      * Perform export patient to MPI server
      *
      * @param patient patient which should be exported.
-     * @return exported MPI patient
+     * @return exported MPI patient generated identifier
      */
-    OpenEmpiPatientQuery exportPatient(Patient patient);
+    String exportPatient(Patient patient);
 }

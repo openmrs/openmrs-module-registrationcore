@@ -8,7 +8,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
-import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientQuery;
 
 import javax.jms.Message;
 
@@ -54,16 +53,16 @@ public class PatientCreationListener extends PatientActionListener {
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);
 
-        OpenEmpiPatientQuery exportedPatientQuery = pushPatientToMpiServer(patient);
+        String personId = pushPatientToMpiServer(patient);
 
-        updatePatient(patient, message, exportedPatientQuery.getPersonId());
+        updatePatient(patient, message, personId);
     }
 
-    private OpenEmpiPatientQuery pushPatientToMpiServer(Patient patient) {
+    private String pushPatientToMpiServer(Patient patient) {
         return coreProperties.getMpiProvider().exportPatient(patient);
     }
 
-    private void updatePatient(Patient patient, Message message, Integer personId) {
+    private void updatePatient(Patient patient, Message message, String personId) {
         grantPrivileges();
         try {
             User creator = extractPatientCreator(message);
@@ -79,9 +78,9 @@ public class PatientCreationListener extends PatientActionListener {
         return userService.getUser(Integer.parseInt(creatorId));
     }
 
-    private PatientIdentifier createPersonIdentifier(User creator, Integer personId) {
+    private PatientIdentifier createPersonIdentifier(User creator, String personId) {
         PatientIdentifier personIdentifier = identifierBuilder
-                .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeId(), String.valueOf(personId), null);
+                .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeId(), personId, null);
         personIdentifier.setCreator(creator);
         return personIdentifier;
     }

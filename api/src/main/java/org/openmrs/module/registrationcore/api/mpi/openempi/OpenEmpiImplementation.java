@@ -42,7 +42,7 @@ public class OpenEmpiImplementation implements MpiProvider {
     }
 
     @Override
-    public OpenEmpiPatientQuery exportPatient(Patient patient) {
+    public String exportPatient(Patient patient) {
         validateAuthentication();
         return patientExporter.exportPatient(patient);
     }

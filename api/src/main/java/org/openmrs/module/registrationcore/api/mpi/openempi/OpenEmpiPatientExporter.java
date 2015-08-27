@@ -26,11 +26,12 @@ public class OpenEmpiPatientExporter implements MpiPatientExporter {
     private RestQueryExecutor queryExecutor;
 
     @Override
-    public OpenEmpiPatientQuery exportPatient(Patient patient) {
+    public String exportPatient(Patient patient) {
         OpenEmpiPatientQuery patientQuery = queryBuilder.build(patient);
         removeOpenEmpiGlobalIdentifier(patientQuery);
 
-        return queryExecutor.exportPatient(authenticator.getToken(), patientQuery);
+        OpenEmpiPatientQuery mpiPerson = queryExecutor.exportPatient(authenticator.getToken(), patientQuery);
+        return String.valueOf(mpiPerson.getPersonId());
     }
 
     private void removeOpenEmpiGlobalIdentifier(OpenEmpiPatientQuery patientQuery) {

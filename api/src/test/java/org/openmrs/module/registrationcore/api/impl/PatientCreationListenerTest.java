@@ -11,7 +11,6 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
-import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientQuery;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -32,15 +31,13 @@ public class PatientCreationListenerTest {
     @Mock private MapMessage mapMessage;
     @Mock private Message message;
     @Mock private Patient patient;
-    @Mock private OpenEmpiPatientQuery exportedPatientQuery;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(coreProperties.isMpiEnabled()).thenReturn(true);
         when(coreProperties.getMpiProvider()).thenReturn(mpiProvider);
-        when(mpiProvider.exportPatient(patient)).thenReturn(exportedPatientQuery);
-        when(exportedPatientQuery.getPersonId()).thenReturn(personId);
+        when(mpiProvider.exportPatient(patient)).thenReturn(String.valueOf(personId));
     }
 
     @Test(expected = APIException.class)
