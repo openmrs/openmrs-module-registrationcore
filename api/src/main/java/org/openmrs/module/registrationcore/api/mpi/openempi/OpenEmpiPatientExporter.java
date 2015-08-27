@@ -7,6 +7,8 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.*;
+
 public class OpenEmpiPatientExporter implements MpiPatientExporter {
 
     @Autowired

@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
+import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.mockito.Mockito.when;

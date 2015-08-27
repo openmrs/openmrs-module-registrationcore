@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.LinkedList;
 import java.util.Set;
 
+import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.*;
+import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier.*;
+
 public class OpenEmpiPatientQueryBuilder {
 
     private final Log log = LogFactory.getLog(this.getClass());

@@ -14,6 +14,8 @@ import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.*;
+import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier.*;
 
 public class OpenEmpiPatientExporterTest {
 

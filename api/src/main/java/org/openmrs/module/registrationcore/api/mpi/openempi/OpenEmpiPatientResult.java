@@ -89,103 +89,105 @@ public class OpenEmpiPatientResult {
     public void setPersonIdentifiers(List<PersonIdentifier> personIdentifiers) {
         this.personIdentifiers = personIdentifiers;
     }
-}
 
-@XmlRootElement
-class Gender{
+    @XmlRootElement
+    public static class Gender {
 
-    private String genderCode;
+        private String genderCode;
 
-    public String getGenderCode() {
-        return genderCode;
+        public String getGenderCode() {
+            return genderCode;
+        }
+
+        public void setGenderCode(String genderCode) {
+            this.genderCode = genderCode;
+        }
     }
 
-    public void setGenderCode(String genderCode) {
-        this.genderCode = genderCode;
-    }
-}
 
-@XmlRootElement(name = "personIdentifiers")
-class PersonIdentifier {
-    private String identifier;
+    @XmlRootElement(name = "personIdentifiers")
+    public static class PersonIdentifier {
+        private String identifier;
 
-    private Integer personIdentifierId;
+        private Integer personIdentifierId;
 
-    private IdentifierDomain identifierDomain;
+        private IdentifierDomain identifierDomain;
 
-    public String getIdentifier() {
-        return identifier;
-    }
+        public String getIdentifier() {
+            return identifier;
+        }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
+        public void setIdentifier(String identifier) {
+            this.identifier = identifier;
+        }
 
-    public Integer getPersonIdentifierId() {
-        return personIdentifierId;
-    }
+        public Integer getPersonIdentifierId() {
+            return personIdentifierId;
+        }
 
-    public void setPersonIdentifierId(Integer personIdentifierId) {
-        this.personIdentifierId = personIdentifierId;
-    }
+        public void setPersonIdentifierId(Integer personIdentifierId) {
+            this.personIdentifierId = personIdentifierId;
+        }
 
-    public IdentifierDomain getIdentifierDomain() {
-        return identifierDomain;
-    }
+        public IdentifierDomain getIdentifierDomain() {
+            return identifierDomain;
+        }
 
-    public void setIdentifierDomain(IdentifierDomain identifierDomain) {
-        this.identifierDomain = identifierDomain;
-    }
-}
-@XmlRootElement
-class IdentifierDomain {
-    private Integer identifierDomainId;
+        public void setIdentifierDomain(IdentifierDomain identifierDomain) {
+            this.identifierDomain = identifierDomain;
+        }
 
-    private String identifierDomainName;
+        @XmlRootElement
+        public static class IdentifierDomain {
+            private Integer identifierDomainId;
 
-    private String namespaceIdentifier;
+            private String identifierDomainName;
 
-    private String universalIdentifier;
+            private String namespaceIdentifier;
 
-    private String universalIdentifierTypeCode;
+            private String universalIdentifier;
 
-    public Integer getIdentifierDomainId() {
-        return identifierDomainId;
-    }
+            private String universalIdentifierTypeCode;
 
-    public void setIdentifierDomainId(Integer identifierDomainId) {
-        this.identifierDomainId = identifierDomainId;
-    }
+            public Integer getIdentifierDomainId() {
+                return identifierDomainId;
+            }
 
-    public String getIdentifierDomainName() {
-        return identifierDomainName;
-    }
+            public void setIdentifierDomainId(Integer identifierDomainId) {
+                this.identifierDomainId = identifierDomainId;
+            }
 
-    public void setIdentifierDomainName(String identifierDomainName) {
-        this.identifierDomainName = identifierDomainName;
-    }
+            public String getIdentifierDomainName() {
+                return identifierDomainName;
+            }
 
-    public String getNamespaceIdentifier() {
-        return namespaceIdentifier;
-    }
+            public void setIdentifierDomainName(String identifierDomainName) {
+                this.identifierDomainName = identifierDomainName;
+            }
 
-    public void setNamespaceIdentifier(String namespaceIdentifier) {
-        this.namespaceIdentifier = namespaceIdentifier;
-    }
+            public String getNamespaceIdentifier() {
+                return namespaceIdentifier;
+            }
 
-    public String getUniversalIdentifier() {
-        return universalIdentifier;
-    }
+            public void setNamespaceIdentifier(String namespaceIdentifier) {
+                this.namespaceIdentifier = namespaceIdentifier;
+            }
 
-    public void setUniversalIdentifier(String universalIdentifier) {
-        this.universalIdentifier = universalIdentifier;
-    }
+            public String getUniversalIdentifier() {
+                return universalIdentifier;
+            }
 
-    public String getUniversalIdentifierTypeCode() {
-        return universalIdentifierTypeCode;
-    }
+            public void setUniversalIdentifier(String universalIdentifier) {
+                this.universalIdentifier = universalIdentifier;
+            }
 
-    public void setUniversalIdentifierTypeCode(String universalIdentifierTypeCode) {
-        this.universalIdentifierTypeCode = universalIdentifierTypeCode;
+            public String getUniversalIdentifierTypeCode() {
+                return universalIdentifierTypeCode;
+            }
+
+            public void setUniversalIdentifierTypeCode(String universalIdentifierTypeCode) {
+                this.universalIdentifierTypeCode = universalIdentifierTypeCode;
+            }
+        }
     }
 }

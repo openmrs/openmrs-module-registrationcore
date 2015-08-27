@@ -8,6 +8,7 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
+import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 

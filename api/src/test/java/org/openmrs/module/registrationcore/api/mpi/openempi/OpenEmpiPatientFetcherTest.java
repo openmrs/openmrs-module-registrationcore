@@ -28,6 +28,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.*;
 
 public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBase {
 
