@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
-import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
@@ -17,7 +16,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MatchedPatientFilterTest {
 
@@ -39,10 +39,6 @@ public class MatchedPatientFilterTest {
         mockProperty();
     }
 
-    private void mockProperty() {
-        when(mpiProperties.getMpiPersonIdentifierTypeId()).thenReturn(PERSON_IDENTIFIER_TYPE_ID);
-    }
-
     @Test
     public void testFilterPatientsWithSimilarIdentifiers() throws Exception {
         generatePatients(Patient.class, MpiPatient.class);
@@ -51,6 +47,10 @@ public class MatchedPatientFilterTest {
 
         assertTrue(patients.contains(patientWrapper));
         assertFalse(patients.contains(mpiPatientWrapper));
+    }
+
+    private void mockProperty() {
+        when(mpiProperties.getMpiPersonIdentifierTypeId()).thenReturn(PERSON_IDENTIFIER_TYPE_ID);
     }
 
     private void generatePatients(Class<? extends Patient> firstPatientClass, Class<? extends Patient> secondPatientClass) {
@@ -71,12 +71,5 @@ public class MatchedPatientFilterTest {
         when(identifier.getIdentifier()).thenReturn(PERSON_IDENTIFIER);
         when(localPatientWrapper.getPatient()).thenReturn(patient);
         return localPatientWrapper;
-    }
-
-    @Test(expected = APIException.class)
-    public void testFilterPatientsThrowExceptionOnLocalPatientsHaveSameIdentifier() throws Exception {
-        generatePatients(Patient.class, Patient.class);
-
-        filter.filter(patients);
     }
 }

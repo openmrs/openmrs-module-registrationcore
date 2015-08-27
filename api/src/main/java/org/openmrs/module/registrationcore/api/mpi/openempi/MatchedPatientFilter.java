@@ -1,7 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.PatientIdentifier;
-import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
@@ -52,8 +51,6 @@ public class MatchedPatientFilter {
             patients.remove(initialPatient);
         } else if (secondaryPatient.getPatient() instanceof MpiPatient) {
             patients.remove(secondaryPatient);
-        } else {
-            throw new APIException("Two local patients have same MPI global identifiers.");
         }
     }
 }
