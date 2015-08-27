@@ -15,11 +15,11 @@ import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class OpenEmpiImplementationTest {
+public class OpenEmpiConnectorTest {
 
     private static final String PATIENT_ID = "13";
 
-    @InjectMocks private MpiProvider mpiProvider = new OpenEmpiImplementation();
+    @InjectMocks private MpiProvider mpiProvider = new OpenEmpiConnector();
     @Mock private MpiSimilarPatientsSearcher searchAlgorithm;
     @Mock private MpiPatientFetcher patientImporter;
     @Mock private MpiAuthenticator authenticator;

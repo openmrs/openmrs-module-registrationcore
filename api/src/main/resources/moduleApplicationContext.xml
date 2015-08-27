@@ -72,7 +72,7 @@
 
     <!-- Mpi implementation part -->
     <bean id="registrationcore.mpi.implementation.OpenEMPI"
-          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiImplementation"/>
+          class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiConnector"/>
 
     <bean id="registrationcore.mpiProperties"
           class="org.openmrs.module.registrationcore.api.mpi.common.MpiProperties"/>
