@@ -44,9 +44,9 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
     }
 
     @Override
-    public List<PatientAndMatchQuality> findPreciseSimilarMatches(Patient patient,
-                                                                  Map<String, Object> otherDataPoints,
-                                                                  Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findExactMatches(Patient patient,
+                                                         Map<String, Object> otherDataPoints,
+                                                         Double cutoff, Integer maxResults) {
         OpenEmpiPatientQuery patientQuery = queryMapper.create(patient);
 
         List<OpenEmpiPatientQuery> mpiPatients = queryExecutor

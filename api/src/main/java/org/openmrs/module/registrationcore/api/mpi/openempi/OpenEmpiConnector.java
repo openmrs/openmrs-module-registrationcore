@@ -60,15 +60,15 @@ public class OpenEmpiConnector implements MpiProvider {
         if (mpiProperties.isProbabilisticMatchingEnabled()) {
             return searchAlgorithm.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         } else {
-            return searchAlgorithm.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
+            return searchAlgorithm.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
         }
     }
 
     @Override
-    public List<PatientAndMatchQuality> findPreciseSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
-                                                                  Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints,
+                                                         Double cutoff, Integer maxResults) {
         authenticateIfNeeded();
-        return searchAlgorithm.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
+        return searchAlgorithm.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
     }
 
     private void authenticateIfNeeded() {

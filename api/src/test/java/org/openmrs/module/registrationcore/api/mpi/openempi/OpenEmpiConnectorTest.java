@@ -92,29 +92,29 @@ public class OpenEmpiConnectorTest {
 
         mpiProvider.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
 
-        verify(searchAlgorithm).findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
+        verify(searchAlgorithm).findExactMatches(patient, otherDataPoints, cutoff, maxResults);
     }
 
     @Test
     public void testFindPreciseSimilarPatients() throws Exception {
         mockProbablyMatchingEnabled(false);
         mockAuthentication(false);
-        when(searchAlgorithm.findPreciseSimilarMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+        when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        List<PatientAndMatchQuality> similarPatients = mpiProvider.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
+        List<PatientAndMatchQuality> similarPatients = mpiProvider.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
         verify(authenticator).performAuthentication();
-        verify(searchAlgorithm).findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
+        verify(searchAlgorithm).findExactMatches(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);
     }
 
     @Test
     public void testFindPreciseSimilarPatientsDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
         mockAuthentication(true);
-        when(searchAlgorithm.findPreciseSimilarMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+        when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        mpiProvider.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
+        mpiProvider.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
 
         verify(authenticator, never()).performAuthentication();
     }

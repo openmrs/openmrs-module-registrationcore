@@ -47,6 +47,6 @@ public interface MpiSimilarPatientsSearcher {
      * @param maxResults
      * @return list of possible matched patients
      */
-    List<PatientAndMatchQuality> findPreciseSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-                                                           Integer maxResults);
+    List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+                                                  Integer maxResults);
 }
