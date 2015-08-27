@@ -124,6 +124,6 @@ public class OpenEmpiImplementationTest {
     }
 
     private void mockProbablyMatchingEnabled(boolean b) {
-        when(mpiProperties.isProbablyMatchingEnabled()).thenReturn(b);
+        when(mpiProperties.isProbabilisticMatchingEnabled()).thenReturn(b);
     }
 }

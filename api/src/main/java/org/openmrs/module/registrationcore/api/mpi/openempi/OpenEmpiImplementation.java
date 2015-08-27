@@ -57,7 +57,7 @@ public class OpenEmpiImplementation implements MpiProvider {
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
                                                            Double cutoff, Integer maxResults) {
         validateAuthentication();
-        if (mpiProperties.isProbablyMatchingEnabled()) {
+        if (mpiProperties.isProbabilisticMatchingEnabled()) {
             return searchAlgorithm.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         } else {
             return searchAlgorithm.findPreciseSimilarMatches(patient, otherDataPoints, cutoff, maxResults);

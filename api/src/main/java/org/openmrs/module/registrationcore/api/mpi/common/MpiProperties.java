@@ -8,8 +8,14 @@ import org.openmrs.module.registrationcore.api.ModuleProperties;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class contains properties related to MPI.
+ */
 public class MpiProperties extends ModuleProperties {
 
+    /**
+     * @return MPI server base url
+     */
     public String getServerUrl() {
         String propertyName = RegistrationCoreConstants.GP_MPI_URL;
         return getProperty(propertyName);
@@ -45,7 +51,7 @@ public class MpiProperties extends ModuleProperties {
         return result;
     }
 
-    public boolean isProbablyMatchingEnabled() {
+    public boolean isProbabilisticMatchingEnabled() {
         String propertyName = RegistrationCoreConstants.GP_PROBABLY_MATCH_ENABLED;
         try {
             String isEnabled = getProperty(propertyName);
