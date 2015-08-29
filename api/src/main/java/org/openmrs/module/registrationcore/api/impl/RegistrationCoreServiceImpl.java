@@ -32,7 +32,6 @@ import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
-import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientFilter;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
@@ -166,6 +165,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		//TODO incorrect set of "UUID" each time it generates new RANDOM value, instead of set uuid of creator.
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
 		log.error("creator uuid: " + patient.getCreator().getUuid());
+		log.error("creator id: " + patient.getCreator().getId());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, String.valueOf(patient.getCreator().getId()));
 		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, new SimpleDateFormat(
 		        RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
