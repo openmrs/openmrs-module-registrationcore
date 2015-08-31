@@ -8,13 +8,11 @@ import org.openmrs.Patient;
  */
 public class MpiPatient extends Patient {
 
-    private static final boolean mpiPatient = true;
-
     /**
      * Checks if patients is MpiPatient
      * @return true if it is mpi patient, otherwise false
      */
     public boolean getMpiPatient() {
-        return mpiPatient;
+        return true;
     }
 }
