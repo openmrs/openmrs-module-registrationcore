@@ -4,8 +4,9 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
-import org.openmrs.api.context.Context;
+import org.openmrs.api.context.Daemon;
 import org.openmrs.event.Event;
+import org.openmrs.module.DaemonToken;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
@@ -24,6 +25,8 @@ public class PatientCreationListener extends PatientActionListener {
 
     private UserService userService;
 
+    private DaemonToken daemonToken;
+
     public void setMpiProperties(MpiProperties mpiProperties) {
         this.mpiProperties = mpiProperties;
     }
@@ -34,6 +37,10 @@ public class PatientCreationListener extends PatientActionListener {
 
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    public void setDaemonToken(DaemonToken daemonToken) {
+        this.daemonToken = daemonToken;
     }
 
     /**
@@ -62,15 +69,15 @@ public class PatientCreationListener extends PatientActionListener {
         return coreProperties.getMpiProvider().exportPatient(patient);
     }
 
-    private void updatePatient(Patient patient, Message message, String personId) {
-        grantPrivileges();
-        try {
-            User creator = extractPatientCreator(message);
-            patient.addIdentifier(createPersonIdentifier(creator, personId));
-            patientService.savePatient(patient);
-        } finally {
-            resetPrivileges();
-        }
+    private void updatePatient(final Patient patient, final Message message, final String personId) {
+        Daemon.runInDaemonThread(new Runnable() {
+            @Override
+            public void run() {
+                User creator = extractPatientCreator(message);
+                patient.addIdentifier(createPersonIdentifier(creator, personId));
+                patientService.savePatient(patient);
+            }
+        }, daemonToken);
     }
 
     private User extractPatientCreator(Message message) {
@@ -83,29 +90,5 @@ public class PatientCreationListener extends PatientActionListener {
                 .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeId(), personId, null);
         personIdentifier.setCreator(creator);
         return personIdentifier;
-    }
-
-    private void grantPrivileges() {
-        Context.addProxyPrivilege("Get Users");
-        Context.addProxyPrivilege("Get Identifier Types");
-        Context.addProxyPrivilege("Get Locations");
-        Context.addProxyPrivilege("Add Patient Identifiers");
-        Context.addProxyPrivilege("Edit Patient Identifiers");
-        Context.addProxyPrivilege("Get Patients");
-        Context.addProxyPrivilege("View Patients");
-        Context.addProxyPrivilege("Add Patients");
-        Context.addProxyPrivilege("Edit Patients");
-    }
-
-    private void resetPrivileges() {
-        Context.removeProxyPrivilege("Get Users");
-        Context.removeProxyPrivilege("Get Identifier Types");
-        Context.removeProxyPrivilege("Get Locations");
-        Context.removeProxyPrivilege("Add Patient Identifiers");
-        Context.removeProxyPrivilege("Edit Patient Identifiers");
-        Context.removeProxyPrivilege("Get Patients");
-        Context.removeProxyPrivilege("View Patients");
-        Context.removeProxyPrivilege("Add Patients");
-        Context.removeProxyPrivilege("Edit Patients");
     }
 }
