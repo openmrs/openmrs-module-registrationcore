@@ -4,6 +4,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.Event;
 import org.openmrs.module.DaemonToken;
@@ -73,9 +74,14 @@ public class PatientCreationListener extends PatientActionListener {
         Daemon.runInDaemonThread(new Runnable() {
             @Override
             public void run() {
-                User creator = extractPatientCreator(message);
-                patient.addIdentifier(createPersonIdentifier(creator, personId));
-                patientService.savePatient(patient);
+                Context.openSession();
+                try {
+                    User creator = extractPatientCreator(message);
+                    patient.addIdentifier(createPersonIdentifier(creator, personId));
+                    patientService.savePatient(patient);
+                } finally {
+                    Context.closeSession();
+                }
             }
         }, daemonToken);
     }
