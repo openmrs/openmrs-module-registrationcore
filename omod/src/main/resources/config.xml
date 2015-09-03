@@ -144,6 +144,16 @@
 		</description>
 	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.personIdentifierId</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies id of identifier type which will be used for Mpi Person Id
+		</description>
+	</globalProperty>
+
+
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				
