@@ -30,8 +30,13 @@ public abstract class PatientActionListener implements EventListener {
 
     @Override
     public void onMessage(Message message) {
-        if (coreProperties.isMpiEnabled()) {
-            performMpiAction(message);
+        Context.openSession();
+        try {
+            if (coreProperties.isMpiEnabled()) {
+                performMpiAction(message);
+            }
+        } finally {
+            Context.closeSession();
         }
     }
 
