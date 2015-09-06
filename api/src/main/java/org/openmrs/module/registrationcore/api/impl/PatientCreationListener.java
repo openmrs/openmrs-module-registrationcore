@@ -88,7 +88,7 @@ public class PatientCreationListener extends PatientActionListener {
 
     private User extractPatientCreator(Message message) {
         String creatorId = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_REGISTERER_ID);
-        //TODO Darius, check received uuid:
+        //TODO decide what to do wiwht this:
         String creatorUuid = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_REGISTERER_UUID);
         return userService.getUser(Integer.parseInt(creatorId));
     }

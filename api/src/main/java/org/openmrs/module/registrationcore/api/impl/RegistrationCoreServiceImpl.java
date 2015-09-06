@@ -161,11 +161,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		EventMessage eventMessage = new EventMessage();
 		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
-
-		//TODO incorrect set of "UUID" each time it generates new RANDOM value, instead of set uuid of creator.
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
-		log.error("creator uuid: " + patient.getCreator().getUuid());
-		log.error("creator id: " + patient.getCreator().getId());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, String.valueOf(patient.getCreator().getId()));
 		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, new SimpleDateFormat(
 		        RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
