@@ -1,10 +1,8 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import org.openmrs.Patient;
-import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
-import org.openmrs.api.context.Context;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
@@ -23,7 +21,7 @@ public abstract class PatientActionListener implements EventListener {
 
     protected PatientService patientService;
 
-    protected DaemonToken daemonToken;
+    private DaemonToken daemonToken;
 
     public void setCoreProperties(RegistrationCoreProperties coreProperties) {
         this.coreProperties = coreProperties;
@@ -42,13 +40,8 @@ public abstract class PatientActionListener implements EventListener {
         Daemon.runInDaemonThread(new Runnable() {
             @Override
             public void run() {
-                Context.openSession();
-                try {
-                    if (coreProperties.isMpiEnabled()) {
-                        performMpiAction(message);
-                    }
-                } finally {
-                    Context.closeSession();
+                if (coreProperties.isMpiEnabled()) {
+                    performMpiAction(message);
                 }
             }
         }, daemonToken);
