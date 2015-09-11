@@ -89,18 +89,10 @@
     </globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpiSimilarPatientSearchAlgorithm</property>
-		<defaultValue>registrationcore.OpenEmpiExactPatientSearchAlgorithm</defaultValue>
-		<description>
-			Specifies a bean used for the precise similar patient search algorithm.
-		</description>
-	</globalProperty>
-
-	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.globalIdentifierDomainId</property>
+		<property>${project.parent.artifactId}.openempi.globalIdentifierDomainId</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies main identifier on MPI server
+			Specifies main identifier on MPI server (e.g. "xyz" for OpenEMPI)
 		</description>
 	</globalProperty>
 
@@ -108,7 +100,7 @@
 		<property>${project.parent.artifactId}.mpi.implementation</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies a bean name of MPI implementation
+			Which MPI to should we connect to? Specify a Spring bean name, or leave blank to disable MPI integration
 		</description>
 	</globalProperty>
 
@@ -137,7 +129,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.probablyMatchEnabled</property>
+		<property>${project.parent.artifactId}.openempi.enableProbabilisticMatching</property>
 		<defaultValue>false</defaultValue>
 		<description>
 			Specifies if probably matching should be used

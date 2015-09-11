@@ -44,7 +44,7 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.preciseSimilarPatientSearchAlgorithm";
 
-	public static final String GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID = "registrationcore.mpi.globalIdentifierDomainId";
+	public static final String GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID = "registrationcore.openempi.globalIdentifierDomainId";
 
 	public static final String GP_MPI_PERSON_IDENTIFIER_ID = "registrationcore.mpi.personIdentifierId";
 
