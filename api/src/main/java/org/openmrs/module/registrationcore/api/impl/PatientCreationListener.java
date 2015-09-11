@@ -4,10 +4,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
-import org.openmrs.api.context.Context;
-import org.openmrs.api.context.Daemon;
 import org.openmrs.event.Event;
-import org.openmrs.module.DaemonToken;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
