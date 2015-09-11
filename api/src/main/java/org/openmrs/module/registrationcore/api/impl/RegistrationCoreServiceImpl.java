@@ -146,6 +146,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				throw new APIException("Failed to resolve location to associate to patient identifiers");
 		}
 
+        // see if there is a primary identifier location further up the chain, use that instead if there is
+        Location taggedPrimaryIdentifierLocation = getPrimaryIdentifierLocationAssociatedWith(identifierLocation);
+        if (taggedPrimaryIdentifierLocation != null) {
+            identifierLocation = taggedPrimaryIdentifierLocation;
+        }
+
         // generate identifier if necessary, otherwise validate
         if (StringUtils.isBlank(identifierString)) {
             identifierString = iss.generateIdentifier(idSource, null);
@@ -194,7 +200,18 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		
 		return patient;
 	}
-	
+
+    private Location getPrimaryIdentifierLocationAssociatedWith(Location location) {
+        if (location != null) {
+            if (location.hasTag(RegistrationCoreConstants.LOCATION_TAG_PRIMARY_IDENTIFIER_LOCATION)) {
+                return location;
+            } else {
+                return getPrimaryIdentifierLocationAssociatedWith(location.getParentLocation());
+            }
+        }
+        return null;
+  }
+
 	/**
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyChanged(org.openmrs.GlobalProperty)
 	 */
