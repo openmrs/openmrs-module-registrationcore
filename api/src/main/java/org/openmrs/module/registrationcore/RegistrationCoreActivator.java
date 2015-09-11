@@ -22,6 +22,8 @@ import org.openmrs.module.DaemonTokenAware;
 import org.openmrs.module.ModuleActivator;
 import org.openmrs.module.registrationcore.api.impl.PatientActionListener;
 
+import java.util.List;
+
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
  */
@@ -77,6 +79,9 @@ public class RegistrationCoreActivator implements ModuleActivator, DaemonTokenAw
     @Override
 	public void setDaemonToken(DaemonToken daemonToken) {
 		log.info("Set daemon token to Registration Core Module");
-		Context.getRegisteredComponents(PatientActionListener.class).get(0).setDaemonToken(daemonToken);
+		List<PatientActionListener> registeredComponents = Context.getRegisteredComponents(PatientActionListener.class);
+		for (PatientActionListener patientActionListener : registeredComponents) {
+			patientActionListener.setDaemonToken(daemonToken);
+		}
 	}
 }
