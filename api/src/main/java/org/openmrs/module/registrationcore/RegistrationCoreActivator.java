@@ -20,7 +20,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.DaemonTokenAware;
 import org.openmrs.module.ModuleActivator;
-import org.openmrs.module.registrationcore.api.impl.PatientCreationListener;
+import org.openmrs.module.registrationcore.api.impl.PatientActionListener;
 
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
@@ -75,10 +75,8 @@ public class RegistrationCoreActivator implements ModuleActivator, DaemonTokenAw
      * @see DaemonTokenAware#setDaemonToken(DaemonToken)
      */
     @Override
-    public void setDaemonToken(DaemonToken daemonToken) {
-        log.info("Set daemon token to Registration Core Module");
-        PatientCreationListener patientCreationListener =
-                Context.getRegisteredComponents(PatientCreationListener.class).get(0);
-        patientCreationListener.setDaemonToken(daemonToken);
-    }
+	public void setDaemonToken(DaemonToken daemonToken) {
+		log.info("Set daemon token to Registration Core Module");
+		Context.getRegisteredComponents(PatientActionListener.class).get(0).setDaemonToken(daemonToken);
+	}
 }

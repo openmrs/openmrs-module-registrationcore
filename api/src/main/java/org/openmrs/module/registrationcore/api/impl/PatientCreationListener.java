@@ -26,8 +26,6 @@ public class PatientCreationListener extends PatientActionListener {
 
     private UserService userService;
 
-    private DaemonToken daemonToken;
-
     public void setMpiProperties(MpiProperties mpiProperties) {
         this.mpiProperties = mpiProperties;
     }
@@ -38,10 +36,6 @@ public class PatientCreationListener extends PatientActionListener {
 
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    public void setDaemonToken(DaemonToken daemonToken) {
-        this.daemonToken = daemonToken;
     }
 
     /**
@@ -71,19 +65,9 @@ public class PatientCreationListener extends PatientActionListener {
     }
 
     private void updatePatient(final Patient patient, final Message message, final String personId) {
-        Daemon.runInDaemonThread(new Runnable() {
-            @Override
-            public void run() {
-                Context.openSession();
-                try {
-                    User creator = extractPatientCreator(message);
-                    patient.addIdentifier(createPersonIdentifier(creator, personId));
-                    patientService.savePatient(patient);
-                } finally {
-                    Context.closeSession();
-                }
-            }
-        }, daemonToken);
+        User creator = extractPatientCreator(message);
+        patient.addIdentifier(createPersonIdentifier(creator, personId));
+        patientService.savePatient(patient);
     }
 
     private User extractPatientCreator(Message message) {

@@ -1,10 +1,13 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import org.openmrs.Patient;
+import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
+import org.openmrs.module.DaemonToken;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
 import javax.jms.JMSException;
@@ -20,24 +23,35 @@ public abstract class PatientActionListener implements EventListener {
 
     protected PatientService patientService;
 
-    public void setPatientService(PatientService patientService) {
-        this.patientService = patientService;
-    }
+    protected DaemonToken daemonToken;
 
     public void setCoreProperties(RegistrationCoreProperties coreProperties) {
         this.coreProperties = coreProperties;
     }
 
+    public void setPatientService(PatientService patientService) {
+        this.patientService = patientService;
+    }
+
+    public void setDaemonToken(DaemonToken daemonToken) {
+        this.daemonToken = daemonToken;
+    }
+
     @Override
-    public void onMessage(Message message) {
-        Context.openSession();
-        try {
-            if (coreProperties.isMpiEnabled()) {
-                performMpiAction(message);
+    public void onMessage(final Message message) {
+        Daemon.runInDaemonThread(new Runnable() {
+            @Override
+            public void run() {
+                Context.openSession();
+                try {
+                    if (coreProperties.isMpiEnabled()) {
+                        performMpiAction(message);
+                    }
+                } finally {
+                    Context.closeSession();
+                }
             }
-        } finally {
-            Context.closeSession();
-        }
+        }, daemonToken);
     }
 
     /**
@@ -70,11 +84,6 @@ public abstract class PatientActionListener implements EventListener {
     }
 
     private Patient getPatient(String patientUuid) {
-        try {
-            Context.addProxyPrivilege("Get Patients");
-            return patientService.getPatientByUuid(patientUuid);
-        } finally {
-            Context.removeProxyPrivilege("Get Patients");
-        }
+        return patientService.getPatientByUuid(patientUuid);
     }
 }
