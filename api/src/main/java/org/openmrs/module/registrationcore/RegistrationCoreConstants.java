@@ -40,5 +40,5 @@ public final class RegistrationCoreConstants {
     
     public static final String GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM = "registrationcore.preciseSimilarPatientSearchAlgorithm";
 
-    public static final String LOCATION_TAG_PRIMARY_IDENTIFIER_LOCATION = "Primary Identifier Location";
+    public static final String LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION = "Identifier Assignment Location";
 }

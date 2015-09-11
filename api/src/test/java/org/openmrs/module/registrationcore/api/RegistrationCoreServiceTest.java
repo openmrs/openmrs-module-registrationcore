@@ -117,11 +117,11 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
     public void registerPatient_shouldSetProperIdentifierLocationBasedOnTag() throws Exception {
 
         LocationTag primaryIdentifierLocationTag = new LocationTag();
-        primaryIdentifierLocationTag.setName(RegistrationCoreConstants.LOCATION_TAG_PRIMARY_IDENTIFIER_LOCATION);
+        primaryIdentifierLocationTag.setName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION);
         locationService.saveLocationTag(primaryIdentifierLocationTag);
 
         Location parentLocation = locationService.getLocation(2);
-        parentLocation.addTag(locationService.getLocationTagByName(RegistrationCoreConstants.LOCATION_TAG_PRIMARY_IDENTIFIER_LOCATION));
+        parentLocation.addTag(locationService.getLocationTagByName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION));
         locationService.saveLocation(parentLocation);
 
         Location location = new Location();

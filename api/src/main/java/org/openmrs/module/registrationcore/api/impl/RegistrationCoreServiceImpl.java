@@ -147,9 +147,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 
         // see if there is a primary identifier location further up the chain, use that instead if there is
-        Location taggedPrimaryIdentifierLocation = getPrimaryIdentifierLocationAssociatedWith(identifierLocation);
-        if (taggedPrimaryIdentifierLocation != null) {
-            identifierLocation = taggedPrimaryIdentifierLocation;
+        Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(identifierLocation);
+        if (identifierAssignmentLocationAssociatedWith != null) {
+            identifierLocation = identifierAssignmentLocationAssociatedWith;
         }
 
         // generate identifier if necessary, otherwise validate
@@ -201,12 +201,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return patient;
 	}
 
-    private Location getPrimaryIdentifierLocationAssociatedWith(Location location) {
+    private Location getIdentifierAssignmentLocationAssociatedWith(Location location) {
         if (location != null) {
-            if (location.hasTag(RegistrationCoreConstants.LOCATION_TAG_PRIMARY_IDENTIFIER_LOCATION)) {
+            if (location.hasTag(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION)) {
                 return location;
             } else {
-                return getPrimaryIdentifierLocationAssociatedWith(location.getParentLocation());
+                return getIdentifierAssignmentLocationAssociatedWith(location.getParentLocation());
             }
         }
         return null;
