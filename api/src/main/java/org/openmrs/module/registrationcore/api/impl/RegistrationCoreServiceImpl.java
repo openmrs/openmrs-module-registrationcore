@@ -216,6 +216,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyChanged(org.openmrs.GlobalProperty)
 	 */
 	@Override
+    @Transactional(readOnly = true)
 	public void globalPropertyChanged(GlobalProperty gp) {
 		idSource = null;
 	}
@@ -224,6 +225,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyDeleted(java.lang.String)
 	 */
 	@Override
+    @Transactional(readOnly = true)
 	public void globalPropertyDeleted(String gpName) {
 		idSource = null;
 	}
@@ -271,17 +273,20 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @see org.openmrs.api.GlobalPropertyListener#supportsPropertyName(java.lang.String)
 	 */
 	@Override
+    @Transactional(readOnly = true)
 	public boolean supportsPropertyName(String gpName) {
 		return RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID.equals(gpName);
 	}
 	
 	@Override
+    @Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                            Double cutoff, Integer maxResults) {
 		return getFastSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 	}
 	
 	@Override
+    @Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                               Double cutoff, Integer maxResults) {
 		return getPreciseSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
@@ -291,6 +296,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
 	 */
 	@Override
+    @Transactional(readOnly = true)
 	public List<String> findSimilarGivenNames(String searchPhrase) {
 		return getPatientNameSearch().findSimilarGivenNames(searchPhrase);
 	}
@@ -299,6 +305,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarFamilyNames(String)
 	 */
 	@Override
+    @Transactional(readOnly = true)
 	public List<String> findSimilarFamilyNames(String searchPhrase) {
 		return getPatientNameSearch().findSimilarFamilyNames(searchPhrase);
 	}
