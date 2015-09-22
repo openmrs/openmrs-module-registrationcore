@@ -13,15 +13,14 @@
  */
 package org.openmrs.module.registrationcore.api.search;
 
-import java.util.Arrays;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Tests ExistingPatientNameSearchTest
@@ -38,14 +37,14 @@ public class ExistingPatientNameSearchTest extends RegistrationCoreSensitiveTest
 
     @Test
     public void findSimilarGivenNames_shouldFindAmongExistingGivenNames() {
-        List<String> names = search.findSimilarGivenNames("Ki");
+        List<String> names = search.findSimilarGivenNames("Kip");
 
         Assert.assertEquals(Arrays.asList("Kiptogom"), names);
     }
 
     @Test
     public void findSimilarFamilyNames_shouldFindAmongExistingFamilyNames() {
-        List<String> names = search.findSimilarFamilyNames("Na");
+        List<String> names = search.findSimilarFamilyNames("Nar");
 
         Assert.assertEquals(Arrays.asList("Nari"), names);
     }
