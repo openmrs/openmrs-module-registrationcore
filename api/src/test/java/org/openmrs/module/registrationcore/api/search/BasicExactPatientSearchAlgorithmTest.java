@@ -1,13 +1,5 @@
 package org.openmrs.module.registrationcore.api.search;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -19,6 +11,17 @@ import org.openmrs.api.PersonService;
 import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class BasicExactPatientSearchAlgorithmTest extends RegistrationCoreSensitiveTestBase {
 
@@ -105,6 +108,41 @@ public class BasicExactPatientSearchAlgorithmTest extends RegistrationCoreSensit
 
         List<PatientAndMatchQuality> matches = algorithm.findSimilarPatients(patient, null, 0d, null);
         assertThat(matches.size(), is(0));
+    }
+
+    @Test
+    public void shouldNotMatchForFarEstimatedBirthdate() throws Exception {
+        Patient patient = buildPatient(buildPersonName(), "M", null);
+
+        Map<String,Object> otherDataPoints = new HashMap<String, Object>();
+        otherDataPoints.put("birthdateYears", 80);
+
+        List<PatientAndMatchQuality> matches = algorithm.findSimilarPatients(patient, otherDataPoints, 0d, null);
+        assertThat(matches.size(), is(0));
+    }
+
+    @Test
+    public void shouldMatchForCloseEstimatedBirthYear() throws Exception {
+        Patient patient = buildPatient(buildPersonName(), "M", null);
+
+        Map<String,Object> otherDataPoints = new HashMap<String, Object>();
+        Calendar cal = Calendar.getInstance();
+        otherDataPoints.put("birthdateYears", cal.get(Calendar.YEAR) - 1975);
+
+        List<PatientAndMatchQuality> matches = algorithm.findSimilarPatients(patient, otherDataPoints, 0d, null);
+        assertThat(matches.size(), is(1));
+    }
+
+    @Test
+    public void shouldMatchForCloseEstimatedBirthMonth() throws Exception {
+        Patient patient = buildPatient(buildPersonName(), "M", null);
+
+        Map<String,Object> otherDataPoints = new HashMap<String, Object>();
+        Calendar cal = Calendar.getInstance();
+        otherDataPoints.put("birthdateMonth", (cal.get(Calendar.YEAR) - 1975) * 12);  // kind of cheat, should really only have months < 12
+
+        List<PatientAndMatchQuality> matches = algorithm.findSimilarPatients(patient, otherDataPoints, 0d, null);
+        assertThat(matches.size(), is(1));
     }
 
     private PersonName buildPersonName() {
