@@ -28,7 +28,7 @@ public class RegistrationCoreUtil {
         }
 
         // set the month (if not specified, and no day specified, set to first month of year)
-        if (months != null && months != 0) {
+        if (months != null) {
             c.add(Calendar.MONTH, -1 * months);
         }
         else if (days == null || days == 0){
@@ -36,7 +36,7 @@ public class RegistrationCoreUtil {
         }
 
         // set the day (if not specified, and no month specified, set to first day of month)
-        if (days != null && days !=0) {
+        if (days != null) {
             c.add(Calendar.DAY_OF_MONTH, -1 * days);
         }
         else if (days == null || days == 0){
