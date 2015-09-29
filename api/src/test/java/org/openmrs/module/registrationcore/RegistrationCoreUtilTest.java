@@ -34,4 +34,22 @@ public class RegistrationCoreUtilTest {
         assertThat(result.getMonthOfYear(), is(2));
         assertThat(result.getDayOfMonth(), is(2));
     }
+
+    @Test
+    public void calculateBirthdateFromAge_shouldCalculateProperBirthdateWhenMonthSpecified(){
+        DateTime ageOnDate= new DateTime(2015, 04, 03, 0, 0, 0);
+        DateTime result = new DateTime(RegistrationCoreUtil.calculateBirthdateFromAge(null, 2, null, ageOnDate.toDate()));
+        assertThat(result.getYear(), is(2015));
+        assertThat(result.getMonthOfYear(), is(2));
+        assertThat(result.getDayOfMonth(), is(1));
+    }
+
+    @Test
+    public void calculateBirthdateFromAge_shouldCalculateProperBirthdateWhenMonthAndDaySpecified(){
+        DateTime ageOnDate= new DateTime(2015, 04, 03, 0, 0, 0);
+        DateTime result = new DateTime(RegistrationCoreUtil.calculateBirthdateFromAge(null, 2, 1, ageOnDate.toDate()));
+        assertThat(result.getYear(), is(2015));
+        assertThat(result.getMonthOfYear(), is(2));
+        assertThat(result.getDayOfMonth(), is(2));
+    }
 }
