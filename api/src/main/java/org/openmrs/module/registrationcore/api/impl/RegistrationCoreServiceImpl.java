@@ -16,17 +16,23 @@ package org.openmrs.module.registrationcore.api.impl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.Relationship;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.GlobalPropertyListener;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.event.Event;
 import org.openmrs.event.EventMessage;
+import org.openmrs.module.idgen.IdentifierSource;
+import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
@@ -35,6 +41,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
+import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -66,7 +73,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	
 	private AdministrationService adminService;
 
-	private IdentifierBuilder identifierBuilder;
+	private static IdentifierSource idSource;
 
 	private MpiPatientFilter mpiPatientFilter;
 
@@ -91,17 +98,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void setPatientService(PatientService patientService) {
 		this.patientService = patientService;
 	}
-	
+
+    public void setLocationService(LocationService locationService) {
+        this.locationService = locationService;
+    }
+
 	public void setPersonService(PersonService personService) {
 		this.personService = personService;
 	}
 
 	public void setAdminService(AdministrationService adminService) {
 		this.adminService = adminService;
-	}
-
-	public void setIdentifierBuilder(IdentifierBuilder identifierBuilder) {
-		this.identifierBuilder = identifierBuilder;
 	}
 
 	public void setMpiPatientFilter(MpiPatientFilter mpiPatientFilter) {
@@ -134,7 +141,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		
 		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
 		if (idSource == null) {
-			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID);
+			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
 			if (StringUtils.isBlank(idSourceId))
 				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
 			
@@ -153,6 +160,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			if (identifierLocation == null)
 				throw new APIException("Failed to resolve location to associate to patient identifiers");
 		}
+
+        // see if there is a primary identifier location further up the chain, use that instead if there is
+        Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(identifierLocation);
+        if (identifierAssignmentLocationAssociatedWith != null) {
+            identifierLocation = identifierAssignmentLocationAssociatedWith;
+        }
 
         // generate identifier if necessary, otherwise validate
         if (StringUtils.isBlank(identifierString)) {
@@ -187,6 +200,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		EventMessage eventMessage = new EventMessage();
 		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, patient.getCreator().getId());
 		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, new SimpleDateFormat(
 		        RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
 		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
@@ -202,6 +216,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return patient;
 	}
+
+    private Location getIdentifierAssignmentLocationAssociatedWith(Location location) {
+        if (location != null) {
+            if (location.hasTag(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION)) {
+                return location;
+            } else {
+                return getIdentifierAssignmentLocationAssociatedWith(location.getParentLocation());
+            }
+        }
+        return null;
+    }
 	
 	/**
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyChanged(org.openmrs.GlobalProperty)
@@ -264,7 +289,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
     @Transactional(readOnly = true)
 	public boolean supportsPropertyName(String gpName) {
-		return RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID.equals(gpName);
+		return RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID.equals(gpName);
 	}
 	
 	@Override

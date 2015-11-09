@@ -53,7 +53,7 @@ public class PatientIdentifierMapper {
             IdentifierMapPair pair = parseIdentifiers(mappedIdentifiers);
             MAPPED_ID.add(pair);
 
-            log.error("Initialized local:mpi identifier type pair. Local: " + pair.localIdentifierId
+            log.info("Initialized local:mpi identifier type pair. Local: " + pair.localIdentifierId
                     + " , MPI: " + pair.mpiIdentifierId);
         }
     }

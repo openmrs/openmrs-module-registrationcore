@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.DaemonToken;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 
@@ -48,6 +49,7 @@ public class PatientEditListenerTest {
     }
 
     @Test
+    @Ignore //Can't be tested since can't mock daemon class.
     public void testDoNotPerformUpdateOnMpiDisabled() throws Exception {
         when(coreProperties.isMpiEnabled()).thenReturn(false);
 

@@ -15,7 +15,7 @@
                 <property name="patientService" ref="patientService" />
                 <property name="personService" ref="personService" />
                 <property name="adminService" ref="adminService" />
-                <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
+                <property name="locationService" ref="locationService"/>
                 <property name="mpiPatientFilter" ref="registrationcore.openEmpiPatientFilter"/>
                 <property name="registrationCoreProperties" ref="registrationcore.coreProperties"/>
             </bean>
