@@ -13,24 +13,12 @@
  */
 package org.openmrs.module.registrationcore.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
+import org.openmrs.LocationTag;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
@@ -46,6 +34,19 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link $ RegistrationCoreService} .
@@ -110,6 +111,27 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 		assertNotNull(personService.getPerson(createdPatient.getPersonId()));
 		assertEquals(2, personService.getRelationshipsByPerson(createdPatient).size());
 	}
+
+    @Test
+    @Verifies(value = "should set identifier locaton to primary identifier location if tagged", method = "registerPatient(Patient,List<Relationship>, Location)")
+    public void registerPatient_shouldSetProperIdentifierLocationBasedOnTag() throws Exception {
+
+        LocationTag primaryIdentifierLocationTag = new LocationTag();
+        primaryIdentifierLocationTag.setName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION);
+        locationService.saveLocationTag(primaryIdentifierLocationTag);
+
+        Location parentLocation = locationService.getLocation(2);
+        parentLocation.addTag(locationService.getLocationTagByName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION));
+        locationService.saveLocation(parentLocation);
+
+        Location location = new Location();
+        location.setName("My house");
+        location.setParentLocation(parentLocation);
+        locationService.saveLocation(location);
+
+        Patient createdPatient = service.registerPatient(createBasicPatient(), null, location);
+        assertEquals(parentLocation, createdPatient.getPatientIdentifier().getLocation());;
+    }
 
     @Test
     @Verifies(value = "should create a patient with manually entered identifier", method = "registerPatient(Patient,List<Relationship>, String identifier, Location)")

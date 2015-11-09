@@ -38,17 +38,34 @@ public class BasicExactPatientSearchAlgorithm implements SimilarPatientSearchAlg
 
     @Override
     public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Patient.class);
-        criteria.add(Restrictions.eq("voided", false));
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Patient.class);criteria.add(Restrictions.eq("voided", false));
 
         if (patient.getGender() != null) {
             criteria.add(Restrictions.eq("gender", patient.getGender()));
         }
 
+        Date birthdateForQuery = null;
+
+        // TODO change this to only do a "between" match if patient or match birthdate is estimated, otherwise require an exact birthdate match
+        // our query birthdate is the patient birthdate if it known
         if (patient.getBirthdate() != null) {
-            // TODO replace this with something that takes into account birthdateEstimated
+            birthdateForQuery = patient.getBirthdate();
+        }
+        // otherwise see if we have an estimated birthdate passed in via "birthdateYears" and "birthdateMonth" parameters (which is what the registration app uses)
+        else if (otherDataPoints != null && otherDataPoints.containsKey("birthdateYears") && otherDataPoints.get("birthdateYears") != null) {
             Calendar cal = Calendar.getInstance();
-            cal.setTime(patient.getBirthdate());
+            cal.add(Calendar.YEAR, -(Integer) otherDataPoints.get("birthdateYears"));
+            birthdateForQuery = cal.getTime();
+        }
+        else if (otherDataPoints != null && otherDataPoints.containsKey("birthdateMonths") && otherDataPoints.get("birthdateMonths") != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, -(Integer) otherDataPoints.get("birthdateMonths"));
+            birthdateForQuery = cal.getTime();
+        }
+
+        if (birthdateForQuery != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(birthdateForQuery);
             cal.add(Calendar.YEAR, -1);
             Date fromDate = cal.getTime();
             cal.add(Calendar.YEAR, 2);

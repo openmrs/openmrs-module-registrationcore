@@ -31,13 +31,6 @@
     <aware_of_modules>
        <aware_of_module version="${namephoneticsVersion}">org.openmrs.module.namephonetics</aware_of_module>
 	</aware_of_modules>
-
-	
-	<!-- Adds link to admin page -->
-	<extension>
-		<point>org.openmrs.admin.list</point>
-		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.AdminList</class>
-	</extension>
 	
 	<!-- Global properties -->
 	<globalProperty>

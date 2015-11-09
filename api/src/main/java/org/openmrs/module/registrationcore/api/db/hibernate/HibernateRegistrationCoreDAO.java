@@ -51,9 +51,14 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
     public List<String> findExistingSimilarGivenNames(String searchPhrase) {
         List<String> results = new ArrayList<String>();
 
+        // don't search until we have at least three characters
+        if (searchPhrase == null || searchPhrase.length() < 3) {
+            return results;
+        }
+
         Query query = sessionFactory.getCurrentSession().createQuery("select givenName from PersonName where voided = 0 and " +
-                "upper(givenName) like upper(:query) group by givenName having count(*) > 5 order by count(*) desc");
-        query.setString("query", searchPhrase + "%");
+                "givenName like :query group by givenName having count(*) > 3 order by count(*) desc");
+        query.setString("query", "%" + searchPhrase + "%");
 
         List<Object> rows = query.list();
         for (Object row: rows) {
@@ -68,9 +73,14 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
     public List<String> findExistingSimilarFamilyNames(String searchPhrase) {
         List<String> results = new ArrayList<String>();
 
+        // don't search until we have at least three characters
+        if (searchPhrase == null || searchPhrase.length() < 3) {
+            return results;
+        }
+
         Query query = sessionFactory.getCurrentSession().createQuery("select familyName from PersonName where voided = 0 and " +
-                "upper(familyName) like upper(:query) group by familyName having count(*) > 5 order by count(*) desc");
-        query.setString("query", searchPhrase + "%");
+                "familyName like :query group by familyName having count(*) > 3 order by count(*) desc");
+        query.setString("query", "%" + searchPhrase + "%");
 
         List<Object> rows = query.list();
         for (Object row: rows) {

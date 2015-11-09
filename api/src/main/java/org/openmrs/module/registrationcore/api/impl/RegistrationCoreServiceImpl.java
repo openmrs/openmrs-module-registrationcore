@@ -50,18 +50,20 @@ import java.util.Map;
  * It is a default implementation of {@link RegistrationCoreService}.
  */
 @Transactional
-public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements RegistrationCoreService, ApplicationContextAware {
-
+public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements RegistrationCoreService, GlobalPropertyListener, ApplicationContextAware {
+	
 	protected final Log log = LogFactory.getLog(this.getClass());
-
+	
 	private ApplicationContext applicationContext;
-
+	
 	private RegistrationCoreDAO dao;
-
+	
 	private PatientService patientService;
-
+	
 	private PersonService personService;
-
+	
+	private LocationService locationService;
+	
 	private AdministrationService adminService;
 
 	private IdentifierBuilder identifierBuilder;
@@ -74,22 +76,22 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
-
+	
 	public void setDao(RegistrationCoreDAO dao) {
 		this.dao = dao;
 	}
-
+	
 	/**
 	 * @return the dao
 	 */
 	public RegistrationCoreDAO getDao() {
 		return dao;
 	}
-
+	
 	public void setPatientService(PatientService patientService) {
 		this.patientService = patientService;
 	}
-
+	
 	public void setPersonService(PersonService personService) {
 		this.personService = personService;
 	}
@@ -129,22 +131,45 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			log.info("Registering new patient..");
 		if (patient == null)
 			throw new APIException("Patient cannot be null");
-
-		Integer openMrsIdentifierId = registrationCoreProperties.getOpenMrsIdentifierSourceId();
-		PatientIdentifier patientIdentifier;
-		if (StringUtils.isBlank(identifierString)) {
-			patientIdentifier = identifierBuilder.generateIdentifier(openMrsIdentifierId, identifierLocation);
-		} else {
-			patientIdentifier = identifierBuilder.createIdentifier(openMrsIdentifierId, identifierString, identifierLocation);
+		
+		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
+		if (idSource == null) {
+			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID);
+			if (StringUtils.isBlank(idSourceId))
+				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
+			
+			try {
+				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
+				if (idSource == null)
+					throw new APIException("cannot find identifier source with id:" + idSourceId);
+			}
+			catch (NumberFormatException e) {
+				throw new APIException("Identifier source id should be a number");
+			}
 		}
-		patientIdentifier.setPreferred(true);
-		patient.addIdentifier(patientIdentifier);
+		
+		if (identifierLocation == null) {
+			identifierLocation = locationService.getDefaultLocation();
+			if (identifierLocation == null)
+				throw new APIException("Failed to resolve location to associate to patient identifiers");
+		}
+
+        // generate identifier if necessary, otherwise validate
+        if (StringUtils.isBlank(identifierString)) {
+            identifierString = iss.generateIdentifier(idSource, null);
+        }
+        else {
+            PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
+        }
+		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
+		patient.addIdentifier(pId);
+        pId.setPreferred(true);
 
 		//TODO fix this when creating a patient from a person is possible
 		boolean wasAPerson = patient.getPersonId() != null;
-
+		
 		patient = patientService.savePatient(patient);
-
+		
 		if (relationships != null) {
 			for (Relationship relationship : relationships) {
 				if (relationship.getPersonA() == null) {
@@ -154,11 +179,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				} else {
 					throw new APIException("Only one side of a relationship should be specified");
 				}
-
+				
 				personService.saveRelationship(relationship);
 			}
 		}
-
+		
 		EventMessage eventMessage = new EventMessage();
 		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
@@ -177,11 +202,27 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return patient;
 	}
-
+	
+	/**
+	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyChanged(org.openmrs.GlobalProperty)
+	 */
+	@Override
+	public void globalPropertyChanged(GlobalProperty gp) {
+		idSource = null;
+	}
+	
+	/**
+	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyDeleted(java.lang.String)
+	 */
+	@Override
+	public void globalPropertyDeleted(String gpName) {
+		idSource = null;
+	}
+	
 	private SimilarPatientSearchAlgorithm getFastSimilarPatientSearchAlgorithm() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_FAST_SIMILAR_PATIENT_SEARCH_ALGORITHM,
 		    "registrationcore.BasicSimilarPatientSearchAlgorithm");
-
+		
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof SimilarPatientSearchAlgorithm) {
 			return (SimilarPatientSearchAlgorithm) bean;
@@ -190,11 +231,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			        + " must point to " + "a bean implementing SimilarPatientSearchAlgorithm");
 		}
 	}
-
+	
 	private SimilarPatientSearchAlgorithm getPreciseSimilarPatientSearchAlgorithm() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM,
 		    "registrationcore.BasicExactPatientSearchAlgorithm");
-
+		
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof SimilarPatientSearchAlgorithm) {
 			return (SimilarPatientSearchAlgorithm) bean;
@@ -203,11 +244,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			        + " must point to " + "a bean implementing SimilarPatientSearchAlgorithm");
 		}
 	}
-
+	
 	private PatientNameSearch getPatientNameSearch() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
 		    "registrationcore.BasicPatientNameSearch");
-
+		
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof PatientNameSearch) {
 			return (PatientNameSearch) bean;
@@ -216,8 +257,18 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			        + "a bean implementing PatientNameSearch");
 		}
 	}
-
+	
+	/**
+	 * @see org.openmrs.api.GlobalPropertyListener#supportsPropertyName(java.lang.String)
+	 */
 	@Override
+    @Transactional(readOnly = true)
+	public boolean supportsPropertyName(String gpName) {
+		return RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID.equals(gpName);
+	}
+	
+	@Override
+    @Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                            Double cutoff, Integer maxResults) {
 		List<PatientAndMatchQuality> matches = new LinkedList<PatientAndMatchQuality>();
@@ -236,8 +287,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return matches;
 	}
-
+	
 	@Override
+    @Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                               Double cutoff, Integer maxResults) {
 		List<PatientAndMatchQuality> matches = new LinkedList<PatientAndMatchQuality>();
@@ -256,19 +308,21 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return matches;
 	}
-
+	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
 	 */
 	@Override
+    @Transactional(readOnly = true)
 	public List<String> findSimilarGivenNames(String searchPhrase) {
 		return getPatientNameSearch().findSimilarGivenNames(searchPhrase);
 	}
-
+	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarFamilyNames(String)
 	 */
 	@Override
+    @Transactional(readOnly = true)
 	public List<String> findSimilarFamilyNames(String searchPhrase) {
 		return getPatientNameSearch().findSimilarFamilyNames(searchPhrase);
 	}
