@@ -13,9 +13,14 @@
  */
 package org.openmrs.module.registrationcore.api.search;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Junction;
@@ -25,16 +30,11 @@ import org.openmrs.Patient;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonName;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * It's a default implementation of {@link SimilarPatientSearchAlgorithm}.
@@ -47,14 +47,14 @@ import java.util.Map;
 @Service("registrationcore.BasicSimilarPatientSearchAlgorithm")
 public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchAlgorithm {
 	
-	private final SessionFactory sessionFactory;
+	private final DbSessionFactory sessionFactory;
 	
 	public final long TWO_WEEKS = 3600000L * 24 * 7 * 2;
 	
 	public long birthdateRangePeriod = TWO_WEEKS;
 	
 	@Autowired
-	public BasicSimilarPatientSearchAlgorithm(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+	public BasicSimilarPatientSearchAlgorithm(@Qualifier("dbSessionFactory") DbSessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	

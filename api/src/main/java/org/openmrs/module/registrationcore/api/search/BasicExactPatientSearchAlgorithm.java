@@ -1,24 +1,24 @@
 package org.openmrs.module.registrationcore.api.search;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Restrictions;
-import org.openmrs.Patient;
-import org.openmrs.PersonName;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Restrictions;
+import org.openmrs.Patient;
+import org.openmrs.PersonName;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 /**
  * Implementation of SimilarPatientSearchAlgorithm that searches for:
@@ -33,8 +33,8 @@ import java.util.Map;
 public class BasicExactPatientSearchAlgorithm implements SimilarPatientSearchAlgorithm {
 
     @Autowired
-    @Qualifier("sessionFactory")
-    private SessionFactory sessionFactory;
+    @Qualifier("dbSessionFactory")
+    private DbSessionFactory sessionFactory;
 
     @Override
     public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {

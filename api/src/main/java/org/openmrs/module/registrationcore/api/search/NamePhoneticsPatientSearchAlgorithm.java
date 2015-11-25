@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
 import org.openmrs.Patient;
 import org.openmrs.PersonName;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.namephonetics.NamePhoneticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class NamePhoneticsPatientSearchAlgorithm extends BasicSimilarPatientSearchAlgorithm {
 	
 	@Autowired
-	public NamePhoneticsPatientSearchAlgorithm(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+	public NamePhoneticsPatientSearchAlgorithm(@Qualifier("dbSessionFactory") DbSessionFactory sessionFactory) {
 		super(sessionFactory);
 	}
 	
