@@ -82,6 +82,64 @@
         </description>
     </globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.openempi.globalIdentifierDomainId</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies main identifier on MPI server (e.g. "xyz" for OpenEMPI)
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.implementation</property>
+		<defaultValue></defaultValue>
+		<description>
+			Which MPI to should we connect to? Specify a Spring bean name, or leave blank to disable MPI integration
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.url</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies url to MPI server
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.username</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies username for authentication to MPI server
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.username</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies password for authentication to MPI server
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.openempi.enableProbabilisticMatching</property>
+		<defaultValue>false</defaultValue>
+		<description>
+			Specifies if probably matching should be used
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.personIdentifierId</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies id of identifier type which will be used for Mpi Person Id
+		</description>
+	</globalProperty>
+
+
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				

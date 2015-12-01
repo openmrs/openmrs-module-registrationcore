@@ -75,7 +75,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	public void before() throws Exception {
 		executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
 		service = Context.getService(RegistrationCoreService.class);
-		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID, "1"));
+		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
 	}
 	
 	private Patient createBasicPatient() {
@@ -161,7 +161,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	@Verifies(value = "should fire an event when a patient is registered", method = "registerPatient(Patient,List<Relationship>)")
 	public void registerPatient_shouldFireAnEventWhenAPatientIsRegistered() throws Exception {
 		MockRegistrationEventListener listener = new MockRegistrationEventListener(1);
-		Event.subscribe(RegistrationCoreConstants.TOPIC_NAME, listener);
+		Event.subscribe(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, listener);
 		
 		Relationship r1 = new Relationship(null, personService.getPerson(2), personService.getRelationshipType(2));
 		Relationship r2 = new Relationship(personService.getPerson(7), null, personService.getRelationshipType(2));
@@ -191,7 +191,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	@Verifies(value = "should set wasPerson field to true for an existing person on the registration event", method = "registerPatient(Patient,List<Relationship>)")
 	public void registerPatient_shouldSetWasPersonFieldToTrueForAnExistingPersonOnTheRegistrationEvent() throws Exception {
 		MockRegistrationEventListener listener = new MockRegistrationEventListener(1);
-		Event.subscribe(RegistrationCoreConstants.TOPIC_NAME, listener);
+		Event.subscribe(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, listener);
 		
 		Relationship r1 = new Relationship(null, personService.getPerson(2), personService.getRelationshipType(2));
 		Relationship r2 = new Relationship(personService.getPerson(7), null, personService.getRelationshipType(2));

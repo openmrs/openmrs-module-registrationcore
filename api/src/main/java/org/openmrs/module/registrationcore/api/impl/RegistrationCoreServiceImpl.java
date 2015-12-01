@@ -36,6 +36,8 @@ import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
@@ -47,6 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,9 +72,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private LocationService locationService;
 	
 	private AdministrationService adminService;
-	
+
 	private static IdentifierSource idSource;
-	
+
+	private MpiPatientFilter mpiPatientFilter;
+
+	private RegistrationCoreProperties registrationCoreProperties;
+
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
@@ -91,20 +98,28 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void setPatientService(PatientService patientService) {
 		this.patientService = patientService;
 	}
-	
+
+    public void setLocationService(LocationService locationService) {
+        this.locationService = locationService;
+    }
+
 	public void setPersonService(PersonService personService) {
 		this.personService = personService;
 	}
-	
-	public void setLocationService(LocationService locationService) {
-		this.locationService = locationService;
-	}
-	
+
 	public void setAdminService(AdministrationService adminService) {
 		this.adminService = adminService;
 	}
 
-    /**
+	public void setMpiPatientFilter(MpiPatientFilter mpiPatientFilter) {
+		this.mpiPatientFilter = mpiPatientFilter;
+	}
+
+	public void setRegistrationCoreProperties(RegistrationCoreProperties coreProperties) {
+		this.registrationCoreProperties = coreProperties;
+	}
+
+	/**
      * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
      *      java.util.List, String, Location)
      */
@@ -126,7 +141,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		
 		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
 		if (idSource == null) {
-			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID);
+			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
 			if (StringUtils.isBlank(idSourceId))
 				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
 			
@@ -185,6 +200,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		EventMessage eventMessage = new EventMessage();
 		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, patient.getCreator().getId());
 		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, new SimpleDateFormat(
 		        RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
 		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
@@ -195,9 +211,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
 		}
-		
-		Event.fireEvent(RegistrationCoreConstants.TOPIC_NAME, eventMessage);
-		
+
+		Event.fireEvent(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, eventMessage);
+
 		return patient;
 	}
 
@@ -210,13 +226,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
             }
         }
         return null;
-  }
-
+    }
+	
 	/**
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyChanged(org.openmrs.GlobalProperty)
 	 */
 	@Override
-    @Transactional(readOnly = true)
 	public void globalPropertyChanged(GlobalProperty gp) {
 		idSource = null;
 	}
@@ -225,7 +240,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyDeleted(java.lang.String)
 	 */
 	@Override
-    @Transactional(readOnly = true)
 	public void globalPropertyDeleted(String gpName) {
 		idSource = null;
 	}
@@ -275,21 +289,49 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
     @Transactional(readOnly = true)
 	public boolean supportsPropertyName(String gpName) {
-		return RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID.equals(gpName);
+		return RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID.equals(gpName);
 	}
 	
 	@Override
     @Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                            Double cutoff, Integer maxResults) {
-		return getFastSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		List<PatientAndMatchQuality> matches = new LinkedList<PatientAndMatchQuality>();
+
+		List<PatientAndMatchQuality> localMatches = getFastSimilarPatientSearchAlgorithm()
+				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		matches.addAll(localMatches);
+
+		if (registrationCoreProperties.isMpiEnabled()) {
+			List<PatientAndMatchQuality> mpiMatches = registrationCoreProperties.getMpiProvider()
+					.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
+			matches.addAll(mpiMatches);
+
+			mpiPatientFilter.filter(matches);
+		}
+
+		return matches;
 	}
 	
 	@Override
     @Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
 	                                                               Double cutoff, Integer maxResults) {
-		return getPreciseSimilarPatientSearchAlgorithm().findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		List<PatientAndMatchQuality> matches = new LinkedList<PatientAndMatchQuality>();
+
+		List<PatientAndMatchQuality> localMatches = getPreciseSimilarPatientSearchAlgorithm()
+				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
+		matches.addAll(localMatches);
+
+		if (registrationCoreProperties.isMpiEnabled()) {
+			List<PatientAndMatchQuality> mpiMatches = registrationCoreProperties.getMpiProvider()
+					.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
+			matches.addAll(mpiMatches);
+
+			mpiPatientFilter.filter(matches);
+		}
+
+		return matches;
 	}
 	
 	/**
@@ -308,5 +350,18 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
     @Transactional(readOnly = true)
 	public List<String> findSimilarFamilyNames(String searchPhrase) {
 		return getPatientNameSearch().findSimilarFamilyNames(searchPhrase);
+	}
+
+	@Override
+	public String importMpiPatient(String personId) {
+		if (registrationCoreProperties.isMpiEnabled()) {
+			MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
+			Patient importedPatient = mpiProvider.fetchMpiPatient(personId);
+			Patient patient = patientService.savePatient(importedPatient);
+			return patient.getUuid();
+		} else {
+			//should not pass here since "importPatient" performs only when MpiProvider is not null
+			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
+		}
 	}
 }
