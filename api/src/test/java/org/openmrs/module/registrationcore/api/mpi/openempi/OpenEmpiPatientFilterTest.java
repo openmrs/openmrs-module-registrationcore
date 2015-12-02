@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Ignore
 public class OpenEmpiPatientFilterTest {
 
     public static final Integer PERSON_IDENTIFIER_TYPE_ID = 5;

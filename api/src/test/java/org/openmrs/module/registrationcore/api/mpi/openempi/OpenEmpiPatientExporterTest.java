@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.*;
 import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.*;
 import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier.*;
 
+@Ignore
 public class OpenEmpiPatientExporterTest {
 
     private static final String TOKEN = "token";

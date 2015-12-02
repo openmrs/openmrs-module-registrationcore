@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
@@ -30,6 +31,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.*;
 
+@Ignore
 public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBase {
 
     private static final String PATIENT_WITH_OPENMRS_ID = "patient_with_openmrs_id.xml";
