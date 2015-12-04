@@ -8,6 +8,7 @@ import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +35,8 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
         String initialPatientIdentifier = initialPatient.getPatient().getPatientIdentifier(globalIdentifierDomainId)
                 .getIdentifier();
 
+        List<PatientAndMatchQuality> patientsToRemove = new ArrayList<PatientAndMatchQuality>();
+
         for (PatientAndMatchQuality secondaryPatient : patients) {
             if (secondaryPatient == initialPatient)
                 continue;
@@ -43,17 +46,19 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
 
             if (secondaryPatientIdentifier != null &&
                     secondaryPatientIdentifier.getIdentifier().equals(initialPatientIdentifier)) {
-                removePatientFromList(initialPatient, secondaryPatient, patients);
+                addPatientToRemove(initialPatient, secondaryPatient, patientsToRemove);
             }
         }
+
+        patients.removeAll(patientsToRemove);
     }
 
-    private void removePatientFromList(PatientAndMatchQuality initialPatient,
-                                       PatientAndMatchQuality secondaryPatient, List<PatientAndMatchQuality> patients) {
+    private void addPatientToRemove(PatientAndMatchQuality initialPatient,
+                                    PatientAndMatchQuality secondaryPatient, List<PatientAndMatchQuality> patientsToRemove) {
         if (initialPatient.getPatient() instanceof MpiPatient) {
-            patients.remove(initialPatient);
+            patientsToRemove.add(initialPatient);
         } else if (secondaryPatient.getPatient() instanceof MpiPatient) {
-            patients.remove(secondaryPatient);
+            patientsToRemove.add(secondaryPatient);
         }
     }
 }
