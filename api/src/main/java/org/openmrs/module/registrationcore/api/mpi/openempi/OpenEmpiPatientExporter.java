@@ -7,7 +7,9 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.*;
+import java.util.Iterator;
+
+import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier;
 
 public class OpenEmpiPatientExporter implements MpiPatientExporter {
 
@@ -40,9 +42,13 @@ public class OpenEmpiPatientExporter implements MpiPatientExporter {
     //The reason is that MPI server should manually generate Global identifier.
     private void removeOpenEmpiGlobalIdentifier(OpenEmpiPatientResult patientQuery) {
         Integer mpiGlobalIdentifierId = mpiProperties.getGlobalIdentifierDomainId();
-        for (PersonIdentifier personIdentifier : patientQuery.getPersonIdentifiers()) {
+
+        Iterator<PersonIdentifier> i = patientQuery.getPersonIdentifiers().iterator();
+
+        while (i.hasNext()) {
+            PersonIdentifier personIdentifier = i.next();
             if (personIdentifier.getIdentifierDomain().getIdentifierDomainId().equals(mpiGlobalIdentifierId)) {
-                patientQuery.getPersonIdentifiers().remove(personIdentifier);
+                i.remove();
             }
         }
     }
