@@ -15,7 +15,7 @@ public class PatientIdentifierMapper {
     private final Log log = LogFactory.getLog(this.getClass());
     private static final String SPLITTER_SIGN = ":";
     //first element ("key") - local, second element ("value") - mpi.
-    private static List<IdentifierMapPair> MAPPED_ID;
+    private List<IdentifierMapPair> MAPPED_ID;
 
     @Autowired
     @Qualifier("registrationcore.mpiProperties")
@@ -27,7 +27,8 @@ public class PatientIdentifierMapper {
             if (pair.mpiIdentifierId.equals(mpiIdentifierTypeId))
                 return pair.localIdentifierId;
         }
-        return null;
+        throw new IllegalArgumentException("There is no mapped local identifier type " +
+                "for mpi identifier type id: " + mpiIdentifierTypeId);
     }
 
     public Integer getMappedMpiIdentifierTypeId(Integer localIdentifierTypeId) {
@@ -36,7 +37,8 @@ public class PatientIdentifierMapper {
             if (pair.localIdentifierId.equals(localIdentifierTypeId))
                 return pair.mpiIdentifierId;
         }
-        return null;
+        throw new IllegalArgumentException("There is no mapped mpi identifier type " +
+                "for local identifier type id: " + localIdentifierTypeId);
     }
 
     private void validateInit() {
