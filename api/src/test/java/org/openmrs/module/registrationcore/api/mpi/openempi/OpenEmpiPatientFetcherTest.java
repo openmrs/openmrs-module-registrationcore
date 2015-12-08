@@ -1,7 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
@@ -89,7 +88,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
     }
 
     private void executeDataSets() throws Exception {
-        //executeDataSet("idgen_dataset.xml");
+        executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
         executeDataSet("identifiers_dataset.xml");
     }
 
