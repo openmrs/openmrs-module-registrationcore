@@ -35,7 +35,7 @@
 
 	<properties>
 		<openMRSVersion>1.10.2</openMRSVersion>
-		<idgenVersion>4.2</idgenVersion>
+		<idgenVersion>4.1</idgenVersion>
 		<eventVersion>2.2.1</eventVersion>
 		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
