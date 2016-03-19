@@ -13,6 +13,12 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,6 +26,7 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.Relationship;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
@@ -41,17 +48,10 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
-import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * It is a default implementation of {@link RegistrationCoreService}.
@@ -167,14 +167,25 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
             identifierLocation = identifierAssignmentLocationAssociatedWith;
         }
 
+		PatientIdentifier pId;
+		PatientIdentifier pId2;
         // generate identifier if necessary, otherwise validate
         if (StringUtils.isBlank(identifierString)) {
             identifierString = iss.generateIdentifier(idSource, null);
+
+	        // use the default identifier source
+	        pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
         }
         else {
-            PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
+	         // load the default identifier type
+	        PatientIdentifierType primaryIdentifierType =  Context.getPatientService().getPatientIdentifierTypeByUuid(adminService.getGlobalProperty("emr.primaryIdentifierType"));
+	        pId = new PatientIdentifier(identifierString, primaryIdentifierType, identifierLocation);
+
+	        pId2 = new PatientIdentifier(iss.generateIdentifier(idSource, null), idSource.getIdentifierType(), identifierLocation);
+	        patient.addIdentifier(pId2);
+
+            // PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
         }
-		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
 		patient.addIdentifier(pId);
         pId.setPreferred(true);
 
