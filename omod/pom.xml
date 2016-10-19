@@ -21,9 +21,33 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>webservices.rest-omod-1.9</artifactId>
+			<version>2.16</version>
+			<scope>provided</scope>
+		</dependency>
 
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>webservices.rest-omod-common</artifactId>
+			<version>2.16</version>
+			<scope>test</scope>
+			<classifier>tests</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>idgen-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openmrs</groupId>
+			<artifactId>event-api-tests</artifactId>
+			<type>test-jar</type>
+		</dependency>
 		<!-- End OpenMRS modules -->
-
 
 		<!-- Begin OpenMRS core -->
 
@@ -62,6 +86,10 @@
 
 		<!-- End OpenMRS core -->
 
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
