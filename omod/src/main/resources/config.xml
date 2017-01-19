@@ -137,6 +137,13 @@
 			Specifies id of identifier type which will be used for Mpi Person Id
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.customRegistrationAppId</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies the appId of a custom registration app, a blank value uses the default appId which is referenceapplication.registrationapp.registerPatient
+		</description>
+	</globalProperty>
 
 
 
