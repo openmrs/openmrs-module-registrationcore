@@ -57,7 +57,7 @@ public class PatientsBySimilarPatientSearchHandler implements SearchHandler {
     private static final String COUNTRY = "country";
     private static final String STATE = "state";
 
-    private final SearchConfig searchConfig = new SearchConfig("default", RestConstants.VERSION_1 + "/patient",
+    private final SearchConfig searchConfig = new SearchConfig("registrationCoreFindSimilar", RestConstants.VERSION_1 + "/patient",
             Arrays.asList("1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.0.*", "2.1.*"),
             Arrays.asList(new SearchQuery.Builder("Allows you to find similar patients")
                     .withRequiredParameters(MATCH_SIMILAR)
