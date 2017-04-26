@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>registrationcore</artifactId>
-		<version>1.8.0-SNAPSHOT</version>
+		<version>1.7.1</version>
 	</parent>
 
 	<artifactId>registrationcore-api</artifactId>
