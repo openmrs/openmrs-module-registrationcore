@@ -27,6 +27,11 @@
             org.openmrs.event
         </require_module>
     </require_modules>
+
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.registrationcore.extension.html.AdminList</class>
+	</extension>
     
     <aware_of_modules>
        <aware_of_module version="${namephoneticsVersion}">org.openmrs.module.namephonetics</aware_of_module>
@@ -135,6 +140,22 @@
 		<defaultValue></defaultValue>
 		<description>
 			Specifies id of identifier type which will be used for Mpi Person Id
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.openempi.pdqEndpoint</property>
+		<defaultValue>localhost</defaultValue>
+		<description>
+			Specifies endpoint to OpenEmpi PDQ
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.openempi.pdqPort</property>
+		<defaultValue>8989</defaultValue>
+		<description>
+			Specifies port to OpenEmpi PDQ
 		</description>
 	</globalProperty>
 

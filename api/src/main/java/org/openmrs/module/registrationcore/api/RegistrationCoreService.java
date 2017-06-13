@@ -128,4 +128,14 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @return uuid of imported patient
 	 */
 	String importMpiPatient(String personId);
+
+	/**
+	 * Query to MPI server to find patient using HL7 PDQ message.
+	 *
+	 * @param familyName patient family name
+	 * @param givenName patient given name
+	 * @return list of patients that matches search parameters
+	 */
+	List<Patient> searchPatientsByPDQ(String familyName, String givenName);
+
 }

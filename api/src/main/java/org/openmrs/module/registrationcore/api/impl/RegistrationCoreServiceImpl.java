@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+import ca.uhn.hl7v2.model.Message;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +42,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.util.PDQMessageUtil;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -49,6 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +81,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private MpiPatientFilter mpiPatientFilter;
 
 	private RegistrationCoreProperties registrationCoreProperties;
+
+	private PDQMessageUtil pdqMessageUtil = PDQMessageUtil.getInstance();
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -364,4 +369,31 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
 		}
 	}
+
+	@Override
+	public List<Patient> searchPatientsByPDQ(String familyName, String givenName) {
+
+		Map<String, String> queryParams = new HashMap<String, String>();
+		if(familyName != null && !familyName.isEmpty())
+			queryParams.put("@PID.5.1", familyName);
+		if(givenName != null && !givenName.isEmpty())
+			queryParams.put("@PID.5.2", givenName);
+
+		Message pdqRequest = null;
+
+		try
+		{
+			pdqRequest = pdqMessageUtil.createPdqMessage(queryParams);
+			Message	response = pdqMessageUtil.sendMessage(pdqRequest, pdqMessageUtil.getPdqEndpoint(), pdqMessageUtil.getPdqPort());
+
+			return null;
+		}
+		catch(Exception e)
+		{
+			log.error("Error in PDQ Search", e);
+		}
+		return null;
+
+	}
+
 }

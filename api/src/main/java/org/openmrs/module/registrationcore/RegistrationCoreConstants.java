@@ -61,4 +61,8 @@ public final class RegistrationCoreConstants {
 	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
 
 	public static final String GP_PROBABLY_MATCH_ENABLED = "registrationcore.openempi.enableProbabilisticMatching";
+
+	public static final String GP_PDQ_ENDPOINT= "registrationcore.openempi.pdqEndpoint";
+
+	public static final String GP_PDQ_PORT = "registrationcore.openempi.pdqPort";
 }
