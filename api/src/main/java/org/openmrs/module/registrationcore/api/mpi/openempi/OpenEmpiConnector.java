@@ -71,6 +71,13 @@ public class OpenEmpiConnector implements MpiProvider {
         return searchAlgorithm.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
     }
 
+    @Override
+    public List<Patient> searchPatientsByPDQ(String familyName, String givenName)
+    {
+        authenticateIfNeeded();
+        return searchAlgorithm.searchPatientsByPDQ(familyName, givenName);
+    }
+
     private void authenticateIfNeeded() {
         if (!authenticator.isAuthenticated())
             authenticator.performAuthentication();

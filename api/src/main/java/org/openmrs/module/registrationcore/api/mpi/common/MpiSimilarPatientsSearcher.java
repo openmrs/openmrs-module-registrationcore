@@ -49,4 +49,13 @@ public interface MpiSimilarPatientsSearcher {
      */
     List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
                                                   Integer maxResults);
+
+    /**
+     * Perform search on MPI server for patients using Hl7 PDQ message.
+     *
+     * @param familyName
+     * @param givenName
+     * @return list of possible matched patients
+     */
+    List<Patient> searchPatientsByPDQ(String familyName, String givenName);
 }

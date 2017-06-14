@@ -97,7 +97,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.implementation</property>
-		<defaultValue></defaultValue>
+		<defaultValue>registrationcore.mpi.implementation.OpenEMPI</defaultValue>
 		<description>
 			Which MPI to should we connect to? Specify a Spring bean name, or leave blank to disable MPI integration
 		</description>
@@ -113,15 +113,15 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.username</property>
-		<defaultValue></defaultValue>
+		<defaultValue>admin</defaultValue>
 		<description>
 			Specifies username for authentication to MPI server
 		</description>
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.username</property>
-		<defaultValue></defaultValue>
+		<property>${project.parent.artifactId}.mpi.password</property>
+		<defaultValue>admin</defaultValue>
 		<description>
 			Specifies password for authentication to MPI server
 		</description>
@@ -144,7 +144,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.openempi.pdqEndpoint</property>
+		<property>${project.parent.artifactId}.mpi.pdqEndpoint</property>
 		<defaultValue>localhost</defaultValue>
 		<description>
 			Specifies endpoint to OpenEmpi PDQ
@@ -152,10 +152,26 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.openempi.pdqPort</property>
+		<property>${project.parent.artifactId}.mpi.pdqPort</property>
 		<defaultValue>8989</defaultValue>
 		<description>
 			Specifies port to OpenEmpi PDQ
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pdqSendingApplication</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies sending implementation of OpenMRS
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pdqSendingLocation</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies sending Location
 		</description>
 	</globalProperty>
 
