@@ -7,7 +7,7 @@ import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
-import org.openmrs.module.registrationcore.api.mpi.pdq.PDQMessageUtil;
+import org.openmrs.module.registrationcore.api.mpi.pixpdq.PDQMessageUtil;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

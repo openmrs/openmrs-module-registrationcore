@@ -1,4 +1,4 @@
-package org.openmrs.module.registrationcore.api.mpi.pdq;
+package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.app.Connection;
@@ -18,10 +18,8 @@ import ca.uhn.hl7v2.model.v25.segment.MSH;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
-import ca.uhn.hl7v2.validation.ValidationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.ImplementationId;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;

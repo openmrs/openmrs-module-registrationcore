@@ -89,6 +89,22 @@
     <bean id="registrationcore.mpiPatientSearcher"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientsSearcher"/>
 
+    <!-- PixPdq Mpi implementation part -->
+    <bean id="registrationcore.mpi.implementation.PixPdq"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqProvider"/>
+
+    <bean id="registrationcore.mpiPatientFetcherPdq"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqPatientFetcher"/>
+
+    <bean id="registrationcore.mpiPatientExporterPix"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPatientExporter"/>
+
+    <bean id="registrationcore.mpiPatientUpdaterPix"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPatientUpdater"/>
+
+    <bean id="registrationcore.mpiPatientSearcherPdq"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqSimilarPatientsSearcher"/>
+
     <!--help classes related to MPI implementation:-->
 
     <bean id="registrationcore.identifierMapper"
