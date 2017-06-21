@@ -105,6 +105,12 @@
     <bean id="registrationcore.mpiPatientSearcherPdq"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqSimilarPatientsSearcher"/>
 
+    <bean id="registrationcore.mpiPixPdqMessageUtil"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PDQMessageUtil"/>
+
+    <bean id="registrationcore.mpiHl7v2Sender"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.MllpSender"/>
+
     <!--help classes related to MPI implementation:-->
 
     <bean id="registrationcore.identifierMapper"

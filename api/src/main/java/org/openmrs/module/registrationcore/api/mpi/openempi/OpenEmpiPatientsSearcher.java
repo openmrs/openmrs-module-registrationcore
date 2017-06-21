@@ -7,12 +7,14 @@ import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
+import org.openmrs.module.registrationcore.api.mpi.pixpdq.Hl7v2Sender;
 import org.openmrs.module.registrationcore.api.mpi.pixpdq.PDQMessageUtil;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +36,13 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     private FindPatientQueryBuilder queryMapper = new FindPatientQueryBuilder();
 
-    private PDQMessageUtil pdqMessageUtil = PDQMessageUtil.getInstance();
+    @Autowired
+    @Qualifier("registrationcore.mpiPixPdqMessageUtil")
+    private PDQMessageUtil pdqMessageUtil;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiHl7v2Sender")
+    private Hl7v2Sender hl7v2Sender;
 
     protected final Log log = LogFactory.getLog(this.getClass());
 
@@ -78,17 +86,15 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
         try
         {
             Message pdqRequest = pdqMessageUtil.createPdqMessage(queryParams);
-            Message	response = pdqMessageUtil.sendMessage(pdqRequest, pdqMessageUtil.getPdqEndpoint(), pdqMessageUtil.getPdqPort());
+            Message	response = hl7v2Sender.sendPdqMessage(pdqRequest);
 
-            List<Patient> retVal = pdqMessageUtil.interpretPIDSegments(response);
-
-            return retVal;
+            return pdqMessageUtil.interpretPIDSegments(response);
         }
         catch(Exception e)
         {
             log.error("Error in PDQ Search", e);
+            return Collections.emptyList();
         }
-        return new LinkedList<Patient>();
     }
 
     private List<PatientAndMatchQuality> convertMpiPatients(List<OpenEmpiPatientResult> mpiPatients,
