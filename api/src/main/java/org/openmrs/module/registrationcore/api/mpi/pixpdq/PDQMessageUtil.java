@@ -385,6 +385,11 @@ public final class PDQMessageUtil {
 
     }
 
+    public boolean isQueryError(Message message) throws HL7Exception {
+        Terser terser = new Terser(message);
+        return !terser.get("/MSA-1").endsWith("A");
+    }
+
     /**
      * Updates the PN with the XPN
      * @param xpn
