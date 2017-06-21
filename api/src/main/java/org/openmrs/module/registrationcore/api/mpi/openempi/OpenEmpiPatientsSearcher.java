@@ -8,7 +8,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.mpi.pixpdq.Hl7v2Sender;
-import org.openmrs.module.registrationcore.api.mpi.pixpdq.PDQMessageUtil;
+import org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqMessageUtil;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +38,7 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Autowired
     @Qualifier("registrationcore.mpiPixPdqMessageUtil")
-    private PDQMessageUtil pdqMessageUtil;
+    private PixPdqMessageUtil pixPdqMessageUtil;
 
     @Autowired
     @Qualifier("registrationcore.mpiHl7v2Sender")
@@ -85,10 +85,10 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
 
         try
         {
-            Message pdqRequest = pdqMessageUtil.createPdqMessage(queryParams);
+            Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
             Message	response = hl7v2Sender.sendPdqMessage(pdqRequest);
 
-            return pdqMessageUtil.interpretPIDSegments(response);
+            return pixPdqMessageUtil.interpretPIDSegments(response);
         }
         catch(Exception e)
         {

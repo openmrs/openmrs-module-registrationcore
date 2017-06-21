@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public final class PDQMessageUtil {
+public final class PixPdqMessageUtil {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
