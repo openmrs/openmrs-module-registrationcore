@@ -70,5 +70,5 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_PDQ_SENDING_LOCATION = "registrationcore.mpi.pdqSendingLocation";
 
-	public static final String GP_MPI_PATIENT_ROOT = "1.2.3.4.5.9";
+	public static final String GP_MPI_PATIENT_ROOT = "registrationcore.mpi.patientRoot";
 }

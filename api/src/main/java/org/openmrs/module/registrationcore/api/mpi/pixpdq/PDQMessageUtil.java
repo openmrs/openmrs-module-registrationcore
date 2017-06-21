@@ -1,11 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.app.Connection;
-import ca.uhn.hl7v2.app.ConnectionHub;
-import ca.uhn.hl7v2.app.Initiator;
-import ca.uhn.hl7v2.llp.LLPException;
-import ca.uhn.hl7v2.llp.MinLowerLayerProtocol;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.Group;
 import ca.uhn.hl7v2.model.Message;
@@ -17,7 +12,6 @@ import ca.uhn.hl7v2.model.v25.message.ADT_A01;
 import ca.uhn.hl7v2.model.v25.message.QBP_Q21;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 import ca.uhn.hl7v2.model.v25.segment.PID;
-import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,8 +27,9 @@ import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +40,9 @@ import java.util.UUID;
 public final class PDQMessageUtil {
 
     private final Log log = LogFactory.getLog(this.getClass());
+
+    @Autowired
+    private RegistrationCoreProperties config;
 
     public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception
     {
@@ -259,7 +257,7 @@ public final class PDQMessageUtil {
 
         Terser queryTerser = new Terser(retVal);
         queryTerser.set("/QPD-3-1", patient.getId().toString());
-        //queryTerser.set("/QPD-3-4-2", this.m_cdaConfiguration.getPatientRoot());
+        queryTerser.set("/QPD-3-4-2", this.config.getShrPatientRoot());
         queryTerser.set("/QPD-3-4-3", "ISO");
 
         // To domain
@@ -299,7 +297,7 @@ public final class PDQMessageUtil {
         // Update the pid segment with data in the patient
 
         // PID-3
-        //pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalID().setValue(this.m_cdaConfiguration.getPatientRoot());
+        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
         pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue("ISO");
         pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
         pid.getPatientIdentifierList(0).getIdentifierTypeCode().setValue("PI");
@@ -378,7 +376,7 @@ public final class PDQMessageUtil {
             {
                 // TODO: Find a better ID
                 this.updateXPN(pid.getMotherSMaidenName(0), rel.getPersonB().getNames().iterator().next());
-                //pid.getMotherSIdentifier(0).getAssigningAuthority().getUniversalID().setValue(this.m_cdaConfiguration.getPatientRoot());
+                pid.getMotherSIdentifier(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
                 pid.getMotherSIdentifier(0).getAssigningAuthority().getUniversalIDType().setValue("ISO");
                 pid.getMotherSIdentifier(0).getIDNumber().setValue(String.format("%s",rel.getPersonB().getId()));
             }

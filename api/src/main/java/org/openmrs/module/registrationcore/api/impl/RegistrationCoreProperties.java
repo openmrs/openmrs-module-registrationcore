@@ -48,7 +48,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
      * @return
      */
     public String getPdqEndpoint() {
-        return Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PDQ_ENDPOINT, "localhost");
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_PDQ_ENDPOINT, "localhost");
     }
 
     /**
@@ -56,6 +57,12 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
      * @return
      */
     public Integer getPdqPort() {
-        return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PDQ_PORT, "8989"));
+        return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_PDQ_PORT, "8989"));
+    }
+
+    public String getShrPatientRoot() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_PATIENT_ROOT, "1.2.3.4.5.9");
     }
 }
