@@ -13,15 +13,16 @@
  */
 package org.openmrs.module.registrationcore.api;
 
-import java.util.List;
-import java.util.Map;
-
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.registrationcore.api.biometrics.BiometricsEngine;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured
@@ -59,7 +60,7 @@ public interface RegistrationCoreService extends OpenmrsService {
      *
      * @param patient the patient to save
      * @param relationships the relationships to save along with the patient
-     * @param identifier the identifier to use for the patient
+     * @param identifierString the identifier to use for the patient
      * @param identifierLocation the location to set for the patient identifier, if not specified,
      *            it defaults to the system default locale see
      *            {@link LocationService#getDefaultLocation()}
@@ -74,8 +75,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	/**
 	 * Returns a list of matching patients using the fast algorithm.
 	 * <p>
-	 * You can change the underlying implementation by calling
-	 * {@link #setFastSimilarPatientSearchAlgorithm(org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm)}.
+	 * You can change the underlying implementation by setting the appropriate global property
 	 *
 	 * @param patient
 	 * @param otherDataPoints
@@ -89,8 +89,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	/**
 	 * Returns a list of matching patients using the precise algorithm.
 	 * <p>
-	 * You can change the underlying implementation by calling
-	 * {@link #setPreciseSimilarPatientSearchAlgorithm(org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm)}.
+	 * You can change the underlying implementation by setting the appropriate global property
 	 *
 	 * @param patient
 	 * @param otherDataPoints
@@ -128,4 +127,9 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @return uuid of imported patient
 	 */
 	String importMpiPatient(String personId);
+
+    /**
+     * @return the engine used for biometric operations, if one is enabled
+     */
+	BiometricsEngine getBiometricsEngine();
 }
