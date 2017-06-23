@@ -33,9 +33,12 @@ public class SearchController {
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView searchPatient(ModelMap model, @ModelAttribute("patientSearch") PatientSearchModel search) {
 
-         RegistrationCoreService service = Context.getService(RegistrationCoreService.class);
+        RegistrationCoreService service = Context.getService(RegistrationCoreService.class);
 
-        service.searchPatientsByPDQ(search.getFamilyName(),search.getGivenName());
+        if(!search.getIdentifier().equals(""))
+            service.searchPatientsByPDQusingIdentifier(search.getIdentifier());
+        else
+            service.searchPatientsByPDQusingAttributes(search.getFamilyName(),search.getGivenName());
 
         return new ModelAndView("/module/registrationcore/search", model);
     }

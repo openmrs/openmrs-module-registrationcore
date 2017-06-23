@@ -58,6 +58,6 @@ public class PixPdqProvider implements MpiProvider {
 
     @Override
     public List<Patient> searchPatientsByPDQ(String familyName, String givenName) {
-        throw new UnsupportedOperationException(); // TODO Remove
+        return searchAlgorithm.searchPatientsByPDQ(familyName,givenName);
     }
 }

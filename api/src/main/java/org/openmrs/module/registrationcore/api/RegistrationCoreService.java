@@ -130,12 +130,21 @@ public interface RegistrationCoreService extends OpenmrsService {
 	String importMpiPatient(String personId);
 
 	/**
-	 * Query to MPI server to find patient using HL7 PDQ message.
+	 * Query to MPI server to find patient by attributes using HL7 PDQ message.
 	 *
 	 * @param familyName patient family name
 	 * @param givenName patient given name
 	 * @return list of patients that matches search parameters
 	 */
-	List<Patient> searchPatientsByPDQ(String familyName, String givenName);
+	List<Patient> searchPatientsByPDQusingAttributes(String familyName, String givenName);
+
+	/**
+	 * Query to MPI server to find patient by identifier using HL7 PDQ message.
+	 *
+	 * @param familyName patient family name
+	 * @param givenName patient given name
+	 * @return list of patients that matches search parameters
+	 */
+	Patient searchPatientsByPDQusingIdentifier(String identifier);
 
 }

@@ -32,10 +32,14 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -61,7 +65,7 @@ public class PDQMessageUtil {
     {
         QBP_Q21 message = new QBP_Q21();
         updateMSH(message.getMSH(), "QBP", "Q22");
-        // What do these statements do?
+
         Terser terser = new Terser(message);
 
         // Set the query parmaeters
@@ -140,8 +144,8 @@ public class PDQMessageUtil {
      * @return
      * @throws HL7Exception
      */
-    public List<Patient> interpretPIDSegments(
-            Message response) throws HL7Exception {
+    public List<Patient> interpretPIDSegments (
+            Message response) throws HL7Exception, ParseException {
         List<Patient> retVal = new ArrayList<Patient>();
 
         Terser terser = new Terser(response);
@@ -202,6 +206,9 @@ public class PDQMessageUtil {
                             defaultLocation
                     );
 
+                    if(patId.getIdentifierType().getName().equals("ECID"))
+                        patId.setPreferred(true);
+
                     patient.addIdentifier(patId);
                 }
 
@@ -234,6 +241,23 @@ public class PDQMessageUtil {
                     patient.addName(new PersonName("(none)", null, "(none)"));
                 // Copy gender
                 patient.setGender(pid.getAdministrativeSex().getValue());
+                patient.setDead("Y".equals(pid.getPatientDeathIndicator().getValue()));
+
+                DateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+
+                // Copy DOB
+                if(pid.getDateTimeOfBirth().getTime().getValue() != null)
+                {
+                    Date birthDate = format.parse(pid.getDateTimeOfBirth().getTime().getValue());
+                    patient.setBirthdate(birthDate);
+                }
+
+                // Death details
+                if(pid.getPatientDeathDateAndTime().getTime().getValue() != null)
+                {
+                    Date deadDate = format.parse(pid.getPatientDeathDateAndTime().getTime().getValue());
+                    patient.setDeathDate(deadDate);
+                }
                 patient.setDead("Y".equals(pid.getPatientDeathIndicator().getValue()));
 
 
@@ -271,6 +295,57 @@ public class PDQMessageUtil {
         }
 
         return retVal;
+    }
+
+    public void importPatient(Patient patient)
+    {
+        Patient existingPatientRecord = null;
+        //List<Patient> existingPatients = new LinkedList<Patient>();
+
+        //check if patient is existing
+        for(PatientIdentifier id : patient.getIdentifiers())
+        {
+            List<Patient> existingPatients = Context.getPatientService().getPatients(null, id.getIdentifier(), null, true);
+            if(existingPatients.size() != 0)
+                existingPatientRecord = existingPatients.get(0);
+            if(existingPatientRecord != null)
+                break;
+        }
+
+        // Update patient if existing
+        if(existingPatientRecord != null)
+        {
+
+            // Add new identifiers
+            for(PatientIdentifier id : patient.getIdentifiers())
+            {
+                boolean hasId = false;
+                for(PatientIdentifier eid : existingPatientRecord.getIdentifiers())
+                    hasId |= eid.getIdentifier().equals(id.getIdentifier()) && eid.getIdentifierType().getId().equals(id.getIdentifierType().getId());
+                if(!hasId)
+                    existingPatientRecord.getIdentifiers().add(id);
+            }
+
+            // update names
+            existingPatientRecord.getNames().clear();
+            for(PersonName name : patient.getNames())
+                existingPatientRecord.addName(name);
+            // update addr
+            existingPatientRecord.getAddresses().clear();
+            for(PersonAddress addr : patient.getAddresses())
+                existingPatientRecord.addAddress(addr);
+
+            // Update deceased
+            existingPatientRecord.setDead(patient.getDead());
+            existingPatientRecord.setDeathDate(patient.getDeathDate());
+            existingPatientRecord.setBirthdate(patient.getBirthdate());
+            existingPatientRecord.setBirthdateEstimated(patient.getBirthdateEstimated());
+            existingPatientRecord.setGender(patient.getGender());
+
+            patient = existingPatientRecord;
+        }
+
+        Context.getPatientService().savePatient(patient);
     }
 
 

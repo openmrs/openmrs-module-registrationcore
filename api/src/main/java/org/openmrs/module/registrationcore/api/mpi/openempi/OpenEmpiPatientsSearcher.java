@@ -1,19 +1,16 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
-import ca.uhn.hl7v2.model.Message;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
-import org.openmrs.module.registrationcore.api.mpi.pixpdq.PDQMessageUtil;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +30,6 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
     private MpiAuthenticator authenticator;
 
     private FindPatientQueryBuilder queryMapper = new FindPatientQueryBuilder();
-
-    private PDQMessageUtil pdqMessageUtil = PDQMessageUtil.getInstance();
 
     protected final Log log = LogFactory.getLog(this.getClass());
 
@@ -69,26 +64,7 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Override
     public List<Patient> searchPatientsByPDQ(String familyName, String givenName) {
-        Map<String, String> queryParams = new HashMap<String, String>();
-        if(familyName != null && !familyName.isEmpty())
-            queryParams.put("@PID.5.1", familyName);
-        if(givenName != null && !givenName.isEmpty())
-            queryParams.put("@PID.5.2", givenName);
-
-        try
-        {
-            Message pdqRequest = pdqMessageUtil.createPdqMessage(queryParams);
-            Message	response = pdqMessageUtil.sendMessage(pdqRequest, pdqMessageUtil.getPdqEndpoint(), pdqMessageUtil.getPdqPort());
-
-            List<Patient> retVal = pdqMessageUtil.interpretPIDSegments(response);
-
-            return retVal;
-        }
-        catch(Exception e)
-        {
-            log.error("Error in PDQ Search", e);
-        }
-        return new LinkedList<Patient>();
+        throw new UnsupportedOperationException();
     }
 
     private List<PatientAndMatchQuality> convertMpiPatients(List<OpenEmpiPatientResult> mpiPatients,

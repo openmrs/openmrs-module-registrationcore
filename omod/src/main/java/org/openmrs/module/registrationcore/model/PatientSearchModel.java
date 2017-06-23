@@ -6,6 +6,8 @@ public class PatientSearchModel {
     private String familyName;
     // Given name
     private String givenName;
+
+    private String identifier;
     /**
      * @return the familyName
      */
@@ -29,6 +31,19 @@ public class PatientSearchModel {
      */
     public void setGivenName(String givenName) {
         this.givenName = givenName;
+    }
+
+    /**
+     * @return the identifier
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+    /**
+     * @param identifier the identifier to set
+     */
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
 }

@@ -22,6 +22,8 @@
 					<td><input type="text" name="familyName" value="${patientSearch.familyName }" /></td>
 					<td>Given Name:</td>
 					<td><input type="text" name="givenName"  value="${patientSearch.givenName }"/></td>
+					<td>Identifier</td>
+					<td colspan="3"><input type="text" name="identifier" value="${patientSearch.identifier }"/>
 				</tr>
 			</table>
 			<br /> <input type="submit" value="Search"> <br />

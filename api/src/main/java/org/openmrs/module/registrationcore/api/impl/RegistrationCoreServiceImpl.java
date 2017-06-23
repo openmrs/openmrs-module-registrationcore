@@ -366,14 +366,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	@Override
-	public List<Patient> searchPatientsByPDQ(String familyName, String givenName) {
-		List<Patient> matches = new LinkedList<Patient>();
+	public List<Patient> searchPatientsByPDQusingAttributes(String familyName, String givenName) {
+		return registrationCoreProperties.getMpiProvider().searchPatientsByPDQ(familyName, givenName);
+	}
 
-		List<Patient> mpiMatches = registrationCoreProperties.getMpiProvider().searchPatientsByPDQ(familyName, givenName);
-		matches.addAll(mpiMatches);
 
-		return matches;
-
+	@Override
+	public Patient searchPatientsByPDQusingIdentifier(String identifier) {
+		return registrationCoreProperties.getMpiProvider().fetchMpiPatient(identifier);
 	}
 
 }
