@@ -101,7 +101,12 @@
             <scope>test</scope>
         </dependency>
 		<!-- End OpenMRS core -->
-		
+
+		<dependency>
+			<groupId>org.marc.everest</groupId>
+			<artifactId>everest-core</artifactId>
+		</dependency>
+
 	</dependencies>
 	
 	<build>

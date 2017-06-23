@@ -69,4 +69,6 @@ public final class RegistrationCoreConstants {
 	public static final String GP_MPI_PDQ_SENDING_APPLICATION = "registrationcore.mpi.pdqSendingApplication";
 
 	public static final String GP_MPI_PDQ_SENDING_LOCATION = "registrationcore.mpi.pdqSendingLocation";
+
+	public static final String GP_MPI_PATIENT_ROOT = "registrationcore.mpi.patientRoot";
 }

@@ -6,6 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,7 +16,13 @@ import java.util.Map;
 
 public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
-    private PDQMessageUtil pdqMessageUtil = PDQMessageUtil.getInstance();
+    @Autowired
+    @Qualifier("registrationcore.mpiPixPdqMessageUtil")
+    private PixPdqMessageUtil pixPdqMessageUtil;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiHl7v2Sender")
+    private Hl7v2Sender hl7v2Sender;
 
     protected final Log log = LogFactory.getLog(this.getClass());
 
@@ -40,14 +48,14 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
         try
         {
-            Message pdqRequest = pdqMessageUtil.createPdqMessage(queryParams);
-            Message	response = pdqMessageUtil.sendMessage(pdqRequest, pdqMessageUtil.getPdqEndpoint(), pdqMessageUtil.getPdqPort());
+            Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
+            Message	response = hl7v2Sender.sendPdqMessage(pdqRequest);
 
-           retVal = pdqMessageUtil.interpretPIDSegments(response);
+           retVal = pixPdqMessageUtil.interpretPIDSegments(response);
 
             for(Patient patient: retVal)
             {
-                pdqMessageUtil.importPatient(patient);
+                pixPdqMessageUtil.importPatient(patient);
             }
 
         }

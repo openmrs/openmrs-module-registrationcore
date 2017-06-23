@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
@@ -40,5 +41,28 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
                     + " must point to bean implementing MpiProvider");
 
         return (MpiProvider) bean;
+    }
+
+    /**
+     * Get the PDQ endpoint
+     * @return
+     */
+    public String getPdqEndpoint() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_PDQ_ENDPOINT, "localhost");
+    }
+
+    /**
+     * Get the PDQ port
+     * @return
+     */
+    public Integer getPdqPort() {
+        return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_PDQ_PORT, "8989"));
+    }
+
+    public String getShrPatientRoot() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_PATIENT_ROOT, "1.2.3.4.5.9");
     }
 }

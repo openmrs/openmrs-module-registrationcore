@@ -141,8 +141,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	/**
 	 * Query to MPI server to find patient by identifier using HL7 PDQ message.
 	 *
-	 * @param familyName patient family name
-	 * @param givenName patient given name
+	 * @param identifier patient identifier
 	 * @return list of patients that matches search parameters
 	 */
 	Patient searchPatientsByPDQusingIdentifier(String identifier);
