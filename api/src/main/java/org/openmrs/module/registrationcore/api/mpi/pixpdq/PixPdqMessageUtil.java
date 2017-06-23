@@ -443,7 +443,7 @@ public final class PixPdqMessageUtil {
         }
 
         // Mother?
-        for(Relationship rel : Context.getPersonService().getRelationships(patient))
+        for(Relationship rel : Context.getPersonService().getRelationshipsByPerson(patient))
         {
             if(rel.getRelationshipType().getDescription().contains("MTH") &&
                     patient.equals(rel.getPersonB())) //MOTHER?
