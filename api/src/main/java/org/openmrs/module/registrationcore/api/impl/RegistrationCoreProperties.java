@@ -68,7 +68,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 
     public Integer getPixPort() {
         return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PIX_PORT, "3700"));
+                RegistrationCoreConstants.GP_MPI_PIX_PORT, "3600"));
     }
 
     public String getShrPatientRoot() {
@@ -93,6 +93,6 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 
     public String getSendingFacility() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_SENDING_LOCATION, "LOCATIOON");
+                RegistrationCoreConstants.GP_MPI_SENDING_LOCATION, "LOCATION");
     }
 }

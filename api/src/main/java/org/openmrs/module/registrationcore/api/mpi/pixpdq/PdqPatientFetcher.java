@@ -43,8 +43,6 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
             retVal = pixPdqMessageUtil.interpretPIDSegments(response).get(0);
 
-            pixPdqMessageUtil.importPatient(retVal);
-
             return retVal;
         }
         catch(Exception e)

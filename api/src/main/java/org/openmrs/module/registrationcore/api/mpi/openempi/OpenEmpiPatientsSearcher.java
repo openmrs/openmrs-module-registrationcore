@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher<PatientAndMatchQuality> {
+public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher{
 
     @Autowired
     @Qualifier("registrationcore.restQueryExecutor")

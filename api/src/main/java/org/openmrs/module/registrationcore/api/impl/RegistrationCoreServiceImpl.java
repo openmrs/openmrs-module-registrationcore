@@ -365,21 +365,4 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
 		}
 	}
-
-	@Override
-	public List<Patient> searchPatientsByPDQusingAttributes(String familyName, String givenName) {
-		Patient patient = new Patient();
-		PersonName pn = new PersonName();
-		pn.setFamilyName(familyName);
-		pn.setGivenName(givenName);
-		patient.addName(pn);
-		return registrationCoreProperties.getMpiProvider().findExactMatches(patient, null, null, null);
-	}
-
-
-	@Override
-	public Patient searchPatientsByPDQusingIdentifier(String identifier) {
-		return registrationCoreProperties.getMpiProvider().fetchMpiPatient(identifier);
-	}
-
 }

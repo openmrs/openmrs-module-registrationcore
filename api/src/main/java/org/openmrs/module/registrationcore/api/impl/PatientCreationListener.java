@@ -54,7 +54,9 @@ public class PatientCreationListener extends PatientActionListener {
 
         String personId = pushPatientToMpiServer(patient);
 
-        updatePatient(patient, message, personId);
+        if (personId != null) {
+            updatePatient(patient, message, personId);
+        }
     }
 
     private String pushPatientToMpiServer(Patient patient) {

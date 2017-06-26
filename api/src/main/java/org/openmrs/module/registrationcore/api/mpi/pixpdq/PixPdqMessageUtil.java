@@ -366,16 +366,17 @@ public final class PixPdqMessageUtil {
 
         // PID-3
         pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
-        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue("ISO");
+        pid.getPatientIdentifierList(0).getAssigningAuthority().getNamespaceID().setValue(config.getShrPatientRoot());
+        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue("NI");
         pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
-        pid.getPatientIdentifierList(0).getIdentifierTypeCode().setValue("PI");
+        //pid.getPatientIdentifierList(0).getIdentifierTypeCode().setValue("PI");
 
         // Other identifiers
-        if(!localIdOnly)
+/*        if(!localIdOnly)
             for(PatientIdentifier patIdentifier : patient.getIdentifiers())
             {
                 CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
-                /*if(II.isRootOid(new II(patIdentifier.getIdentifierType().getName())))
+                if(II.isRootOid(new II(patIdentifier.getIdentifierType().getName())))
                 {
                     patientId.getAssigningAuthority().getUniversalID().setValue(patIdentifier.getIdentifierType().getName());
                     patientId.getAssigningAuthority().getUniversalIDType().setValue("ISO");
@@ -386,11 +387,11 @@ public final class PixPdqMessageUtil {
                     patientId.getAssigningAuthority().getUniversalIDType().setValue("ISO");
                 }
                 else
-                    patientId.getAssigningAuthority().getNamespaceID().setValue(patIdentifier.getIdentifierType().getName());*/
+                    patientId.getAssigningAuthority().getNamespaceID().setValue(patIdentifier.getIdentifierType().getName());
 
                 patientId.getIDNumber().setValue(patIdentifier.getIdentifier());
                 patientId.getIdentifierTypeCode().setValue("PT");
-            }
+            }*/
 
         // Names
         for(PersonName pn : patient.getNames())

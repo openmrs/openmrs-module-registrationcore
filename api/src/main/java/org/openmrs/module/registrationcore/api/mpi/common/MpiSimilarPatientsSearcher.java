@@ -15,6 +15,7 @@ package org.openmrs.module.registrationcore.api.mpi.common;
 
 
 import org.openmrs.Patient;
+import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Map;
 /**
  * This service provide finding precise similar and probably similar matched patients.
  */
-public interface MpiSimilarPatientsSearcher<T> {
+public interface MpiSimilarPatientsSearcher {
 
     /**
      * Perform search on MPI server for patients using Hl7 PDQ message.
@@ -33,7 +34,7 @@ public interface MpiSimilarPatientsSearcher<T> {
      * @param maxResults
      * @return list of possible matched patients
      */
-    List<T> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+    List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
                                                     Integer maxResults);
 
     /**
@@ -46,6 +47,6 @@ public interface MpiSimilarPatientsSearcher<T> {
      * @param maxResults
      * @return list of possible matched patients
      */
-    List<T> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+    List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
                                                   Integer maxResults);
 }
