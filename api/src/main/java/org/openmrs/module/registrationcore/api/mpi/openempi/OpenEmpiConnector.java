@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.List;
 import java.util.Map;
 
-public class OpenEmpiConnector implements MpiProvider {
+public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
 
     @Autowired
     @Qualifier("registrationcore.mpiPatientFetcher")
@@ -69,13 +69,6 @@ public class OpenEmpiConnector implements MpiProvider {
                                                          Double cutoff, Integer maxResults) {
         authenticateIfNeeded();
         return searchAlgorithm.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
-    }
-
-    @Override
-    public List<Patient> searchPatientsByPDQ(String familyName, String givenName)
-    {
-        authenticateIfNeeded();
-        return searchAlgorithm.searchPatientsByPDQ(familyName, givenName);
     }
 
     private void authenticateIfNeeded() {

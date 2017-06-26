@@ -97,7 +97,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.implementation</property>
-		<defaultValue>registrationcore.mpi.implementation.OpenEMPI</defaultValue>
+		<defaultValue>registrationcore.mpi.implementation.PixPdq</defaultValue>
 		<description>
 			Which MPI to should we connect to? Specify a Spring bean name, or leave blank to disable MPI integration
 		</description>
@@ -147,7 +147,7 @@
 		<property>${project.parent.artifactId}.mpi.pdqEndpoint</property>
 		<defaultValue>localhost</defaultValue>
 		<description>
-			Specifies endpoint to OpenEmpi PDQ
+			Specifies endpoint for Hl7 PDQ Message
 		</description>
 	</globalProperty>
 
@@ -155,7 +155,7 @@
 		<property>${project.parent.artifactId}.mpi.pdqPort</property>
 		<defaultValue>8989</defaultValue>
 		<description>
-			Specifies port to OpenEmpi PDQ
+			Specifies port for Hl7 PDQ Message
 		</description>
 	</globalProperty>
 

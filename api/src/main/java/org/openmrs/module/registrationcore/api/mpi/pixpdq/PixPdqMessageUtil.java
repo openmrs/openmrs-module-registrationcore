@@ -337,13 +337,13 @@ public final class PixPdqMessageUtil {
         queryTerser.set("/QPD-3-4-3", "ISO");
 
         // To domain
-        if(II.isRootOid(new II(toAssigningAuthority)))
+        /*if(II.isRootOid(new II(toAssigningAuthority)))
         {
             queryTerser.set("/QPD-4-4-2", toAssigningAuthority);
             queryTerser.set("/QPD-4-4-3", "ISO");
         }
         else
-            queryTerser.set("/QPD-4-4-1", toAssigningAuthority);
+            queryTerser.set("/QPD-4-4-1", toAssigningAuthority);*/
 
         return retVal;
     }
@@ -383,7 +383,7 @@ public final class PixPdqMessageUtil {
             for(PatientIdentifier patIdentifier : patient.getIdentifiers())
             {
                 CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
-                if(II.isRootOid(new II(patIdentifier.getIdentifierType().getName())))
+                /*if(II.isRootOid(new II(patIdentifier.getIdentifierType().getName())))
                 {
                     patientId.getAssigningAuthority().getUniversalID().setValue(patIdentifier.getIdentifierType().getName());
                     patientId.getAssigningAuthority().getUniversalIDType().setValue("ISO");
@@ -394,7 +394,7 @@ public final class PixPdqMessageUtil {
                     patientId.getAssigningAuthority().getUniversalIDType().setValue("ISO");
                 }
                 else
-                    patientId.getAssigningAuthority().getNamespaceID().setValue(patIdentifier.getIdentifierType().getName());
+                    patientId.getAssigningAuthority().getNamespaceID().setValue(patIdentifier.getIdentifierType().getName());*/
 
                 patientId.getIDNumber().setValue(patIdentifier.getIdentifier());
                 patientId.getIdentifierTypeCode().setValue("PT");

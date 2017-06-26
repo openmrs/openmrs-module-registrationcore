@@ -20,6 +20,7 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
@@ -367,7 +368,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	@Override
 	public List<Patient> searchPatientsByPDQusingAttributes(String familyName, String givenName) {
-		return registrationCoreProperties.getMpiProvider().searchPatientsByPDQ(familyName, givenName);
+		Patient patient = new Patient();
+		PersonName pn = new PersonName();
+		pn.setFamilyName(familyName);
+		pn.setGivenName(givenName);
+		patient.addName(pn);
+		return registrationCoreProperties.getMpiProvider().findExactMatches(patient, null, null, null);
 	}
 
 
