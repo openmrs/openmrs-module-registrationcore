@@ -76,6 +76,8 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_PATIENT_ROOT = "registrationcore.mpi.patientRoot";
 
+	public static final String GP_MPI_UNI_ID_TYPE = "registrationcore.mpi.universalIdType";
+
 	public static final String GP_MPI_RECEIVING_APPLICATION = "registsrationcore.mpi.receivingApplication";
 
 	public static final String GP_MPI_RECEIVING_FACILITY = "registrationcore.mpi.receivingFacility";

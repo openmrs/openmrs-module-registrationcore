@@ -95,4 +95,9 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return Context.getAdministrationService().getGlobalProperty(
                 RegistrationCoreConstants.GP_MPI_SENDING_LOCATION, "LOCATION");
     }
+
+    public String getUniversalIdType() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_UNI_ID_TYPE, "NI");
+    }
 }

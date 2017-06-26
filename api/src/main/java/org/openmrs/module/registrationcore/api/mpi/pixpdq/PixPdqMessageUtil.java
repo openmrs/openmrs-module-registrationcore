@@ -249,57 +249,6 @@ public final class PixPdqMessageUtil {
         return retVal;
     }
 
-
-    public void importPatient(Patient patient)
-    {
-        Patient existingPatientRecord = null;
-
-        //check if patient is existing
-        for(PatientIdentifier id : patient.getIdentifiers())
-        {
-            List<Patient> existingPatients = Context.getPatientService().getPatients(null, id.getIdentifier(), null, true);
-            if(existingPatients.size() != 0)
-                existingPatientRecord = existingPatients.get(0);
-            if(existingPatientRecord != null)
-                break;
-        }
-
-        // Update patient if existing
-        if(existingPatientRecord != null)
-        {
-
-            // Add new identifiers
-            for(PatientIdentifier id : patient.getIdentifiers())
-            {
-                boolean hasId = false;
-                for(PatientIdentifier eid : existingPatientRecord.getIdentifiers())
-                    hasId |= eid.getIdentifier().equals(id.getIdentifier()) && eid.getIdentifierType().getId().equals(id.getIdentifierType().getId());
-                if(!hasId)
-                    existingPatientRecord.getIdentifiers().add(id);
-            }
-
-            // update names
-            existingPatientRecord.getNames().clear();
-            for(PersonName name : patient.getNames())
-                existingPatientRecord.addName(name);
-            // update addr
-            existingPatientRecord.getAddresses().clear();
-            for(PersonAddress addr : patient.getAddresses())
-                existingPatientRecord.addAddress(addr);
-
-            // Update deceased
-            existingPatientRecord.setDead(patient.getDead());
-            existingPatientRecord.setDeathDate(patient.getDeathDate());
-            existingPatientRecord.setBirthdate(patient.getBirthdate());
-            existingPatientRecord.setBirthdateEstimated(patient.getBirthdateEstimated());
-            existingPatientRecord.setGender(patient.getGender());
-
-            patient = existingPatientRecord;
-        }
-
-        Context.getPatientService().savePatient(patient);
-    }
-
     public Message createAdmit(Patient patient) throws HL7Exception
     {
         ADT_A01 message = new ADT_A01();
@@ -307,35 +256,9 @@ public final class PixPdqMessageUtil {
         message.getMSH().getVersionID().getVersionID().setValue("2.3.1");
 
         // Move patient data to PID
-        this.updatePID(message.getPID(), patient, false);
+        this.updatePID(message.getPID(), patient);
 
         return message;
-    }
-
-    /**
-     * Create a PIX message
-     * @throws HL7Exception
-     */
-    public Message createPixMessage(Patient patient, String toAssigningAuthority) throws HL7Exception {
-        QBP_Q21 retVal = new QBP_Q21();
-        this.updateMSH(retVal.getMSH(), "QBP", "Q23");
-        retVal.getMSH().getVersionID().getVersionID().setValue("2.5");
-
-        Terser queryTerser = new Terser(retVal);
-        queryTerser.set("/QPD-3-1", patient.getId().toString());
-        queryTerser.set("/QPD-3-4-2", this.config.getShrPatientRoot());
-        queryTerser.set("/QPD-3-4-3", "ISO");
-
-        // To domain
-        /*if(II.isRootOid(new II(toAssigningAuthority)))
-        {
-            queryTerser.set("/QPD-4-4-2", toAssigningAuthority);
-            queryTerser.set("/QPD-4-4-3", "ISO");
-        }
-        else
-            queryTerser.set("/QPD-4-4-1", toAssigningAuthority);*/
-
-        return retVal;
     }
 
     /**
@@ -346,10 +269,9 @@ public final class PixPdqMessageUtil {
         ADT_A01 message = new ADT_A01();
         this.updateMSH(message.getMSH(), "ADT", "A08");
         message.getMSH().getVersionID().getVersionID().setValue("2.3.1");
-        //message.getMSH().getMessageType().getMessageStructure().setValue("ADT_A08");
 
         // Move patient data to PID
-        this.updatePID(message.getPID(), patient, true);
+        this.updatePID(message.getPID(), patient);
 
         return message;
     }
@@ -358,16 +280,15 @@ public final class PixPdqMessageUtil {
      * Update the PID segment
      * @throws HL7Exception
      */
-    private void updatePID(PID pid, Patient patient, boolean localIdOnly) throws HL7Exception {
+    private void updatePID(PID pid, Patient patient) throws HL7Exception {
 
         // Update the pid segment with data in the patient
 
         // PID-3
         pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
         pid.getPatientIdentifierList(0).getAssigningAuthority().getNamespaceID().setValue(config.getShrPatientRoot());
-        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue("NI");
+        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(config.getUniversalIdType());
         pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
-        //pid.getPatientIdentifierList(0).getIdentifierTypeCode().setValue("PI");
 
         // Names
         for(PersonName pn : patient.getNames())
