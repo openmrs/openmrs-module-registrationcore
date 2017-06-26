@@ -65,4 +65,24 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return Context.getAdministrationService().getGlobalProperty(
                 RegistrationCoreConstants.GP_MPI_PATIENT_ROOT, "1.2.3.4.5.9");
     }
+
+    public String getReceivingApplication() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_RECEIVING_APPLICATION, "CR");
+    }
+
+    public String getReceivingFacility() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_RECEIVING_FACILITY, "Clinic");
+    }
+
+    public String getSendingApplication() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_SENDING_APPLICATION, "UNNAMEDOPENMRS");
+    }
+
+    public String getSendingFacility() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_SENDING_LOCATION, "LOCATIOON");
+    }
 }

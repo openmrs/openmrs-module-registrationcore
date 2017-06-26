@@ -80,20 +80,14 @@ public final class PixPdqMessageUtil {
         msh.getMessageType().getMessageCode().setValue(messageCode); // Message Structure Code
         msh.getMessageType().getTriggerEvent().setValue(triggerEvent); // Trigger Event
         msh.getProcessingID().getProcessingID().setValue("P"); // Production
-        msh.getReceivingApplication().getNamespaceID().setValue("CR"); // Client Registry
-        msh.getReceivingFacility().getNamespaceID().setValue("MOH_CAAT"); // Mohawk College of Applied Arts and Technology
+        msh.getReceivingApplication().getNamespaceID().setValue(config.getReceivingApplication());
+        msh.getReceivingFacility().getNamespaceID().setValue(config.getReceivingFacility());
 
-        String implementation = Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PDQ_SENDING_APPLICATION);
-        if(implementation != null)
-            msh.getSendingApplication().getNamespaceID().setValue(implementation);
-        else
-            msh.getSendingApplication().getNamespaceID().setValue("UNNAMEDOPENMRS");
+        String implementation = config.getSendingApplication();
+        msh.getSendingApplication().getNamespaceID().setValue(implementation);
 
-        String defaultLocale = Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PDQ_SENDING_LOCATION);
-        if(defaultLocale != null)
-            msh.getSendingFacility().getNamespaceID().setValue(defaultLocale);
-        else
-            msh.getSendingFacility().getNamespaceID().setValue("LOCATION");
+        String location = config.getSendingFacility();
+        msh.getSendingFacility().getNamespaceID().setValue(location);
 
         msh.getVersionID().getVersionID().setValue("2.5");
     }

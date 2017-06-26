@@ -66,9 +66,13 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_PDQ_PORT = "registrationcore.mpi.pdqPort";
 
-	public static final String GP_MPI_PDQ_SENDING_APPLICATION = "registrationcore.mpi.pdqSendingApplication";
+	public static final String GP_MPI_SENDING_APPLICATION = "registrationcore.mpi.sendingApplication";
 
-	public static final String GP_MPI_PDQ_SENDING_LOCATION = "registrationcore.mpi.pdqSendingLocation";
+	public static final String GP_MPI_SENDING_LOCATION = "registrationcore.mpi.sendingLocation";
 
 	public static final String GP_MPI_PATIENT_ROOT = "registrationcore.mpi.patientRoot";
+
+	public static final String GP_MPI_RECEIVING_APPLICATION = "registsrationcore.mpi.receivingApplication";
+
+	public static final String GP_MPI_RECEIVING_FACILITY = "registrationcore.mpi.receivingFacility";
 }
