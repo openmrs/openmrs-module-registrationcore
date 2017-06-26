@@ -141,12 +141,6 @@
                 <version>2.2</version>
 				<scope>provided</scope>
             </dependency>
-
-			<dependency>
-				<groupId>org.marc.everest</groupId>
-				<artifactId>everest-core</artifactId>
-				<version>1.0.17</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

@@ -15,7 +15,6 @@ import ca.uhn.hl7v2.model.v25.segment.PID;
 import ca.uhn.hl7v2.util.Terser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.marc.everest.datatypes.II;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -26,7 +25,6 @@ import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -370,28 +368,6 @@ public final class PixPdqMessageUtil {
         pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue("NI");
         pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
         //pid.getPatientIdentifierList(0).getIdentifierTypeCode().setValue("PI");
-
-        // Other identifiers
-/*        if(!localIdOnly)
-            for(PatientIdentifier patIdentifier : patient.getIdentifiers())
-            {
-                CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
-                if(II.isRootOid(new II(patIdentifier.getIdentifierType().getName())))
-                {
-                    patientId.getAssigningAuthority().getUniversalID().setValue(patIdentifier.getIdentifierType().getName());
-                    patientId.getAssigningAuthority().getUniversalIDType().setValue("ISO");
-                }
-                else if(II.isRootOid(new II(patIdentifier.getIdentifierType().getUuid())))
-                {
-                    patientId.getAssigningAuthority().getUniversalID().setValue(patIdentifier.getIdentifierType().getUuid());
-                    patientId.getAssigningAuthority().getUniversalIDType().setValue("ISO");
-                }
-                else
-                    patientId.getAssigningAuthority().getNamespaceID().setValue(patIdentifier.getIdentifierType().getName());
-
-                patientId.getIDNumber().setValue(patIdentifier.getIdentifier());
-                patientId.getIdentifierTypeCode().setValue("PT");
-            }*/
 
         // Names
         for(PersonName pn : patient.getNames())
