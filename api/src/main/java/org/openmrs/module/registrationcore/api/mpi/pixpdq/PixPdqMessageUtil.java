@@ -30,13 +30,11 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -445,7 +443,7 @@ public final class PixPdqMessageUtil {
         }
 
         // Mother?
-        for(Relationship rel : Context.getPersonService().getRelationships(patient))
+        for(Relationship rel : Context.getPersonService().getRelationshipsByPerson(patient))
         {
             if(rel.getRelationshipType().getDescription().contains("MTH") &&
                     patient.equals(rel.getPersonB())) //MOTHER?
