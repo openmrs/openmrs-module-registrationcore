@@ -61,6 +61,10 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
             log.error("Error in PDQ Search", e);
         }
 
+        if (maxResults != null && retVal.size() > maxResults) {
+            retVal = retVal.subList(0, maxResults);
+        }
+
         return toMatchList(retVal);
     }
 
