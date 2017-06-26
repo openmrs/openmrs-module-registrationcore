@@ -29,6 +29,13 @@ public class MllpSender implements Hl7v2Sender {
         return sendMessage(request, endpoint, port);
     }
 
+    @Override
+    public Message sendPixMessage(Message request) throws LLPException, IOException, HL7Exception {
+        String endpoint = config.getPixEndpoint();
+        int port = config.getPixPort();
+        return sendMessage(request, endpoint, port);
+    }
+
     private Message sendMessage(Message request, String endpoint, int port) throws HL7Exception, LLPException, IOException {
         PipeParser parser = new PipeParser();
         ConnectionHub hub = ConnectionHub.getInstance();

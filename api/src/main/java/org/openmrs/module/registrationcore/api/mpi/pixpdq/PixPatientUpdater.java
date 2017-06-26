@@ -25,7 +25,7 @@ public class PixPatientUpdater implements MpiPatientUpdater {
     public void updatePatient(Patient patient) {
         try {
             Message updateMsg = pixPdqMessageUtil.createUpdate(patient);
-            Message response = hl7v2Sender.sendPdqMessage(updateMsg);
+            Message response = hl7v2Sender.sendPixMessage(updateMsg);
 
             if (pixPdqMessageUtil.isQueryError(response)) {
                 throw new MpiException("Error querying patient data during update");

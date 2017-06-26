@@ -9,4 +9,6 @@ import java.io.IOException;
 public interface Hl7v2Sender {
 
     Message sendPdqMessage(Message request) throws LLPException, IOException, HL7Exception;
+
+    Message sendPixMessage(Message request) throws LLPException, IOException, HL7Exception;
 }
