@@ -9,10 +9,10 @@
  */
 package org.openmrs.module.registrationcore.api.biometrics;
 
-import org.openmrs.module.registrationcore.api.biometrics.model.EngineStatus;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricEngineStatus;
 import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
-import org.openmrs.module.registrationcore.api.biometrics.model.Match;
-import org.openmrs.module.registrationcore.api.biometrics.model.Subject;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -30,20 +30,20 @@ import java.util.UUID;
  * on template contents
  */
 @Component
-public class TestBiometricsEngine implements BiometricsEngine {
+public class TestBiometricEngine implements BiometricEngine {
 
-    private Map<String, Subject> enrolledSubjects = new HashMap<String, Subject>();
+    private Map<String, BiometricSubject> enrolledSubjects = new HashMap<String, BiometricSubject>();
 
     @Override
-    public EngineStatus getStatus() {
-        EngineStatus status = new EngineStatus();
+    public BiometricEngineStatus getStatus() {
+        BiometricEngineStatus status = new BiometricEngineStatus();
         status.setEnabled(true);
         status.setDescription("Test biometrics engine for demonstration purposes");
         return status;
     }
 
     @Override
-    public Subject enroll(Subject subject) {
+    public BiometricSubject enroll(BiometricSubject subject) {
         if (subject.getSubjectId() == null) {
             subject.setSubjectId(UUID.randomUUID().toString());
         }
@@ -52,17 +52,17 @@ public class TestBiometricsEngine implements BiometricsEngine {
     }
 
     @Override
-    public Subject updateSubjectId(String oldId, String newId) {
-        Subject s = enrolledSubjects.remove(oldId);
+    public BiometricSubject updateSubjectId(String oldId, String newId) {
+        BiometricSubject s = enrolledSubjects.remove(oldId);
         s.setSubjectId(newId);
         enroll(s);
         return s;
     }
 
     @Override
-    public List<Match> search(Subject subject) {
-        List<Match> ret = new ArrayList<Match>();
-        for (Subject s : enrolledSubjects.values()) {
+    public List<BiometricMatch> search(BiometricSubject subject) {
+        List<BiometricMatch> ret = new ArrayList<BiometricMatch>();
+        for (BiometricSubject s : enrolledSubjects.values()) {
             double score = 0;
             if (s.getSubjectId().equals(subject.getSubjectId())) {
                 score += 10000;
@@ -75,7 +75,7 @@ public class TestBiometricsEngine implements BiometricsEngine {
                 }
             }
             if (score > 0) {
-                ret.add(new Match(s.getSubjectId(), score));
+                ret.add(new BiometricMatch(s.getSubjectId(), score));
             }
         }
         Collections.sort(ret);
@@ -83,7 +83,7 @@ public class TestBiometricsEngine implements BiometricsEngine {
     }
 
     @Override
-    public Subject lookup(String subjectId) {
+    public BiometricSubject lookup(String subjectId) {
         return enrolledSubjects.get(subjectId);
     }
 

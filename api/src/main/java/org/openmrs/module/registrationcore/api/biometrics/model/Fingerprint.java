@@ -14,11 +14,11 @@ import java.io.Serializable;
 /**
  * Represents a single fingerprint sample
  */
-public class Fingerprint extends Sample implements Serializable {
+public class Fingerprint extends BiometricSample implements Serializable {
 
     public Fingerprint() { }
 
-    public Fingerprint(String type, Format templateFormat, String template) {
+    public Fingerprint(String type, BiometricTemplateFormat templateFormat, String template) {
         super(type, templateFormat, template);
     }
 }

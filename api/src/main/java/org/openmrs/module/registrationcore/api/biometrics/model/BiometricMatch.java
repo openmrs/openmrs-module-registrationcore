@@ -16,14 +16,14 @@ import java.io.Serializable;
  * a biometric database for matches on a given subject
  * The matchScore is a numeric that indicates the strength of the match
  */
-public class Match implements Serializable, Comparable<Match> {
+public class BiometricMatch implements Serializable, Comparable<BiometricMatch> {
 
     private String subjectId;
     private Double matchScore;
 
-    public Match() { }
+    public BiometricMatch() { }
 
-    public Match(String subjectId, Double matchScore) {
+    public BiometricMatch(String subjectId, Double matchScore) {
         this.subjectId = subjectId;
         this.matchScore = matchScore;
     }
@@ -34,7 +34,7 @@ public class Match implements Serializable, Comparable<Match> {
     }
 
     @Override
-    public int compareTo(Match that) {
+    public int compareTo(BiometricMatch that) {
         int ret = (int)(that.getMatchScore() - this.getMatchScore()); // A higher match score should come first
         if (ret == 0) {
             ret = this.getSubjectId().compareTo(that.getSubjectId());

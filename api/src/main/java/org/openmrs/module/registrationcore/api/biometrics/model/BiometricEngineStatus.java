@@ -14,13 +14,13 @@ import java.io.Serializable;
 /**
  * Simple bean to encapsulate the status of the Biometrics Engine
  */
-public class EngineStatus implements Serializable {
+public class BiometricEngineStatus implements Serializable {
 
     private boolean enabled = false;
     private String description;
     private String statusMessage;
 
-    public EngineStatus() { }
+    public BiometricEngineStatus() { }
 
     public boolean isEnabled() {
         return enabled;

@@ -12,6 +12,6 @@ package org.openmrs.module.registrationcore.api.biometrics.model;
 /**
  * Represents a particular Format that a sample can be stored in
  */
-public enum Format {
+public enum BiometricTemplateFormat {
     ISO, ANSI, PROPRIETARY
 }

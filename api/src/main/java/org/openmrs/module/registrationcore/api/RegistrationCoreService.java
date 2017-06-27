@@ -18,7 +18,7 @@ import org.openmrs.Patient;
 import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.registrationcore.api.biometrics.BiometricsEngine;
+import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -131,5 +131,5 @@ public interface RegistrationCoreService extends OpenmrsService {
     /**
      * @return the engine used for biometric operations, if one is enabled
      */
-	BiometricsEngine getBiometricsEngine();
+	BiometricEngine getBiometricEngine();
 }

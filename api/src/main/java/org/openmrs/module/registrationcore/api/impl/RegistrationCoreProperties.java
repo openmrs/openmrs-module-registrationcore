@@ -7,7 +7,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
-import org.openmrs.module.registrationcore.api.biometrics.BiometricsEngine;
+import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -50,17 +50,17 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
     }
 
     /**
-     * @return the id of the Biometrics Engine that is configured
+     * @return the id of the Biometric Engine that is configured
      */
-    public BiometricsEngine getBiometricsEngine() {
+    public BiometricEngine getBiometricEngine() {
         String propertyName = RegistrationCoreConstants.GP_BIOMETRICS_IMPLEMENTATION;
         String engineId = administrationService.getGlobalProperty(propertyName);
-        BiometricsEngine engine = null;
+        BiometricEngine engine = null;
         if (StringUtils.isNotBlank(engineId)) {
             log.debug("Looking up biometrics engine component: " + engineId);
-            engine = Context.getRegisteredComponent(engineId, BiometricsEngine.class);
+            engine = Context.getRegisteredComponent(engineId, BiometricEngine.class);
             if (engine == null) {
-                throw new IllegalStateException(propertyName + " must point to a bean implementing BiometricsEngine. " + engineId + " is not valid.");
+                throw new IllegalStateException(propertyName + " must point to a bean implementing BiometricEngine. " + engineId + " is not valid.");
             }
         }
         return engine;

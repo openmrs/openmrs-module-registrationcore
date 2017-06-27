@@ -9,38 +9,38 @@
  */
 package org.openmrs.module.registrationcore.api.biometrics;
 
-import org.openmrs.module.registrationcore.api.biometrics.model.EngineStatus;
-import org.openmrs.module.registrationcore.api.biometrics.model.Match;
-import org.openmrs.module.registrationcore.api.biometrics.model.Subject;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricEngineStatus;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 
 import java.util.List;
 
 /**
  * Provides primary API for interacting with the biometric matching engine
  */
-public interface BiometricsEngine {
+public interface BiometricEngine {
 
-    EngineStatus getStatus();
+    BiometricEngineStatus getStatus();
 
     /**
      * Enrolls biometrics for the passed subject
      */
-    Subject enroll(Subject subject);
+    BiometricSubject enroll(BiometricSubject subject);
 
     /**
      * Change an existing subjectId to a new value
      */
-    Subject updateSubjectId(String oldId, String newId);
+    BiometricSubject updateSubjectId(String oldId, String newId);
 
     /**
      * @return a List of PatientAndMatchQuality for the given subject in order to find matching patients
      */
-    List<Match> search(Subject subject);
+    List<BiometricMatch> search(BiometricSubject subject);
 
     /**
      * @return the subject saved for the given subjectId
      */
-    Subject lookup(String subjectId);
+    BiometricSubject lookup(String subjectId);
 
     /**
      * Deletes the saved subject for the given subjectId

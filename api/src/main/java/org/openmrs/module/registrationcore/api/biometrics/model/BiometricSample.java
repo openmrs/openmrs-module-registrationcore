@@ -17,15 +17,15 @@ import java.io.Serializable;
  * format: represents the standard used to represent the template, ISO, ANSI, etc
  * template:  the textual representation of the sample, generally Base64 encoded binary data
  */
-public class Sample implements Serializable {
+public class BiometricSample implements Serializable {
 
     private String type;
-    private Format format;
+    private BiometricTemplateFormat format;
     private String template;
 
-    public Sample() { }
+    public BiometricSample() { }
 
-    public Sample(String type, Format format, String template) {
+    public BiometricSample(String type, BiometricTemplateFormat format, String template) {
         this.type = type;
         this.format = format;
         this.template = template;
@@ -39,11 +39,11 @@ public class Sample implements Serializable {
         this.type = type;
     }
 
-    public Format getFormat() {
+    public BiometricTemplateFormat getFormat() {
         return format;
     }
 
-    public void setFormat(Format format) {
+    public void setFormat(BiometricTemplateFormat format) {
         this.format = format;
     }
 
