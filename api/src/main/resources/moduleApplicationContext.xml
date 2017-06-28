@@ -108,7 +108,10 @@
     <bean id="registrationcore.mpiPixPdqMessageUtil"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqMessageUtil"/>
 
-    <bean id="registrationcore.mpiHl7v2Sender"
+    <bean id="registrationcore.mpiHl7v2HttpSender"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.HttpSender"/>
+
+    <bean id="registrationcore.mpiHl7v2MllpSender"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.MllpSender"/>
 
     <!--help classes related to MPI implementation:-->

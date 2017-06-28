@@ -54,6 +54,8 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_IMPLEMENTATION = "registrationcore.mpi.implementation";
 
+	public static final String GP_MPI_HL7_IMPLEMENTATION = "registrationcore.mpi.Hl7implementation";
+
 	public static final String GP_MPI_URL = "registrationcore.mpi.url";
 
 	public static final String GP_MPI_ACCESS_USERNAME = "registrationcore.mpi.username";
@@ -69,6 +71,10 @@ public final class RegistrationCoreConstants {
 	public static final String GP_MPI_PIX_ENDPOINT= "registrationcore.mpi.pixEndpoint";
 
 	public static final String GP_MPI_PIX_PORT = "registrationcore.mpi.pixPort";
+
+	public static final String GP_MPI_PIX_URL = "registrationcore.mpi.pixUrl";
+
+	public static final String GP_MPI_PDQ_URL = "registrationcore.mpi.pdqUrl";
 
 	public static final String GP_MPI_SENDING_APPLICATION = "registrationcore.mpi.sendingApplication";
 

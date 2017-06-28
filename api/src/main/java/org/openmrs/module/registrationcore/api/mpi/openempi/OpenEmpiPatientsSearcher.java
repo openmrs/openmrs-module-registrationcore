@@ -6,7 +6,6 @@ import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
-import org.openmrs.module.registrationcore.api.mpi.pixpdq.Hl7v2Sender;
 import org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqMessageUtil;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +35,6 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher{
     @Autowired
     @Qualifier("registrationcore.mpiPixPdqMessageUtil")
     private PixPdqMessageUtil pixPdqMessageUtil;
-
-    @Autowired
-    @Qualifier("registrationcore.mpiHl7v2Sender")
-    private Hl7v2Sender hl7v2Sender;
 
     protected final Log log = LogFactory.getLog(this.getClass());
 

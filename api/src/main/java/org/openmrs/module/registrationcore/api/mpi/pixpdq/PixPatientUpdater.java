@@ -14,10 +14,6 @@ public class PixPatientUpdater implements MpiPatientUpdater {
     private final Log log = LogFactory.getLog(this.getClass());
 
     @Autowired
-    @Qualifier("registrationcore.mpiHl7v2Sender")
-    private Hl7v2Sender hl7v2Sender;
-
-    @Autowired
     @Qualifier("registrationcore.mpiPixPdqMessageUtil")
     private PixPdqMessageUtil pixPdqMessageUtil;
 
@@ -25,10 +21,13 @@ public class PixPatientUpdater implements MpiPatientUpdater {
     public void updatePatient(Patient patient) {
         try {
             Message updateMsg = pixPdqMessageUtil.createUpdate(patient);
-            Message response = hl7v2Sender.sendPixMessage(updateMsg);
+            if(pixPdqMessageUtil.isHl7enabled())
+            {
+                Message response = pixPdqMessageUtil.getHl7v2Sender().sendPixMessage(updateMsg);
 
-            if (pixPdqMessageUtil.isQueryError(response)) {
-                throw new MpiException("Error querying patient data during update");
+                if (pixPdqMessageUtil.isQueryError(response)) {
+                    throw new MpiException("Error querying patient data during update");
+                }
             }
         } catch (Exception e) {
             log.error(e);

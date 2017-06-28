@@ -153,9 +153,49 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pdqPort</property>
-		<defaultValue>8989</defaultValue>
+		<defaultValue>3700</defaultValue>
 		<description>
 			Specifies port for Hl7 PDQ Message
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pixPort</property>
+		<defaultValue>3600</defaultValue>
+		<description>
+			Specifies port for Hl7 PIX Message
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pixUrl</property>
+		<defaultValue>localhost:5001/pix</defaultValue>
+		<description>
+			Specifies URL for Hl7 PDQ Message
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pdqUrl</property>
+		<defaultValue>localhost:5001/pdq</defaultValue>
+		<description>
+			Specifies URL for Hl7 PIX Message
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.Hl7implementation</property>
+		<defaultValue>registrationcore.mpiHl7v2HttpSender</defaultValue>
+		<description>
+			Specifies which bean should be used to send Hl7 Message
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.patientRoot</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies Root Identifier for Patient
 		</description>
 	</globalProperty>
 
@@ -166,6 +206,7 @@
 			Specifies sending implementation of OpenMRS
 		</description>
 	</globalProperty>
+
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pdqSendingLocation</property>
