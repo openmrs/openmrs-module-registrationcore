@@ -71,14 +71,14 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
                 RegistrationCoreConstants.GP_MPI_PIX_PORT, "3600"));
     }
 
-    public String getPixUrl() {
+    public String getMpiUsername() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PIX_URL, "localhost:5001/pix");
+                RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME, "admin");
     }
 
-    public String getPdqUrl() {
+    public String getMpiPassword() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PDQ_URL, "localhost:5001/pdq");
+                RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, "admin");
     }
 
     public String getShrPatientRoot() {

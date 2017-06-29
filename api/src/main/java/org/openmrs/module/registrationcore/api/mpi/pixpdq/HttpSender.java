@@ -27,13 +27,13 @@ public class HttpSender implements Hl7v2Sender {
 
     @Override
     public Message sendPdqMessage(Message request) throws LLPException, IOException, HL7Exception {
-        URL url = new URL("http://" + config.getPdqUrl());
+        URL url = new URL(config.getPdqEndpoint());
         return sendMessage(request, url);
     }
 
     @Override
     public Message sendPixMessage(Message request) throws LLPException, IOException, HL7Exception {
-        URL url = new URL("http://" + config.getPixUrl());
+        URL url = new URL(config.getPixEndpoint());
         return sendMessage(request, url);
     }
 
@@ -43,7 +43,7 @@ public class HttpSender implements Hl7v2Sender {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/hl7-v2+er7; charset=utf-8");
-        String authentication = "pixc:pixc";
+        String authentication = config.getMpiUsername() + ":" + config.getMpiPassword();
         String encoded = "Basic "+ Base64.encode(authentication.getBytes());
         connection.setRequestProperty("Authorization", encoded);
         connection.setRequestMethod("POST");

@@ -114,6 +114,9 @@
     <bean id="registrationcore.mpiHl7v2MllpSender"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.MllpSender"/>
 
+    <bean id="registrationcore.Hl7SenderHolder"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.Hl7SenderHolder"/>
+
     <!--help classes related to MPI implementation:-->
 
     <bean id="registrationcore.identifierMapper"

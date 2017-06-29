@@ -168,22 +168,6 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.pixUrl</property>
-		<defaultValue>localhost:5001/pix</defaultValue>
-		<description>
-			Specifies URL for Hl7 PDQ Message
-		</description>
-	</globalProperty>
-
-	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.pdqUrl</property>
-		<defaultValue>localhost:5001/pdq</defaultValue>
-		<description>
-			Specifies URL for Hl7 PIX Message
-		</description>
-	</globalProperty>
-
-	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.Hl7implementation</property>
 		<defaultValue>registrationcore.mpiHl7v2HttpSender</defaultValue>
 		<description>

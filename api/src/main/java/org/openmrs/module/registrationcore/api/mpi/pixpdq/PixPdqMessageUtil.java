@@ -24,12 +24,9 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.Relationship;
-import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -47,9 +44,6 @@ public final class PixPdqMessageUtil {
 
     @Autowired
     private RegistrationCoreProperties config;
-
-    @Autowired
-    private ApplicationContext context;
 
     public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception
     {
@@ -305,10 +299,10 @@ public final class PixPdqMessageUtil {
         pid.getAdministrativeSex().setValue(patient.getGender());
 
         // Date of birth
-        if(patient.getBirthdateEstimated())
+        /*if(patient.getBirthdateEstimated())
             pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyy").format(patient.getBirthdate()));
         else
-            pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate()));
+            pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate()));*/
 
         // Addresses
         for(PersonAddress pa : patient.getAddresses())
@@ -387,26 +381,6 @@ public final class PixPdqMessageUtil {
         else
             xpn.getNameTypeCode().setValue("U");
 
-    }
-
-    public boolean isHl7enabled() {
-        return getHl7v2Sender() != null;
-    }
-
-    public Hl7v2Sender getHl7v2Sender() {
-        String propertyName = RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION;
-        Object bean;
-        try {
-            String beanId = Context.getAdministrationService().getGlobalProperty(propertyName);
-            bean = context.getBean(beanId);
-        } catch (APIException e) {
-            return null;
-        }
-        if (!(bean instanceof Hl7v2Sender))
-            throw new IllegalArgumentException(propertyName
-                    + " must point to bean implementing MpiProvider");
-
-        return (Hl7v2Sender) bean;
     }
 
 }

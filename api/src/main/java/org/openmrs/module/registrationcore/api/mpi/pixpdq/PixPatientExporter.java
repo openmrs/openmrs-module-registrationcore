@@ -17,17 +17,20 @@ public class PixPatientExporter implements MpiPatientExporter {
     @Qualifier("registrationcore.mpiPixPdqMessageUtil")
     private PixPdqMessageUtil pixPdqMessageUtil;
 
+    @Autowired
+    @Qualifier("registrationcore.Hl7SenderHolder")
+    private Hl7SenderHolder hl7SenderHolder;
+
     @Override
     public String exportPatient(Patient patient) {
         try {
             Message admitMessage = pixPdqMessageUtil.createAdmit(patient);
-            if(pixPdqMessageUtil.isHl7enabled()) {
-                Message response = pixPdqMessageUtil.getHl7v2Sender().sendPixMessage(admitMessage);
-                if (pixPdqMessageUtil.isQueryError(response)) {
-                    throw new MpiException("Error querying patient data during export");
-                }
+            Message response = hl7SenderHolder.getHl7v2Sender().sendPixMessage(admitMessage);
 
+            if (pixPdqMessageUtil.isQueryError(response)) {
+                throw new MpiException("Error querying patient data during export");
             }
+
             // TODO: return ID
             return null;
         } catch (Exception e) {

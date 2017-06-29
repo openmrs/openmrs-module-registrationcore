@@ -22,6 +22,10 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     @Qualifier("registrationcore.mpiPixPdqMessageUtil")
     private PixPdqMessageUtil pixPdqMessageUtil;
 
+    @Autowired
+    @Qualifier("registrationcore.Hl7SenderHolder")
+    private Hl7SenderHolder hl7SenderHolder;
+
     protected final Log log = LogFactory.getLog(this.getClass());
 
     @Override
@@ -48,10 +52,10 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         try
         {
             Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
-            if(pixPdqMessageUtil.isHl7enabled()) {
-                Message response = pixPdqMessageUtil.getHl7v2Sender().sendPdqMessage(pdqRequest);
-                retVal = pixPdqMessageUtil.interpretPIDSegments(response);
-            }
+            Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
+
+            retVal = pixPdqMessageUtil.interpretPIDSegments(response);
+
         }
         catch(Exception e)
         {
