@@ -39,8 +39,6 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     }
 
     private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
-        // TODO: use max results
-
         Map<String, String> queryParams = new HashMap<String, String>();
         if(patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
             queryParams.put("@PID.5.1", patient.getFamilyName());
