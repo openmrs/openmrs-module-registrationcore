@@ -72,10 +72,6 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_PIX_PORT = "registrationcore.mpi.pixPort";
 
-	public static final String GP_MPI_PIX_URL = "registrationcore.mpi.pixUrl";
-
-	public static final String GP_MPI_PDQ_URL = "registrationcore.mpi.pdqUrl";
-
 	public static final String GP_MPI_SENDING_APPLICATION = "registrationcore.mpi.sendingApplication";
 
 	public static final String GP_MPI_SENDING_LOCATION = "registrationcore.mpi.sendingLocation";
