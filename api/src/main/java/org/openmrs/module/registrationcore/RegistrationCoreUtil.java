@@ -3,14 +3,21 @@ package org.openmrs.module.registrationcore;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RegistrationCoreUtil {
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 
+public class RegistrationCoreUtil {
+    
+    protected static final Log log = LogFactory.getLog(RegistrationCoreUtil.class);
     /**
      * Converts an age (specified in year, month, and day) to a birthdate.
      * You can specify the specific date to calculate the age from, or, if
      * not specified, today's date is used. Year, month, or day can all be left blank.
      *
-     * Note that if only a year is specified, the month/day is set to January 1;
+     * Note that if only a year is specified, the month/day is set to January 1 or the month specified by the
+     * @see RegistrationCoreConstants#GP_BIRTHDATE_ESTIMATION_START_MONTH global property if specified;
      *
      * If only the month (or the month and year) is specified, the day is set to the first day of the month
      *
@@ -32,7 +39,7 @@ public class RegistrationCoreUtil {
             c.add(Calendar.MONTH, -1 * months);
         }
         else if (days == null || days == 0){
-            c.set(Calendar.MONTH,0);
+            c.set(Calendar.MONTH, getEstimationStartMonth());
         }
 
         // set the day (if not specified, and no month specified, set to first day of month)
@@ -45,6 +52,23 @@ public class RegistrationCoreUtil {
 
         return c.getTime();
     }
-
-
+    
+    /**
+     * Get the month from which the birth dates are estimated, defaults to January
+     *
+     * @return
+     */
+    public static int getEstimationStartMonth() {
+        int startMonth = Calendar.JANUARY;
+        String gpStartMonth = Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_BIRTHDATE_ESTIMATION_START_MONTH);
+        if (StringUtils.isNotBlank(gpStartMonth)) {
+            try {
+                startMonth = Integer.parseInt(gpStartMonth);
+            } catch (NumberFormatException nfe) {
+                log.warn("Unable to parse value of " + RegistrationCoreConstants.GP_BIRTHDATE_ESTIMATION_START_MONTH,  nfe);
+            }
+        }
+        
+        return startMonth;
+    }
 }
