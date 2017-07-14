@@ -98,12 +98,12 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 
     public String getSendingApplication() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_SENDING_APPLICATION, "UNNAMEDOPENMRS");
+                RegistrationCoreConstants.GP_MPI_SENDING_APPLICATION, "OPENMRS");
     }
 
     public String getSendingFacility() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_SENDING_LOCATION, "LOCATION");
+                RegistrationCoreConstants.GP_MPI_SENDING_FACILITY, "LOCATION");
     }
 
     public String getUniversalIdType() {

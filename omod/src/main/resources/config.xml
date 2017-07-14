@@ -167,6 +167,14 @@
 	</globalProperty>
 
 	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pixEndpoint</property>
+		<defaultValue>3700</defaultValue>
+		<description>
+			Specifies port for Hl7 PDQ Message
+		</description>
+	</globalProperty>
+
+	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pixPort</property>
 		<defaultValue>3600</defaultValue>
 		<description>
@@ -191,7 +199,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.pdqSendingApplication</property>
+		<property>${project.parent.artifactId}.mpi.sendingApplication</property>
 		<defaultValue></defaultValue>
 		<description>
 			Specifies sending implementation of OpenMRS
@@ -200,7 +208,24 @@
 
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.pdqSendingLocation</property>
+		<property>${project.parent.artifactId}.mpi.sendingFacility</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies sending Location
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.receivingApplication</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies sending implementation of OpenMRS
+		</description>
+	</globalProperty>
+
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.receivingFacility</property>
 		<defaultValue></defaultValue>
 		<description>
 			Specifies sending Location

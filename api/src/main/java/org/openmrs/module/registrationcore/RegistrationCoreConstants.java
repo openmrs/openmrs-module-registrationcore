@@ -74,7 +74,7 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_SENDING_APPLICATION = "registrationcore.mpi.sendingApplication";
 
-	public static final String GP_MPI_SENDING_LOCATION = "registrationcore.mpi.sendingLocation";
+	public static final String GP_MPI_SENDING_FACILITY = "registrationcore.mpi.sendingFacility";
 
 	public static final String GP_MPI_PATIENT_ROOT = "registrationcore.mpi.patientRoot";
 
