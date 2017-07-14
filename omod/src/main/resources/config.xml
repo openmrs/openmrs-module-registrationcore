@@ -28,6 +28,12 @@
         </require_module>
     </require_modules>
 
+	<require_modules>
+		<require_module>
+			org.openmrs.module.outgoingmessageexceptions
+		</require_module>
+	</require_modules>
+
 	<extension>
 		<point>org.openmrs.admin.list</point>
 		<class>org.openmrs.module.registrationcore.extension.html.AdminList</class>
@@ -36,6 +42,7 @@
     <aware_of_modules>
        <aware_of_module version="${namephoneticsVersion}">org.openmrs.module.namephonetics</aware_of_module>
        <aware_of_module>org.openmrs.module.legacyui</aware_of_module>
+		<aware_of_module>org.openmrs.module.outgoingmessageexceptions</aware_of_module>
 	</aware_of_modules>
 	
 	<!-- Global properties -->
