@@ -70,10 +70,49 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     private List<PatientAndMatchQuality> toMatchList(List<Patient> patients) {
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 
-        for (Patient patient : patients) {
-            PatientAndMatchQuality match = new PatientAndMatchQuality(patient,
-                    1.0,
-                    Collections.<String>emptyList()); // TODO: list fields
+        for (Patient match : patients) {
+            List<String> matchedFields = new ArrayList<String>();
+            Double score = 0.0;
+
+            if(patient.getBirthdate() != null && match.getBirthdate() != null) {
+                long birthdateDistance = Math.abs(patient.getBirthdate().getTime() - match.getBirthdate().getTime());
+                if(birthdateDistance == 0){
+                    matchedFields.add("bithdate");
+                    score += 0.2;
+                }
+            }
+
+            for (PersonName patientName : patient.getNames()) {
+                for (PersonName matchName : match.getNames()) {
+                    if(patientName.getFamilyName().equals(matchName.getFamilyName())) {
+                        matchedFields.add("names.familyName");
+                        score += 0.2;
+                    }
+                    if(patientName.getMiddleName().equals(matchName.getMiddleName())) {
+                        matchedFields.add("names.middleName");
+                        score += 0.2;
+                    }
+                    if(patientName.getGivenName().equals(matchName.getGivenName())) {
+                        matchedFields.add("names.givenName");
+                        score += 0.2;
+                    }
+                }
+            }
+
+            for(PersonAddress personAddress : patient.getAddresses()) {
+                for(PersonAddress matchAddress : match.getAddresses()) {
+                    if(personAddress.getCountry().equals(matchAddress.getCountry())) {
+                        matchedFields.add("addresses.country");
+                        score += 0.2;
+                    }
+                    if(personAddress.getCityVillage().equals(matchAddress.getCityVillage())) {
+                        matchedFields.add("addresses.cityVillage");
+                        score += 0.2;
+                    }
+                }
+            }
+
+            matchList.add(new PatientAndMatchQuality(match, score, matchedFields));
         }
 
         return matchList;
