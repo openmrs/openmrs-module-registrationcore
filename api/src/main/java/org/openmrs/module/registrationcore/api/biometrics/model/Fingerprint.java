@@ -16,9 +16,19 @@ import java.io.Serializable;
  */
 public class Fingerprint extends BiometricSample implements Serializable {
 
+    private String image;
+
     public Fingerprint() { }
 
     public Fingerprint(String type, BiometricTemplateFormat templateFormat, String template) {
         super(type, templateFormat, template);
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
