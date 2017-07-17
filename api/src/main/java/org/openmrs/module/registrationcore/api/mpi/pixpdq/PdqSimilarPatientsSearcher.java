@@ -4,13 +4,14 @@ import ca.uhn.hl7v2.model.Message;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
+import org.openmrs.PersonAddress;
+import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,10 +65,10 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
             retVal = retVal.subList(0, maxResults);
         }
 
-        return toMatchList(retVal);
+        return toMatchList(patient, retVal);
     }
 
-    private List<PatientAndMatchQuality> toMatchList(List<Patient> patients) {
+    private List<PatientAndMatchQuality> toMatchList(Patient patient, List<Patient> patients) {
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 
         for (Patient match : patients) {
@@ -77,37 +78,53 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
             if(patient.getBirthdate() != null && match.getBirthdate() != null) {
                 long birthdateDistance = Math.abs(patient.getBirthdate().getTime() - match.getBirthdate().getTime());
                 if(birthdateDistance == 0){
-                    matchedFields.add("bithdate");
-                    score += 0.2;
+                    matchedFields.add("birthdate");
+                    score += 0.125;
                 }
+            }
+
+            if(patient.getGender() != null && match.getGender() != null
+                    && patient.getGender().toLowerCase().equals(match.getGender().toLowerCase())) {
+                matchedFields.add("gender");
+                score += 0.125;
             }
 
             for (PersonName patientName : patient.getNames()) {
                 for (PersonName matchName : match.getNames()) {
-                    if(patientName.getFamilyName().equals(matchName.getFamilyName())) {
+                    if(patientName.getFamilyName() != null && matchName.getFamilyName() != null
+                            && patientName.getFamilyName().toLowerCase().equals(matchName.getFamilyName().toLowerCase())) {
                         matchedFields.add("names.familyName");
-                        score += 0.2;
+                        score += 0.125;
                     }
-                    if(patientName.getMiddleName().equals(matchName.getMiddleName())) {
+                    if(patientName.getMiddleName() != null && matchName.getMiddleName() != null
+                            && patientName.getMiddleName().toLowerCase().equals(matchName.getMiddleName().toLowerCase())) {
                         matchedFields.add("names.middleName");
-                        score += 0.2;
+                        score += 0.125;
                     }
-                    if(patientName.getGivenName().equals(matchName.getGivenName())) {
+                    if(patientName.getGivenName() != null && matchName.getGivenName() != null
+                            && patientName.getGivenName().toLowerCase().equals(matchName.getGivenName().toLowerCase())) {
                         matchedFields.add("names.givenName");
-                        score += 0.2;
+                        score += 0.125;
                     }
                 }
             }
 
             for(PersonAddress personAddress : patient.getAddresses()) {
                 for(PersonAddress matchAddress : match.getAddresses()) {
-                    if(personAddress.getCountry().equals(matchAddress.getCountry())) {
+                    if(personAddress.getCountry() != null && matchAddress.getCountry() != null
+                            && personAddress.getCountry().toLowerCase().equals(matchAddress.getCountry().toLowerCase())) {
                         matchedFields.add("addresses.country");
-                        score += 0.2;
+                        score += 0.125;
                     }
-                    if(personAddress.getCityVillage().equals(matchAddress.getCityVillage())) {
+                    if(personAddress.getCityVillage() != null && matchAddress.getCityVillage() != null
+                            && personAddress.getCityVillage().toLowerCase().equals(matchAddress.getCityVillage().toLowerCase())) {
                         matchedFields.add("addresses.cityVillage");
-                        score += 0.2;
+                        score += 0.125;
+                    }
+                    if(personAddress.getCountyDistrict() != null && matchAddress.getCountyDistrict() != null
+                            && personAddress.getCountyDistrict().toLowerCase().equals(matchAddress.getCountyDistrict().toLowerCase())) {
+                        matchedFields.add("addresses.countryDistrict");
+                        score += 0.125;
                     }
                 }
             }
