@@ -137,6 +137,14 @@
 			Specifies id of identifier type which will be used for Mpi Person Id
 		</description>
 	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.birthdateEstimationStartMonth</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			The month from which the birth date is estimated, with January having a value of 0
+		</description>
+	</globalProperty>
 
     <globalProperty>
         <property>${project.parent.artifactId}.biometrics.implementation</property>
