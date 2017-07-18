@@ -28,6 +28,11 @@ public interface BiometricEngine {
     BiometricSubject enroll(BiometricSubject subject);
 
     /**
+     * Updates the biometrics for a given subject, enrolling that subject if they do not already exist
+     */
+    BiometricSubject update(BiometricSubject subject);
+
+    /**
      * Change an existing subjectId to a new value
      */
     BiometricSubject updateSubjectId(String oldId, String newId);

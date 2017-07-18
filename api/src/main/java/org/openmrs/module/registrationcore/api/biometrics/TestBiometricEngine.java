@@ -10,9 +10,9 @@
 package org.openmrs.module.registrationcore.api.biometrics;
 
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricEngineStatus;
-import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
+import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -49,6 +49,19 @@ public class TestBiometricEngine implements BiometricEngine {
         }
         enrolledSubjects.put(subject.getSubjectId(), subject);
         return subject;
+    }
+
+    @Override
+    public BiometricSubject update(BiometricSubject subject) {
+        if (subject.getSubjectId() == null) {
+            return enroll(subject);
+        }
+        BiometricSubject existing = lookup(subject.getSubjectId());
+        if (existing == null) {
+            throw new IllegalArgumentException("No subject with id <" + subject.getSubjectId() + "> found.");
+        }
+        existing.setFingerprints(subject.getFingerprints());
+        return existing;
     }
 
     @Override
