@@ -146,7 +146,13 @@
 		</description>
 	</globalProperty>
 
-
+    <globalProperty>
+        <property>${project.parent.artifactId}.biometrics.implementation</property>
+        <defaultValue></defaultValue>
+        <description>
+            Which Biometrics engine implementation to should we connect to? Specify a Spring bean name, or leave blank to disable
+        </description>
+    </globalProperty>
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>

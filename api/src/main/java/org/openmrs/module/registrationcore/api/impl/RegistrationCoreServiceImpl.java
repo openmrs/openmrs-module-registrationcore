@@ -35,6 +35,7 @@ import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
+import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
@@ -364,4 +365,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
 		}
 	}
+
+    @Override
+    public BiometricEngine getBiometricEngine() {
+	    return registrationCoreProperties.getBiometricEngine();
+    }
 }
