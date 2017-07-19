@@ -26,6 +26,7 @@ import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
+import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.DateFormat;
@@ -33,6 +34,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -44,6 +46,9 @@ public class PixPdqMessageUtil {
 
     @Autowired
     private RegistrationCoreProperties config;
+
+    @Autowired
+    private PatientIdentifierMapper identifierMapper;
 
     public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception
     {
@@ -289,6 +294,19 @@ public class PixPdqMessageUtil {
         pid.getPatientIdentifierList(0).getAssigningAuthority().getNamespaceID().setValue(config.getShrPatientRoot());
         pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(config.getUniversalIdType());
         pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
+
+        List<String> LIST_PIXPDQ = new ArrayList<String>();
+        LIST_PIXPDQ.add("54e90dd1-4378-4a05-8e51-9f1f53c67a17");   //TODO, replace this to global property
+
+        for (PatientIdentifier patIdentifier : patient.getIdentifiers()) {
+            CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
+            if (LIST_PIXPDQ.contains(patIdentifier.getIdentifierType().getUuid())) { //TODO, replace list to global property
+                patientId.getAssigningAuthority().getUniversalID().setValue(identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid()));
+                patientId.getAssigningAuthority().getNamespaceID().setValue(identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid()));
+                patientId.getAssigningAuthority().getUniversalIDType().setValue(config.getUniversalIdType()); //TODO, how to get this ?
+                patientId.getIDNumber().setValue(patIdentifier.getIdentifier());
+            }
+        }
 
         // Names
         for(PersonName pn : patient.getNames())
