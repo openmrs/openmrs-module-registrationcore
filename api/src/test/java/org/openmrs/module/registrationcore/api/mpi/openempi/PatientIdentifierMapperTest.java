@@ -45,7 +45,7 @@ public class PatientIdentifierMapperTest {
 
         String mpiIdentifierTypeId = identifierMapper.getMappedMpiIdentifierTypeId(PROPERTY_LOCAL_PART.toString());
 
-        assertEquals(mpiIdentifierTypeId, PROPERTY_MPI_PART);
+        assertEquals(mpiIdentifierTypeId, PROPERTY_MPI_PART.toString());
     }
 
     @Test
@@ -54,6 +54,6 @@ public class PatientIdentifierMapperTest {
 
         String localIdentifierTypeId = identifierMapper.getMappedLocalIdentifierTypeId(PROPERTY_MPI_PART.toString());
 
-        assertEquals(localIdentifierTypeId, PROPERTY_LOCAL_PART);
+        assertEquals(localIdentifierTypeId, PROPERTY_LOCAL_PART.toString());
     }
 }
