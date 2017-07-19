@@ -21,21 +21,23 @@ public class PatientIdentifierMapper {
     @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
-    public Integer getMappedLocalIdentifierTypeId(Integer mpiIdentifierTypeId) {
+    public String getMappedLocalIdentifierTypeId(String mpiIdentifierTypeId) {
         validateInit();
         for (IdentifierMapPair pair : MAPPED_ID) {
-            if (pair.mpiIdentifierId.equals(mpiIdentifierTypeId))
+            if (pair.mpiIdentifierId.equals(mpiIdentifierTypeId)) {
                 return pair.localIdentifierId;
+            }
         }
         throw new IllegalArgumentException("There is no mapped local identifier type " +
                 "for mpi identifier type id: " + mpiIdentifierTypeId);
     }
 
-    public Integer getMappedMpiIdentifierTypeId(Integer localIdentifierTypeId) {
+    public String getMappedMpiIdentifierTypeId(String localIdentifierTypeId) {
         validateInit();
         for (IdentifierMapPair pair : MAPPED_ID) {
-            if (pair.localIdentifierId.equals(localIdentifierTypeId))
+            if (pair.localIdentifierId.equals(localIdentifierTypeId)) {
                 return pair.mpiIdentifierId;
+            }
         }
         throw new IllegalArgumentException("There is no mapped mpi identifier type " +
                 "for local identifier type id: " + localIdentifierTypeId);
@@ -76,8 +78,8 @@ public class PatientIdentifierMapper {
 
     private IdentifierMapPair createPair(String localString, String mpiString) {
         try {
-            Integer local = Integer.valueOf(localString);
-            Integer mpi = Integer.valueOf(mpiString);
+            String local = localString;
+            String mpi = mpiString;
             return  new IdentifierMapPair(local, mpi);
         } catch (NumberFormatException e) {
             throw new APIException("Can't create identifier pair for values: local= " +
@@ -87,11 +89,11 @@ public class PatientIdentifierMapper {
 
     private class IdentifierMapPair{
 
-        public final Integer localIdentifierId;
+        public final String localIdentifierId;
 
-        public final Integer mpiIdentifierId;
+        public final String mpiIdentifierId;
 
-        public IdentifierMapPair(Integer localIdentifierId, Integer mpiIdentifierId) {
+        public IdentifierMapPair(String localIdentifierId, String mpiIdentifierId) {
             this.localIdentifierId = localIdentifierId;
             this.mpiIdentifierId = mpiIdentifierId;
         }

@@ -19,10 +19,10 @@ public class PatientBuilderTest {
 
     private static final String PATIENT_WITH_OPENMRS_ID = "patient_with_openmrs_id.xml";
 
-    private static final int LOCAL_OPENMRS_IDENTIFIER_TYPE_ID = 3;
-    private static final int MPI_OPENMRS_IDENTIFIER_TYPE_ID = 13;
-    private static final int LOCAL_ECID_IDENTIFIER_TYPE_ID = 5;
-    private static final int MPI_ECID_IDENTIFIER_TYPE_ID = 60;
+    private static final Integer LOCAL_OPENMRS_IDENTIFIER_TYPE_ID = 3;
+    private static final Integer MPI_OPENMRS_IDENTIFIER_TYPE_ID = 13;
+    private static final Integer LOCAL_ECID_IDENTIFIER_TYPE_ID = 5;
+    private static final Integer MPI_ECID_IDENTIFIER_TYPE_ID = 60;
     private static final String PATIENT_OPENMRS_IDENTIFIER_VALUE = "1001NF";
     private static final String PATIENT_ECID_IDENTIFIER_VALUE = "019bb820-1bd3-11e5-8a7f-040158db6201";
     private static final int PERSON_IDENTIFIER_TYPE_ID = 6;
@@ -46,8 +46,8 @@ public class PatientBuilderTest {
     }
 
     private void mockIdentifierMapper() {
-        when(identifierMapper.getMappedLocalIdentifierTypeId(MPI_OPENMRS_IDENTIFIER_TYPE_ID)).thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_ID);
-        when(identifierMapper.getMappedLocalIdentifierTypeId(MPI_ECID_IDENTIFIER_TYPE_ID)).thenReturn(LOCAL_ECID_IDENTIFIER_TYPE_ID);
+        when(identifierMapper.getMappedLocalIdentifierTypeId(MPI_OPENMRS_IDENTIFIER_TYPE_ID.toString())).thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_ID.toString());
+        when(identifierMapper.getMappedLocalIdentifierTypeId(MPI_ECID_IDENTIFIER_TYPE_ID.toString())).thenReturn(LOCAL_ECID_IDENTIFIER_TYPE_ID.toString());
     }
 
     private void mockIdentifierBuilder() {
