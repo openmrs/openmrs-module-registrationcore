@@ -38,7 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-public final class PixPdqMessageUtil {
+public class PixPdqMessageUtil {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
