@@ -43,6 +43,17 @@ public class PatientIdentifierMapper {
                 "for local identifier type id: " + localIdentifierTypeId);
     }
 
+    public String getMappedMpiUniversalIdType(String localIdentifierTypeId) {
+        validateInit();
+        for (IdentifierMapPair pair : MAPPED_ID) {
+            if (pair.localIdentifierId.equals(localIdentifierTypeId)) {
+                return pair.universalIdType;
+            }
+        }
+        throw new IllegalArgumentException("There is no mapped universal id type " +
+                "for local identifier type id: " + localIdentifierTypeId);
+    }
+
     private void validateInit() {
         if (MAPPED_ID == null) {
             init();
@@ -65,25 +76,43 @@ public class PatientIdentifierMapper {
     private IdentifierMapPair parseIdentifiers(String mappedIdentifiers) {
         String local = getLocalPart(mappedIdentifiers);
         String mpi = getMpiPart(mappedIdentifiers);
-        return createPair(local, mpi);
+        String type = getIdTypePart(mappedIdentifiers);
+        return createPair(local, mpi, type);
     }
 
     private String getLocalPart(String mappedIdentifiers) {
-        return mappedIdentifiers.substring(0, mappedIdentifiers.indexOf(SPLITTER_SIGN));
+        String parts[] = mappedIdentifiers.split(":");
+        if (parts.length > 0) {
+            return parts[0];
+        }
+        return null;
     }
 
     private String getMpiPart(String mappedIdentifiers) {
-        return mappedIdentifiers.substring(mappedIdentifiers.indexOf(SPLITTER_SIGN) + 1);
+        String parts[] = mappedIdentifiers.split(":");
+        if (parts.length > 1) {
+            return parts[1];
+        }
+        return null;
     }
 
-    private IdentifierMapPair createPair(String localString, String mpiString) {
+    private String getIdTypePart(String mappedIdentifiers) {
+        String parts[] = mappedIdentifiers.split(":");
+        if (parts.length > 2) {
+            return parts[2];
+        }
+        return null;
+    }
+
+    private IdentifierMapPair createPair(String localString, String mpiString, String universalIdType) {
         try {
             String local = localString;
             String mpi = mpiString;
-            return  new IdentifierMapPair(local, mpi);
+            String type = universalIdType;
+            return  new IdentifierMapPair(local, mpi, type);
         } catch (NumberFormatException e) {
             throw new APIException("Can't create identifier pair for values: local= " +
-                    localString + ", mpi=" + mpiString);
+                    localString + ", mpi=" + mpiString + ", type=" + universalIdType);
         }
     }
 
@@ -93,9 +122,12 @@ public class PatientIdentifierMapper {
 
         public final String mpiIdentifierId;
 
-        public IdentifierMapPair(String localIdentifierId, String mpiIdentifierId) {
+        public final String universalIdType;
+
+        public IdentifierMapPair(String localIdentifierId, String mpiIdentifierId, String universalIdType) {
             this.localIdentifierId = localIdentifierId;
             this.mpiIdentifierId = mpiIdentifierId;
+            this.universalIdType = universalIdType;
         }
     }
 }
