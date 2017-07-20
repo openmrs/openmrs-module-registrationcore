@@ -18,7 +18,9 @@ import org.openmrs.Patient;
 import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -71,6 +73,16 @@ public interface RegistrationCoreService extends OpenmrsService {
      * @should fail if identifier does not pass validation
      */
     public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation);
+
+    /**
+     * Registers patient and saves them in the database.
+     * @return the created patient
+     * @should create a patient from record with relationships
+     * @should fire an event when a patient is registered
+     * @should set wasPerson field to true for an existing person on the registration event
+     * @should fail if identifier does not pass validation
+     */
+    public Patient registerPatient(RegistrationData registrationData);
 
 	/**
 	 * Returns a list of matching patients using the fast algorithm.
@@ -132,4 +144,9 @@ public interface RegistrationCoreService extends OpenmrsService {
      * @return the engine used for biometric operations, if one is enabled
      */
 	BiometricEngine getBiometricEngine();
+
+    /**
+     * Enrolls the given biometric data
+     */
+	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
 }

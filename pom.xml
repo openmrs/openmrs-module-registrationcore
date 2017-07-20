@@ -34,7 +34,7 @@
 	</modules>
 
 	<properties>
-		<openMRSVersion>1.10.2</openMRSVersion>
+		<openMRSVersion>1.10.5</openMRSVersion>
 		<idgenVersion>4.3</idgenVersion>
 		<eventVersion>2.3</eventVersion>
 		<namephoneticsVersion>1.4</namephoneticsVersion>

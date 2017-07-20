@@ -20,6 +20,8 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.LocationTag;
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.Relationship;
@@ -31,9 +33,15 @@ import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.RegistrationData;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricTemplateFormat;
+import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.annotation.NotTransactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,14 +50,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
- * Tests {@link $ RegistrationCoreService} .
+ * Tests {@link RegistrationCoreService} .
  */
 public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBase {
 	
@@ -70,12 +74,20 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	@Autowired
 	@Qualifier("locationService")
 	private LocationService locationService;
+
+	private PatientIdentifierType biometricsIdentifierType;
 	
 	@Before
 	public void before() throws Exception {
 		executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
 		service = Context.getService(RegistrationCoreService.class);
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
+
+        biometricsIdentifierType = new PatientIdentifierType();
+        biometricsIdentifierType.setName("Biometrics Reference Code");
+        biometricsIdentifierType.setDescription("Biometrics Reference Code");
+        biometricsIdentifierType.setLocationBehavior(PatientIdentifierType.LocationBehavior.NOT_USED);
+        biometricsIdentifierType = patientService.savePatientIdentifierType(biometricsIdentifierType);
 	}
 	
 	private Patient createBasicPatient() {
@@ -155,7 +167,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
     }
 
 	/**
-	 * @see {@link RegistrationCoreService#registerPatient(Patient,List<Relationship>)}
+	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
 	 */
 	@Test
 	@Verifies(value = "should fire an event when a patient is registered", method = "registerPatient(Patient,List<Relationship>)")
@@ -183,8 +195,8 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	}
 	
 	/**
-	 * @see {@link RegistrationCoreService#registerPatient(Patient,List<Relationship>)} This needs
-	 *      to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
+	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
+     * This needs to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
 	 */
 	@Test
 	@Ignore
@@ -204,4 +216,74 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 		listener.waitForEvents(10, TimeUnit.SECONDS);
 		assertTrue(listener.getWasAPerson());
 	}
+
+    /**
+     * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
+     */
+    @Test
+    public void registerPatient_shouldNotRequireBiometrics() throws Exception {
+        RegistrationData data = new RegistrationData();
+        data.setPatient(createBasicPatient());
+        int startPatients = getNumPatients();
+        Patient p = service.registerPatient(data);
+        assertEquals(0, p.getPatientIdentifiers(biometricsIdentifierType).size());
+        assertEquals(startPatients+1, getNumPatients());
+    }
+
+    /**
+     * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
+     */
+    @Test
+    @NotTransactional
+    @Ignore // TODO: this passes when run on its own, but not in a suite
+    public void registerPatient_shouldFailIfBiometricsSuppliedButNoEngineEnabled() throws Exception {
+        RegistrationData data = getSampleRegistrationDataWithBiometrics();
+        int numPatients = getNumPatients();
+        boolean exceptionThrown = false;
+        try {
+            Patient p = service.registerPatient(data);
+        }
+        catch (IllegalStateException e) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+        assertEquals(numPatients, getNumPatients()); // Make sure that transaction rolled back and no patient was created
+    }
+
+    /**
+     * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
+     */
+    @Test
+    public void registerPatient_shouldSucceedIfBiometricsSuppliedAndEngineEnabled() throws Exception {
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_IMPLEMENTATION, "testBiometricEngine"));
+        RegistrationData data = getSampleRegistrationDataWithBiometrics();
+        int startPatients = getNumPatients();
+        Patient p = service.registerPatient(data);
+        List<PatientIdentifier> identifiers = p.getPatientIdentifiers(biometricsIdentifierType);
+        assertEquals(1, identifiers.size());
+        assertEquals(startPatients+1, getNumPatients());
+        PatientIdentifier identifier = identifiers.get(0);
+        BiometricSubject subject = service.getBiometricEngine().lookup(identifier.getIdentifier());
+        assertNotNull(subject);
+        assertEquals(1, subject.getFingerprints().size());
+        Fingerprint fingerprint = subject.getFingerprints().get(0);
+        assertEquals("LEFT-INDEX", fingerprint.getType());
+        assertEquals(BiometricTemplateFormat.ISO, fingerprint.getFormat());
+        assertEquals("xxxyyyzzz", fingerprint.getTemplate());
+    }
+
+    private RegistrationData getSampleRegistrationDataWithBiometrics() {
+        RegistrationData data = new RegistrationData();
+        data.setPatient(createBasicPatient());
+
+        BiometricSubject subject = new BiometricSubject();
+        subject.addFingerprint(new Fingerprint("LEFT-INDEX", BiometricTemplateFormat.ISO, "xxxyyyzzz"));
+        data.addBiometricData(new BiometricData(subject, biometricsIdentifierType));
+        return data;
+    }
+
+    private int getNumPatients() {
+        List<List<Object>> results = adminService.executeSQL("select count(*) from patient", true);
+        return ((Number)results.get(0).get(0)).intValue();
+    }
 }
