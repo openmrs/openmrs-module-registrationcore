@@ -26,6 +26,7 @@ import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,7 +35,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,6 +49,9 @@ public class PixPdqMessageUtil {
 
     @Autowired
     private PatientIdentifierMapper identifierMapper;
+
+    @Autowired
+    private MpiProperties mpiProperties;
 
     public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception
     {
@@ -254,8 +257,7 @@ public class PixPdqMessageUtil {
         return retVal;
     }
 
-    public Message createAdmit(Patient patient) throws HL7Exception
-    {
+    public Message createAdmit(Patient patient) throws HL7Exception {
         ADT_A01 message = new ADT_A01();
         this.updateMSH(message.getMSH(), "ADT", "A01");
         message.getMSH().getVersionID().getVersionID().setValue("2.3.1");
@@ -295,23 +297,25 @@ public class PixPdqMessageUtil {
         pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(config.getUniversalIdType());
         pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
 
-        List<String> LIST_PIXPDQ = new ArrayList<String>();
-        LIST_PIXPDQ.add("54e90dd1-4378-4a05-8e51-9f1f53c67a17");   //TODO, replace this to global property
-
+        // Other identifiers
+        List<String> uuidList = mpiProperties.getPixIdentifierUuidList();
         for (PatientIdentifier patIdentifier : patient.getIdentifiers()) {
-            CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
-            if (LIST_PIXPDQ.contains(patIdentifier.getIdentifierType().getUuid())) { //TODO, replace list to global property
+            identifierMapper.getMappedMpiUniversalIdType(patIdentifier.getIdentifierType().getUuid());
+            if (uuidList.contains(patIdentifier.getIdentifierType().getUuid())) {
+                CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
                 patientId.getAssigningAuthority().getUniversalID().setValue(identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid()));
                 patientId.getAssigningAuthority().getNamespaceID().setValue(identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid()));
-                patientId.getAssigningAuthority().getUniversalIDType().setValue(config.getUniversalIdType()); //TODO, how to get this ?
+                patientId.getAssigningAuthority().getUniversalIDType().setValue(identifierMapper.getMappedMpiUniversalIdType(patIdentifier.getIdentifierType().getUuid()));
                 patientId.getIDNumber().setValue(patIdentifier.getIdentifier());
             }
         }
 
         // Names
-        for(PersonName pn : patient.getNames())
-            if(!pn.getFamilyName().equals("(none)") && !pn.getGivenName().equals("(none)"))
+        for(PersonName pn : patient.getNames()) {
+            if (!pn.getFamilyName().equals("(none)") && !pn.getGivenName().equals("(none)")) {
                 this.updateXPN(pid.getPatientName(pid.getPatientName().length), pn);
+            }
+        }
 
         // Gender
         pid.getAdministrativeSex().setValue(patient.getGender());
@@ -323,8 +327,7 @@ public class PixPdqMessageUtil {
             pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate()));*/
 
         // Addresses
-        for(PersonAddress pa : patient.getAddresses())
-        {
+        for(PersonAddress pa : patient.getAddresses()) {
             XAD xad = pid.getPatientAddress(pid.getPatientAddress().length);
             if(pa.getAddress1() != null)
                 xad.getStreetAddress().getStreetOrMailingAddress().setValue(pa.getAddress1());
@@ -348,25 +351,21 @@ public class PixPdqMessageUtil {
         }
 
         // Death?
-        if(patient.getDead())
-        {
+        if (patient.getDead()) {
             pid.getPatientDeathIndicator().setValue("Y");
             pid.getPatientDeathDateAndTime().getTime().setDatePrecision(patient.getDeathDate().getYear(), patient.getDeathDate().getMonth(), patient.getDeathDate().getDay());
         }
 
         // Mother?
-        for(Relationship rel : Context.getPersonService().getRelationshipsByPerson(patient))
-        {
-            if(rel.getRelationshipType().getDescription().contains("MTH") &&
-                    patient.equals(rel.getPersonB())) //MOTHER?
-            {
+        for (Relationship rel : Context.getPersonService().getRelationshipsByPerson(patient)) {
+            if (rel.getRelationshipType().getDescription().contains("MTH") &&
+                    patient.equals(rel.getPersonB())) { //MOTHER?
                 // TODO: Find a better ID
                 this.updateXPN(pid.getMotherSMaidenName(0), rel.getPersonB().getNames().iterator().next());
                 pid.getMotherSIdentifier(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
                 pid.getMotherSIdentifier(0).getAssigningAuthority().getUniversalIDType().setValue("ISO");
                 pid.getMotherSIdentifier(0).getIDNumber().setValue(String.format("%s",rel.getPersonB().getId()));
             }
-
         }
 
     }
