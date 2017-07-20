@@ -232,7 +232,13 @@
 		</description>
 	</globalProperty>
 
-
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pixIdentifierUuidList</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies sending identifier UUID list (separate with comma)
+		</description>
+	</globalProperty>
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>

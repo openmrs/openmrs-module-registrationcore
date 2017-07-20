@@ -5,6 +5,8 @@ import org.openmrs.api.APIException;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,5 +62,13 @@ public class MpiProperties extends ModuleProperties {
             //If exception is thrown if property is missed, so by default return false;
             return false;
         }
+    }
+
+    public List<String> getPixIdentifierUuidList() {
+        String uuidListPropertyName = RegistrationCoreConstants.GP_MPI_PIX_IDENTTIFIER_UUID_LIST;
+        String uuidList = getProperty(uuidListPropertyName);
+        List<String> list = new ArrayList<String>();
+        list.addAll(Arrays.asList(uuidList.split(",")));
+        return list;
     }
 }
