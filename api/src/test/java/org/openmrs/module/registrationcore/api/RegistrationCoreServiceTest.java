@@ -36,7 +36,6 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
-import org.openmrs.module.registrationcore.api.biometrics.model.BiometricTemplateFormat;
 import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -268,7 +267,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
         assertEquals(1, subject.getFingerprints().size());
         Fingerprint fingerprint = subject.getFingerprints().get(0);
         assertEquals("LEFT-INDEX", fingerprint.getType());
-        assertEquals(BiometricTemplateFormat.ISO, fingerprint.getFormat());
+        assertEquals("ISO", fingerprint.getFormat());
         assertEquals("xxxyyyzzz", fingerprint.getTemplate());
     }
 
@@ -277,7 +276,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
         data.setPatient(createBasicPatient());
 
         BiometricSubject subject = new BiometricSubject();
-        subject.addFingerprint(new Fingerprint("LEFT-INDEX", BiometricTemplateFormat.ISO, "xxxyyyzzz"));
+        subject.addFingerprint(new Fingerprint("LEFT-INDEX", "ISO", "xxxyyyzzz"));
         data.addBiometricData(new BiometricData(subject, biometricsIdentifierType));
         return data;
     }
