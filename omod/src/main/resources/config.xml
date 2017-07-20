@@ -151,6 +151,14 @@
 	</globalProperty>
 
 	<globalProperty>
+		<property>${project.parent.artifactId}.biometrics.implementation</property>
+		<defaultValue></defaultValue>
+		<description>
+			Which Biometrics engine implementation to should we connect to? Specify a Spring bean name, or leave blank to disable
+		</description>
+	</globalProperty>
+
+	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pdqEndpoint</property>
 		<defaultValue>localhost</defaultValue>
 		<description>

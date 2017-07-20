@@ -83,4 +83,6 @@ public final class RegistrationCoreConstants {
 	public static final String GP_MPI_RECEIVING_APPLICATION = "registsrationcore.mpi.receivingApplication";
 
 	public static final String GP_MPI_RECEIVING_FACILITY = "registrationcore.mpi.receivingFacility";
+
+	public static final String GP_BIOMETRICS_IMPLEMENTATION = "registrationcore.biometrics.implementation";
 }
