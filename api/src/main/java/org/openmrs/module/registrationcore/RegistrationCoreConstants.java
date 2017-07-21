@@ -85,4 +85,6 @@ public final class RegistrationCoreConstants {
 	public static final String GP_MPI_RECEIVING_FACILITY = "registrationcore.mpi.receivingFacility";
 
 	public static final String GP_MPI_PIX_IDENTTIFIER_UUID_LIST = "registrationcore.mpi.pixIdentifierUuidList";
+
+	public static final String GP_MPI_PDQ_IDENTTIFIER_UUID_LIST = "registrationcore.mpi.pdqIdentifierUuidList";
 }
