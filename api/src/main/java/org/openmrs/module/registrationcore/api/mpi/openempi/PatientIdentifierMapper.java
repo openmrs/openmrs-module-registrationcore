@@ -28,8 +28,7 @@ public class PatientIdentifierMapper {
                 return pair.localIdentifierId;
             }
         }
-        throw new IllegalArgumentException("There is no mapped local identifier type " +
-                "for mpi identifier type id: " + mpiIdentifierTypeId);
+        return null;
     }
 
     public String getMappedMpiIdentifierTypeId(String localIdentifierTypeId) {
@@ -39,8 +38,7 @@ public class PatientIdentifierMapper {
                 return pair.mpiIdentifierId;
             }
         }
-        throw new IllegalArgumentException("There is no mapped mpi identifier type " +
-                "for local identifier type id: " + localIdentifierTypeId);
+        return null;
     }
 
     public String getMappedMpiUniversalIdType(String localIdentifierTypeId) {
