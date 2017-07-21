@@ -280,7 +280,6 @@ public class PixPdqMessageUtil {
         // Other identifiers
         List<String> uuidList = mpiProperties.getPixIdentifierUuidList();
         for (PatientIdentifier patIdentifier : patient.getIdentifiers()) {
-            identifierMapper.getMappedMpiUniversalIdType(patIdentifier.getIdentifierType().getUuid());
             if (uuidList.contains(patIdentifier.getIdentifierType().getUuid())) {
                 CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
                 patientId.getAssigningAuthority().getUniversalID().setValue(identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid()));
