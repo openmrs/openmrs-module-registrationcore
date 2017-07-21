@@ -20,6 +20,7 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.APIException;
@@ -35,7 +36,11 @@ import org.openmrs.event.EventMessage;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
+import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
@@ -48,6 +53,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -130,26 +136,44 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
     }
 
 	/**
-	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(org.openmrs.Patient,
-	 *      java.util.List, String, Location)
+	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(Patient, List, String, Location)
 	 */
 	@Override
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation) {
-		if (log.isInfoEnabled())
-			log.info("Registering new patient..");
-		if (patient == null)
-			throw new APIException("Patient cannot be null");
-		
+		RegistrationData data = new RegistrationData();
+		data.setPatient(patient);
+		data.setRelationships(relationships);
+		data.setIdentifier(identifierString);
+		data.setIdentifierLocation(identifierLocation);
+		return registerPatient(data);
+	}
+
+	/**
+	 *  @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(RegistrationData)
+	 */
+	@Override
+	public Patient registerPatient(RegistrationData registrationData) {
+			if (log.isInfoEnabled()) {
+				log.info("Registering new patient..");
+			}
+			Patient patient = registrationData.getPatient();
+			String identifierString = registrationData.getIdentifier();
+			Location identifierLocation = registrationData.getIdentifierLocation();
+			if (patient == null) {
+				throw new APIException("Patient cannot be null");
+			}
+
 		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
 		if (idSource == null) {
 			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
-			if (StringUtils.isBlank(idSourceId))
+			if (StringUtils.isBlank(idSourceId)) {
 				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
-			
+			}
 			try {
 				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
-				if (idSource == null)
+				if (idSource == null) {
 					throw new APIException("cannot find identifier source with id:" + idSourceId);
+				}
 			}
 			catch (NumberFormatException e) {
 				throw new APIException("Identifier source id should be a number");
@@ -158,8 +182,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		
 		if (identifierLocation == null) {
 			identifierLocation = locationService.getDefaultLocation();
-			if (identifierLocation == null)
+			if (identifierLocation == null) {
 				throw new APIException("Failed to resolve location to associate to patient identifiers");
+			}
 		}
 
         // see if there is a primary identifier location further up the chain, use that instead if there is
@@ -183,33 +208,35 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		boolean wasAPerson = patient.getPersonId() != null;
 		
 		patient = patientService.savePatient(patient);
-		
-		if (relationships != null) {
-			for (Relationship relationship : relationships) {
-				if (relationship.getPersonA() == null) {
-					relationship.setPersonA(patient);
-				} else if (relationship.getPersonB() == null) {
-					relationship.setPersonB(patient);
-				} else {
-					throw new APIException("Only one side of a relationship should be specified");
-				}
-				
-				personService.saveRelationship(relationship);
+
+		List<Relationship> relationships = registrationData.getRelationships();
+		ArrayList<String> relationshipUuids = new ArrayList<String>();
+		for (Relationship relationship : relationships) {
+			if (relationship.getPersonA() == null) {
+				relationship.setPersonA(patient);
 			}
+			else if (relationship.getPersonB() == null) {
+				relationship.setPersonB(patient);
+			}
+			else {
+				throw new APIException("Only one side of a relationship should be specified");
+			}
+			personService.saveRelationship(relationship);
+			relationshipUuids.add(relationship.getUuid());
 		}
+		for (BiometricData biometricData : registrationData.getBiometrics()) {
+			Context.getService(RegistrationCoreService.class).saveBiometricsForPatient(patient, biometricData);
+		}
+		DateFormat df = new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING);
 		
 		EventMessage eventMessage = new EventMessage();
 		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, patient.getCreator().getId());
-		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, new SimpleDateFormat(
-		        RegistrationCoreConstants.DATE_FORMAT_STRING).format(patient.getDateCreated()));
+		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, df.format(patient.getDateCreated()));
 		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
-		ArrayList<String> relationshipUuids = new ArrayList<String>();
-		if (relationships != null) {
-			for (Relationship r : relationships) {
-				relationshipUuids.add(r.getUuid());
-			}
+
+		if (!relationshipUuids.isEmpty()) {
 			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
 		}
 
@@ -364,5 +391,60 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			//should not pass here since "importPatient" performs only when MpiProvider is not null
 			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
 		}
+	}
+
+	@Override
+	public BiometricEngine getBiometricEngine() {
+		return registrationCoreProperties.getBiometricEngine();
+	}
+
+	@Override
+	public BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData) {
+		BiometricSubject subject = biometricData.getSubject();
+		if (subject == null || subject.getFingerprints().isEmpty()) {
+			log.debug("There are no biometrics to save for patient");
+		}
+		else {
+			log.debug("Saving biometrics for patient.  Found " + subject.getFingerprints().size() + " fingerprints.");
+					BiometricEngine biometricEngine = getBiometricEngine();
+			if (biometricEngine == null) {
+				throw new IllegalStateException("Unable to save biometrics, as no biometrics engine is enabled");
+			}
+			log.debug("Using biometric engine: " + biometricEngine.getClass().getSimpleName());
+					PatientIdentifierType idType = biometricData.getIdentifierType();
+			if (idType != null) {
+				log.debug("Saving biometrics as a patient identifier of type: " + idType.getName());
+						BiometricSubject existingSubject = (subject.getSubjectId() == null ? null : biometricEngine.lookup(subject.getSubjectId()));
+				if (existingSubject == null) {
+					subject = biometricEngine.enroll(subject);
+					log.debug("Enrolled new biometric subject: " + subject.getSubjectId());
+				}
+				else {
+					subject = biometricEngine.update(subject);
+					log.debug("Updated existing biometric subject: " + subject.getSubjectId());
+				}
+				// If patient does not already have an identifier that references this subject, add one
+				boolean identifierExists = false;
+				for (PatientIdentifier identifier : patient.getPatientIdentifiers(idType)) {
+					if (identifier.getIdentifier().equals(subject.getSubjectId())) {
+						identifierExists = true;
+					}
+				}
+				if (identifierExists) {
+					log.debug("Identifier already exists for patient");
+				}
+				else {
+					PatientIdentifier identifier = new PatientIdentifier(subject.getSubjectId(), idType, null);
+					patient.addIdentifier(identifier);
+					patientService.savePatientIdentifier(identifier);
+					log.debug("New patient identifier saved for patient: " + identifier);
+				}
+			}
+			else {
+				// TODO: In the future we could add additional support for different storage options - eg. as person attributes
+				throw new IllegalArgumentException("Invalid biometric configuration.  No patient identifier type specified");
+			}
+		}
+		return biometricData;
 	}
 }

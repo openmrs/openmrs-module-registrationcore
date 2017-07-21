@@ -146,7 +146,15 @@
 		<property>${project.parent.artifactId}.mpi.personIdentifierId</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies id of identifier type which will be used for Mpi Person Id
+			Specifies id of identifier type which will be used for Mpi Person Id. Note that this is not currently the UUID.
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.biometrics.implementation</property>
+		<defaultValue></defaultValue>
+		<description>
+			Which Biometrics engine implementation to should we connect to? Specify a Spring bean name, or leave blank to disable
 		</description>
 	</globalProperty>
 
@@ -168,9 +176,9 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pixEndpoint</property>
-		<defaultValue>3700</defaultValue>
+		<defaultValue>localhost</defaultValue>
 		<description>
-			Specifies port for Hl7 PDQ Message
+			Specifies the endpoint for the Hl7 PIX Message
 		</description>
 	</globalProperty>
 
@@ -186,7 +194,7 @@
 		<property>${project.parent.artifactId}.mpi.Hl7implementation</property>
 		<defaultValue>registrationcore.mpiHl7v2HttpSender</defaultValue>
 		<description>
-			Specifies which bean should be used to send Hl7 Message
+			Specifies which bean should be used to send the Hl7 Message
 		</description>
 	</globalProperty>
 
@@ -194,7 +202,7 @@
 		<property>${project.parent.artifactId}.mpi.sendingApplication</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies sending implementation of OpenMRS
+			Specifies the sending application in the MSH header section of the HL7 message
 		</description>
 	</globalProperty>
 
@@ -203,7 +211,7 @@
 		<property>${project.parent.artifactId}.mpi.sendingFacility</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies sending Location
+			Specifies sending Facility in the MSH header section of the HL7 message
 		</description>
 	</globalProperty>
 
@@ -211,7 +219,7 @@
 		<property>${project.parent.artifactId}.mpi.receivingApplication</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies sending implementation of OpenMRS
+			Specifies the receiving application in the MSH header section of the HL7 message
 		</description>
 	</globalProperty>
 
@@ -220,7 +228,7 @@
 		<property>${project.parent.artifactId}.mpi.receivingFacility</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies sending Location
+			Specifies sending Facility in the MSH header section of the HL7 message
 		</description>
 	</globalProperty>
 
