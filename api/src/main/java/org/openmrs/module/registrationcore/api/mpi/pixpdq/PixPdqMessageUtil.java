@@ -110,55 +110,37 @@ public class PixPdqMessageUtil {
 
         Terser terser = new Terser(response);
         // Check for AA and OK in QAK
-        if(terser.get("/MSA-1") != null &&
-                terser.get("/MSA-1").equals("AE"))
+        if (terser.get("/MSA-1") != null && terser.get("/MSA-1").equals("AE")) {
             throw new HL7Exception("Server Error");
-        else if(terser.get("/QAK-2") != null &&
-                terser.get("/QAK-2").equals("NF"))
+        } else if (terser.get("/QAK-2") != null && terser.get("/QAK-2").equals("NF")) {
             return retVal;
+        }
 
         Location defaultLocation = Context.getLocationService().getDefaultLocation();
 
-        for(Structure queryResponseStruct : response.getAll("QUERY_RESPONSE"))
-        {
+        for (Structure queryResponseStruct : response.getAll("QUERY_RESPONSE")) {
             Group queryResponseGroup = (Group)queryResponseStruct;
-            for(Structure pidStruct : queryResponseGroup.getAll("PID"))
-            {
+            for (Structure pidStruct : queryResponseGroup.getAll("PID")) {
                 PID pid = (PID)pidStruct;
                 Patient patient = new Patient();
                 // Attempt to load a patient by identifier
-                for(CX id : pid.getPatientIdentifierList())
-                {
+                for (CX id : pid.getPatientIdentifierList()) {
 
                     PatientIdentifierType pit = null;
 
-                    if(id.getAssigningAuthority().getUniversalID().getValue() != null &&
-                            !id.getAssigningAuthority().getUniversalID().getValue().isEmpty())
-                    {
-                        pit = Context.getPatientService().getPatientIdentifierTypeByName(id.getAssigningAuthority().getUniversalID().getValue());
-                        if(pit == null)
-                            pit = Context.getPatientService().getPatientIdentifierTypeByUuid(id.getAssigningAuthority().getUniversalID().getValue());
-                        else if(!pit.getUuid().equals(id.getAssigningAuthority().getUniversalID().getValue())) // fix the UUID
-                        {
-                            log.debug(String.format("Updating %s to have UUID %s", pit.getName(), id.getAssigningAuthority().getUniversalID().getValue()));
-                            pit.setUuid(id.getAssigningAuthority().getUniversalID().getValue());
-                            Context.getPatientService().savePatientIdentifierType(pit);
-                        }
+                    if (id.getAssigningAuthority().getUniversalID().getValue() != null &&
+                            !id.getAssigningAuthority().getUniversalID().getValue().isEmpty()) {
+                        pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
+                                identifierMapper.getMappedLocalIdentifierTypeId(id.getAssigningAuthority().getUniversalID().getValue()));
                     }
-                    if(pit == null && id.getAssigningAuthority().getNamespaceID().getValue() != null &&
-                            !id.getAssigningAuthority().getNamespaceID().getValue().isEmpty())
-                    {
-                        pit = Context.getPatientService().getPatientIdentifierTypeByName(id.getAssigningAuthority().getNamespaceID().getValue());
-                        if(pit != null && !pit.getUuid().equals(id.getAssigningAuthority().getUniversalID().getValue())) // fix the UUID
-                        {
-                            log.debug(String.format("Updating %s to have UUID %s", pit.getName(), id.getAssigningAuthority().getUniversalID().getValue()));
-                            pit.setUuid(id.getAssigningAuthority().getUniversalID().getValue());
-                            Context.getPatientService().savePatientIdentifierType(pit);
-                        }
-
+                    if (pit == null && id.getAssigningAuthority().getNamespaceID().getValue() != null &&
+                            !id.getAssigningAuthority().getNamespaceID().getValue().isEmpty()) {
+                        pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
+                                identifierMapper.getMappedLocalIdentifierTypeId(id.getAssigningAuthority().getNamespaceID().getValue()));
                     }
-                    if(pit == null)
+                    if (pit == null) {
                         continue;
+                    }
 
                     PatientIdentifier patId = new PatientIdentifier(
                             id.getIDNumber().getValue(),
@@ -166,39 +148,43 @@ public class PixPdqMessageUtil {
                             defaultLocation
                     );
 
-                    if(patId.getIdentifierType().getName().equals("ECID"))
+                    if (patId.getIdentifierType().getName().equals("ECID")) {
                         patId.setPreferred(true);
+                    }
 
                     patient.addIdentifier(patId);
                 }
 
                 // Attempt to copy names
-                for(XPN xpn : pid.getPatientName())
-                {
+                for (XPN xpn : pid.getPatientName()) {
                     PersonName pn = new PersonName();
 
-                    if(xpn.getFamilyName().getSurname().getValue() == null || xpn.getFamilyName().getSurname().getValue().isEmpty())
+                    if (xpn.getFamilyName().getSurname().getValue() == null || xpn.getFamilyName().getSurname().getValue().isEmpty()) {
                         pn.setFamilyName("(none)");
-                    else
+                    } else {
                         pn.setFamilyName(xpn.getFamilyName().getSurname().getValue());
+                    }
                     pn.setFamilyName2(xpn.getFamilyName().getSurnameFromPartnerSpouse().getValue());
 
                     // Given name
-                    if(xpn.getGivenName().getValue() == null || xpn.getGivenName().getValue().isEmpty())
+                    if (xpn.getGivenName().getValue() == null || xpn.getGivenName().getValue().isEmpty()) {
                         pn.setGivenName("(none)");
-                    else
+                    } else {
                         pn.setGivenName(xpn.getGivenName().getValue());
+                    }
                     pn.setMiddleName(xpn.getSecondAndFurtherGivenNamesOrInitialsThereof().getValue());
                     pn.setPrefix(xpn.getPrefixEgDR().getValue());
 
-                    if("L".equals(xpn.getNameTypeCode().getValue()))
+                    if ("L".equals(xpn.getNameTypeCode().getValue())) {
                         pn.setPreferred(true);
+                    }
 
                     patient.addName(pn);
                 }
 
-                if(patient.getNames().size() == 0)
+                if (patient.getNames().size() == 0) {
                     patient.addName(new PersonName("(none)", null, "(none)"));
+                }
                 // Copy gender
                 patient.setGender(pid.getAdministrativeSex().getValue());
                 patient.setDead("Y".equals(pid.getPatientDeathIndicator().getValue()));
@@ -206,24 +192,20 @@ public class PixPdqMessageUtil {
                 DateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
 
                 // Copy DOB
-                if(pid.getDateTimeOfBirth().getTime().getValue() != null)
-                {
+                if (pid.getDateTimeOfBirth().getTime().getValue() != null) {
                     Date birthDate = format.parse(pid.getDateTimeOfBirth().getTime().getValue());
                     patient.setBirthdate(birthDate);
                 }
 
                 // Death details
-                if(pid.getPatientDeathDateAndTime().getTime().getValue() != null)
-                {
+                if (pid.getPatientDeathDateAndTime().getTime().getValue() != null) {
                     Date deadDate = format.parse(pid.getPatientDeathDateAndTime().getTime().getValue());
                     patient.setDeathDate(deadDate);
                 }
                 patient.setDead("Y".equals(pid.getPatientDeathIndicator().getValue()));
 
-
                 // Addresses
-                for(XAD xad : pid.getPatientAddress())
-                {
+                for (XAD xad : pid.getPatientAddress()) {
                     PersonAddress pa = new PersonAddress();
                     pa.setAddress1(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
                     pa.setAddress2(xad.getOtherDesignation().getValue());
@@ -232,20 +214,18 @@ public class PixPdqMessageUtil {
                     pa.setCountyDistrict(xad.getCountyParishCode().getValue());
                     pa.setPostalCode(xad.getZipOrPostalCode().getValue());
                     pa.setStateProvince(xad.getStateOrProvince().getValue());
-                    if("H".equals(xad.getAddressType().getValue()))
+                    if ("H".equals(xad.getAddressType().getValue())) {
                         pa.setPreferred(true);
+                    }
 
                     patient.addAddress(pa);
-
                 }
 
                 // Mother's name
                 XPN momsName = pid.getMotherSMaidenName(0);
-                if(momsName != null)
-                {
+                if (momsName != null) {
                     PersonAttributeType momNameAtt = Context.getPersonService().getPersonAttributeTypeByName("Mother's Name");
-                    if(momNameAtt != null)
-                    {
+                    if (momNameAtt != null) {
                         PersonAttribute pa = new PersonAttribute(momNameAtt, String.format("%s, %s", momsName.getFamilyName().getSurname().getValue(), momsName.getGivenName().getValue()));
                         patient.addAttribute(pa);
                     }
