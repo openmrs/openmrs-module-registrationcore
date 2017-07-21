@@ -272,10 +272,10 @@ public class PixPdqMessageUtil {
         // Update the pid segment with data in the patient
 
         // PID-3
-        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
-        pid.getPatientIdentifierList(0).getAssigningAuthority().getNamespaceID().setValue(config.getShrPatientRoot());
-        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(config.getUniversalIdType());
-        pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
+//        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
+//        pid.getPatientIdentifierList(0).getAssigningAuthority().getNamespaceID().setValue(config.getShrPatientRoot());
+//        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(config.getUniversalIdType());
+//        pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
 
         // Other identifiers
         List<String> uuidList = mpiProperties.getPixIdentifierUuidList();

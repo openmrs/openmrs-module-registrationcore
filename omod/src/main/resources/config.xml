@@ -191,14 +191,6 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.patientRoot</property>
-		<defaultValue></defaultValue>
-		<description>
-			Specifies Root Identifier for Patient
-		</description>
-	</globalProperty>
-
-	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.sendingApplication</property>
 		<defaultValue></defaultValue>
 		<description>
