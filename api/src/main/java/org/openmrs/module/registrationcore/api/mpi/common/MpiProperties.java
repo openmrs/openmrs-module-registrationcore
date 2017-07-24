@@ -64,8 +64,8 @@ public class MpiProperties extends ModuleProperties {
         }
     }
 
-    public List<String> getPixIdentifierUuidList() {
-        String uuidListPropertyName = RegistrationCoreConstants.GP_MPI_PIX_IDENTTIFIER_UUID_LIST;
+    public List<String> getPixIdentifierTypeUuidList() {
+        String uuidListPropertyName = RegistrationCoreConstants.GP_MPI_PIX_IDENTTIFIER_TYPE_UUID_LIST;
         String uuidList = getProperty(uuidListPropertyName);
         List<String> list = new ArrayList<String>();
         for (String uuid : uuidList.split(",")) {
@@ -74,8 +74,8 @@ public class MpiProperties extends ModuleProperties {
         return list;
     }
 
-    public List<String> getPdqIdentifierUuidList() {
-        String uuidListPropertyName = RegistrationCoreConstants.GP_MPI_PDQ_IDENTTIFIER_UUID_LIST;
+    public List<String> getPdqIdentifierTypeUuidList() {
+        String uuidListPropertyName = RegistrationCoreConstants.GP_MPI_PDQ_IDENTTIFIER_TYPE_UUID_LIST;
         String uuidList = getProperty(uuidListPropertyName);
         List<String> list = new ArrayList<String>();
         for (String uuid : uuidList.split(",")) {

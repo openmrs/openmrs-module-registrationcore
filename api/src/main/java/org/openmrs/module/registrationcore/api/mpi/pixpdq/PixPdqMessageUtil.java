@@ -278,7 +278,7 @@ public class PixPdqMessageUtil {
 //        pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
 
         // Other identifiers
-        List<String> uuidList = mpiProperties.getPixIdentifierUuidList();
+        List<String> uuidList = mpiProperties.getPixIdentifierTypeUuidList();
         for (PatientIdentifier patIdentifier : patient.getIdentifiers()) {
             if (uuidList.contains(patIdentifier.getIdentifierType().getUuid())) {
                 CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);

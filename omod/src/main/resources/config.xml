@@ -233,7 +233,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.pixIdentifierUuidList</property>
+		<property>${project.parent.artifactId}.mpi.pixIdentifierTypeUuidList</property>
 		<defaultValue></defaultValue>
 		<description>
 			Specifies sending identifier UUID list (separate with comma)
@@ -241,7 +241,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.pdqIdentifierUuidList</property>
+		<property>${project.parent.artifactId}.mpi.pdqIdentifierTypeUuidList</property>
 		<defaultValue></defaultValue>
 		<description>
 			Specifies sending identifier UUID list (separate with comma)

@@ -39,7 +39,7 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
         }
 
         Map<String, String> queryParams = new HashMap<String, String>();
-        List<String> uuidList = mpiProperties.getPdqIdentifierUuidList();
+        List<String> uuidList = mpiProperties.getPdqIdentifierTypeUuidList();
         for (PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
             if (uuidList.contains(patientIdentifier.getIdentifierType().getUuid())) {
                 queryParams.put("@PID.3.1", patientIdentifier.getIdentifier());
