@@ -72,19 +72,19 @@ public class OpenEmpiPatientQueryBuilder {
         LinkedList<PersonIdentifier> personIdentifiers = new LinkedList<PersonIdentifier>();
 
         for (PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
-            Integer identifierTypeId = patientIdentifier.getIdentifierType().getId();
+            String identifierTypeUuid = patientIdentifier.getIdentifierType().getUuid();
             String identifier = patientIdentifier.getIdentifier();
-            if (identifierTypeId.equals(mpiProperties.getMpiPersonIdentifierTypeId())) {
+            if (identifierTypeUuid.equals(mpiProperties.getMpiPersonIdentifierTypeUuid())) {
                 //person identifier should be placed in separate field, not in list of identifiers.
                 setPersonIdentifier(identifier, query);
                 continue;
             }
-            Integer mpiIdentifierTypeId = Integer.valueOf(identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeId.toString()));
+            Integer mpiIdentifierTypeId = Integer.valueOf(identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid.toString()));
 
             if (mpiIdentifierTypeId != null) {
                 personIdentifiers.add(createPersonIdentifier(mpiIdentifierTypeId, identifier));
             } else {
-                log.error("Do not add patient identifier type id: " + identifierTypeId + " to Exported patient. " +
+                log.error("Do not add patient identifier type uuid: " + identifierTypeUuid + " to Exported patient. " +
                         "Reason: there is no matched appropriate MPI identifier for this type.");
             }
         }

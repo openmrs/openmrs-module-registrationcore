@@ -143,10 +143,10 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.personIdentifierId</property>
+		<property>${project.parent.artifactId}.mpi.personIdentifierTypeUuid</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies id of identifier type which will be used for Mpi Person Id. Note that this is not currently the UUID.
+			Specifies uuid of identifier type which will be used for Mpi Person Id
 		</description>
 	</globalProperty>
 

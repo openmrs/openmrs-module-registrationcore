@@ -1,5 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
+import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Performs filter by OpenEmpi person identifier.
@@ -21,19 +24,34 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
     private MpiProperties mpiProperties;
 
     public void filter(List<PatientAndMatchQuality> patients) {
-        Integer filterIdentifierId = mpiProperties.getMpiPersonIdentifierTypeId();
+        String filterIdentifierTypeUuid = mpiProperties.getMpiPersonIdentifierTypeUuid();
 
         for (PatientAndMatchQuality patientWrapper : patients) {
-            if (patientWrapper.getPatient().getPatientIdentifier(filterIdentifierId) != null) {
-                removePatientsWithSameIdentifier(filterIdentifierId, patientWrapper, patients);
+            if (hasIdentifierTypeUuid(patientWrapper.getPatient(), filterIdentifierTypeUuid)) {
+                removePatientsWithSameIdentifier(filterIdentifierTypeUuid, patientWrapper, patients);
             }
         }
     }
 
-    private void removePatientsWithSameIdentifier(Integer globalIdentifierDomainId, PatientAndMatchQuality initialPatient,
+    private boolean hasIdentifierTypeUuid(Patient patient, String patientIdentifierTypeUuid) {
+        return getPatientIdentifiersByIdentifiersTypeUuid(patient, patientIdentifierTypeUuid).size() > 0;
+    }
+
+    private Set<String> getPatientIdentifiersByIdentifiersTypeUuid(Patient patient, String patientIdentifierTypeUuid) {
+        HashSet<String> patientIdentifiers = new HashSet<String>();
+        for(PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
+            if (patientIdentifier.getIdentifierType() != null
+                    && patientIdentifier.getIdentifierType().getUuid().equals(patientIdentifierTypeUuid)) {
+                patientIdentifiers.add(patientIdentifier.getIdentifier());
+            }
+        }
+        return patientIdentifiers;
+    }
+
+    private void removePatientsWithSameIdentifier(String patientIdentifierTypeUuid, PatientAndMatchQuality initialPatient,
                                                   List<PatientAndMatchQuality> patients) {
-        String initialPatientIdentifier = initialPatient.getPatient().getPatientIdentifier(globalIdentifierDomainId)
-                .getIdentifier();
+        Set<String> initialPatientIdentifiers = getPatientIdentifiersByIdentifiersTypeUuid(initialPatient.getPatient(),
+                patientIdentifierTypeUuid);
 
         List<PatientAndMatchQuality> patientsToRemove = new ArrayList<PatientAndMatchQuality>();
 
@@ -41,12 +59,14 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
             if (secondaryPatient == initialPatient)
                 continue;
 
-            PatientIdentifier secondaryPatientIdentifier = secondaryPatient.getPatient()
-                    .getPatientIdentifier(globalIdentifierDomainId);
+            Set<String> secondaryPatientIdentifiers = getPatientIdentifiersByIdentifiersTypeUuid(
+                    secondaryPatient.getPatient(), patientIdentifierTypeUuid);
 
-            if (secondaryPatientIdentifier != null &&
-                    secondaryPatientIdentifier.getIdentifier().equals(initialPatientIdentifier)) {
-                addPatientToRemove(initialPatient, secondaryPatient, patientsToRemove);
+            for (String initialPatientIdentifier : initialPatientIdentifiers) {
+                if (secondaryPatientIdentifiers.contains(initialPatientIdentifier)) {
+                    addPatientToRemove(initialPatient, secondaryPatient, patientsToRemove);
+                    break;
+                }
             }
         }
 

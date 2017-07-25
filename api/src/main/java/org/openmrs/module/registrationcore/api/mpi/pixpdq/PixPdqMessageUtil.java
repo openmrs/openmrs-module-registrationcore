@@ -131,12 +131,12 @@ public class PixPdqMessageUtil {
                     if (id.getAssigningAuthority().getUniversalID().getValue() != null &&
                             !id.getAssigningAuthority().getUniversalID().getValue().isEmpty()) {
                         pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
-                                identifierMapper.getMappedLocalIdentifierTypeId(id.getAssigningAuthority().getUniversalID().getValue()));
+                                identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getUniversalID().getValue()));
                     }
                     if (pit == null && id.getAssigningAuthority().getNamespaceID().getValue() != null &&
                             !id.getAssigningAuthority().getNamespaceID().getValue().isEmpty()) {
                         pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
-                                identifierMapper.getMappedLocalIdentifierTypeId(id.getAssigningAuthority().getNamespaceID().getValue()));
+                                identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getNamespaceID().getValue()));
                     }
                     if (pit == null) {
                         continue;

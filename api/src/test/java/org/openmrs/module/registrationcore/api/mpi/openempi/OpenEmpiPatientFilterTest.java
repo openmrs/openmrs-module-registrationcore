@@ -7,10 +7,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 public class OpenEmpiPatientFilterTest {
 
-    public static final Integer PERSON_IDENTIFIER_TYPE_ID = 5;
+    public static final String PERSON_IDENTIFIER_TYPE_UUID = "5";
     private static final String PERSON_IDENTIFIER = "4";
     private List<PatientAndMatchQuality> patients;
 
@@ -50,7 +53,7 @@ public class OpenEmpiPatientFilterTest {
     }
 
     private void mockProperty() {
-        when(mpiProperties.getMpiPersonIdentifierTypeId()).thenReturn(PERSON_IDENTIFIER_TYPE_ID);
+        when(mpiProperties.getMpiPersonIdentifierTypeUuid()).thenReturn(PERSON_IDENTIFIER_TYPE_UUID);
     }
 
     private void generatePatients(Class<? extends Patient> firstPatientClass, Class<? extends Patient> secondPatientClass) {
@@ -67,8 +70,10 @@ public class OpenEmpiPatientFilterTest {
                                                  PatientAndMatchQuality localPatientWrapper) {
         Patient patient = mock(patientClass);
         PatientIdentifier identifier = mock(PatientIdentifier.class);
-        when(patient.getPatientIdentifier(PERSON_IDENTIFIER_TYPE_ID)).thenReturn(identifier);
-        when(identifier.getIdentifier()).thenReturn(PERSON_IDENTIFIER);
+        PatientIdentifierType patientIdentifierType = mock(PatientIdentifierType.class);
+        when(patient.getIdentifiers()).thenReturn(new HashSet<PatientIdentifier>(Arrays.asList(identifier)));
+        when(identifier.getIdentifierType()).thenReturn(patientIdentifierType);
+        when(patientIdentifierType.getUuid()).thenReturn(PERSON_IDENTIFIER_TYPE_UUID);
         when(localPatientWrapper.getPatient()).thenReturn(patient);
         return localPatientWrapper;
     }

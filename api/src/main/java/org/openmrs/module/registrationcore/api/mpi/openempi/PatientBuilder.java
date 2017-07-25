@@ -88,24 +88,24 @@ public class PatientBuilder {
             String mpiIdentifierTypeName = identifier.getIdentifierDomain().getIdentifierDomainName();
             Integer mpiIdentifierTypeId = identifier.getIdentifierDomain().getIdentifierDomainId();
 
-            Integer localIdentifierTypeId = Integer.valueOf(identifierMapper.getMappedLocalIdentifierTypeId(mpiIdentifierTypeId.toString()));
+            String localIdentifierTypeUuid = identifierMapper.getMappedLocalIdentifierTypeUuid(mpiIdentifierTypeId.toString());
             String identifierValue = identifier.getIdentifier();
-            PatientIdentifier patientIdentifier = createIdentifier(mpiIdentifierTypeName, localIdentifierTypeId, identifierValue);
+            PatientIdentifier patientIdentifier = createIdentifier(mpiIdentifierTypeName, localIdentifierTypeUuid, identifierValue);
 
             patient.addIdentifier(patientIdentifier);
         }
     }
 
     private void setMpiPersonIdentifier(OpenEmpiPatientResult patientQuery, Patient patient) {
-        Integer personIdentifierId = mpiProperties.getMpiPersonIdentifierTypeId();
-        PatientIdentifier identifier = createIdentifier("Person identifier", personIdentifierId, String.valueOf(patientQuery.getPersonId()));
+        String personIdentifierTypeUuid = mpiProperties.getMpiPersonIdentifierTypeUuid();
+        PatientIdentifier identifier = createIdentifier("Person identifier", personIdentifierTypeUuid, String.valueOf(patientQuery.getPersonId()));
         patient.getIdentifiers().add(identifier);
     }
 
-    private PatientIdentifier createIdentifier(String identifierName, Integer identifierId, String identifierValue) {
-        log.info("Create identifier for imported Mpi patient. Identifier name: " + identifierName + ". Identifier Id: "
-                + identifierId + ". Identifier value: " + identifierValue);
-        PatientIdentifier identifier = identifierBuilder.createIdentifier(identifierId, identifierValue, null);
+    private PatientIdentifier createIdentifier(String identifierName, String identifierTypeUuid, String identifierValue) {
+        log.info("Create identifier for imported Mpi patient. Identifier name: " + identifierName + ". Identifier UUID: "
+                + identifierTypeUuid + ". Identifier value: " + identifierValue);
+        PatientIdentifier identifier = identifierBuilder.createIdentifier(identifierTypeUuid, identifierValue, null);
         if (OPENMRS_IDENTIFIER_NAME.equals(identifierName)) {
             identifier.setPreferred(true);
         }
