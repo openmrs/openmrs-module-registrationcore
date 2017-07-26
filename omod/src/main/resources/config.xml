@@ -155,7 +155,7 @@
 		<property>${project.parent.artifactId}.errorHandler.implementation</property>
 		<defaultValue></defaultValue>
 		<description>
-			Which Biometrics engine implementation to should we connect to? Specify a Spring bean name, or leave blank to disable
+			Specify a Spring bean name of error handler service
 		</description>
 	</globalProperty>
 
