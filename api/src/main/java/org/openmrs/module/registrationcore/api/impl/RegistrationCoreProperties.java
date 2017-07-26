@@ -7,6 +7,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
+import org.openmrs.module.registrationcore.api.MpiErrorHandlingService;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.springframework.context.ApplicationContext;
@@ -64,6 +65,20 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
             }
         }
         return engine;
+    }
+
+    public MpiErrorHandlingService getMpiErrorHandlingService() {
+        String propertyName = RegistrationCoreConstants.GP_ERROR_HANDLER_IMPLEMENTATION;
+        String handlerId = Context.getAdministrationService().getGlobalProperty(propertyName);
+        MpiErrorHandlingService handler = null;
+        if (StringUtils.isNotBlank(handlerId)) {
+            log.debug("Looking up biometrics engine component: " + handlerId);
+            handler = Context.getRegisteredComponent(handlerId, MpiErrorHandlingService.class);
+            if (handler == null) {
+                throw new IllegalStateException(propertyName + " must point to a bean implementing BiometricEngine. " + handlerId + " is not valid.");
+            }
+        }
+        return handler;
     }
 
     /**
