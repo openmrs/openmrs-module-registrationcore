@@ -282,10 +282,12 @@ public class PixPdqMessageUtil {
         for (PatientIdentifier patIdentifier : patient.getIdentifiers()) {
             if (uuidList.contains(patIdentifier.getIdentifierType().getUuid())) {
                 CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
-                patientId.getAssigningAuthority().getUniversalID().setValue(identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid()));
-                patientId.getAssigningAuthority().getNamespaceID().setValue(identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid()));
+                String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
+                patientId.getAssigningAuthority().getUniversalID().setValue(mpiUuid);
+                patientId.getAssigningAuthority().getNamespaceID().setValue(mpiUuid);
                 patientId.getAssigningAuthority().getUniversalIDType().setValue(identifierMapper.getMappedMpiUniversalIdType(patIdentifier.getIdentifierType().getUuid()));
                 patientId.getIDNumber().setValue(patIdentifier.getIdentifier());
+
             }
         }
 
