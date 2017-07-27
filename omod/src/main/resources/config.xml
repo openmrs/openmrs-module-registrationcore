@@ -28,12 +28,6 @@
         </require_module>
     </require_modules>
 
-	<require_modules>
-		<require_module>
-			org.openmrs.module.outgoingmessageexceptions
-		</require_module>
-	</require_modules>
-
 	<extension>
 		<point>org.openmrs.admin.list</point>
 		<class>org.openmrs.module.registrationcore.extension.html.AdminList</class>
@@ -42,7 +36,6 @@
     <aware_of_modules>
        <aware_of_module version="${namephoneticsVersion}">org.openmrs.module.namephonetics</aware_of_module>
        <aware_of_module>org.openmrs.module.legacyui</aware_of_module>
-		<aware_of_module>org.openmrs.module.outgoingmessageexceptions</aware_of_module>
 	</aware_of_modules>
 	
 	<!-- Global properties -->
@@ -155,6 +148,14 @@
 		<defaultValue></defaultValue>
 		<description>
 			Which Biometrics engine implementation to should we connect to? Specify a Spring bean name, or leave blank to disable
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.errorHandler.implementation</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specify a Spring bean name of error handler service
 		</description>
 	</globalProperty>
 
