@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Performs filter by OpenEmpi person identifier.
@@ -34,23 +32,22 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
     }
 
     private boolean hasIdentifierTypeUuid(Patient patient, String patientIdentifierTypeUuid) {
-        return getPatientIdentifiersByIdentifiersTypeUuid(patient, patientIdentifierTypeUuid).size() > 0;
+        return getPatientIdentifierByIdentifierTypeUuid(patient, patientIdentifierTypeUuid) != null;
     }
 
-    private Set<String> getPatientIdentifiersByIdentifiersTypeUuid(Patient patient, String patientIdentifierTypeUuid) {
-        HashSet<String> patientIdentifiers = new HashSet<String>();
+    private String getPatientIdentifierByIdentifierTypeUuid(Patient patient, String patientIdentifierTypeUuid) {
         for(PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
             if (patientIdentifier.getIdentifierType() != null
                     && patientIdentifier.getIdentifierType().getUuid().equals(patientIdentifierTypeUuid)) {
-                patientIdentifiers.add(patientIdentifier.getIdentifier());
+                return patientIdentifier.getIdentifier();
             }
         }
-        return patientIdentifiers;
+        return null;
     }
 
     private void removePatientsWithSameIdentifier(String patientIdentifierTypeUuid, PatientAndMatchQuality initialPatient,
                                                   List<PatientAndMatchQuality> patients) {
-        Set<String> initialPatientIdentifiers = getPatientIdentifiersByIdentifiersTypeUuid(initialPatient.getPatient(),
+        String initialPatientIdentifier = getPatientIdentifierByIdentifierTypeUuid(initialPatient.getPatient(),
                 patientIdentifierTypeUuid);
 
         List<PatientAndMatchQuality> patientsToRemove = new ArrayList<PatientAndMatchQuality>();
@@ -59,14 +56,11 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
             if (secondaryPatient == initialPatient)
                 continue;
 
-            Set<String> secondaryPatientIdentifiers = getPatientIdentifiersByIdentifiersTypeUuid(
+            String secondaryPatientIdentifier = getPatientIdentifierByIdentifierTypeUuid(
                     secondaryPatient.getPatient(), patientIdentifierTypeUuid);
 
-            for (String initialPatientIdentifier : initialPatientIdentifiers) {
-                if (secondaryPatientIdentifiers.contains(initialPatientIdentifier)) {
-                    addPatientToRemove(initialPatient, secondaryPatient, patientsToRemove);
-                    break;
-                }
+            if (secondaryPatientIdentifier != null && secondaryPatientIdentifier.equals(initialPatientIdentifier)) {
+                addPatientToRemove(initialPatient, secondaryPatient, patientsToRemove);
             }
         }
 
