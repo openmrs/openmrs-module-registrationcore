@@ -25,8 +25,8 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     protected final Log log = LogFactory.getLog(this.getClass());
 
     @Override
-    public Patient fetchMpiPatient(String patientId) {
-        PatientIdentifier identifier = new PatientIdentifier(patientId, null, null);
+    public Patient fetchMpiPatient(String patientIdentifier) {
+        PatientIdentifier identifier = new PatientIdentifier(patientIdentifier, null, null);
         Map<String, String> queryParams = new HashMap<String, String>();
 
         queryParams.put("@PID.3.1", identifier.getIdentifier());

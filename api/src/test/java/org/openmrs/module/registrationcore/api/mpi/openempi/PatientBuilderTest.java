@@ -19,10 +19,10 @@ public class PatientBuilderTest {
 
     private static final String PATIENT_WITH_OPENMRS_ID = "patient_with_openmrs_id.xml";
 
-    private static final int LOCAL_OPENMRS_IDENTIFIER_TYPE_ID = 3;
-    private static final int MPI_OPENMRS_IDENTIFIER_TYPE_ID = 13;
-    private static final int LOCAL_ECID_IDENTIFIER_TYPE_ID = 5;
-    private static final int MPI_ECID_IDENTIFIER_TYPE_ID = 60;
+    private static final String LOCAL_OPENMRS_IDENTIFIER_TYPE_ID = "3";
+    private static final String MPI_OPENMRS_IDENTIFIER_TYPE_ID = "13";
+    private static final String LOCAL_ECID_IDENTIFIER_TYPE_ID = "5";
+    private static final String MPI_ECID_IDENTIFIER_TYPE_ID = "60";
     private static final String PATIENT_OPENMRS_IDENTIFIER_VALUE = "1001NF";
     private static final String PATIENT_ECID_IDENTIFIER_VALUE = "019bb820-1bd3-11e5-8a7f-040158db6201";
     private static final int PERSON_IDENTIFIER_TYPE_ID = 6;
@@ -51,9 +51,9 @@ public class PatientBuilderTest {
     }
 
     private void mockIdentifierBuilder() {
-        when(identifierBuilder.createIdentifier(LOCAL_OPENMRS_IDENTIFIER_TYPE_ID, PATIENT_OPENMRS_IDENTIFIER_VALUE, null))
+        when(identifierBuilder.createIdentifier(Integer.valueOf(LOCAL_OPENMRS_IDENTIFIER_TYPE_ID), PATIENT_OPENMRS_IDENTIFIER_VALUE, null))
                 .thenReturn(openmrsidentifier);
-        when(identifierBuilder.createIdentifier(LOCAL_ECID_IDENTIFIER_TYPE_ID, PATIENT_ECID_IDENTIFIER_VALUE, null))
+        when(identifierBuilder.createIdentifier(Integer.valueOf(LOCAL_ECID_IDENTIFIER_TYPE_ID), PATIENT_ECID_IDENTIFIER_VALUE, null))
                 .thenReturn(ecidIdentifier);
     }
 

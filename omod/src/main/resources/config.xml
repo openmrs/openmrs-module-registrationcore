@@ -200,14 +200,6 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.patientRoot</property>
-		<defaultValue></defaultValue>
-		<description>
-			Specifies the Root Identifier for the Patient in the PID-3 section of the HL7 message
-		</description>
-	</globalProperty>
-
-	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.sendingApplication</property>
 		<defaultValue></defaultValue>
 		<description>
@@ -241,7 +233,21 @@
 		</description>
 	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pixIdentifierTypeUuidList</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies the list of identifiers to send in a PIX query to save the patient in the MPI. Takes a list of UUID of patient identifier types - separate them with commas.
+		</description>
+	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pdqIdentifierTypeUuidList</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies the list of identifiers to send in a PDQ query to the MPI. Takes a list of UUID of patient identifier types - separate them with commas.
+		</description>
+	</globalProperty>
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
