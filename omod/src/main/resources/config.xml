@@ -139,7 +139,7 @@
 		<property>${project.parent.artifactId}.mpi.personIdentifierTypeUuid</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies uuid of identifier type which will be used for Mpi Person Id
+			Specifies UUID of the identifier type that the MPI generates and is persisted in OpenMRS
 		</description>
 	</globalProperty>
 
