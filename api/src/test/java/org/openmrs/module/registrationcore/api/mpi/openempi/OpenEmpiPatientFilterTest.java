@@ -72,6 +72,7 @@ public class OpenEmpiPatientFilterTest {
         PatientIdentifier identifier = mock(PatientIdentifier.class);
         PatientIdentifierType patientIdentifierType = mock(PatientIdentifierType.class);
         when(patient.getIdentifiers()).thenReturn(new HashSet<PatientIdentifier>(Arrays.asList(identifier)));
+        when(identifier.getIdentifier()).thenReturn(PERSON_IDENTIFIER);
         when(identifier.getIdentifierType()).thenReturn(patientIdentifierType);
         when(patientIdentifierType.getUuid()).thenReturn(PERSON_IDENTIFIER_TYPE_UUID);
         when(localPatientWrapper.getPatient()).thenReturn(patient);

@@ -18,11 +18,10 @@ import static org.mockito.Mockito.when;
 public class PatientBuilderTest {
 
     private static final String PATIENT_WITH_OPENMRS_ID = "patient_with_openmrs_id.xml";
-
     private static final String LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID = "3";
-    private static final Integer MPI_OPENMRS_IDENTIFIER_TYPE_ID = 13;
+    private static final String MPI_OPENMRS_IDENTIFIER_TYPE_ID = "13";
     private static final String LOCAL_ECID_IDENTIFIER_TYPE_UUID = "5";
-    private static final Integer MPI_ECID_IDENTIFIER_TYPE_ID = 60;
+    private static final String MPI_ECID_IDENTIFIER_TYPE_ID = "60";
     private static final String PATIENT_OPENMRS_IDENTIFIER_VALUE = "1001NF";
     private static final String PATIENT_ECID_IDENTIFIER_VALUE = "019bb820-1bd3-11e5-8a7f-040158db6201";
     private static final String PERSON_IDENTIFIER_TYPE_UUID = "6";
@@ -46,8 +45,8 @@ public class PatientBuilderTest {
     }
 
     private void mockIdentifierMapper() {
-        when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_OPENMRS_IDENTIFIER_TYPE_ID.toString())).thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID.toString());
-        when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_ECID_IDENTIFIER_TYPE_ID.toString())).thenReturn(LOCAL_ECID_IDENTIFIER_TYPE_UUID.toString());
+        when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_OPENMRS_IDENTIFIER_TYPE_ID)).thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID);
+        when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_ECID_IDENTIFIER_TYPE_ID)).thenReturn(LOCAL_ECID_IDENTIFIER_TYPE_UUID);
     }
 
     private void mockIdentifierBuilder() {

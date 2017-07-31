@@ -48,8 +48,7 @@ public class PatientIdentifierMapper {
                 return pair.universalIdType;
             }
         }
-        throw new IllegalArgumentException("There is no mapped universal id type " +
-                "for local identifier type uuid: " + localIdentifierTypeUuid);
+        return null;
     }
 
     private void validateInit() {

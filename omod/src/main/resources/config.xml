@@ -237,7 +237,7 @@
 		<property>${project.parent.artifactId}.mpi.pixIdentifierTypeUuidList</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies sending identifier UUID list (separate with comma)
+			Specifies the list of identifiers to send in a PIX query to save the patient in the MPI. Takes a list of UUID of patient identifier types - separate them with commas.
 		</description>
 	</globalProperty>
 
@@ -245,7 +245,7 @@
 		<property>${project.parent.artifactId}.mpi.pdqIdentifierTypeUuidList</property>
 		<defaultValue></defaultValue>
 		<description>
-			Specifies sending identifier UUID list (separate with comma)
+			Specifies the list of identifiers to send in a PDQ query to the MPI. Takes a list of UUID of patient identifier types - separate them with commas.
 		</description>
 	</globalProperty>
 
