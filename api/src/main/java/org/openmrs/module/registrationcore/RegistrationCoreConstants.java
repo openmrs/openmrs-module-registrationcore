@@ -86,8 +86,6 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_PIX_IDENTTIFIER_TYPE_UUID_LIST = "registrationcore.mpi.pixIdentifierTypeUuidList";
 
-	public static final String GP_MPI_PDQ_IDENTTIFIER_TYPE_UUID_LIST = "registrationcore.mpi.pdqIdentifierTypeUuidList";
-
 	public static final String GP_BIOMETRICS_IMPLEMENTATION = "registrationcore.biometrics.implementation";
 
 	public static final String GP_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.errorHandler.implementation";

@@ -68,10 +68,6 @@ public class MpiProperties extends ModuleProperties {
         return splitIntoList(RegistrationCoreConstants.GP_MPI_PIX_IDENTTIFIER_TYPE_UUID_LIST);
     }
 
-    public List<String> getPdqIdentifierTypeUuidList() {
-        return splitIntoList(RegistrationCoreConstants.GP_MPI_PDQ_IDENTTIFIER_TYPE_UUID_LIST);
-    }
-
     private List<String> splitIntoList (String property) {
         String uuidList = getProperty(property);
         List<String> list = new ArrayList<String>();
