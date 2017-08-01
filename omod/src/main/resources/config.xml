@@ -241,14 +241,6 @@
 		</description>
 	</globalProperty>
 
-	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.pdqIdentifierTypeUuidList</property>
-		<defaultValue></defaultValue>
-		<description>
-			Specifies the list of identifiers to send in a PDQ query to the MPI. Takes a list of UUID of patient identifier types - separate them with commas.
-		</description>
-	</globalProperty>
-
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				
