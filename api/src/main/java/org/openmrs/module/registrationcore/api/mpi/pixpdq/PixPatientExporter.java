@@ -9,6 +9,8 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import static org.openmrs.module.registrationcore.RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME;
+
 public class PixPatientExporter implements MpiPatientExporter {
 
     private final Log log = LogFactory.getLog(this.getClass());
@@ -21,6 +23,10 @@ public class PixPatientExporter implements MpiPatientExporter {
     @Qualifier("registrationcore.Hl7SenderHolder")
     private Hl7SenderHolder hl7SenderHolder;
 
+    @Autowired
+    @Qualifier("registrationcore.mpiPatientFetcherPdq")
+    private PdqPatientFetcher pdqPatientFetcher;
+
     @Override
     public String exportPatient(Patient patient) {
         try {
@@ -31,8 +37,8 @@ public class PixPatientExporter implements MpiPatientExporter {
                 throw new MpiException("Error querying patient data during export");
             }
 
-            // TODO: return ID
-            return null;
+            Patient mpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier().getIdentifier());
+            return getEcidIdentifier(mpiPatient);
         } catch (Exception e) {
             log.error(e);
             if (e instanceof  MpiException) {
@@ -42,4 +48,9 @@ public class PixPatientExporter implements MpiPatientExporter {
             }
         }
     }
+
+    private String getEcidIdentifier(Patient mpiPatient) {
+        return mpiPatient.getPatientIdentifier(MPI_IDENTIFIER_TYPE_ECID_NAME).getIdentifier();
+    }
+
 }
