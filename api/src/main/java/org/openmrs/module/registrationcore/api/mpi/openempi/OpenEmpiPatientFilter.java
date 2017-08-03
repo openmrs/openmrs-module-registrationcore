@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Performs filter by OpenEmpi person identifier.
@@ -23,12 +25,14 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
 
     public void filter(List<PatientAndMatchQuality> patients) {
         String filterIdentifierTypeUuid = mpiProperties.getMpiPersonIdentifierTypeUuid();
+        Set<PatientAndMatchQuality> patientsToRemove = new HashSet<PatientAndMatchQuality>();
 
         for (PatientAndMatchQuality patientWrapper : patients) {
             if (hasIdentifierTypeUuid(patientWrapper.getPatient(), filterIdentifierTypeUuid)) {
-                removePatientsWithSameIdentifier(filterIdentifierTypeUuid, patientWrapper, patients);
+                patientsToRemove.addAll(getPatientsWithSameIdentifier(filterIdentifierTypeUuid, patientWrapper, patients));
             }
         }
+        patients.removeAll(patientsToRemove);
     }
 
     private boolean hasIdentifierTypeUuid(Patient patient, String patientIdentifierTypeUuid) {
@@ -45,8 +49,8 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
         return null;
     }
 
-    private void removePatientsWithSameIdentifier(String patientIdentifierTypeUuid, PatientAndMatchQuality initialPatient,
-                                                  List<PatientAndMatchQuality> patients) {
+    private List<PatientAndMatchQuality> getPatientsWithSameIdentifier(String patientIdentifierTypeUuid, PatientAndMatchQuality initialPatient,
+            List<PatientAndMatchQuality> patients) {
         String initialPatientIdentifier = getPatientIdentifierByIdentifierTypeUuid(initialPatient.getPatient(),
                 patientIdentifierTypeUuid);
 
@@ -64,7 +68,7 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
             }
         }
 
-        patients.removeAll(patientsToRemove);
+        return patientsToRemove;
     }
 
     private void addPatientToRemove(PatientAndMatchQuality initialPatient,
