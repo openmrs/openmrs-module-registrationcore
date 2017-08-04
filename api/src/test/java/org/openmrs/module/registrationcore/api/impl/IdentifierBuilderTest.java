@@ -21,7 +21,7 @@ public class IdentifierBuilderTest {
 
     private static final String OPENMRS_IDENTIFIER_SOURCE_ID = "1";
     private static final String OPENMRS_GENERATED_IDENTIFIER = "10012NF";
-    private static final String CUSTOM_MPI_IDENTIFIER_ID = "2";
+    private static final String PERSON_IDENTIFIER_TYPE_UUID = "2";
     private static final String CUSTOM_MPI_IDENTIFIER_VALUE = "16340061NF";
 
     @InjectMocks private IdentifierBuilder generator;
@@ -109,17 +109,17 @@ public class IdentifierBuilderTest {
         mockPatientIdentifierType(customMpiPatientIdentifierType);
 
         PatientIdentifier identifier = generator.createIdentifier(
-                Integer.valueOf(CUSTOM_MPI_IDENTIFIER_ID), CUSTOM_MPI_IDENTIFIER_VALUE, null);
+                PERSON_IDENTIFIER_TYPE_UUID, CUSTOM_MPI_IDENTIFIER_VALUE, null);
 
         verify(locationService).getDefaultLocation();
-        verify(patientService).getPatientIdentifierType(Integer.valueOf(CUSTOM_MPI_IDENTIFIER_ID));
+        verify(patientService).getPatientIdentifierTypeByUuid(PERSON_IDENTIFIER_TYPE_UUID);
         assertEquals(identifier.getIdentifier(), CUSTOM_MPI_IDENTIFIER_VALUE);
         assertEquals(identifier.getIdentifierType(), customMpiPatientIdentifierType);
         assertEquals(identifier.getLocation(), defaultLocation);
     }
 
     private void mockPatientIdentifierType(PatientIdentifierType customMpiPatientIdentifierType) {
-        when(patientService.getPatientIdentifierType(Integer.valueOf(CUSTOM_MPI_IDENTIFIER_ID)))
+        when(patientService.getPatientIdentifierTypeByUuid(PERSON_IDENTIFIER_TYPE_UUID))
                 .thenReturn(customMpiPatientIdentifierType);
     }
 
@@ -129,10 +129,10 @@ public class IdentifierBuilderTest {
         mockPatientIdentifierType(customMpiPatientIdentifierType);
 
         PatientIdentifier identifier = generator.createIdentifier(
-                Integer.valueOf(CUSTOM_MPI_IDENTIFIER_ID), CUSTOM_MPI_IDENTIFIER_VALUE, customLocation);
+                PERSON_IDENTIFIER_TYPE_UUID, CUSTOM_MPI_IDENTIFIER_VALUE, customLocation);
 
         verify(locationService, never()).getDefaultLocation();
-        verify(patientService).getPatientIdentifierType(Integer.valueOf(CUSTOM_MPI_IDENTIFIER_ID));
+        verify(patientService).getPatientIdentifierTypeByUuid(PERSON_IDENTIFIER_TYPE_UUID);
         assertEquals(identifier.getIdentifier(), CUSTOM_MPI_IDENTIFIER_VALUE);
         assertEquals(identifier.getIdentifierType(), customMpiPatientIdentifierType);
         assertEquals(identifier.getLocation(), customLocation);
@@ -142,6 +142,6 @@ public class IdentifierBuilderTest {
     public void testCreateIdentifierThrowExceptionOnEmptyDefaultLocation() throws Exception {
         mockDefaultLocation(null);
 
-        generator.createIdentifier(Integer.valueOf(CUSTOM_MPI_IDENTIFIER_ID), CUSTOM_MPI_IDENTIFIER_VALUE, null);
+        generator.createIdentifier(PERSON_IDENTIFIER_TYPE_UUID, CUSTOM_MPI_IDENTIFIER_VALUE, null);
     }
 }

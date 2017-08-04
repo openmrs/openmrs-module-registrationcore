@@ -20,7 +20,7 @@ import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatie
 
 public class OpenEmpiPatientResultBuilderTest {
 
-    private static final Integer LOCAL_IDENTIFIER_TYPE_ID = 5;
+    private static final String LOCAL_IDENTIFIER_TYPE_UUID = "5";
     private static final Integer MPI_IDENTIFIER_TYPE_ID = 6;
     private static final String IDENTIFIER_VALUE = "identifierValue";
 
@@ -29,7 +29,7 @@ public class OpenEmpiPatientResultBuilderTest {
     private static final String MIDDLE_NAME = "middleName";
     private static final String GENDER_CODE = "M";
     private static final Date BIRTHDATE = new Date();
-    private static final Integer PERSON_IDENTIFIER_TYPE = 6;
+    private static final String PERSON_IDENTIFIER_TYPE_UUID = "6";
 
     @InjectMocks OpenEmpiPatientQueryBuilder queryBuilder;
     @Mock PatientIdentifierMapper identifierMapper;
@@ -39,7 +39,7 @@ public class OpenEmpiPatientResultBuilderTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockIdentifierMapper();
-        when(mpiProperties.getMpiPersonIdentifierTypeId()).thenReturn(PERSON_IDENTIFIER_TYPE);
+        when(mpiProperties.getMpiPersonIdentifierTypeUuid()).thenReturn(PERSON_IDENTIFIER_TYPE_UUID);
     }
 
     @Test
@@ -76,13 +76,16 @@ public class OpenEmpiPatientResultBuilderTest {
 
         patient.setBirthdate(BIRTHDATE);
 
+        PatientIdentifierType patientIdentifierType = new PatientIdentifierType();
+        patientIdentifierType.setUuid(LOCAL_IDENTIFIER_TYPE_UUID);
         PatientIdentifier patientIdentifier = new PatientIdentifier(IDENTIFIER_VALUE,
-                new PatientIdentifierType(LOCAL_IDENTIFIER_TYPE_ID), null);
+                patientIdentifierType, null);
+
         patient.addIdentifier(patientIdentifier);
         return patient;
     }
 
     private void mockIdentifierMapper() {
-        when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_ID.toString())).thenReturn(MPI_IDENTIFIER_TYPE_ID.toString());
+        when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_UUID)).thenReturn(MPI_IDENTIFIER_TYPE_ID.toString());
     }
 }

@@ -42,19 +42,19 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
     //identifiers mapping:
     private static final String MPI_IDENTIFIER_TYPE_OPENEMRS_NAME = "OpenMRS";
     private static final String MPI_IDENTIFIER_TYPE_ID_OPENMRS = "13";
-    private static final String LOCAL_IDENTIFIER_TYPE_ID_OPENMRS = "3";
+    private static final String LOCAL_IDENTIFIER_TYPE_UUID_OPENMRS = "0d47284f-9e9b-4a81-a88b-8bb42bc0a903";
 
     private static final String MPI_IDENTIFIER_TYPE_OPENEMPI_NAME = "OpenEMPI";
     private static final String MPI_IDENTIFIER_TYPE_ID_OPENEMPI = "18";
-    private static final String LOCAL_IDENTIFIER_TYPE_ID_OPENEMPI = "4";
+    private static final String LOCAL_IDENTIFIER_TYPE_UUID_OPENEMPI = "0d47284f-9e9b-4a81-a88b-8bb42bc0a904";
 
     private static final String MPI_IDENTIFIER_TYPE_ECID_NAME = "ECID";
     private static final String MPI_IDENTIFIER_TYPE_ID_ECID = "60";
-    private static final String LOCAL_IDENTIFIER_TYPE_ID_ECID = "5";
+    private static final String LOCAL_IDENTIFIER_TYPE_UUID_ECID = "0d47284f-9e9b-4a81-a88b-8bb42bc0a905";
 
     private static final String MPI_PERSON_ID = "2";
     private static final String TOKEN_VALUE = "token_value";
-    private static final String PERSON_IDENTIFIER_TYPE_ID = "6";
+    private static final String PERSON_IDENTIFIER_TYPE_UUID = "0d47284f-9e9b-4a81-a88b-8bb42bc0a906";
 
     private RegistrationCoreService service;
 
@@ -98,11 +98,11 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME, GP_MPI_USERNAME));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, GP_MPI_PASSWORD));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_URL, "server.url"));
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_ID, PERSON_IDENTIFIER_TYPE_ID));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID, PERSON_IDENTIFIER_TYPE_UUID));
 
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMRS_NAME, LOCAL_IDENTIFIER_TYPE_ID_OPENMRS + ":" + MPI_IDENTIFIER_TYPE_ID_OPENMRS));
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMPI_NAME, LOCAL_IDENTIFIER_TYPE_ID_OPENEMPI + ":" + MPI_IDENTIFIER_TYPE_ID_OPENEMPI));
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_ECID_NAME, LOCAL_IDENTIFIER_TYPE_ID_ECID + ":" + MPI_IDENTIFIER_TYPE_ID_ECID));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMRS_NAME, LOCAL_IDENTIFIER_TYPE_UUID_OPENMRS + ":" + MPI_IDENTIFIER_TYPE_ID_OPENMRS));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMPI_NAME, LOCAL_IDENTIFIER_TYPE_UUID_OPENEMPI + ":" + MPI_IDENTIFIER_TYPE_ID_OPENEMPI));
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_ECID_NAME, LOCAL_IDENTIFIER_TYPE_UUID_ECID + ":" + MPI_IDENTIFIER_TYPE_ID_ECID));
     }
 
     private void mockResTemplate() {

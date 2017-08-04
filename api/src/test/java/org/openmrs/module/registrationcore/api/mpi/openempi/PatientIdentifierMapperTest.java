@@ -52,7 +52,7 @@ public class PatientIdentifierMapperTest {
     public void testReturnCorrectLocalIdentifierTypeId() throws Exception {
         identifierMapper.init();
 
-        String localIdentifierTypeId = identifierMapper.getMappedLocalIdentifierTypeId(PROPERTY_MPI_PART.toString());
+        String localIdentifierTypeId = identifierMapper.getMappedLocalIdentifierTypeUuid(PROPERTY_MPI_PART.toString());
 
         assertEquals(localIdentifierTypeId, PROPERTY_LOCAL_PART.toString());
     }

@@ -21,30 +21,30 @@ public class PatientIdentifierMapper {
     @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
-    public String getMappedLocalIdentifierTypeId(String mpiIdentifierTypeId) {
+    public String getMappedLocalIdentifierTypeUuid(String mpiIdentifierTypeId) {
         validateInit();
         for (IdentifierMapPair pair : MAPPED_ID) {
             if (pair.mpiIdentifierId.equals(mpiIdentifierTypeId)) {
-                return pair.localIdentifierId;
+                return pair.localIdentifierUuid;
             }
         }
         return null;
     }
 
-    public String getMappedMpiIdentifierTypeId(String localIdentifierTypeId) {
+    public String getMappedMpiIdentifierTypeId(String localIdentifierTypeUuid) {
         validateInit();
         for (IdentifierMapPair pair : MAPPED_ID) {
-            if (pair.localIdentifierId.equals(localIdentifierTypeId)) {
+            if (pair.localIdentifierUuid.equals(localIdentifierTypeUuid)) {
                 return pair.mpiIdentifierId;
             }
         }
         return null;
     }
 
-    public String getMappedMpiUniversalIdType(String localIdentifierTypeId) {
+    public String getMappedMpiUniversalIdType(String localIdentifierTypeUuid) {
         validateInit();
         for (IdentifierMapPair pair : MAPPED_ID) {
-            if (pair.localIdentifierId.equals(localIdentifierTypeId)) {
+            if (pair.localIdentifierUuid.equals(localIdentifierTypeUuid)) {
                 return pair.universalIdType;
             }
         }
@@ -65,7 +65,7 @@ public class PatientIdentifierMapper {
             IdentifierMapPair pair = parseIdentifiers(mappedIdentifiers);
             MAPPED_ID.add(pair);
 
-            log.info("Initialized local:mpi identifier type pair. Local: " + pair.localIdentifierId
+            log.info("Initialized local:mpi identifier type pair. Local: " + pair.localIdentifierUuid
                     + " , MPI: " + pair.mpiIdentifierId);
         }
     }
@@ -115,14 +115,14 @@ public class PatientIdentifierMapper {
 
     private class IdentifierMapPair{
 
-        public final String localIdentifierId;
+        public final String localIdentifierUuid;
 
         public final String mpiIdentifierId;
 
         public final String universalIdType;
 
-        public IdentifierMapPair(String localIdentifierId, String mpiIdentifierId, String universalIdType) {
-            this.localIdentifierId = localIdentifierId;
+        public IdentifierMapPair(String localIdentifierUuid, String mpiIdentifierId, String universalIdType) {
+            this.localIdentifierUuid = localIdentifierUuid;
             this.mpiIdentifierId = mpiIdentifierId;
             this.universalIdType = universalIdType;
         }

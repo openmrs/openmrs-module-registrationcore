@@ -26,6 +26,7 @@ import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +123,7 @@ public class PixPdqMessageUtil {
             Group queryResponseGroup = (Group)queryResponseStruct;
             for (Structure pidStruct : queryResponseGroup.getAll("PID")) {
                 PID pid = (PID)pidStruct;
-                Patient patient = new Patient();
+                Patient patient = new MpiPatient();
                 // Attempt to load a patient by identifier
                 for (CX id : pid.getPatientIdentifierList()) {
 
@@ -131,12 +132,12 @@ public class PixPdqMessageUtil {
                     if (id.getAssigningAuthority().getUniversalID().getValue() != null &&
                             !id.getAssigningAuthority().getUniversalID().getValue().isEmpty()) {
                         pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
-                                identifierMapper.getMappedLocalIdentifierTypeId(id.getAssigningAuthority().getUniversalID().getValue()));
+                                identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getUniversalID().getValue()));
                     }
                     if (pit == null && id.getAssigningAuthority().getNamespaceID().getValue() != null &&
                             !id.getAssigningAuthority().getNamespaceID().getValue().isEmpty()) {
                         pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
-                                identifierMapper.getMappedLocalIdentifierTypeId(id.getAssigningAuthority().getNamespaceID().getValue()));
+                                identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getNamespaceID().getValue()));
                     }
                     if (pit == null) {
                         continue;

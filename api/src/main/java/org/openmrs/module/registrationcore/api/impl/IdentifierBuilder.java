@@ -48,14 +48,14 @@ public class IdentifierBuilder {
     /**
      * Create identifier with existing value.
      *
-     * @param identifierId    identifier type id
-     * @param identifierValue identifier value
-     * @param location        identifier location
+     * @param identifierTypeUuid    identifier type uuid
+     * @param identifierValue       identifier value
+     * @param location              identifier location
      * @return created patient identifier
      */
-    public PatientIdentifier createIdentifier(Integer identifierId, String identifierValue, Location location) {
+    public PatientIdentifier createIdentifier(String identifierTypeUuid, String identifierValue, Location location) {
         location = getLocation(location);
-        PatientIdentifierType identifierType = patientService.getPatientIdentifierType(identifierId);
+        PatientIdentifierType identifierType = patientService.getPatientIdentifierTypeByUuid(identifierTypeUuid);
         PatientIdentifierValidator.validateIdentifier(identifierValue, identifierType);
 
         return new PatientIdentifier(identifierValue, identifierType, location);
