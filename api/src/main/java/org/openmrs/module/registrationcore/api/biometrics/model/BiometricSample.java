@@ -20,12 +20,12 @@ import java.io.Serializable;
 public class BiometricSample implements Serializable {
 
     private String type;
-    private BiometricTemplateFormat format;
+    private String format;
     private String template;
 
     public BiometricSample() { }
 
-    public BiometricSample(String type, BiometricTemplateFormat format, String template) {
+    public BiometricSample(String type, String format, String template) {
         this.type = type;
         this.format = format;
         this.template = template;
@@ -39,11 +39,11 @@ public class BiometricSample implements Serializable {
         this.type = type;
     }
 
-    public BiometricTemplateFormat getFormat() {
+    public String getFormat() {
         return format;
     }
 
-    public void setFormat(BiometricTemplateFormat format) {
+    public void setFormat(String format) {
         this.format = format;
     }
 
