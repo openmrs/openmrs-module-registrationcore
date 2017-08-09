@@ -91,4 +91,6 @@ public final class RegistrationCoreConstants {
 	public static final String GP_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.errorHandler.implementation";
 
 	public static final String MPI_IDENTIFIER_TYPE_ECID_NAME = "ECID";
+
+	public static final String FINGERPRINT_IDENTIFIER_TYPE_NAME = "Fingerprint";
 }

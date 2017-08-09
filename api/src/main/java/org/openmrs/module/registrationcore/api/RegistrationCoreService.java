@@ -21,6 +21,7 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -158,4 +159,12 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * Enrolls the given biometric data
 	 */
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
+
+	/**
+	 * Creating biometric data that is ready to save
+	 * It assign proper fingerprint patient identifier type and it assign passed biometricSubject
+	 *
+	 * @return BiometricData ready to save
+	 */
+	BiometricData generateBiometricData(BiometricSubject biometricSubject);
 }

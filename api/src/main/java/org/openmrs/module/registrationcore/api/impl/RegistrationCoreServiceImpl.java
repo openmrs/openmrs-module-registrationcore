@@ -61,6 +61,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static org.openmrs.module.registrationcore.RegistrationCoreConstants.FINGERPRINT_IDENTIFIER_TYPE_NAME;
+
 /**
  * It is a default implementation of {@link RegistrationCoreService}.
  */
@@ -460,6 +462,19 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 		}
 		return biometricData;
+	}
+
+	@Override
+	public BiometricData generateBiometricData(BiometricSubject biometricSubject) {
+		return new BiometricData(biometricSubject, getFingerprintIdentifierType());
+	}
+
+	private PatientIdentifierType getFingerprintIdentifierType() {
+		PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(FINGERPRINT_IDENTIFIER_TYPE_NAME);
+		if (patientIdentifierType == null) {
+			throw new APIException("Local fingerprint identifier type not found");
+		}
+		return patientIdentifierType;
 	}
 
 	private boolean isBiometricEngineEnable() {
