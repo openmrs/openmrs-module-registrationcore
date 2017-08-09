@@ -21,7 +21,6 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
@@ -49,6 +48,8 @@ import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,6 +86,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private MpiPatientFilter mpiPatientFilter;
 
 	private RegistrationCoreProperties registrationCoreProperties;
+
+	@Autowired
+	@Qualifier("registrationcore.identifierBuilder")
+	private IdentifierBuilder identifierBuilder;
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -401,28 +406,24 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData) {
 		BiometricSubject subject = biometricData.getSubject();
-		if (subject == null || subject.getFingerprints().isEmpty()) {
+		if (subject == null) {
 			log.debug("There are no biometrics to save for patient");
 		}
 		else {
-			log.debug("Saving biometrics for patient.  Found " + subject.getFingerprints().size() + " fingerprints.");
-					BiometricEngine biometricEngine = getBiometricEngine();
-			if (biometricEngine == null) {
+			if (isBiometricEngineEnable()) {
 				throw new IllegalStateException("Unable to save biometrics, as no biometrics engine is enabled");
 			}
+			BiometricEngine biometricEngine = getBiometricEngine();
 			log.debug("Using biometric engine: " + biometricEngine.getClass().getSimpleName());
-					PatientIdentifierType idType = biometricData.getIdentifierType();
+
+			PatientIdentifierType idType = biometricData.getIdentifierType();
 			if (idType != null) {
 				log.debug("Saving biometrics as a patient identifier of type: " + idType.getName());
-						BiometricSubject existingSubject = (subject.getSubjectId() == null ? null : biometricEngine.lookup(subject.getSubjectId()));
+                BiometricSubject existingSubject = (subject.getSubjectId() == null ? null : biometricEngine.lookup(subject.getSubjectId()));
 				if (existingSubject == null) {
-					subject = biometricEngine.enroll(subject);
-					log.debug("Enrolled new biometric subject: " + subject.getSubjectId());
+					throw new IllegalArgumentException("The subject doesn't exist in m2Sys. Did you call m2Sys enroll method?") ;
 				}
-				else {
-					subject = biometricEngine.update(subject);
-					log.debug("Updated existing biometric subject: " + subject.getSubjectId());
-				}
+
 				// If patient does not already have an identifier that references this subject, add one
 				boolean identifierExists = false;
 				for (PatientIdentifier identifier : patient.getPatientIdentifiers(idType)) {
@@ -432,19 +433,21 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				}
 				if (identifierExists) {
 					log.debug("Identifier already exists for patient");
-				}
-				else {
-					PatientIdentifier identifier = new PatientIdentifier(subject.getSubjectId(), idType, null);
+				} else {
+					PatientIdentifier identifier = identifierBuilder.createIdentifier(idType.getUuid(), subject.getSubjectId(), null);
 					patient.addIdentifier(identifier);
 					patientService.savePatientIdentifier(identifier);
 					log.debug("New patient identifier saved for patient: " + identifier);
 				}
-			}
-			else {
+			} else {
 				// TODO: In the future we could add additional support for different storage options - eg. as person attributes
 				throw new IllegalArgumentException("Invalid biometric configuration.  No patient identifier type specified");
 			}
 		}
 		return biometricData;
+	}
+
+	private boolean isBiometricEngineEnable() {
+		return registrationCoreProperties.isBiometricsEngineEnabled();
 	}
 }
