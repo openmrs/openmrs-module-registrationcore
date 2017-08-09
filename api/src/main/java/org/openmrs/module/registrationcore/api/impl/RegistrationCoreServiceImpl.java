@@ -153,6 +153,21 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return registerPatient(data);
 	}
 
+	@Override
+	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString,
+								   Location identifierLocation, BiometricData biometricData) {
+		RegistrationData data = new RegistrationData();
+		data.setPatient(patient);
+		data.setRelationships(relationships);
+		data.setIdentifier(identifierString);
+		data.setIdentifierLocation(identifierLocation);
+		if (biometricData != null) {
+			data.addBiometricData(biometricData);
+		}
+
+		return registerPatient(data);
+	}
+
 	/**
 	 *  @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(RegistrationData)
 	 */
