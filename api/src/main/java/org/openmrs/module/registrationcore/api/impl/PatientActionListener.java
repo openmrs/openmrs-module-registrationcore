@@ -80,13 +80,6 @@ public abstract class PatientActionListener implements EventListener {
 
     private Patient getPatient(String patientUuid) {
         Patient patient = patientService.getPatientByUuid(patientUuid);
-        fetchAllPatientIdentifierType(patient); // it is because we need proper UUID information in patientIdentifierType
         return patient;
-    }
-
-    private void fetchAllPatientIdentifierType(Patient patient) {
-        for (PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
-            patientIdentifier.setIdentifierType(HibernateUtil.deproxy(patientIdentifier.getIdentifierType()));
-        }
     }
 }
