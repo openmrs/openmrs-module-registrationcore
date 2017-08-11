@@ -427,7 +427,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			log.debug("There are no biometrics to save for patient");
 		}
 		else {
-			if (isBiometricEngineEnable()) {
+			if (!isBiometricEngineEnabled()) {
 				throw new IllegalStateException("Unable to save biometrics, as no biometrics engine is enabled");
 			}
 			BiometricEngine biometricEngine = getBiometricEngine();
@@ -477,7 +477,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return patientIdentifierType;
 	}
 
-	private boolean isBiometricEngineEnable() {
+	private boolean isBiometricEngineEnabled() {
 		return registrationCoreProperties.isBiometricsEngineEnabled();
 	}
 }
