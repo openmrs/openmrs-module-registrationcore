@@ -1,14 +1,12 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.db.hibernate.util.HibernateUtil;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
