@@ -159,12 +159,4 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * Enrolls the given biometric data
 	 */
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
-
-	/**
-	 * Creating biometric data that is ready to save
-	 * It assign proper fingerprint patient identifier type and it assign passed biometricSubject
-	 *
-	 * @return BiometricData ready to save
-	 */
-	BiometricData generateBiometricData(BiometricSubject biometricSubject);
 }
