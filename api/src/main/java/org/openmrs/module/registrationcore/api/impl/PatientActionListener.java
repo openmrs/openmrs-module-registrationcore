@@ -1,14 +1,12 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.db.hibernate.util.HibernateUtil;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -80,13 +78,6 @@ public abstract class PatientActionListener implements EventListener {
 
     private Patient getPatient(String patientUuid) {
         Patient patient = patientService.getPatientByUuid(patientUuid);
-        fetchAllPatientIdentifierType(patient); // it is because we need proper UUID information in patientIdentifierType
         return patient;
-    }
-
-    private void fetchAllPatientIdentifierType(Patient patient) {
-        for (PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
-            patientIdentifier.setIdentifierType(HibernateUtil.deproxy(patientIdentifier.getIdentifierType()));
-        }
     }
 }

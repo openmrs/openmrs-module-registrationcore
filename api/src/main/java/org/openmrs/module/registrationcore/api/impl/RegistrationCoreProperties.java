@@ -50,6 +50,10 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return (MpiProvider) bean;
     }
 
+    public boolean isBiometricsEngineEnabled() {
+        return getBiometricEngine() != null;
+    }
+
     /**
      * @return the id of the Biometric Engine that is configured
      */

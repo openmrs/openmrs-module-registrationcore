@@ -21,6 +21,7 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -73,6 +74,15 @@ public interface RegistrationCoreService extends OpenmrsService {
      * @should fail if identifier does not pass validation
      */
     public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation);
+
+	/**
+	 * Creates patient and saves them and their fingerprints in the database,
+	 * setting their identifier as specified instead of assigning automatically
+	 *
+	 * @return the created patient
+	 */
+	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString,
+								   Location identifierLocation, BiometricData biometricData);
 
 	/**
 	 * Registers patient and saves them in the database.
