@@ -225,9 +225,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
             relationshipUuids.add(relationship.getUuid());
         }
 
-        for (BiometricData biometricData : registrationData.getBiometrics()) {
-            Context.getService(RegistrationCoreService.class).saveBiometricsForPatient(patient, biometricData);
-        }
+        try {
+			for (BiometricData biometricData : registrationData.getBiometrics()) {
+				Context.getService(RegistrationCoreService.class).saveBiometricsForPatient(patient, biometricData);
+			}
+		}
+		catch (Exception e) {
+        	throw new APIException("registrationapp.biometrics.errorContactingBiometricsServer", e);
+		}
 
         DateFormat df = new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING);
 		
