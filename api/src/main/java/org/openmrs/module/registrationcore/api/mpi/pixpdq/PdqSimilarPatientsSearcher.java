@@ -50,11 +50,12 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
         try
         {
-            Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
-            Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
+            if (isGivenNameOrFamilyName(patient)) {
+                Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
+                Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
 
-            retVal = pixPdqMessageUtil.interpretPIDSegments(response);
-
+                retVal = pixPdqMessageUtil.interpretPIDSegments(response);
+            }
         }
         catch(Exception e)
         {
@@ -133,5 +134,10 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         }
 
         return matchList;
+    }
+
+    private boolean isGivenNameOrFamilyName(Patient patient) {
+        return (patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
+                || (patient.getGivenName() != null && !patient.getGivenName().isEmpty());
     }
 }
