@@ -144,6 +144,14 @@
 	</globalProperty>
 
 	<globalProperty>
+		<property>${project.parent.artifactId}.biometrics.personIdentifierTypeUuid</property>
+		<defaultValue></defaultValue>
+		<description>
+			Specifies UUID of the identifier type that is used to store the biometric reference code
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
 		<property>${project.parent.artifactId}.biometrics.implementation</property>
 		<defaultValue></defaultValue>
 		<description>
