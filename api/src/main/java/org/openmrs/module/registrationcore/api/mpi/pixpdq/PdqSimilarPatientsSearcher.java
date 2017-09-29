@@ -1,12 +1,15 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.v25.datatype.CX;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
+import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
@@ -26,6 +30,9 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     @Autowired
     @Qualifier("registrationcore.Hl7SenderHolder")
     private Hl7SenderHolder hl7SenderHolder;
+
+    @Autowired
+    private PatientIdentifierMapper identifierMapper;
 
     protected final Log log = LogFactory.getLog(this.getClass());
 
@@ -40,18 +47,33 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     }
 
     private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
-        Map<String, String> queryParams = new HashMap<String, String>();
+        Map<String, String> nameQueryParams = new HashMap<String, String>();
         if(patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
-            queryParams.put("@PID.5.1", patient.getFamilyName());
+            nameQueryParams.put("@PID.5.1", patient.getFamilyName());
         if(patient.getGivenName() != null && !patient.getGivenName().isEmpty())
-            queryParams.put("@PID.5.2", patient.getGivenName());
+            nameQueryParams.put("@PID.5.2", patient.getGivenName());
+
+        PatientIdentifier identifier = getLastIdentifier(patient.getIdentifiers());
+
+        Map<String, String> identifierQueryParams = new HashMap<String, String>();
+        if(identifier!=null) {
+            identifierQueryParams.put("@PID.3.1", identifier.getIdentifier());
+            if (identifier.getIdentifierType() != null) {
+                String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifier.getIdentifierType().getUuid());
+                identifierQueryParams.put("@PID.3.4", mpiUuid);
+            }
+        }
 
         List<Patient> retVal = new LinkedList<Patient>();
 
-        try
-        {
+        try {
             if (isGivenNameOrFamilyName(patient)) {
-                Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
+                Message pdqRequest = pixPdqMessageUtil.createPdqMessage(nameQueryParams);
+                Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
+
+                retVal = pixPdqMessageUtil.interpretPIDSegments(response);
+            } else if (identifier != null) {
+                Message pdqRequest = pixPdqMessageUtil.createPdqMessage(identifierQueryParams);
                 Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
 
                 retVal = pixPdqMessageUtil.interpretPIDSegments(response);
@@ -139,5 +161,15 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     private boolean isGivenNameOrFamilyName(Patient patient) {
         return (patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
                 || (patient.getGivenName() != null && !patient.getGivenName().isEmpty());
+    }
+
+    private PatientIdentifier getLastIdentifier(Set<PatientIdentifier> identifiers) {
+
+        PatientIdentifier lastIdentifier = new PatientIdentifier();
+
+        for (PatientIdentifier patIdentifier : identifiers) {
+                lastIdentifier=patIdentifier;
+        }
+        return  lastIdentifier;
     }
 }

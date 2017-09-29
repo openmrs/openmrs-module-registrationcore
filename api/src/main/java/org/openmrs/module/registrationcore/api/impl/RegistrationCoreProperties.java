@@ -76,10 +76,10 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         String handlerId = Context.getAdministrationService().getGlobalProperty(propertyName);
         MpiErrorHandlingService handler = null;
         if (StringUtils.isNotBlank(handlerId)) {
-            log.debug("Looking up biometrics engine component: " + handlerId);
+            log.debug("Looking up Mpi Error Handling Service component: " + handlerId);
             handler = Context.getRegisteredComponent(handlerId, MpiErrorHandlingService.class);
             if (handler == null) {
-                throw new IllegalStateException(propertyName + " must point to a bean implementing BiometricEngine. " + handlerId + " is not valid.");
+                throw new IllegalStateException(propertyName + " must point to a bean implementing MpiErrorHandlingService. " + handlerId + " is not valid.");
             }
         }
         return handler;
