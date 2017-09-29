@@ -8,6 +8,7 @@ import ca.uhn.hl7v2.model.Structure;
 import ca.uhn.hl7v2.model.v25.datatype.CX;
 import ca.uhn.hl7v2.model.v25.datatype.XAD;
 import ca.uhn.hl7v2.model.v25.datatype.XPN;
+import ca.uhn.hl7v2.model.v25.datatype.XTN;
 import ca.uhn.hl7v2.model.v25.message.ADT_A01;
 import ca.uhn.hl7v2.model.v25.message.QBP_Q21;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
@@ -303,10 +304,10 @@ public class PixPdqMessageUtil {
         pid.getAdministrativeSex().setValue(patient.getGender());
 
         // Date of birth
-        /*if(patient.getBirthdateEstimated())
+        if(patient.getBirthdateEstimated())
             pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyy").format(patient.getBirthdate()));
         else
-            pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate()));*/
+            pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate()));
 
         // Addresses
         for(PersonAddress pa : patient.getAddresses()) {
@@ -332,21 +333,22 @@ public class PixPdqMessageUtil {
                 xad.getAddressType().setValue("L");
         }
 
-        // Death?
+        // Death
         if (patient.getDead()) {
             pid.getPatientDeathIndicator().setValue("Y");
             pid.getPatientDeathDateAndTime().getTime().setDatePrecision(patient.getDeathDate().getYear(), patient.getDeathDate().getMonth(), patient.getDeathDate().getDay());
         }
 
-        // Mother?
-        for (Relationship rel : Context.getPersonService().getRelationshipsByPerson(patient)) {
-            if (rel.getRelationshipType().getDescription().contains("MTH") &&
-                    patient.equals(rel.getPersonB())) { //MOTHER?
-                // TODO: Find a better ID
-                this.updateXPN(pid.getMotherSMaidenName(0), rel.getPersonB().getNames().iterator().next());
-                pid.getMotherSIdentifier(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
-                pid.getMotherSIdentifier(0).getAssigningAuthority().getUniversalIDType().setValue("ISO");
-                pid.getMotherSIdentifier(0).getIDNumber().setValue(String.format("%s",rel.getPersonB().getId()));
+        // Mother and Telephone
+        for (PersonAttribute attribute : patient.getAttributes()) {
+            if (isMotherAttributeType(attribute)) {
+                PersonName mother = new PersonName();
+                mother.setFamilyName(attribute.getValue());
+                this.updateXPN(pid.getMotherSMaidenName(0), mother);
+            } else if (isTelephoneAttributeType(attribute)) {
+                XTN xtn = pid.getPhoneNumberHome(0);
+                xtn.getTelephoneNumber().setValue(attribute.getValue());
+                xtn.getLocalNumber().setValue(attribute.getValue());
             }
         }
 
@@ -355,6 +357,14 @@ public class PixPdqMessageUtil {
     public boolean isQueryError(Message message) throws HL7Exception {
         Terser terser = new Terser(message);
         return !terser.get("/MSA-1").endsWith("A");
+    }
+
+    private boolean isMotherAttributeType(PersonAttribute attribute) {
+       return attribute.getAttributeType().getName().toLowerCase().contains("mother");
+    }
+
+    private boolean isTelephoneAttributeType(PersonAttribute attribute) {
+        return attribute.getAttributeType().getName().toLowerCase().contains("telephone");
     }
 
     /**
