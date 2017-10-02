@@ -5,7 +5,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
+import org.openmrs.api.PatientService;
+import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
+import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -22,35 +27,40 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     @Qualifier("registrationcore.Hl7SenderHolder")
     private Hl7SenderHolder hl7SenderHolder;
 
+    @Autowired
+    private PatientIdentifierMapper identifierMapper;
+
+    @Autowired
+    private PatientService patientService;
+
     protected final Log log = LogFactory.getLog(this.getClass());
 
     @Override
     public Patient fetchMpiPatient(String patientIdentifier) {
-        PatientIdentifier identifier = new PatientIdentifier(patientIdentifier, null, null);
+        PatientIdentifierType ecidIdType = patientService.getPatientIdentifierTypeByName(
+                RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME);
+
+        PatientIdentifier identifier = new PatientIdentifier(patientIdentifier, ecidIdType, null);
+        String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifier.getIdentifierType().getUuid());
+
         Map<String, String> queryParams = new HashMap<String, String>();
-
         queryParams.put("@PID.3.1", identifier.getIdentifier());
+        queryParams.put("@PID.3.4", mpiUuid);
 
-        if(identifier.getIdentifierType() != null)
-            queryParams.put("@PID.3.4", identifier.getIdentifierType().getName());
-
-        Patient retVal = new Patient();
-
-        try
-        {
+        try {
             Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
             Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
 
-            retVal = pixPdqMessageUtil.interpretPIDSegments(response).get(0);
-
-            return retVal;
+            Patient mpiPatient = pixPdqMessageUtil.interpretPIDSegments(response).get(0);
+            return toPatientFromMpiPatient(mpiPatient);
+        } catch(Exception e) {
+            throw new MpiException("Error in PDQ fetch by identifier", e);
         }
-        catch(Exception e)
-        {
-            log.error("Error in PDQ Search", e);
-        }
+    }
 
-        return retVal;
-
+    private Patient toPatientFromMpiPatient(Patient mpiPatient) {
+        Patient patient = new Patient(mpiPatient);
+        patient.setIdentifiers(mpiPatient.getIdentifiers());
+        return patient;
     }
 }
