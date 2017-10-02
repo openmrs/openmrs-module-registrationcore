@@ -120,7 +120,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
 
         verifyRemoteMpiServerQuerying();
         Patient savedPatient = patientService.getPatientByUuid(uuid);
-        assertPatientEquals(mpiPatient, savedPatient, 4);
+        assertPatientEquals(mpiPatient, savedPatient, 5);
     }
 
     @SuppressWarnings("unchecked")
@@ -142,7 +142,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
     private void assertPatientEquals(OpenEmpiPatientResult mpiPatient, Patient savedPatient, int idCount) {
         assertNotNull(savedPatient.getPatientId());
         assertNotNull(savedPatient.getPersonId());
-        assertEquals(savedPatient.getIdentifiers().size(), idCount);
+        assertEquals(idCount, savedPatient.getIdentifiers().size());
         assertNotNull(savedPatient.getPatientIdentifier());
         assertEquals(savedPatient.getPatientIdentifier().getLocation(), locationService.getDefaultLocation());
         assertEqualsPatients(mpiPatient, savedPatient);
@@ -178,6 +178,6 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
 
         verifyRemoteMpiServerQuerying();
         Patient savedPatient = patientService.getPatientByUuid(uuid);
-        assertPatientEquals(mpiPatient, savedPatient, 3);
+        assertPatientEquals(mpiPatient, savedPatient, 4);
     }
 }
