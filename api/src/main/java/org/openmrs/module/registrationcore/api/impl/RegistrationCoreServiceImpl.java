@@ -183,46 +183,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				throw new APIException("Patient cannot be null");
 			}
 
-		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
-		if (idSource == null) {
-			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
-			if (StringUtils.isBlank(idSourceId)) {
-				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
-			}
-			try {
-				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
-				if (idSource == null) {
-					throw new APIException("cannot find identifier source with id:" + idSourceId);
-				}
-			}
-			catch (NumberFormatException e) {
-				throw new APIException("Identifier source id should be a number");
-			}
-		}
-		
-		if (identifierLocation == null) {
-			identifierLocation = locationService.getDefaultLocation();
-			if (identifierLocation == null) {
-				throw new APIException("Failed to resolve location to associate to patient identifiers");
-			}
-		}
 
-        // see if there is a primary identifier location further up the chain, use that instead if there is
-        Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(identifierLocation);
-        if (identifierAssignmentLocationAssociatedWith != null) {
-            identifierLocation = identifierAssignmentLocationAssociatedWith;
-        }
-
-        // generate identifier if necessary, otherwise validate
-        if (StringUtils.isBlank(identifierString)) {
-            identifierString = iss.generateIdentifier(idSource, null);
-        }
-        else {
-            PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
-        }
-		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
+		PatientIdentifier pId = validateOrGenerateIdentifier(identifierString, identifierLocation);
 		patient.addIdentifier(pId);
-        pId.setPreferred(true);
 
 		//TODO fix this when creating a patient from a person is possible
 		boolean wasAPerson = patient.getPersonId() != null;
@@ -405,6 +368,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (registrationCoreProperties.isMpiEnabled()) {
 			MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
 			Patient importedPatient = mpiProvider.fetchMpiPatient(personId);
+
+			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
+			if (importedPatient.getPatientIdentifier(idSourceId) == null) {
+				PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
+				importedPatient.addIdentifier(localId);
+			}
+
 			Patient patient = patientService.savePatient(importedPatient);
 			return patient.getUuid();
 		} else {
@@ -464,5 +434,61 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private boolean isBiometricEngineEnabled() {
 		return registrationCoreProperties.isBiometricsEngineEnabled();
+	}
+
+	private IdentifierSourceService getIssAndUpdateIdSource() {
+		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
+		if (idSource == null) {
+			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
+			if (StringUtils.isBlank(idSourceId)) {
+				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
+			}
+			try {
+				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
+				if (idSource == null) {
+					throw new APIException("cannot find identifier source with id:" + idSourceId);
+				}
+			}
+			catch (NumberFormatException e) {
+				throw new APIException("Identifier source id should be a number");
+			}
+		}
+
+		return iss;
+	}
+
+	private Location getIdentifierLocation(Location identifierLocation) {
+		if (identifierLocation == null) {
+			identifierLocation = locationService.getDefaultLocation();
+			if (identifierLocation == null) {
+				throw new APIException("Failed to resolve location to associate to patient identifiers");
+			}
+		}
+
+		// see if there is a primary identifier location further up the chain, use that instead if there is
+		Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(identifierLocation);
+		if (identifierAssignmentLocationAssociatedWith != null) {
+			identifierLocation = identifierAssignmentLocationAssociatedWith;
+		}
+
+		return identifierLocation;
+	}
+
+	private PatientIdentifier validateOrGenerateIdentifier(String identifierString, Location identifierLocation) {
+		IdentifierSourceService iss = getIssAndUpdateIdSource();
+		identifierLocation = getIdentifierLocation(identifierLocation);
+
+		// generate identifier if necessary, otherwise validate
+		if (StringUtils.isBlank(identifierString)) {
+			identifierString = iss.generateIdentifier(idSource, null);
+		} else {
+			PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
+		}
+
+		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(),
+				identifierLocation);
+		pId.setPreferred(true);
+
+		return pId;
 	}
 }
