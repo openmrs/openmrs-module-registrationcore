@@ -13,7 +13,6 @@ import java.util.List;
 public class PatientIdentifierMapper {
 
     private final Log log = LogFactory.getLog(this.getClass());
-    private static final String SPLITTER_SIGN = ":";
     //first element ("key") - local, second element ("value") - mpi.
     private List<IdentifierMapPair> MAPPED_ID;
 
@@ -103,17 +102,14 @@ public class PatientIdentifierMapper {
 
     private IdentifierMapPair createPair(String localString, String mpiString, String universalIdType) {
         try {
-            String local = localString;
-            String mpi = mpiString;
-            String type = universalIdType;
-            return  new IdentifierMapPair(local, mpi, type);
+            return new IdentifierMapPair(localString, mpiString, universalIdType);
         } catch (NumberFormatException e) {
             throw new APIException("Can't create identifier pair for values: local= " +
                     localString + ", mpi=" + mpiString + ", type=" + universalIdType);
         }
     }
 
-    private class IdentifierMapPair{
+    private class IdentifierMapPair {
 
         public final String localIdentifierUuid;
 
