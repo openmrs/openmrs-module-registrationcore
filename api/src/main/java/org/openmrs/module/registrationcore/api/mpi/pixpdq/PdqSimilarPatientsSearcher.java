@@ -1,7 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.model.Message;
-import ca.uhn.hl7v2.model.v25.datatype.CX;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
@@ -56,10 +55,10 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         PatientIdentifier identifier = getLastIdentifier(patient.getIdentifiers());
 
         Map<String, String> identifierQueryParams = new HashMap<String, String>();
-        if(identifier!=null) {
-            identifierQueryParams.put("@PID.3.1", identifier.getIdentifier());
-            if (identifier.getIdentifierType() != null) {
-                String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifier.getIdentifierType().getUuid());
+        if(identifier != null && identifier.getIdentifierType() != null) {
+            String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifier.getIdentifierType().getUuid());
+            if (mpiUuid != null) {
+                identifierQueryParams.put("@PID.3.1", identifier.getIdentifier());
                 identifierQueryParams.put("@PID.3.4", mpiUuid);
             }
         }
@@ -67,7 +66,7 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         List<Patient> retVal = new LinkedList<Patient>();
 
         try {
-            if (isGivenNameOrFamilyName(patient)) {
+            if (hasGivenNameOrFamilyName(patient)) {
                 Message pdqRequest = pixPdqMessageUtil.createPdqMessage(nameQueryParams);
                 Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
 
@@ -158,7 +157,7 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         return matchList;
     }
 
-    private boolean isGivenNameOrFamilyName(Patient patient) {
+    private boolean hasGivenNameOrFamilyName(Patient patient) {
         return (patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
                 || (patient.getGivenName() != null && !patient.getGivenName().isEmpty());
     }
@@ -168,7 +167,7 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         PatientIdentifier lastIdentifier = new PatientIdentifier();
 
         for (PatientIdentifier patIdentifier : identifiers) {
-                lastIdentifier=patIdentifier;
+                lastIdentifier = patIdentifier;
         }
         return  lastIdentifier;
     }
