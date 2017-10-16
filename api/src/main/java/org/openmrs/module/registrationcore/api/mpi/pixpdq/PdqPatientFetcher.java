@@ -61,6 +61,9 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     private Patient toPatientFromMpiPatient(Patient mpiPatient) {
         Patient patient = new Patient(mpiPatient);
         patient.setIdentifiers(mpiPatient.getIdentifiers());
+        for (PatientIdentifier pid : patient.getIdentifiers()) {
+            pid.setPatient(patient);
+        }
         return patient;
     }
 }
