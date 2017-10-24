@@ -159,4 +159,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * Enrolls the given biometric data
 	 */
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
+
+
+	List<PatientAndMatchQuality> findByBiometricMatch(BiometricSubject subject);
 }

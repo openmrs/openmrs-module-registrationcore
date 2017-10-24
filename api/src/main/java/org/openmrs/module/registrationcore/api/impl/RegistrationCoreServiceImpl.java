@@ -39,6 +39,7 @@ import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
@@ -53,10 +54,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -430,6 +433,37 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 		}
 		return biometricData;
+	}
+
+	@Override
+	public List<PatientAndMatchQuality> findByBiometricMatch(BiometricSubject subject) {
+		List<BiometricMatch> matches = getBiometricEngine().search(subject);
+		List<PatientAndMatchQuality> result = new ArrayList<PatientAndMatchQuality>();
+
+		PatientIdentifierType biometricId = patientService.getPatientIdentifierTypeByUuid(
+				RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID);
+
+		for (BiometricMatch match : matches) {
+			String subjectId = match.getSubjectId();
+
+			List<Patient> patients = patientService.getPatients(null, subjectId,
+					Collections.singletonList(biometricId),true,
+					0, Integer.MAX_VALUE);
+
+			if (CollectionUtils.isEmpty(patients)) {
+				log.warn("No patient found wth biometric id: " + subjectId);
+			} else {
+				if (patients.size() > 1) {
+					log.warn("Found " + patients.size() + " patients with the same biometric id: " + subjectId);
+				}
+				for (Patient patient : patients) {
+					result.add(new PatientAndMatchQuality(patient, match.getMatchScore(),
+							Collections.singletonList("fingerprint")));
+				}
+			}
+		}
+
+		return result;
 	}
 
 	private boolean isBiometricEngineEnabled() {
