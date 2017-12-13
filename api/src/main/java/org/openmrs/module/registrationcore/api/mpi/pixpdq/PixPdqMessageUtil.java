@@ -309,29 +309,29 @@ public class PixPdqMessageUtil {
         else
             pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate()));
 
-        // Addresses
-        for(PersonAddress pa : patient.getAddresses()) {
-            XAD xad = pid.getPatientAddress(pid.getPatientAddress().length);
-            if(pa.getAddress1() != null)
-                xad.getStreetAddress().getStreetOrMailingAddress().setValue(pa.getAddress1());
-            if(pa.getAddress2() != null)
-                xad.getOtherDesignation().setValue(pa.getAddress2());
-            if(pa.getAddress3() != null)
-                xad.getOtherDesignation().setValue(xad.getOtherDesignation() + " " + pa.getAddress3());
-            if(pa.getCityVillage() != null)
-                xad.getCity().setValue(pa.getCityVillage());
-            if(pa.getCountry() != null)
-                xad.getCountry().setValue(pa.getCountry());
-            if(pa.getCountyDistrict() != null)
-                xad.getCountyParishCode().setValue(pa.getCountyDistrict());
-            if(pa.getPostalCode() != null)
-                xad.getZipOrPostalCode().setValue(pa.getPostalCode());
-            if(pa.getStateProvince() != null)
-                xad.getStateOrProvince().setValue(pa.getStateProvince());
+        PersonAddress pa = patient.getAddresses().iterator().next();
 
-            if(pa.getPreferred())
-                xad.getAddressType().setValue("L");
-        }
+        // Addresses
+        XAD xad = pid.getPatientAddress(pid.getPatientAddress().length);
+        if(pa.getAddress1() != null)
+            xad.getStreetAddress().getStreetOrMailingAddress().setValue(pa.getAddress1());
+        if(pa.getAddress2() != null)
+            xad.getOtherDesignation().setValue(pa.getAddress2());
+        if(pa.getAddress3() != null)
+            xad.getOtherDesignation().setValue(xad.getOtherDesignation() + " " + pa.getAddress3());
+        if(pa.getCityVillage() != null)
+            xad.getCity().setValue(pa.getCityVillage());
+        if(pa.getCountry() != null)
+            xad.getCountry().setValue(pa.getCountry());
+        if(pa.getCountyDistrict() != null)
+            xad.getCountyParishCode().setValue(pa.getCountyDistrict());
+        if(pa.getPostalCode() != null)
+            xad.getZipOrPostalCode().setValue(pa.getPostalCode());
+        if(pa.getStateProvince() != null)
+            xad.getStateOrProvince().setValue(pa.getStateProvince());
+
+        if(pa.getPreferred())
+            xad.getAddressType().setValue("L");
 
         // Death
         if (patient.getDead()) {
@@ -339,10 +339,11 @@ public class PixPdqMessageUtil {
             pid.getPatientDeathDateAndTime().getTime().setDatePrecision(patient.getDeathDate().getYear(), patient.getDeathDate().getMonth(), patient.getDeathDate().getDay());
         }
 
+        PersonName mother = new PersonName();
+
         // Mother and Telephone
         for (PersonAttribute attribute : patient.getAttributes()) {
-            if (isMotherAttributeType(attribute)) {
-                PersonName mother = new PersonName();
+            if (isMotherAttributeType(attribute) && mother.getFamilyName() == null) {
                 mother.setFamilyName(attribute.getValue());
                 this.updateXPN(pid.getMotherSMaidenName(0), mother);
             } else if (isTelephoneAttributeType(attribute)) {

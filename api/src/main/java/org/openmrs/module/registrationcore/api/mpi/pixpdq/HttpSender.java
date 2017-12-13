@@ -12,9 +12,12 @@ import org.apache.xerces.impl.dv.util.Base64;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -54,13 +57,11 @@ public class HttpSender implements Hl7v2Sender {
             if(log.isDebugEnabled())
                 log.debug(String.format("Sending to %s : %s", url, parser.encode(request)));
 
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes("\u000B" + request.toString() + "\u001C" + "\r");
+            String message = "\u000B" + request.toString() + "\u001C" + "\r";
+            connection.getOutputStream().write(message.getBytes("UTF-8"));
 
             int code = connection.getResponseCode();
             Message response = null;
-            wr.flush();
-            wr.close();
 
             if (code == 200) {
                 response = getResponse(connection, parser);
