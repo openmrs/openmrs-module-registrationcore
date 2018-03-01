@@ -88,6 +88,9 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID = "registrationcore.biometrics.personIdentifierTypeUuid";
 
+	public static final String GP_BIOMETRICS_NATIONAL_PERSON_IDENTIFIER_TYPE_UUID =
+			"registrationcore.biometrics.nationalPersonIdentifierTypeUuid";
+
 	public static final String GP_BIOMETRICS_IMPLEMENTATION = "registrationcore.biometrics.implementation";
 
 	public static final String GP_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.errorHandler.implementation";
