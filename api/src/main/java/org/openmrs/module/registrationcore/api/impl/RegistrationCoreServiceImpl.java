@@ -371,15 +371,19 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (registrationCoreProperties.isMpiEnabled()) {
 			MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
 			Patient importedPatient = mpiProvider.fetchMpiPatient(personId);
+			return persistImportedMpiPatient(importedPatient);
+		} else {
+			//should not pass here since "importPatient" performs only when MpiProvider is not null
+			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
+		}
+	}
 
-			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
-			if (importedPatient.getPatientIdentifier(idSourceId) == null) {
-				PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
-				importedPatient.addIdentifier(localId);
-			}
-
-			Patient patient = patientService.savePatient(importedPatient);
-			return patient.getUuid();
+	@Override
+	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeName) {
+		if (registrationCoreProperties.isMpiEnabled()) {
+			MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
+			Patient importedPatient = mpiProvider.fetchMpiPatient(patientIdentifier, patientIdentifierTypeName);
+			return persistImportedMpiPatient(importedPatient);
 		} else {
 			//should not pass here since "importPatient" performs only when MpiProvider is not null
 			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
@@ -464,6 +468,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 
 		return result;
+	}
+
+	private String persistImportedMpiPatient(Patient mpiPatient) {
+		String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
+		if (mpiPatient.getPatientIdentifier(idSourceId) == null) {
+			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
+			mpiPatient.addIdentifier(localId);
+		}
+
+		Patient patient = patientService.savePatient(mpiPatient);
+		return patient.getUuid();
 	}
 
 	private boolean isBiometricEngineEnabled() {

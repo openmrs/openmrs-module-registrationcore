@@ -47,6 +47,11 @@ public class PixPdqProvider implements MpiProvider<Patient> {
     }
 
     @Override
+    public Patient fetchMpiPatient(String patientId, String identifierTypeName) {
+        return patientFetcher.fetchMpiPatient(patientId, identifierTypeName);
+    }
+
+    @Override
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
         return searchAlgorithm.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
     }
