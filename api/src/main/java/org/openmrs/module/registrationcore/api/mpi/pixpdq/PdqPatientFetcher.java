@@ -61,7 +61,9 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
         return fetchMpiPatient(patientIdentifier, RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME);
     }
 
+
     private Patient toPatientFromMpiPatient(Patient mpiPatient) {
+        // it is a hack in order to save the MpiPatient class to DB (converting to the Patient class)
         Patient patient = new Patient(mpiPatient);
         patient.setIdentifiers(mpiPatient.getIdentifiers());
         for (PatientIdentifier pid : patient.getIdentifiers()) {
