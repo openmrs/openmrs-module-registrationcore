@@ -36,15 +36,11 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     protected final Log log = LogFactory.getLog(this.getClass());
 
     @Override
-    public Patient fetchMpiPatient(String patientIdentifier) {
-        PatientIdentifierType ecidIdType = patientService.getPatientIdentifierTypeByName(
-                RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME);
-
-        PatientIdentifier identifier = new PatientIdentifier(patientIdentifier, ecidIdType, null);
-        String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifier.getIdentifierType().getUuid());
+    public Patient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {
+        String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid);
 
         Map<String, String> queryParams = new HashMap<String, String>();
-        queryParams.put("@PID.3.1", identifier.getIdentifier());
+        queryParams.put("@PID.3.1", patientIdentifier);
         queryParams.put("@PID.3.4", mpiUuid);
 
         try {
@@ -58,7 +54,16 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
         }
     }
 
+    @Override
+    public Patient fetchMpiPatient(String patientIdentifier) {
+        PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(
+                RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME);
+        return fetchMpiPatient(patientIdentifier, patientIdentifierType.getUuid());
+    }
+
+
     private Patient toPatientFromMpiPatient(Patient mpiPatient) {
+        // it is a hack in order to save the MpiPatient class to DB (converting to the Patient class)
         Patient patient = new Patient(mpiPatient);
         patient.setIdentifiers(mpiPatient.getIdentifiers());
         for (PatientIdentifier pid : patient.getIdentifiers()) {

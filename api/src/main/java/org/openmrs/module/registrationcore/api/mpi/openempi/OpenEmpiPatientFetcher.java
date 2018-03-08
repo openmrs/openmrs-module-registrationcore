@@ -1,5 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
@@ -40,6 +41,11 @@ public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
         OpenEmpiPatientResult mpiPatient = queryExecutor.getPatientById(authenticator.getToken(), patientId);
 
         return buildPatient(mpiPatient);
+    }
+
+    @Override
+    public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
+        throw new NotImplementedException("Method fetchMpiPatient for OpenEmpiPatientFetcher is not implemented yet");
     }
 
     private Patient buildPatient(OpenEmpiPatientResult mpiPatient) {

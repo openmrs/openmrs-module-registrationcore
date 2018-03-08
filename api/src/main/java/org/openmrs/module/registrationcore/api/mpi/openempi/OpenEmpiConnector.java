@@ -42,6 +42,12 @@ public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
     }
 
     @Override
+    public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
+        authenticateIfNeeded();
+        return patientImporter.fetchMpiPatient(patientId, identifierTypeUuid);
+    }
+
+    @Override
     public String exportPatient(Patient patient) {
         authenticateIfNeeded();
         return patientExporter.exportPatient(patient);
