@@ -47,8 +47,8 @@ public class PixPdqProvider implements MpiProvider<Patient> {
     }
 
     @Override
-    public Patient fetchMpiPatient(String patientId, String identifierTypeName) {
-        return patientFetcher.fetchMpiPatient(patientId, identifierTypeName);
+    public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
+        return patientFetcher.fetchMpiPatient(patientId, identifierTypeUuid);
     }
 
     @Override

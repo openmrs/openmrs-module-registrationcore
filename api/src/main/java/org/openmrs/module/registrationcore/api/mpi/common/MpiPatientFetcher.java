@@ -17,8 +17,8 @@ public interface MpiPatientFetcher {
     /**
      * Perform query to mpi server to get patient by specific identifier & convert it to local patient.
      * @param patientId patient identifier
-     * @param identifierTypeName name of {@link org.openmrs.PatientIdentifierType }
+     * @param identifierTypeUuid uuid of {@link org.openmrs.PatientIdentifierType }
      * @return converted patient not yet saved to local DB.
      */
-    Patient fetchMpiPatient(String patientId, String identifierTypeName);
+    Patient fetchMpiPatient(String patientId, String identifierTypeUuid);
 }

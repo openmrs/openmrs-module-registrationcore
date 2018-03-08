@@ -44,7 +44,7 @@ public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
     }
 
     @Override
-    public Patient fetchMpiPatient(String patientId, String identifierTypeName) {
+    public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
         throw new NotImplementedException("Method fetchMpiPatient for OpenEmpiPatientFetcher is not implemented yet");
     }
 

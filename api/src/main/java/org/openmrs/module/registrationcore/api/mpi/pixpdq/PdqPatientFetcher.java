@@ -36,10 +36,8 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     protected final Log log = LogFactory.getLog(this.getClass());
 
     @Override
-    public Patient fetchMpiPatient(String patientIdentifier, String identifierTypeName) {
-        PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(identifierTypeName);
-
-        String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patientIdentifierType.getUuid());
+    public Patient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {
+        String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid);
 
         Map<String, String> queryParams = new HashMap<String, String>();
         queryParams.put("@PID.3.1", patientIdentifier);
@@ -58,7 +56,9 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
     @Override
     public Patient fetchMpiPatient(String patientIdentifier) {
-        return fetchMpiPatient(patientIdentifier, RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME);
+        PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(
+                RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME);
+        return fetchMpiPatient(patientIdentifier, patientIdentifierType.getUuid());
     }
 
 
