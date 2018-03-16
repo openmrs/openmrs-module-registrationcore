@@ -2,17 +2,25 @@ package org.openmrs.module.registrationcore.api.biometrics.model;
 
 public class EnrollmentResult {
 
-    private BiometricSubject biometricSubject;
+    private BiometricSubject nationalBiometricSubject;
+
+    private BiometricSubject localBiometricSubject;
 
     private EnrollmentStatus enrollmentStatus;
 
-    public EnrollmentResult(BiometricSubject biometricSubject, EnrollmentStatus enrollmentStatus) {
-        this.biometricSubject = biometricSubject;
+    public EnrollmentResult(BiometricSubject localBiometricSubject, BiometricSubject nationalBiometricSubject,
+            EnrollmentStatus enrollmentStatus) {
+        this.localBiometricSubject = localBiometricSubject;
+        this.nationalBiometricSubject = nationalBiometricSubject;
         this.enrollmentStatus = enrollmentStatus;
     }
 
-    public BiometricSubject getBiometricSubject() {
-        return biometricSubject;
+    public BiometricSubject getNationalBiometricSubject() {
+        return nationalBiometricSubject;
+    }
+
+    public BiometricSubject getLocalBiometricSubject() {
+        return localBiometricSubject;
     }
 
     public EnrollmentStatus getEnrollmentStatus() {

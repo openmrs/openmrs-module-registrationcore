@@ -46,17 +46,19 @@ public class TestBiometricEngine implements BiometricEngine {
 
     @Override
     public EnrollmentResult enroll(BiometricSubject subject) {
+        BiometricSubject nationalBiometricSubject = null;
         if (subject.getSubjectId() == null) {
             subject.setSubjectId(UUID.randomUUID().toString());
+            nationalBiometricSubject = new BiometricSubject(UUID.randomUUID().toString());
         }
         enrolledSubjects.put(subject.getSubjectId(), subject);
-        return new EnrollmentResult(subject, EnrollmentStatus.SUCCESS);
+        return new EnrollmentResult(subject, nationalBiometricSubject, EnrollmentStatus.SUCCESS);
     }
 
     @Override
     public BiometricSubject update(BiometricSubject subject) {
         if (subject.getSubjectId() == null) {
-            return enroll(subject).getBiometricSubject();
+            return enroll(subject).getLocalBiometricSubject();
         }
         BiometricSubject existing = lookup(subject.getSubjectId());
         if (existing == null) {
