@@ -411,10 +411,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			PatientIdentifierType idType = biometricData.getIdentifierType();
 			if (idType != null) {
 				log.debug("Saving biometrics as a patient identifier of type: " + idType.getName());
-                BiometricSubject existingSubject = (subject.getSubjectId() == null ? null : biometricEngine.lookup(subject.getSubjectId()));
-				if (existingSubject == null) {
-					throw new IllegalArgumentException("The subject doesn't exist in m2Sys. Did you call m2Sys enroll method?") ;
-				}
+				//Currently, lookup checks if identifier exists only in local fingerprint server, but this method will be used also by national ids
+				//BiometricSubject existingSubject = (subject.getSubjectId() == null ? null : biometricEngine.lookup(subject.getSubjectId()));
+				//if (existingSubject == null) {
+				//	throw new IllegalArgumentException("The subject doesn't exist in m2Sys. Did you call m2Sys enroll method?") ;
+				//}
 
 				// If patient does not already have an identifier that references this subject, add one
 				boolean identifierExists = false;
