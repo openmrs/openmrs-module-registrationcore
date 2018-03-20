@@ -379,10 +379,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	@Override
-	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeName) {
+	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
 		if (registrationCoreProperties.isMpiEnabled()) {
 			MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
-			Patient importedPatient = mpiProvider.fetchMpiPatient(patientIdentifier, patientIdentifierTypeName);
+			Patient importedPatient = mpiProvider.fetchMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
 			return persistImportedMpiPatient(importedPatient);
 		} else {
 			//should not pass here since "importPatient" performs only when MpiProvider is not null
@@ -411,10 +411,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			PatientIdentifierType idType = biometricData.getIdentifierType();
 			if (idType != null) {
 				log.debug("Saving biometrics as a patient identifier of type: " + idType.getName());
-                BiometricSubject existingSubject = (subject.getSubjectId() == null ? null : biometricEngine.lookup(subject.getSubjectId()));
-				if (existingSubject == null) {
-					throw new IllegalArgumentException("The subject doesn't exist in m2Sys. Did you call m2Sys enroll method?") ;
-				}
+				//Currently, lookup checks if identifier exists only in local fingerprint server, but this method will be used also by national ids
+				//BiometricSubject existingSubject = (subject.getSubjectId() == null ? null : biometricEngine.lookup(subject.getSubjectId()));
+				//if (existingSubject == null) {
+				//	throw new IllegalArgumentException("The subject doesn't exist in m2Sys. Did you call m2Sys enroll method?") ;
+				//}
 
 				// If patient does not already have an identifier that references this subject, add one
 				boolean identifierExists = false;
@@ -468,6 +469,29 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 
 		return result;
+	}
+
+	@Override
+	public Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid) {
+		PatientIdentifierType idType = patientService.getPatientIdentifierTypeByUuid(patientIdentifierTypeUuid);
+		if (idType == null) {
+			throw new APIException(String.format("PatientIdentifierType is missing: UUID %s",
+					patientIdentifierTypeUuid));
+		} else {
+			//Currently method getPatients() does not take into consideration the identifierTypes,
+			//so it needs to be filtered anyway
+			List<Patient> patients = new ArrayList<Patient>();
+			for (Patient p : patientService.getPatients(null, patientIdentifier,
+					Collections.singletonList(idType), true)) {
+				for (PatientIdentifier pi : p.getIdentifiers()) {
+					if (pi.getIdentifierType().equals(idType)) {
+						patients.add(p);
+						break;
+					}
+				}
+			}
+			return CollectionUtils.isEmpty(patients) ? null : patients.get(0);
+		}
 	}
 
 	private String persistImportedMpiPatient(Patient mpiPatient) {

@@ -14,6 +14,7 @@ import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 
 import java.util.List;
+import org.openmrs.module.registrationcore.api.biometrics.model.EnrollmentResult;
 
 /**
  * Provides primary API for interacting with the biometric matching engine
@@ -25,7 +26,7 @@ public interface BiometricEngine {
     /**
      * Enrolls biometrics for the passed subject
      */
-    BiometricSubject enroll(BiometricSubject subject);
+    EnrollmentResult enroll(BiometricSubject subject);
 
     /**
      * Updates the biometrics for a given subject, enrolling that subject if they do not already exist

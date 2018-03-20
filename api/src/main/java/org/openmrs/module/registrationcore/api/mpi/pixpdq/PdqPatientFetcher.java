@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.model.Message;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.util.CollectionUtils;
 
 public class PdqPatientFetcher implements MpiPatientFetcher {
 
@@ -47,8 +49,12 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
             Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
             Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
 
-            Patient mpiPatient = pixPdqMessageUtil.interpretPIDSegments(response).get(0);
-            return toPatientFromMpiPatient(mpiPatient);
+            List<Patient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
+            if (CollectionUtils.isEmpty(mpiPatients)) {
+                throw new MpiException(String.format("Patient with ID: %s of MPI type: %s has not been found in MPI",
+                        patientIdentifier, identifierTypeUuid));
+            }
+            return toPatientFromMpiPatient(mpiPatients.get(0));
         } catch(Exception e) {
             throw new MpiException("Error in PDQ fetch by identifier", e);
         }
