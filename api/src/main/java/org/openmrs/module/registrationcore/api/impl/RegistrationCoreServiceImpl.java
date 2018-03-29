@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+import static org.openmrs.module.registrationcore.RegistrationCoreConstants.LOCAL_FINGERPRINT;
+import static org.openmrs.module.registrationcore.RegistrationCoreConstants.NATIONAL_FINGERPRINT;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -448,7 +451,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		PatientIdentifierType biometricId = patientService.getPatientIdentifierTypeByUuid(
 				getGlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID));
 
+		PatientIdentifierType nationalBiometricId = patientService.getPatientIdentifierTypeByUuid(
+				getGlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_NATIONAL_PERSON_IDENTIFIER_TYPE_UUID));
+
 		for (BiometricMatch match : matches) {
+			boolean possessNationalFpId = false;
 			String subjectId = match.getSubjectId();
 
 			List<Patient> patients = patientService.getPatients(null, subjectId,
@@ -462,9 +469,16 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 					log.warn("Found " + patients.size() + " patients with the same biometric id: " + subjectId);
 				}
 				for (Patient patient : patients) {
+					possessNationalFpId = possessNationalFpId(patient) || possessNationalFpId;
 					result.add(new PatientAndMatchQuality(patient, match.getMatchScore(),
-							Collections.singletonList("fingerprint")));
+							Collections.singletonList(LOCAL_FINGERPRINT)));
 				}
+			}
+
+			if (registrationCoreProperties.isMpiEnabled() && !possessNationalFpId) {
+				Patient mpiPatient = findMpiPatient(subjectId, nationalBiometricId.getUuid());
+				result.add(new PatientAndMatchQuality(mpiPatient,
+						match.getMatchScore(), Collections.singletonList(NATIONAL_FINGERPRINT)));
 			}
 		}
 
@@ -492,6 +506,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 			return CollectionUtils.isEmpty(patients) ? null : patients.get(0);
 		}
+	}
+
+	private boolean possessNationalFpId(Patient patient) {
+		PatientIdentifierType nationalBiometricId = patientService.getPatientIdentifierTypeByUuid(
+				getGlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_NATIONAL_PERSON_IDENTIFIER_TYPE_UUID));
+
+		return patient.getPatientIdentifier(nationalBiometricId) != null;
 	}
 
 	private String persistImportedMpiPatient(Patient mpiPatient) {
