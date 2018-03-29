@@ -446,7 +446,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		List<PatientAndMatchQuality> result = new ArrayList<PatientAndMatchQuality>();
 
 		PatientIdentifierType biometricId = patientService.getPatientIdentifierTypeByUuid(
-				RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID);
+				getGlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID));
 
 		for (BiometricMatch match : matches) {
 			String subjectId = match.getSubjectId();
@@ -563,5 +563,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		pId.setPreferred(true);
 
 		return pId;
+	}
+
+
+	public String getGlobalProperty(String propertyName) {
+		String propertyValue = adminService.getGlobalProperty(propertyName);
+		if (StringUtils.isBlank(propertyValue)) {
+			throw new APIException(String.format("Property value for '%s' is not set", propertyName));
+		}
+		return propertyValue;
 	}
 }
