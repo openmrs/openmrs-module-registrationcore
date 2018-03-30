@@ -386,8 +386,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	@Override
 	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
-			Patient importedPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
-			return persistImportedMpiPatient(importedPatient);
+		Patient importedPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
+		return persistImportedMpiPatient(importedPatient);
 	}
 
 	@Override
