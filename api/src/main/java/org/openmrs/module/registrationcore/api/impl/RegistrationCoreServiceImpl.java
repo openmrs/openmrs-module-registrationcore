@@ -42,6 +42,7 @@ import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
@@ -367,27 +368,26 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	@Override
-	public String importMpiPatient(String personId) {
-		if (registrationCoreProperties.isMpiEnabled()) {
-			MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
-			Patient importedPatient = mpiProvider.fetchMpiPatient(personId);
-			return persistImportedMpiPatient(importedPatient);
-		} else {
-			//should not pass here since "importPatient" performs only when MpiProvider is not null
-			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
+	public Patient findMpiPatient(String identifier, String identifierTypeUuid) {
+		if (!registrationCoreProperties.isMpiEnabled()) {
+			throw new MpiException("Should not perform 'findMpiPatient' when MPI is disabled");
 		}
+		MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
+		return mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
+	}
+
+	@Override
+	public String importMpiPatient(String personId) {
+		PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(
+				RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME);
+
+		return importMpiPatient(personId, patientIdentifierType.getUuid());
 	}
 
 	@Override
 	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
-		if (registrationCoreProperties.isMpiEnabled()) {
-			MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
-			Patient importedPatient = mpiProvider.fetchMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
-			return persistImportedMpiPatient(importedPatient);
-		} else {
-			//should not pass here since "importPatient" performs only when MpiProvider is not null
-			throw new APIException("Should not perform 'fetchMpiPatient' when MPI is disabled");
-		}
+		Patient importedPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
+		return persistImportedMpiPatient(importedPatient);
 	}
 
 	@Override
@@ -446,7 +446,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		List<PatientAndMatchQuality> result = new ArrayList<PatientAndMatchQuality>();
 
 		PatientIdentifierType biometricId = patientService.getPatientIdentifierTypeByUuid(
-				RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID);
+				getGlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID));
 
 		for (BiometricMatch match : matches) {
 			String subjectId = match.getSubjectId();
@@ -563,5 +563,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		pId.setPreferred(true);
 
 		return pId;
+	}
+
+
+	public String getGlobalProperty(String propertyName) {
+		String propertyValue = adminService.getGlobalProperty(propertyName);
+		if (StringUtils.isBlank(propertyValue)) {
+			throw new APIException(String.format("Property value for '%s' is not set", propertyName));
+		}
+		return propertyValue;
 	}
 }

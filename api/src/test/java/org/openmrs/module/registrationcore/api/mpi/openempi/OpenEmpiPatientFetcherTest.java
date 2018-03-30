@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
@@ -111,6 +112,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
     }
 
     @Test
+    @Ignore("This functionality is currently not used and not implemented")
     public void testPerformCorrectImportForPatientWithoutOpenMrsIdentifier() throws Exception {
         mockMpiAuthentication();
         OpenEmpiPatientResult mpiPatient = marshaller.getQuery(PATIENT_WITHOUT_OPENMRS_ID);
@@ -169,6 +171,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
     }
 
     @Test
+    @Ignore("This functionality is currently not used and not implemented")
     public void testPerformCorrectImportForPatientWithOpenMrsIdentifier() throws Exception {
         mockMpiAuthentication();
         OpenEmpiPatientResult mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);

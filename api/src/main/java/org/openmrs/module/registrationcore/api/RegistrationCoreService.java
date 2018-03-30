@@ -142,6 +142,15 @@ public interface RegistrationCoreService extends OpenmrsService {
 	List<String> findSimilarFamilyNames(String searchPhrase);
 
 	/**
+	 * Query to MPI server to find patient with Id "patientId".
+	 *
+	 * @param identifier person identifier of patient which should be imported
+	 * @param identifierTypeUuid person identifier type of patient which will be found
+	 * @return found patient
+	 */
+	Patient findMpiPatient(String identifier, String identifierTypeUuid);
+
+	/**
 	 * Query to MPI server to find patient with Id "patientId"
 	 * and save that patient to local DB.
      *
