@@ -29,9 +29,9 @@ public interface BiometricEngine {
     EnrollmentResult enroll();
 
     /**
-     * Enrolls biometrics for the passed subject
+     * Enrolls given biometrics
      */
-    EnrollmentResult enroll(BiometricSubject subject);
+    EnrollmentResult enroll(String fingerprinstXmlTemplate);
 
     /**
      * Updates the biometrics for a given subject, enrolling that subject if they do not already exist
@@ -47,7 +47,7 @@ public interface BiometricEngine {
      * Scans fingerprints and returns matching patients.
      * @return a List of PatientAndMatchQuality in order to find matching patients
      */
-    List<BiometricMatch> search();
+    List<BiometricMatch> search(BiometricSubject subject);
 
     /**
      * @return the subject saved for the given subjectId

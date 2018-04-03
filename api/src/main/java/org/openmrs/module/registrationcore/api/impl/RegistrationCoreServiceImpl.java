@@ -444,8 +444,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	@Override
-	public List<PatientAndMatchQuality> findByBiometricMatch() {
-		List<BiometricMatch> matches = getBiometricEngine().search();
+	public List<PatientAndMatchQuality> findByBiometricMatch(BiometricSubject subject) {
+		List<BiometricMatch> matches = getBiometricEngine().search(subject);
 		List<PatientAndMatchQuality> result = new ArrayList<PatientAndMatchQuality>();
 
 		PatientIdentifierType biometricId = patientService.getPatientIdentifierTypeByUuid(
