@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.registrationcore.api.biometrics;
 
+import java.util.Arrays;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricEngineStatus;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Not meant for actual production usage, this is a simple
@@ -33,6 +35,9 @@ import java.util.UUID;
  */
 @Component
 public class TestBiometricEngine implements BiometricEngine {
+
+    private static final String FINGERPRINT_TYPE = "ISO";
+    private static final String FINGERPRINT_FORMAT = "ISO";
 
     private Map<String, BiometricSubject> enrolledSubjects = new HashMap<String, BiometricSubject>();
 
@@ -45,12 +50,25 @@ public class TestBiometricEngine implements BiometricEngine {
     }
 
     @Override
+    public EnrollmentResult enroll() {
+        BiometricSubject scannedBiometricSubject = getScannedBiometricSubject();
+        return enroll(scannedBiometricSubject);
+    }
+
+    @Override
     public EnrollmentResult enroll(BiometricSubject subject) {
-        BiometricSubject nationalBiometricSubject = null;
-        if (subject.getSubjectId() == null) {
-            subject.setSubjectId(UUID.randomUUID().toString());
-            nationalBiometricSubject = new BiometricSubject(UUID.randomUUID().toString());
+        if (subject == null) {
+            throw new IllegalArgumentException("Passed BiometricSubject cannot be null");
         }
+        if (subject.getSubjectId() == null) {
+            throw new IllegalArgumentException(
+                    "SubjectId in passed BiometricSubject cannot be null");
+        }
+        if (CollectionUtils.isEmpty(subject.getFingerprints())) {
+            throw new IllegalArgumentException(
+                    "Fingerprints collection in passed BiometricSubject cannot be empty");
+        }
+        BiometricSubject nationalBiometricSubject = new BiometricSubject(UUID.randomUUID().toString());
         enrolledSubjects.put(subject.getSubjectId(), subject);
         return new EnrollmentResult(subject, nationalBiometricSubject, EnrollmentStatus.SUCCESS);
     }
@@ -77,15 +95,16 @@ public class TestBiometricEngine implements BiometricEngine {
     }
 
     @Override
-    public List<BiometricMatch> search(BiometricSubject subject) {
+    public List<BiometricMatch> search() {
+        BiometricSubject scannedBiometricSubject = getScannedBiometricSubject();
         List<BiometricMatch> ret = new ArrayList<BiometricMatch>();
         for (BiometricSubject s : enrolledSubjects.values()) {
             double score = 0;
-            if (s.getSubjectId().equals(subject.getSubjectId())) {
+            if (s.getSubjectId().equals(scannedBiometricSubject.getSubjectId())) {
                 score += 10000;
             }
             for (Fingerprint fp : s.getFingerprints()) {
-                for (Fingerprint fp2 : subject.getFingerprints()) {
+                for (Fingerprint fp2 : scannedBiometricSubject.getFingerprints()) {
                     if (fp.getTemplate().equals(fp2.getTemplate())) {
                         score += 1000;
                     }
@@ -107,5 +126,16 @@ public class TestBiometricEngine implements BiometricEngine {
     @Override
     public void delete(String subjectId) {
         enrolledSubjects.remove(subjectId);
+    }
+
+    private BiometricSubject getScannedBiometricSubject() {
+        List<Fingerprint> scannedFingerprints = Arrays.asList(
+                new Fingerprint(FINGERPRINT_TYPE, FINGERPRINT_FORMAT, "sampleTemplateDate1"),
+                new Fingerprint(FINGERPRINT_TYPE, FINGERPRINT_FORMAT, "sampleTemplateDate2")
+        );
+        BiometricSubject scannedBiometricSubject = new BiometricSubject();
+        scannedBiometricSubject.setSubjectId(UUID.randomUUID().toString());
+        scannedBiometricSubject.setFingerprints(scannedFingerprints);
+        return scannedBiometricSubject;
     }
 }

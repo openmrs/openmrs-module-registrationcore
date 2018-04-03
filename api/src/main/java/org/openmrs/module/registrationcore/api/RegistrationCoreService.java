@@ -180,7 +180,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
 
 
-	List<PatientAndMatchQuality> findByBiometricMatch(BiometricSubject subject);
+	List<PatientAndMatchQuality> findByBiometricMatch();
 
 	Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid);
 }
