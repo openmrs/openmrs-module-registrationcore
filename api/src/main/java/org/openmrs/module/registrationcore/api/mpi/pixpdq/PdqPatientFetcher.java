@@ -51,8 +51,7 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
             List<Patient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
             if (CollectionUtils.isEmpty(mpiPatients)) {
-                throw new MpiException(String.format("Patient with ID: %s of MPI type: %s has not been found in MPI",
-                        patientIdentifier, identifierTypeUuid));
+                return null;
             }
             return toPatientFromMpiPatient(mpiPatients.get(0));
         } catch(Exception e) {

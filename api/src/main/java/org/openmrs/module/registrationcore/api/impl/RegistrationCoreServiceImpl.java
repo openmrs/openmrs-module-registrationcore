@@ -389,8 +389,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	@Override
 	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
-		Patient importedPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
-		return persistImportedMpiPatient(importedPatient);
+		Patient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
+		if (foundPatient == null) {
+			throw new MpiException(String.format(
+					"Error during importing Patient from MPI. "
+							+ "Patient ID: %s of identifier type: %s has not been found in MPI",
+					patientIdentifier, patientIdentifierTypeUuid));
+		}
+		return persistImportedMpiPatient(foundPatient);
 	}
 
 	@Override
@@ -477,8 +483,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 			if (registrationCoreProperties.isMpiEnabled() && !possessNationalFpId) {
 				Patient mpiPatient = findMpiPatient(subjectId, nationalBiometricId.getUuid());
-				result.add(new PatientAndMatchQuality(mpiPatient,
-						match.getMatchScore(), Collections.singletonList(NATIONAL_FINGERPRINT_NAME)));
+				if (mpiPatient != null) {
+					result.add(new PatientAndMatchQuality(mpiPatient,
+							match.getMatchScore(),
+							Collections.singletonList(NATIONAL_FINGERPRINT_NAME)));
+				}
 			}
 		}
 
