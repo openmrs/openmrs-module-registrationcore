@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.registrationcore.api.biometrics;
 
+import java.util.Arrays;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricEngineStatus;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
@@ -34,6 +35,9 @@ import java.util.UUID;
 @Component
 public class TestBiometricEngine implements BiometricEngine {
 
+    private static final String FINGERPRINT_TYPE = "ISO";
+    private static final String FINGERPRINT_FORMAT = "ISO";
+
     private Map<String, BiometricSubject> enrolledSubjects = new HashMap<String, BiometricSubject>();
 
     @Override
@@ -45,14 +49,17 @@ public class TestBiometricEngine implements BiometricEngine {
     }
 
     @Override
-    public EnrollmentResult enroll(BiometricSubject subject) {
-        BiometricSubject nationalBiometricSubject = null;
-        if (subject.getSubjectId() == null) {
-            subject.setSubjectId(UUID.randomUUID().toString());
-            nationalBiometricSubject = new BiometricSubject(UUID.randomUUID().toString());
-        }
-        enrolledSubjects.put(subject.getSubjectId(), subject);
-        return new EnrollmentResult(subject, nationalBiometricSubject, EnrollmentStatus.SUCCESS);
+    public EnrollmentResult enroll() {
+        BiometricSubject scannedBiometricSubject = getScannedBiometricSubject();
+        return enroll(scannedBiometricSubject);
+    }
+
+    @Override
+    public EnrollmentResult enroll(String fingerprintsXmlTemplate) {
+        List<Fingerprint> fingerprints = Collections.singletonList(
+                new Fingerprint(FINGERPRINT_TYPE, FINGERPRINT_FORMAT, fingerprintsXmlTemplate));
+
+        return enroll(buildBiometricSubjectWithGivenFingeprints(fingerprints));
     }
 
     @Override
@@ -107,5 +114,26 @@ public class TestBiometricEngine implements BiometricEngine {
     @Override
     public void delete(String subjectId) {
         enrolledSubjects.remove(subjectId);
+    }
+
+    private EnrollmentResult enroll(BiometricSubject subject) {
+        BiometricSubject nationalBiometricSubject = new BiometricSubject(UUID.randomUUID().toString());
+        enrolledSubjects.put(subject.getSubjectId(), subject);
+        return new EnrollmentResult(subject, nationalBiometricSubject, EnrollmentStatus.SUCCESS);
+    }
+
+    private BiometricSubject getScannedBiometricSubject() {
+        List<Fingerprint> scannedFingerprints = Arrays.asList(
+                new Fingerprint(FINGERPRINT_TYPE, FINGERPRINT_FORMAT, "sampleTemplateDate1"),
+                new Fingerprint(FINGERPRINT_TYPE, FINGERPRINT_FORMAT, "sampleTemplateDate2")
+        );
+        return buildBiometricSubjectWithGivenFingeprints(scannedFingerprints);
+    }
+
+    private BiometricSubject buildBiometricSubjectWithGivenFingeprints(List<Fingerprint> fingerprints) {
+        BiometricSubject scannedBiometricSubject = new BiometricSubject();
+        scannedBiometricSubject.setSubjectId(UUID.randomUUID().toString());
+        scannedBiometricSubject.setFingerprints(fingerprints);
+        return scannedBiometricSubject;
     }
 }

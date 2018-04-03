@@ -24,9 +24,14 @@ public interface BiometricEngine {
     BiometricEngineStatus getStatus();
 
     /**
-     * Enrolls biometrics for the passed subject
+     * Scans and enrolls biometrics
      */
-    EnrollmentResult enroll(BiometricSubject subject);
+    EnrollmentResult enroll();
+
+    /**
+     * Enrolls given biometrics
+     */
+    EnrollmentResult enroll(String fingerprinstXmlTemplate);
 
     /**
      * Updates the biometrics for a given subject, enrolling that subject if they do not already exist
@@ -39,7 +44,8 @@ public interface BiometricEngine {
     BiometricSubject updateSubjectId(String oldId, String newId);
 
     /**
-     * @return a List of PatientAndMatchQuality for the given subject in order to find matching patients
+     * Scans fingerprints and returns matching patients.
+     * @return a List of PatientAndMatchQuality in order to find matching patients
      */
     List<BiometricMatch> search(BiometricSubject subject);
 
