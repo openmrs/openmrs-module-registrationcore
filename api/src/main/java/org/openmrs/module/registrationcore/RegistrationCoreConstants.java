@@ -97,7 +97,7 @@ public final class RegistrationCoreConstants {
 
 	public static final String MPI_IDENTIFIER_TYPE_ECID_NAME = "ECID";
 
-	public static final String LOCAL_FINGERPRINT = "localFingerprint";
+	public static final String LOCAL_FINGERPRINT_NAME = "localFingerprint";
 
-	public static final String NATIONAL_FINGERPRINT = "nationalFingerprint";
+	public static final String NATIONAL_FINGERPRINT_NAME = "nationalFingerprint";
 }
