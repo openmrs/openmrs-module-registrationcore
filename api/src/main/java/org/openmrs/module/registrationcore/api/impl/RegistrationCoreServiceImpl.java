@@ -16,6 +16,8 @@ package org.openmrs.module.registrationcore.api.impl;
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.LOCAL_FINGERPRINT_NAME;
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.NATIONAL_FINGERPRINT_NAME;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -452,7 +454,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public List<PatientAndMatchQuality> findByBiometricMatch(BiometricSubject subject) {
 		List<BiometricMatch> matches = getBiometricEngine().search(subject);
-		List<PatientAndMatchQuality> result = new ArrayList<PatientAndMatchQuality>();
+		Set<PatientAndMatchQuality> result = new HashSet<PatientAndMatchQuality>();
 
 		PatientIdentifierType biometricId = patientService.getPatientIdentifierTypeByUuid(
 				getGlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID));
@@ -491,7 +493,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 		}
 
-		return result;
+		return new ArrayList<PatientAndMatchQuality>(result);
 	}
 
 	@Override

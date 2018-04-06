@@ -15,6 +15,7 @@ package org.openmrs.module.registrationcore.api.search;
 
 import java.util.List;
 
+import java.util.Objects;
 import org.openmrs.Patient;
 
 /**
@@ -53,5 +54,21 @@ public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality
 	public int compareTo(PatientAndMatchQuality o) {
 		return o.score.compareTo(score);
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		PatientAndMatchQuality that = (PatientAndMatchQuality) o;
+		return Objects.equals(patient, that.patient);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(patient);
+	}
 }
