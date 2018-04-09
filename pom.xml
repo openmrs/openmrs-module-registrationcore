@@ -39,6 +39,7 @@
 		<eventVersion>2.3</eventVersion>
 		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<xdsSenderVersion>1.0.0</xdsSenderVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -141,6 +142,13 @@
                 <version>2.2</version>
 				<scope>provided</scope>
             </dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>xds-sender-api</artifactId>
+				<version>${xdsSenderVersion}</version>
+				<scope>provided</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
