@@ -187,5 +187,5 @@ public interface RegistrationCoreService extends OpenmrsService {
 
 	Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid);
 
-	Ccd importCcd(Patient patient) throws XDSException, IOException;
+	String importCcd(Patient patient);
 }
