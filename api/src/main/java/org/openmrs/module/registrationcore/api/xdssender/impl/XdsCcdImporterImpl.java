@@ -14,8 +14,8 @@ import java.io.IOException;
 public class XdsCcdImporterImpl implements XdsCcdImporter {
 
     @Autowired
-    @Qualifier("ccdService")
-    CcdService ccdService;
+    @Qualifier("xdsSender.CcdService")
+    private CcdService ccdService;
 
     @Override
     public Ccd getLocallyStoredCcd(Patient patient) {
