@@ -1,4 +1,4 @@
-package org.openmrs.module.registrationcore.api;
+package org.openmrs.module.registrationcore.api.errorhandling;
 
 public interface ErrorHandlingService {
     
