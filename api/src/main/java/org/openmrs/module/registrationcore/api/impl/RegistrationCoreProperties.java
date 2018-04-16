@@ -7,7 +7,6 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
-import org.openmrs.module.registrationcore.api.MpiErrorHandlingService;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.springframework.context.ApplicationContext;
