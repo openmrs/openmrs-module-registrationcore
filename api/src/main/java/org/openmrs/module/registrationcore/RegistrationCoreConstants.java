@@ -93,8 +93,10 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_BIOMETRICS_IMPLEMENTATION = "registrationcore.biometrics.implementation";
 
-	public static final String GP_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.errorHandler.implementation";
-
+	public static final String GP_MPI_PIX_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pix.errorHandler.implementation";
+	
+	public static final String GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pdq.errorHandler.implementation";
+	
 	public static final String MPI_IDENTIFIER_TYPE_ECID_NAME = "ECID";
 
 	public static final String LOCAL_FINGERPRINT_NAME = "localFingerprint";
