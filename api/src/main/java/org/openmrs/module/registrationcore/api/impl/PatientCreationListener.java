@@ -74,7 +74,6 @@ public class PatientCreationListener extends PatientActionListener {
                         true,
                         ExceptionUtils.getFullStackTrace(e));
             }
-    
         }
         
         if (personId != null) {

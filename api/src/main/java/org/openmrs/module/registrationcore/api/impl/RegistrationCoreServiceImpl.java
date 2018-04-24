@@ -19,6 +19,7 @@ import static org.openmrs.module.registrationcore.RegistrationCoreConstants.NATI
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.GlobalProperty;
@@ -47,6 +48,7 @@ import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
@@ -378,9 +380,16 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new MpiException("Should not perform 'findMpiPatient' when MPI is disabled");
 		}
 		MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
-		return mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
+		Patient patient = null;
+		try {
+			patient = mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
+		} catch (RuntimeException e) {
+			servePdqExceptionAndThrowAgain(e, "PDQ patient find exception occurred",
+					"org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqPatientFetcher");
+		}
+		return patient;
 	}
-
+	
 	@Override
 	public String importMpiPatient(String personId) {
 		PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(
@@ -388,17 +397,37 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return importMpiPatient(personId, patientIdentifierType.getUuid());
 	}
-
+	
 	@Override
 	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
 		Patient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
-		if (foundPatient == null) {
-			throw new MpiException(String.format(
-					"Error during importing Patient from MPI. "
-							+ "Patient ID: %s of identifier type: %s has not been found in MPI",
-					patientIdentifier, patientIdentifierTypeUuid));
+		
+		String savedPatientUuid = null;
+		try {
+			if (foundPatient == null) {
+				throw new MpiException(String.format(
+						"Error during importing Patient from MPI. "
+								+ "Patient ID: %s of identifier type: %s has not been found in MPI",
+						patientIdentifier, patientIdentifierTypeUuid));
+			}
+			savedPatientUuid = persistImportedMpiPatient(foundPatient);
+		} catch (RuntimeException e) {
+			servePdqExceptionAndThrowAgain(e,"PDQ patient import exception occurred",
+					"org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqPatientFetcher");
 		}
-		return persistImportedMpiPatient(foundPatient);
+		return savedPatientUuid;
+	}
+	
+	private void servePdqExceptionAndThrowAgain(RuntimeException e, String message,
+			String destination) {
+		ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
+		if (errorHandler == null) {
+			throw new MpiException(message + " with not configured PDQ error handler", e);
+		} else {
+			errorHandler.handle(e.getMessage(), destination,true,
+					ExceptionUtils.getFullStackTrace(e));
+			throw new MpiException(message, e);
+		}
 	}
 
 	@Override

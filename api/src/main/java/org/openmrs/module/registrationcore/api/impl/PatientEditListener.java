@@ -50,7 +50,6 @@ public class PatientEditListener extends PatientActionListener {
                         true,
                         ExceptionUtils.getFullStackTrace(e));
             }
-    
         }
     }
 }
