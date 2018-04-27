@@ -626,8 +626,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return pId;
 	}
 
-
-	public String getGlobalProperty(String propertyName) {
+	private String getGlobalProperty(String propertyName) {
 		String propertyValue = adminService.getGlobalProperty(propertyName);
 		if (StringUtils.isBlank(propertyValue)) {
 			throw new APIException(String.format("Property value for '%s' is not set", propertyName));
