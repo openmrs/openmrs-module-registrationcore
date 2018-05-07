@@ -10,14 +10,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -63,13 +60,20 @@ public class HttpSender implements Hl7v2Sender {
             int code = connection.getResponseCode();
             Message response = null;
 
-            if (code == 200) {
-                response = getResponse(connection, parser);
+            if (!isSuccessfulResponseCode(code)) {
+                throw new MpiException(String.format("MPI connection error. "
+                                + "Response code: %s, response message: %s, error stream: %n%s ",
+                        code,
+                        connection.getResponseMessage(),
+                        IOUtils.toString(connection.getErrorStream())
+                ));
             }
-
-           if(log.isDebugEnabled())
+            response = getResponse(connection, parser);
+    
+            if (log.isDebugEnabled()) {
                 log.debug(String.format("Response from %s : %s", url, parser.encode(response)));
-
+            }
+            
             return response;
         }
         finally
@@ -88,4 +92,7 @@ public class HttpSender implements Hl7v2Sender {
         return parser.parse(decoded);
     }
 
+    private boolean isSuccessfulResponseCode(int statusCode) {
+        return statusCode >= 200 && statusCode < 300;
+    }
 }
