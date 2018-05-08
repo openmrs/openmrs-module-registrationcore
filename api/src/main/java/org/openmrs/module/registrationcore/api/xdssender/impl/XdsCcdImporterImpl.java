@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 
 public class XdsCcdImporterImpl implements XdsCcdImporter {
 
@@ -23,7 +26,8 @@ public class XdsCcdImporterImpl implements XdsCcdImporter {
     }
 
     @Override
-    public Ccd downloadAndSaveCcd(Patient patient) throws XDSException, IOException {
+    public Ccd downloadAndSaveCcd(Patient patient) throws XDSException, IOException, NoSuchAlgorithmException,
+            KeyStoreException, KeyManagementException {
         return ccdService.downloadAndSaveCcd(patient);
     }
 }

@@ -527,13 +527,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	@Override
 	public String importCcd(Patient patient) {
-		String patientUuid = null;
+		String ccdUuid = null;
 		try {
-			patientUuid = xdsCcdImporter.downloadAndSaveCcd(patient).getUuid();
+			ccdUuid = xdsCcdImporter.downloadAndSaveCcd(patient).getUuid();
 		} catch (Exception e) {
 			log.error(e);
 		}
-		return patientUuid;
+		return ccdUuid;
 	}
 
 	private boolean checkIfPossessNationalFpId(Patient patient) {
