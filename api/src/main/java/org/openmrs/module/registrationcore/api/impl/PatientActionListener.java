@@ -20,8 +20,6 @@ import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpi
  */
 public abstract class PatientActionListener implements EventListener {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
     protected RegistrationCoreProperties coreProperties;
 
     protected PatientService patientService;
@@ -79,7 +77,7 @@ public abstract class PatientActionListener implements EventListener {
     protected String prepareParameters(Patient patient) {
         SendingPatientToMpiParameters parameters = new SendingPatientToMpiParameters(patient.getUuid());
         try {
-            return OBJECT_MAPPER.writeValueAsString(parameters);
+            return new ObjectMapper().writeValueAsString(parameters);
         } catch (IOException e) {
             throw new RuntimeException("Cannot prepare parameters for OutgoingMessageException", e);
         }

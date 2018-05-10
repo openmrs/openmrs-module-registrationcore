@@ -16,12 +16,14 @@ package org.openmrs.module.registrationcore.api.impl;
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.LOCAL_FINGERPRINT_NAME;
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.NATIONAL_FINGERPRINT_NAME;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -49,7 +51,9 @@ import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
+import org.openmrs.module.registrationcore.api.errorhandling.FetchingMpiPatientParameters;
 import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingService;
+import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpiParameters;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
@@ -385,7 +389,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		try {
 			patient = mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
 		} catch (RuntimeException e) {
-			servePdqExceptionAndThrowAgain(e, "PDQ patient find exception occurred",
+			servePdqExceptionAndThrowAgain(e,
+					prepareParameters(identifier, identifierTypeUuid),
 					PdqErrorHandlingService.FIND_MPI_PATIENT_DESTINATION);
 		}
 		return patient;
@@ -413,7 +418,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 			savedPatientUuid = persistImportedMpiPatient(foundPatient);
 		} catch (RuntimeException e) {
-			servePdqExceptionAndThrowAgain(e,"PDQ patient import exception occurred",
+			servePdqExceptionAndThrowAgain(e,
+					prepareParameters(patientIdentifier, patientIdentifierTypeUuid),
 					PdqErrorHandlingService.PERSIST_MPI_PATIENT_DESTINATION);
 		}
 		return savedPatientUuid;
@@ -428,6 +434,16 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			errorHandler.handle(e.getMessage(), destination,true,
 					ExceptionUtils.getFullStackTrace(e));
 			throw new MpiException(message, e);
+		}
+	}
+
+	private String prepareParameters(String identifier, String identifierTypeUuid) {
+		FetchingMpiPatientParameters parameters = new FetchingMpiPatientParameters(identifier,
+				identifierTypeUuid);
+		try {
+			return new ObjectMapper().writeValueAsString(parameters);
+		} catch (IOException e) {
+			throw new RuntimeException("Cannot prepare parameters for OutgoingMessageException", e);
 		}
 	}
 
