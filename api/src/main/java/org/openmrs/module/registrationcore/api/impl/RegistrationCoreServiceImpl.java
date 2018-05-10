@@ -100,6 +100,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private RegistrationCoreProperties registrationCoreProperties;
 
+	@Autowired
+	@Qualifier("registrationcore.xdsCcdImporter")
 	private XdsCcdImporter xdsCcdImporter;
 
 	@Autowired
@@ -526,14 +528,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	@Override
-	public String importCcd(Patient patient) {
-		String ccdUuid = null;
+	public Integer importCcd(Patient patient) {
+		Integer ccdId = null;
 		try {
-			ccdUuid = xdsCcdImporter.downloadAndSaveCcd(patient).getUuid();
+			ccdId = xdsCcdImporter.downloadAndSaveCcd(patient).getId();
 		} catch (Exception e) {
 			log.error(e);
 		}
-		return ccdUuid;
+		return ccdId;
 	}
 
 	private boolean checkIfPossessNationalFpId(Patient patient) {

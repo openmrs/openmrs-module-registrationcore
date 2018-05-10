@@ -13,6 +13,5 @@ public interface XdsCcdImporter {
 
     Ccd getLocallyStoredCcd(Patient patient);
 
-    Ccd downloadAndSaveCcd(Patient patient) throws XDSException, IOException, NoSuchAlgorithmException,
-            KeyStoreException, KeyManagementException;
+    Ccd downloadAndSaveCcd(Patient patient) throws XDSException;
 }

@@ -8,12 +8,15 @@ import org.openmrs.module.xdssender.api.model.DocumentInfo;
 import org.openmrs.module.xdssender.api.service.CcdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
+@Service
+@Qualifier("registrationcore.xdsCcdImporter")
 public class XdsCcdImporterImpl implements XdsCcdImporter {
 
     @Autowired
@@ -26,8 +29,7 @@ public class XdsCcdImporterImpl implements XdsCcdImporter {
     }
 
     @Override
-    public Ccd downloadAndSaveCcd(Patient patient) throws XDSException, IOException, NoSuchAlgorithmException,
-            KeyStoreException, KeyManagementException {
+    public Ccd downloadAndSaveCcd(Patient patient) throws XDSException {
         return ccdService.downloadAndSaveCcd(patient);
     }
 }
