@@ -1,5 +1,6 @@
 package org.openmrs.module.registrationcore.api.impl;
 
+import javax.jms.Message;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -8,10 +9,9 @@ import org.openmrs.api.UserService;
 import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
+import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
-
-import javax.jms.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,8 +69,8 @@ public class PatientCreationListener extends PatientActionListener {
                         + "with not configured PIX error handler", e);
             } else {
                 LOGGER.error("PIX patient push exception occurred", e);
-                errorHandler.handle(e.getMessage(),
-                        "org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPatientExporter",
+                errorHandler.handle(prepareParameters(patient),
+                        PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_CREATION_DESTINATION,
                         true,
                         ExceptionUtils.getFullStackTrace(e));
             }

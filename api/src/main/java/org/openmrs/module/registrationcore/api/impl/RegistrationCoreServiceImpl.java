@@ -49,6 +49,7 @@ import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
+import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
@@ -385,7 +386,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			patient = mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
 		} catch (RuntimeException e) {
 			servePdqExceptionAndThrowAgain(e, "PDQ patient find exception occurred",
-					"org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqPatientFetcher");
+					PdqErrorHandlingService.FIND_MPI_PATIENT_DESTINATION);
 		}
 		return patient;
 	}
@@ -413,7 +414,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			savedPatientUuid = persistImportedMpiPatient(foundPatient);
 		} catch (RuntimeException e) {
 			servePdqExceptionAndThrowAgain(e,"PDQ patient import exception occurred",
-					"org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqPatientFetcher");
+					PdqErrorHandlingService.PERSIST_MPI_PATIENT_DESTINATION);
 		}
 		return savedPatientUuid;
 	}

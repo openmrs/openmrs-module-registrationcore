@@ -1,5 +1,7 @@
 package org.openmrs.module.registrationcore.api.impl;
 
+import java.io.IOException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
@@ -11,11 +13,14 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
+import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpiParameters;
 
 /**
  * Abstract class for event listening.
  */
 public abstract class PatientActionListener implements EventListener {
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     protected RegistrationCoreProperties coreProperties;
 
@@ -68,6 +73,15 @@ public abstract class PatientActionListener implements EventListener {
             return ((MapMessage) message).getString(propertyName);
         } catch (JMSException e) {
             throw new APIException("Exception while get uuid of created patient from JMS message. " + e);
+        }
+    }
+
+    protected String prepareParameters(Patient patient) {
+        SendingPatientToMpiParameters parameters = new SendingPatientToMpiParameters(patient.getUuid());
+        try {
+            return OBJECT_MAPPER.writeValueAsString(parameters);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot prepare parameters for OutgoingMessageException", e);
         }
     }
 

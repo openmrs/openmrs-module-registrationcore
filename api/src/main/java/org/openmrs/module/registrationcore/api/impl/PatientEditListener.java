@@ -7,6 +7,7 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
 import javax.jms.Message;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
+import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,8 @@ public class PatientEditListener extends PatientActionListener {
                         + "with not configured PIX error handler", e);
             } else {
                 LOGGER.error("PIX patient update exception occurred", e);
-                errorHandler.handle(e.getMessage(),
-                        "org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPatientUpdater",
+                errorHandler.handle(prepareParameters(patient),
+                        PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_UPDATE_DESTINATION,
                         true,
                         ExceptionUtils.getFullStackTrace(e));
             }
