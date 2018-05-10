@@ -16,11 +16,13 @@ package org.openmrs.module.registrationcore.api.impl;
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.LOCAL_FINGERPRINT_NAME;
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.NATIONAL_FINGERPRINT_NAME;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dcm4chee.xds2.common.exception.XDSException;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -53,6 +55,8 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.xdssender.XdsCcdImporter;
+import org.openmrs.module.xdssender.api.domain.Ccd;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +99,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private MpiPatientFilter mpiPatientFilter;
 
 	private RegistrationCoreProperties registrationCoreProperties;
+
+	@Autowired
+	@Qualifier("registrationcore.xdsCcdImporter")
+	private XdsCcdImporter xdsCcdImporter;
 
 	@Autowired
 	@Qualifier("registrationcore.identifierBuilder")
@@ -517,6 +525,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 			return CollectionUtils.isEmpty(patients) ? null : patients.get(0);
 		}
+	}
+
+	@Override
+	public Integer importCcd(Patient patient) {
+		Integer ccdId = null;
+		try {
+			ccdId = xdsCcdImporter.downloadAndSaveCcd(patient).getId();
+		} catch (Exception e) {
+			log.error(e);
+		}
+		return ccdId;
 	}
 
 	private boolean checkIfPossessNationalFpId(Patient patient) {
