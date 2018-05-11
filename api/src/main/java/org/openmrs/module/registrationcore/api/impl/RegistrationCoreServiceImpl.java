@@ -53,13 +53,13 @@ import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.errorhandling.FetchingMpiPatientParameters;
 import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingService;
-import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpiParameters;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
+import org.openmrs.module.registrationcore.api.xdssender.XdsCcdImporter;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +102,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private MpiPatientFilter mpiPatientFilter;
 
 	private RegistrationCoreProperties registrationCoreProperties;
+
+	@Autowired
+	@Qualifier("registrationcore.xdsCcdImporter")
+	private XdsCcdImporter xdsCcdImporter;
 
 	@Autowired
 	@Qualifier("registrationcore.identifierBuilder")
@@ -395,7 +399,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 		return patient;
 	}
-	
+
 	@Override
 	public String importMpiPatient(String personId) {
 		PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(
@@ -403,11 +407,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return importMpiPatient(personId, patientIdentifierType.getUuid());
 	}
-	
+
 	@Override
 	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
 		Patient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
-		
+
 		String savedPatientUuid = null;
 		try {
 			if (foundPatient == null) {
@@ -424,7 +428,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 		return savedPatientUuid;
 	}
-	
+
 	private void servePdqExceptionAndThrowAgain(RuntimeException e, String message,
 			String destination) {
 		ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
@@ -563,6 +567,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 			return CollectionUtils.isEmpty(patients) ? null : patients.get(0);
 		}
+	}
+
+	@Override
+	public Integer importCcd(Patient patient) {
+		Integer ccdId = null;
+		try {
+			ccdId = xdsCcdImporter.downloadAndSaveCcd(patient).getId();
+		} catch (Exception e) {
+			log.error(e);
+		}
+		return ccdId;
 	}
 
 	private boolean checkIfPossessNationalFpId(Patient patient) {
