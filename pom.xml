@@ -40,6 +40,9 @@
 		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xdsSenderVersion>1.0.0</xdsSenderVersion>
+		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
+		<apacheHttpClientVersion>4.5</apacheHttpClientVersion>
+		<jodaTimeVersion>2.2</jodaTimeVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -139,7 +142,7 @@
 			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
-				<version>2.2</version>
+				<version>${jodaTimeVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 
@@ -148,6 +151,19 @@
 				<artifactId>xds-sender-api</artifactId>
 				<version>${xdsSenderVersion}</version>
 				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+				<version>${apacheHttpCoreVersion}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${apacheHttpClientVersion}</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
