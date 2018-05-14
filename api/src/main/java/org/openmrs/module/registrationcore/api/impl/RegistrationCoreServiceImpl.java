@@ -435,7 +435,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (errorHandler == null) {
 			throw new MpiException(message + " with not configured PDQ error handler", e);
 		} else {
-			errorHandler.handle(e.getMessage(), destination,true,
+			errorHandler.handle(message, destination,true,
 					ExceptionUtils.getFullStackTrace(e));
 			throw new MpiException(message, e);
 		}
