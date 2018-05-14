@@ -7,6 +7,9 @@ public class SendingPatientToMpiParameters implements Serializable {
 
 	private String patientUuid;
 
+	public SendingPatientToMpiParameters() {
+	}
+
 	public SendingPatientToMpiParameters(String patientUuid) {
 		this.patientUuid = patientUuid;
 	}

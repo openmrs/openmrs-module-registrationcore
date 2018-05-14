@@ -8,6 +8,9 @@ public class FetchingMpiPatientParameters implements Serializable {
 
 	private String identifierTypeUuid;
 
+	public FetchingMpiPatientParameters() {
+	}
+
 	public FetchingMpiPatientParameters(String identifier, String identifierTypeUuid) {
 		this.identifier = identifier;
 		this.identifierTypeUuid = identifierTypeUuid;
