@@ -170,10 +170,18 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.errorHandler.implementation</property>
-		<defaultValue></defaultValue>
+		<property>${project.parent.artifactId}.mpi.pix.errorHandler.implementation</property>
+		<defaultValue>outgoingmessageexceptions.PixErrorHandlingService</defaultValue>
 		<description>
-			Specify a Spring bean name of error handler service
+			Specify a Spring bean name of PIX error handler service
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.pdq.errorHandler.implementation</property>
+		<defaultValue>outgoingmessageexceptions.PdqErrorHandlingService</defaultValue>
+		<description>
+			Specify a Spring bean name of PDQ error handler service
 		</description>
 	</globalProperty>
 

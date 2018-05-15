@@ -20,9 +20,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dcm4chee.xds2.common.exception.XDSException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -49,6 +50,9 @@ import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
+import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
+import org.openmrs.module.registrationcore.api.errorhandling.FetchingMpiPatientParameters;
+import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
@@ -56,7 +60,6 @@ import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.xdssender.XdsCcdImporter;
-import org.openmrs.module.xdssender.api.domain.Ccd;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -386,7 +389,15 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new MpiException("Should not perform 'findMpiPatient' when MPI is disabled");
 		}
 		MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
-		return mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
+		Patient patient = null;
+		try {
+			patient = mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
+		} catch (RuntimeException e) {
+			servePdqExceptionAndThrowAgain(e,
+					prepareParameters(identifier, identifierTypeUuid),
+					PdqErrorHandlingService.FIND_MPI_PATIENT_DESTINATION);
+		}
+		return patient;
 	}
 
 	@Override
@@ -400,13 +411,44 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
 		Patient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
-		if (foundPatient == null) {
-			throw new MpiException(String.format(
-					"Error during importing Patient from MPI. "
-							+ "Patient ID: %s of identifier type: %s has not been found in MPI",
-					patientIdentifier, patientIdentifierTypeUuid));
+
+		String savedPatientUuid = null;
+		try {
+			if (foundPatient == null) {
+				throw new MpiException(String.format(
+						"Error during importing Patient from MPI. "
+								+ "Patient ID: %s of identifier type: %s has not been found in MPI",
+						patientIdentifier, patientIdentifierTypeUuid));
+			}
+			savedPatientUuid = persistImportedMpiPatient(foundPatient);
+		} catch (RuntimeException e) {
+			servePdqExceptionAndThrowAgain(e,
+					prepareParameters(patientIdentifier, patientIdentifierTypeUuid),
+					PdqErrorHandlingService.PERSIST_MPI_PATIENT_DESTINATION);
 		}
-		return persistImportedMpiPatient(foundPatient);
+		return savedPatientUuid;
+	}
+
+	private void servePdqExceptionAndThrowAgain(RuntimeException e, String message,
+			String destination) {
+		ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
+		if (errorHandler == null) {
+			throw new MpiException(message + " with not configured PDQ error handler", e);
+		} else {
+			errorHandler.handle(message, destination,true,
+					ExceptionUtils.getFullStackTrace(e));
+			throw new MpiException(message, e);
+		}
+	}
+
+	private String prepareParameters(String identifier, String identifierTypeUuid) {
+		FetchingMpiPatientParameters parameters = new FetchingMpiPatientParameters(identifier,
+				identifierTypeUuid);
+		try {
+			return new ObjectMapper().writeValueAsString(parameters);
+		} catch (IOException e) {
+			throw new RuntimeException("Cannot prepare parameters for OutgoingMessageException", e);
+		}
 	}
 
 	@Override
@@ -616,8 +658,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return pId;
 	}
 
-
-	public String getGlobalProperty(String propertyName) {
+	private String getGlobalProperty(String propertyName) {
 		String propertyValue = adminService.getGlobalProperty(propertyName);
 		if (StringUtils.isBlank(propertyValue)) {
 			throw new APIException(String.format("Property value for '%s' is not set", propertyName));

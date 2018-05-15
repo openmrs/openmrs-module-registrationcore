@@ -38,6 +38,10 @@ public class PixPatientExporter implements MpiPatientExporter {
             }
 
             Patient mpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier().getIdentifier());
+            if (mpiPatient == null) {
+                throw new MpiException("Patient has not been created on MPI. "
+                        + "Probably patient with the same IDs already exists");
+            }
             return getEcidIdentifier(mpiPatient);
         } catch (Exception e) {
             log.error(e);

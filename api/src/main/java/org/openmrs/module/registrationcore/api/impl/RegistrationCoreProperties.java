@@ -7,8 +7,9 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
-import org.openmrs.module.registrationcore.api.MpiErrorHandlingService;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
+import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingService;
+import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -71,20 +72,24 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return engine;
     }
 
-    public MpiErrorHandlingService getMpiErrorHandlingService() {
-        String propertyName = RegistrationCoreConstants.GP_ERROR_HANDLER_IMPLEMENTATION;
-        String handlerId = Context.getAdministrationService().getGlobalProperty(propertyName);
-        MpiErrorHandlingService handler = null;
-        if (StringUtils.isNotBlank(handlerId)) {
-            log.debug("Looking up Mpi Error Handling Service component: " + handlerId);
-            handler = Context.getRegisteredComponent(handlerId, MpiErrorHandlingService.class);
-            if (handler == null) {
-                throw new IllegalStateException(propertyName + " must point to a bean implementing MpiErrorHandlingService. " + handlerId + " is not valid.");
-            }
+    public PixErrorHandlingService getPixErrorHandlingService() {
+        String propertyName = RegistrationCoreConstants.GP_MPI_PIX_ERROR_HANDLER_IMPLEMENTATION;
+        PixErrorHandlingService handler = null;
+        if (isPropertySet(propertyName)) {
+            handler = getComponentByPropertyName(propertyName, PixErrorHandlingService.class);
         }
         return handler;
     }
-
+    
+    public PdqErrorHandlingService getPdqErrorHandlingService() {
+        String propertyName = RegistrationCoreConstants.GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION;
+        PdqErrorHandlingService handler = null;
+        if (isPropertySet(propertyName)) {
+            handler = getComponentByPropertyName(propertyName, PdqErrorHandlingService.class);
+        }
+        return handler;
+    }
+    
     /**
      * Get the PDQ endpoint
      * @return
@@ -151,5 +156,16 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
     public String getUniversalIdType() {
         return Context.getAdministrationService().getGlobalProperty(
                 RegistrationCoreConstants.GP_MPI_UNI_ID_TYPE, "PI");
+    }
+    
+    private boolean isPropertySet(String globalProperty) {
+        return StringUtils.isNotBlank(
+                Context.getAdministrationService().getGlobalProperty(globalProperty));
+    }
+    
+    private <T> T getComponentByPropertyName(String propertyName, Class<T> type) {
+        String handlerId = getProperty(propertyName);
+        log.debug("Looking up component: " + handlerId);
+        return Context.getRegisteredComponent(handlerId, type);
     }
 }

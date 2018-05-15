@@ -1,12 +1,15 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.model.Message;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
+import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
@@ -32,6 +35,10 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Autowired
     private PatientIdentifierMapper identifierMapper;
+    
+    @Autowired
+    @Qualifier("registrationcore.coreProperties")
+    private RegistrationCoreProperties registrationCoreProperties;
 
     protected final Log log = LogFactory.getLog(this.getClass());
 
@@ -77,10 +84,14 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
                 retVal = pixPdqMessageUtil.interpretPIDSegments(response);
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error("Error in PDQ Search", e);
+            ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
+            if (errorHandler != null) {
+                errorHandler.handle(e.getMessage(),
+                        "org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqSimilarPatientsSearcher",
+                        true, ExceptionUtils.getFullStackTrace(e));
+            }
         }
 
         if (maxResults != null && retVal.size() > maxResults) {
