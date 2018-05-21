@@ -3,6 +3,7 @@ package org.openmrs.module.registrationcore.api.mpi.openempi;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,8 +14,8 @@ import java.util.List;
 public class PatientIdentifierMapper {
 
     private final Log log = LogFactory.getLog(this.getClass());
-    //first element ("key") - local, second element ("value") - mpi.
-    private List<IdentifierMapPair> MAPPED_ID;
+    //first element - local, second element - mpi, third element - type
+    private List<IdentifierTypeMap> MAPPED_ID;
 
     @Autowired
     @Qualifier("registrationcore.mpiProperties")
@@ -22,32 +23,41 @@ public class PatientIdentifierMapper {
 
     public String getMappedLocalIdentifierTypeUuid(String mpiIdentifierTypeId) {
         validateInit();
-        for (IdentifierMapPair pair : MAPPED_ID) {
-            if (pair.mpiIdentifierId.equals(mpiIdentifierTypeId)) {
-                return pair.localIdentifierUuid;
+        for (IdentifierTypeMap typeMap : MAPPED_ID) {
+            if (typeMap.mpiIdentifierId.equals(mpiIdentifierTypeId)) {
+                log.info("mpiIdentifierTypeId " + mpiIdentifierTypeId + " " +
+                        "properly mapped for "+ typeMap.localIdentifierUuid);
+                return typeMap.localIdentifierUuid;
             }
         }
-        return null;
+        throw new MpiException("No proper mapping found for mpiIdentifierTypeId=" + mpiIdentifierTypeId + ". " +
+                "Check Local Identifier Uuid value for your mapping in global properties.");
     }
 
     public String getMappedMpiIdentifierTypeId(String localIdentifierTypeUuid) {
         validateInit();
-        for (IdentifierMapPair pair : MAPPED_ID) {
-            if (pair.localIdentifierUuid.equals(localIdentifierTypeUuid)) {
-                return pair.mpiIdentifierId;
+        for (IdentifierTypeMap typeMap : MAPPED_ID) {
+            if (typeMap.localIdentifierUuid.equals(localIdentifierTypeUuid)) {
+                log.info("localIdentifierTypeUuid " + localIdentifierTypeUuid + " " +
+                        "properly mapped for "+ typeMap.mpiIdentifierId);
+                return typeMap.mpiIdentifierId;
             }
         }
-        return null;
+        throw new MpiException("No proper mapping found for localIdentifierTypeUuid=" + localIdentifierTypeUuid + ". " +
+                "Check Mpi Identifier Id value for your mapping in global properties.");
     }
 
     public String getMappedMpiUniversalIdType(String localIdentifierTypeUuid) {
         validateInit();
-        for (IdentifierMapPair pair : MAPPED_ID) {
-            if (pair.localIdentifierUuid.equals(localIdentifierTypeUuid)) {
-                return pair.universalIdType;
+        for (IdentifierTypeMap typeMap : MAPPED_ID) {
+            if (typeMap.localIdentifierUuid.equals(localIdentifierTypeUuid)) {
+                log.info("localIdentifierTypeUuid " + localIdentifierTypeUuid + " " +
+                        "properly mapped for "+ typeMap.universalIdType);
+                return typeMap.universalIdType;
             }
         }
-        return null;
+        throw new MpiException("No proper mapping found for localIdentifierTypeUuid=" + localIdentifierTypeUuid + ". " +
+                "Check Universal Id Type value for your mapping in global properties.");
     }
 
     private void validateInit() {
@@ -57,23 +67,23 @@ public class PatientIdentifierMapper {
     }
 
     public void init() {
-        MAPPED_ID = new LinkedList<IdentifierMapPair>();
+        MAPPED_ID = new LinkedList<IdentifierTypeMap>();
         log.info("start init method of PatientIdentifierMapper");
         List<String> properties = mpiProperties.getLocalMpiIdentifierTypeMap();
         for (String mappedIdentifiers : properties) {
-            IdentifierMapPair pair = parseIdentifiers(mappedIdentifiers);
-            MAPPED_ID.add(pair);
+            IdentifierTypeMap typeMap = parseIdentifiers(mappedIdentifiers);
+            MAPPED_ID.add(typeMap);
 
-            log.info("Initialized local:mpi identifier type pair. Local: " + pair.localIdentifierUuid
-                    + " , MPI: " + pair.mpiIdentifierId);
+            log.info("Initialized identifier type map - Local: " + typeMap.localIdentifierUuid
+                    + " , MPI: " + typeMap.mpiIdentifierId + " , Type: " + typeMap.universalIdType);
         }
     }
 
-    private IdentifierMapPair parseIdentifiers(String mappedIdentifiers) {
+    private IdentifierTypeMap parseIdentifiers(String mappedIdentifiers) {
         String local = getLocalPart(mappedIdentifiers);
         String mpi = getMpiPart(mappedIdentifiers);
         String type = getIdTypePart(mappedIdentifiers);
-        return createPair(local, mpi, type);
+        return createTypeMap(local, mpi, type);
     }
 
     private String getLocalPart(String mappedIdentifiers) {
@@ -100,16 +110,16 @@ public class PatientIdentifierMapper {
         return null;
     }
 
-    private IdentifierMapPair createPair(String localString, String mpiString, String universalIdType) {
+    private IdentifierTypeMap createTypeMap(String localString, String mpiString, String universalIdType) {
         try {
-            return new IdentifierMapPair(localString, mpiString, universalIdType);
+            return new IdentifierTypeMap(localString, mpiString, universalIdType);
         } catch (NumberFormatException e) {
-            throw new APIException("Can't create identifier pair for values: local= " +
+            throw new APIException("Can't create identifier type map for values: local= " +
                     localString + ", mpi=" + mpiString + ", type=" + universalIdType);
         }
     }
 
-    private class IdentifierMapPair {
+    private class IdentifierTypeMap {
 
         public final String localIdentifierUuid;
 
@@ -117,7 +127,7 @@ public class PatientIdentifierMapper {
 
         public final String universalIdType;
 
-        public IdentifierMapPair(String localIdentifierUuid, String mpiIdentifierId, String universalIdType) {
+        public IdentifierTypeMap(String localIdentifierUuid, String mpiIdentifierId, String universalIdType) {
             this.localIdentifierUuid = localIdentifierUuid;
             this.mpiIdentifierId = mpiIdentifierId;
             this.universalIdType = universalIdType;
