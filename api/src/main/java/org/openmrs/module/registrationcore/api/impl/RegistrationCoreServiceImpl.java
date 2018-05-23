@@ -535,7 +535,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				}
 			}
 
-			if (registrationCoreProperties.isMpiEnabled() && !possessNationalFpId) {
+			if (result.isEmpty() && registrationCoreProperties.isMpiEnabled() && !possessNationalFpId) {
 				Patient mpiPatient = findMpiPatient(subjectId, nationalBiometricId.getUuid());
 				if (mpiPatient != null) {
 					result.add(new PatientAndMatchQuality(mpiPatient,
