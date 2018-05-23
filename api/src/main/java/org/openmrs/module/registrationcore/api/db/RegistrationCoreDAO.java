@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.registrationcore.api.db;
 
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 
 import java.util.List;
@@ -21,6 +22,8 @@ import java.util.List;
  *  Database methods for {@link RegistrationCoreService}.
  */
 public interface RegistrationCoreDAO {
+
+    DbSessionFactory getSessionFactory();
 
     List<String> findExistingSimilarGivenNames(String searchPhrase);
 

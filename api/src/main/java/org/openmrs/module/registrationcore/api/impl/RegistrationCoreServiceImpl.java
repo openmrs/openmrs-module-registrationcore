@@ -527,6 +527,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 					log.warn("Found " + patients.size() + " patients with the same biometric id: " + subjectId);
 				}
 				for (Patient patient : patients) {
+					dao.getSessionFactory().getCurrentSession().refresh(patient);
+
 					possessNationalFpId = checkIfPossessNationalFpId(patient) || possessNationalFpId;
 					result.add(new PatientAndMatchQuality(patient, match.getMatchScore(),
 							Collections.singletonList(LOCAL_FINGERPRINT_NAME)));
@@ -565,7 +567,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 					}
 				}
 			}
-			return CollectionUtils.isEmpty(patients) ? null : patients.get(0);
+
+			if (CollectionUtils.isEmpty(patients)) {
+				return null;
+			} else {
+				Patient patient = patients.get(0);
+				dao.getSessionFactory().getCurrentSession().refresh(patient);
+				return patient;
+			}
 		}
 	}
 
