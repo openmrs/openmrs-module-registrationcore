@@ -597,8 +597,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	private String persistImportedMpiPatient(Patient mpiPatient) {
-		String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
-		if (mpiPatient.getPatientIdentifier(idSourceId) == null) {
+		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
+
+		PatientIdentifierType openMrsIdType = patientService.getPatientIdentifierTypeByUuid(openMrsIdTypeUuid);
+
+		if (mpiPatient.getPatientIdentifier(openMrsIdType) == null) {
 			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
 			mpiPatient.addIdentifier(localId);
 		}
