@@ -267,6 +267,14 @@
 		</description>
 	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.openmrsIdenitfier.uuid</property>
+		<description>
+			UUID of the OpenMRS identifier that will be generated during MPI import unless it is present.
+		</description>
+		<defaultValue>05a29f94-c0ed-11e2-94be-8c13b969e334</defaultValue>
+	</globalProperty>
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				
