@@ -145,31 +145,13 @@
 		</description>
 	</globalProperty>
 
-<!--	CCSY EDITED
-	<globalProperty>
-		<property>${project.parent.artifactId}.biometrics.personIdentifierTypeUuid</property>
-		<defaultValue></defaultValue>
-		<description>
-			Specifies UUID of the identifier type that is used to store the biometric reference code
-		</description>
-	</globalProperty>
-
-	<globalProperty>
-		<property>${project.parent.artifactId}.biometrics.nationalPersonIdentifierTypeUuid</property>
-		<defaultValue></defaultValue>
-		<description>
-			Specifies UUID of the identifier type that is used to store the national biometric reference code
-		</description>
-	</globalProperty>
-	
-	<globalProperty>
-		<property>${project.parent.artifactId}.biometrics.implementation</property>
-		<defaultValue></defaultValue>
-		<description>
-			Which Biometrics engine implementation to should we connect to? Specify a Spring bean name, or leave blank to disable
-		</description>
-	</globalProperty>
--->
+    <globalProperty>
+        <property>${project.parent.artifactId}.biometrics.implementation</property>
+        <defaultValue></defaultValue>
+        <description>
+            Which Biometrics engine implementation to should we connect to? Specify a Spring bean name, or leave blank to disable
+        </description>
+    </globalProperty>
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pix.errorHandler.implementation</property>
@@ -234,7 +216,16 @@
 			Specifies the sending application in the MSH header section of the HL7 message
 		</description>
 	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.birthdateEstimationStartMonth</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			The month from which the birth date is estimated, with January having a value of 0
+		</description>
+	</globalProperty>
 
+<<<<<<< HEAD
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.sendingFacility</property>

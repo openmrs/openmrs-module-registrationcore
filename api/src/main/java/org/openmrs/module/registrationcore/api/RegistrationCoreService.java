@@ -14,23 +14,23 @@
 package org.openmrs.module.registrationcore.api;
 
 import org.dcm4chee.xds2.common.exception.XDSException;
+
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.RegistrationData;
-/*
-CCSY EDITED
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
-import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;*/
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.xdssender.api.domain.Ccd;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured
@@ -80,17 +80,26 @@ public interface RegistrationCoreService extends OpenmrsService {
      */
     public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation);
 
+    /**
+     * Registers patient and saves them in the database.
+     * @return the created patient
+     * @should create a patient from record with relationships
+     * @should fire an event when a patient is registered
+     * @should set wasPerson field to true for an existing person on the registration event
+     * @should fail if identifier does not pass validation
+     */
+    public Patient registerPatient(RegistrationData registrationData);
+
 	/**
 	 * Creates patient and saves them and their fingerprints in the database,
 	 * setting their identifier as specified instead of assigning automatically
 	 *
 	 * @return the created patient
 	 */
-	/*
-	CCSY EDITED
+
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString,
 								   Location identifierLocation, BiometricData biometricData);
-*/
+
 	/**
 	 * Registers patient and saves them in the database.
 	 * @return the created patient
@@ -175,27 +184,21 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @return uuid of imported patient
 	 */
 	String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid);
-/*
-	CCSY EDITED
-	*/
-/**
+
+	/**
 	 * @return the engine used for biometric operations, if one is enabled
-	 *//*
+	 */
 
 	BiometricEngine getBiometricEngine();
 
-	*/
-/**
+	/**
 	 * Enrolls the given biometric data
-	 *//*
+	 */
 
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
-
-
-	List<PatientAndMatchQuality> findByBiometricMatch(BiometricSubject subject);
-*/
 
 	Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid);
 
 	Integer importCcd(Patient patient);
+
 }
