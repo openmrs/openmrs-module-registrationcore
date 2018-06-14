@@ -225,8 +225,6 @@
 		</description>
 	</globalProperty>
 
-<<<<<<< HEAD
-
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.sendingFacility</property>
 		<defaultValue></defaultValue>
