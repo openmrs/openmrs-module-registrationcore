@@ -12,7 +12,9 @@ package org.openmrs.module.registrationcore;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.Relationship;
-import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
+
+// CCSY EDITED
+//import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,7 +29,9 @@ public class RegistrationData implements Serializable {
     private List<Relationship> relationships;
     private String identifier;
     private Location identifierLocation;
-    private List<BiometricData> biometrics;
+
+    // CCSY EDITED
+    // private List<BiometricData> biometrics;
 
     public RegistrationData() {}
 
@@ -66,6 +70,8 @@ public class RegistrationData implements Serializable {
         this.identifierLocation = identifierLocation;
     }
 
+    /*
+    CCSY EDITED
     public List<BiometricData> getBiometrics() {
         if (biometrics == null) {
             biometrics = new ArrayList<BiometricData>();
@@ -80,4 +86,5 @@ public class RegistrationData implements Serializable {
     public void addBiometricData(BiometricData biometricData) {
         getBiometrics().add(biometricData);
     }
+    */
 }

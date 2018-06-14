@@ -7,7 +7,12 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
+
+/*
+CCSY EDITED
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
+*/
+
 import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingService;
 import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
@@ -51,13 +56,17 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return (MpiProvider) bean;
     }
 
+/*
+    CCSY EDITED
     public boolean isBiometricsEngineEnabled() {
         return getBiometricEngine() != null;
     }
 
-    /**
+    */
+/**
      * @return the id of the Biometric Engine that is configured
-     */
+     *//*
+
     public BiometricEngine getBiometricEngine() {
         String propertyName = RegistrationCoreConstants.GP_BIOMETRICS_IMPLEMENTATION;
         String engineId = administrationService.getGlobalProperty(propertyName);
@@ -71,6 +80,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         }
         return engine;
     }
+*/
 
     public PixErrorHandlingService getPixErrorHandlingService() {
         String propertyName = RegistrationCoreConstants.GP_MPI_PIX_ERROR_HANDLER_IMPLEMENTATION;

@@ -20,9 +20,11 @@ import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.RegistrationData;
+/*
+CCSY EDITED
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
-import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
+import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;*/
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.xdssender.api.domain.Ccd;
 
@@ -84,9 +86,11 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 *
 	 * @return the created patient
 	 */
+	/*
+	CCSY EDITED
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString,
 								   Location identifierLocation, BiometricData biometricData);
-
+*/
 	/**
 	 * Registers patient and saves them in the database.
 	 * @return the created patient
@@ -171,19 +175,25 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @return uuid of imported patient
 	 */
 	String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid);
-
-	/**
+/*
+	CCSY EDITED
+	*/
+/**
 	 * @return the engine used for biometric operations, if one is enabled
-	 */
+	 *//*
+
 	BiometricEngine getBiometricEngine();
 
-	/**
+	*/
+/**
 	 * Enrolls the given biometric data
-	 */
+	 *//*
+
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
 
 
 	List<PatientAndMatchQuality> findByBiometricMatch(BiometricSubject subject);
+*/
 
 	Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid);
 

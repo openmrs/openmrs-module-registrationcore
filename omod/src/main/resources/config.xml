@@ -145,6 +145,7 @@
 		</description>
 	</globalProperty>
 
+<!--	CCSY EDITED
 	<globalProperty>
 		<property>${project.parent.artifactId}.biometrics.personIdentifierTypeUuid</property>
 		<defaultValue></defaultValue>
@@ -168,6 +169,7 @@
 			Which Biometrics engine implementation to should we connect to? Specify a Spring bean name, or leave blank to disable
 		</description>
 	</globalProperty>
+-->
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pix.errorHandler.implementation</property>

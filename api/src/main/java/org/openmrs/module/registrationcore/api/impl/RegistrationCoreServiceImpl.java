@@ -13,8 +13,10 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+/*CCSY EDITED
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.LOCAL_FINGERPRINT_NAME;
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.NATIONAL_FINGERPRINT_NAME;
+*/
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -45,10 +47,16 @@ import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
+
+/*
+CCSY EDITED
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
+*/
+
+
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.errorhandling.FetchingMpiPatientParameters;
@@ -66,7 +74,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.TranssaveToMementoactional;
 import org.springframework.util.CollectionUtils;
 
 import java.text.DateFormat;
@@ -172,7 +180,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		data.setIdentifierLocation(identifierLocation);
 		return registerPatient(data);
 	}
-
+/*
+	CCSY EDITED
 	@Override
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString,
 								   Location identifierLocation, BiometricData biometricData) {
@@ -186,7 +195,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 
 		return registerPatient(data);
-	}
+	}*/
 
 	/**
 	 *  @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(RegistrationData)
@@ -227,9 +236,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			personService.saveRelationship(relationship);
 			relationshipUuids.add(relationship.getUuid());
 		}
+
+		/*
+		CCSY EDITED
 		for (BiometricData biometricData : registrationData.getBiometrics()) {
 			saveBiometricsForPatient(patient, biometricData);
-		}
+		}*/
+
 		DateFormat df = new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING);
 		
 		EventMessage eventMessage = new EventMessage();
@@ -450,7 +463,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new RuntimeException("Cannot prepare parameters for OutgoingMessageException", e);
 		}
 	}
-
+/*
+	CCSY EDITED
 	@Override
 	public BiometricEngine getBiometricEngine() {
 		return registrationCoreProperties.getBiometricEngine();
@@ -547,6 +561,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return new ArrayList<PatientAndMatchQuality>(result);
 	}
+*/
 
 	@Override
 	public Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid) {
@@ -589,12 +604,15 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return ccdId;
 	}
 
+/*
+	CCSY EDITED
 	private boolean checkIfPossessNationalFpId(Patient patient) {
 		PatientIdentifierType nationalBiometricId = patientService.getPatientIdentifierTypeByUuid(
 				getGlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_NATIONAL_PERSON_IDENTIFIER_TYPE_UUID));
 
 		return patient.getPatientIdentifier(nationalBiometricId) != null;
 	}
+*/
 
 	private String persistImportedMpiPatient(Patient mpiPatient) {
 		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
@@ -609,10 +627,12 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		Patient patient = patientService.savePatient(mpiPatient);
 		return patient.getUuid();
 	}
-
+/*
+	CCSY EDITED
 	private boolean isBiometricEngineEnabled() {
 		return registrationCoreProperties.isBiometricsEngineEnabled();
 	}
+*/
 
 	private IdentifierSourceService getIssAndUpdateIdSource() {
 		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
