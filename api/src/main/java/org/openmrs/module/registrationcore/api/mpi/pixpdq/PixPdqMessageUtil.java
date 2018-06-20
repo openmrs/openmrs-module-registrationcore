@@ -352,7 +352,7 @@ public class PixPdqMessageUtil {
                 String number = attribute.getValue().replace(" ", "");
 
                 xtn.getTelephoneNumber().setValue(number);
-                xtn.getLocalNumber().setValue(attribute.getValue());
+                xtn.getLocalNumber().setValue(number);
             }
         }
 
