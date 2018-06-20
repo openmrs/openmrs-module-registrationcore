@@ -348,7 +348,10 @@ public class PixPdqMessageUtil {
                 this.updateXPN(pid.getMotherSMaidenName(0), mother);
             } else if (isTelephoneAttributeType(attribute)) {
                 XTN xtn = pid.getPhoneNumberHome(0);
-                xtn.getTelephoneNumber().setValue(attribute.getValue());
+
+                String number = attribute.getValue().replace(" ", "");
+
+                xtn.getTelephoneNumber().setValue(number);
                 xtn.getLocalNumber().setValue(attribute.getValue());
             }
         }
