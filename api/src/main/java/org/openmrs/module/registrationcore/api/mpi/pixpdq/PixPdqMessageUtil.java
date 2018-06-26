@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.api.PatientService;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
@@ -31,6 +32,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -51,6 +53,9 @@ public class PixPdqMessageUtil {
 
     @Autowired
     private PatientIdentifierMapper identifierMapper;
+
+    @Autowired
+    private PatientService patientService;
 
     @Autowired
     private MpiProperties mpiProperties;
@@ -150,7 +155,9 @@ public class PixPdqMessageUtil {
                             defaultLocation
                     );
 
-                    if (patId.getIdentifierType().getName().equals("ECID")) {
+
+                    if (patId.getIdentifierType().equals(patientService.getPatientIdentifierTypeByUuid(
+                            RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID))) {
                         patId.setPreferred(true);
                     }
 

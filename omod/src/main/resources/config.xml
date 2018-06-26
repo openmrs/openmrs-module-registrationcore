@@ -25,11 +25,6 @@
         <require_module version="${eventVersion}">
             org.openmrs.event
         </require_module>
-		<!--
-		<require_module version="${xdsSenderVersion}">
-			org.openmrs.module.xdssender
-		</require_module>
-		-->
     </require_modules>
 
 	<extension>
@@ -150,11 +145,20 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.local_mpi_identifierTypeMap.OpenEMPI</property>
-		<defaultValue>f54ed6b9-f5b9-4fd5-a588-8f7561a78401:2.16.840.1.113883.4.56:NI</defaultValue>
+		<property>${project.parent.artifactId}.local_mpi_identifierTypeMap.OpenEMPI ID</property>
+		<defaultValue>a5d38e09-efcb-4d91-a526-50ce1ba5011a:2.16.840.1.113883.4.357:hl7</defaultValue>
 		<description>
-			Specifies the mapping from OpenEMPI Object ID (OID) to the local OpenMRS Application's identifier UUID.
-			OpenEMPI is the default Global Identifier Domain (GID) for OpenEMPI but this can be changed.
+			Specifies the mapping from OpenEMPI Object ID (OID) to the local OpenMRS Application's identifier for OpenEMPI ID UUID.
+			OpenEMPI ID is the default Global Identifier Domain (GID) for OpenEMPI but this can be changed.
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.local_mpi_identifierTypeMap.OpenMRS ID</property>
+		<defaultValue>05a29f94-c0ed-11e2-94be-8c13b969e334:2.25.71280592878078638113873461180761116318:PI</defaultValue>
+		<description>
+			Specifies the mapping from OpenEMPI Object ID (OID) to the local OpenMRS Application's identifier for OpenMRS ID UUID.
+			OpenMRS ID is the default generated identifier for OpenMRS but this can be changed.
 		</description>
 	</globalProperty>
 
@@ -169,17 +173,21 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pix.errorHandler.implementation</property>
-		<defaultValue>outgoingmessageexceptions.PixErrorHandlingService</defaultValue>
+		<defaultValue></defaultValue>
 		<description>
-			Specify a Spring bean name of PIX error handler service
+			Specify a Spring bean name of PIX error handler service. It requires the xds-sender module and outgoing message
+			exception module developed by SolDevelo. Set value to "outgoingmessageexceptions.PixErrorHandlingService" and
+			install those two modules to enable pix error handling functionality.
 		</description>
 	</globalProperty>
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.pdq.errorHandler.implementation</property>
-		<defaultValue>outgoingmessageexceptions.PdqErrorHandlingService</defaultValue>
+		<defaultValue></defaultValue>
 		<description>
-			Specify a Spring bean name of PDQ error handler service
+			Specify a Spring bean name of PDQ error handler service. It requires the xds-sender module and outgoing message
+			exception module developed by SolDevelo. Set value to "outgoingmessageexceptions.PdqErrorHandlingService" and
+			install those two modules to enable pix error handling functionality.
 		</description>
 	</globalProperty>
 

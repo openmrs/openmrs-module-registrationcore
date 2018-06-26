@@ -61,8 +61,8 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
     @Override
     public Patient fetchMpiPatient(String patientIdentifier) {
-        PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(
-                RegistrationCoreConstants.MPI_IDENTIFIER_TYPE_ECID_NAME);
+        PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByUuid(
+                RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID);
         return fetchMpiPatient(patientIdentifier, patientIdentifierType.getUuid());
     }
 
