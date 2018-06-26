@@ -58,7 +58,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
-import org.openmrs.module.registrationcore.api.xdssender.XdsCcdImporter;
+//import org.openmrs.module.registrationcore.api.xdssender.XdsCcdImporter;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,9 +105,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private RegistrationCoreProperties registrationCoreProperties;
 
-	@Autowired
+
+	/*@Autowired
 	@Qualifier("registrationcore.xdsCcdImporter")
-	private XdsCcdImporter xdsCcdImporter;
+	private XdsCcdImporter xdsCcdImporter;*/
 
 	@Autowired
 	@Qualifier("registrationcore.identifierBuilder")
@@ -529,7 +530,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 	}
 
-	@Override
+	/*@Override
 	public Integer importCcd(Patient patient) {
 		Integer ccdId = null;
 		try {
@@ -538,7 +539,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			log.error(e);
 		}
 		return ccdId;
-	}
+	}*/
 
 	private String persistImportedMpiPatient(Patient mpiPatient) {
 		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);

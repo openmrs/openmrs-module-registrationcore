@@ -84,11 +84,12 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>xds-sender-api</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency>-->
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
