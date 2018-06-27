@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,10 @@ public class PixPatientExporter implements MpiPatientExporter {
     @Autowired
     @Qualifier("registrationcore.mpiPatientFetcherPdq")
     private PdqPatientFetcher pdqPatientFetcher;
+
+    @Autowired
+    @Qualifier("registrationcore.mpiProperties")
+    private MpiProperties mpiProperties;
 
     @Autowired
     private PatientService patientService;
@@ -59,7 +63,7 @@ public class PixPatientExporter implements MpiPatientExporter {
 
     private String getMpiIdentifier(Patient mpiPatient) {
         PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByUuid(
-                RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID);
+                mpiProperties.getMpiPersonIdentifierTypeUuid());
         return mpiPatient.getPatientIdentifier(patientIdentifierType).getIdentifier();
     }
 

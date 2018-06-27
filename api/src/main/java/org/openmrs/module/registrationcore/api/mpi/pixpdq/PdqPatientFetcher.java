@@ -12,6 +12,7 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -33,7 +34,8 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     private PatientIdentifierMapper identifierMapper;
 
     @Autowired
-    private PatientService patientService;
+    @Qualifier("registrationcore.mpiProperties")
+    private MpiProperties mpiProperties;
 
     protected final Log log = LogFactory.getLog(this.getClass());
 
@@ -61,9 +63,7 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
     @Override
     public Patient fetchMpiPatient(String patientIdentifier) {
-        PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByUuid(
-                RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID);
-        return fetchMpiPatient(patientIdentifier, patientIdentifierType.getUuid());
+        return fetchMpiPatient(patientIdentifier, mpiProperties.getMpiPersonIdentifierTypeUuid());
     }
 
 

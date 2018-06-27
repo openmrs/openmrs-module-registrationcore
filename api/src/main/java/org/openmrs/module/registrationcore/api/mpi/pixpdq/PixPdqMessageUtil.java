@@ -32,7 +32,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
 
 public class PixPdqMessageUtil {
 
@@ -58,6 +59,7 @@ public class PixPdqMessageUtil {
     private PatientService patientService;
 
     @Autowired
+    @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
     public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception
@@ -155,9 +157,8 @@ public class PixPdqMessageUtil {
                             defaultLocation
                     );
 
-
                     if (patId.getIdentifierType().equals(patientService.getPatientIdentifierTypeByUuid(
-                            RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID))) {
+                            mpiProperties.getMpiPersonIdentifierTypeUuid()))) {
                         patId.setPreferred(true);
                     }
 
