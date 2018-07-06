@@ -13,6 +13,7 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.Relationship;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,5 +80,4 @@ public class RegistrationData implements Serializable {
     public void addBiometricData(BiometricData biometricData) {
         getBiometrics().add(biometricData);
     }
-
 }

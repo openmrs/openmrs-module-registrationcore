@@ -13,8 +13,6 @@
  */
 package org.openmrs.module.registrationcore.api;
 
-// import org.dcm4chee.xds2.common.exception.XDSException;
-
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.Relationship;
@@ -25,12 +23,10 @@ import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
-// import org.openmrs.module.xdssender.api.domain.Ccd;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured
@@ -188,7 +184,4 @@ public interface RegistrationCoreService extends OpenmrsService {
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
 
 	Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid);
-
-	// Integer importCcd(Patient patient);
-
 }

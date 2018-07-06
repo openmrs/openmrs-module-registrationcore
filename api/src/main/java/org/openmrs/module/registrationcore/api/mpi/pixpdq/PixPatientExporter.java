@@ -66,5 +66,4 @@ public class PixPatientExporter implements MpiPatientExporter {
                 mpiProperties.getMpiPersonIdentifierTypeUuid());
         return mpiPatient.getPatientIdentifier(patientIdentifierType).getIdentifier();
     }
-
 }

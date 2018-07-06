@@ -66,6 +66,10 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_PROBABLY_MATCH_ENABLED = "registrationcore.openempi.enableProbabilisticMatching";
 
+	public static final String GP_BIRTHDATE_ESTIMATION_START_MONTH = "registrationcore.birthdateEstimationStartMonth";
+
+    public static final String GP_BIOMETRICS_IMPLEMENTATION = "registrationcore.biometrics.implementation";
+
 	public static final String GP_MPI_PDQ_ENDPOINT= "registrationcore.mpi.pdqEndpoint";
 
 	public static final String GP_MPI_PDQ_PORT = "registrationcore.mpi.pdqPort";
@@ -92,11 +96,4 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pdq.errorHandler.implementation";
 
-	public static final String GP_BIRTHDATE_ESTIMATION_START_MONTH = "registrationcore.birthdateEstimationStartMonth";
-
-	public static final String GP_BIOMETRICS_IMPLEMENTATION = "registrationcore.biometrics.implementation";
-
-
 }
-
-

@@ -53,6 +53,7 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     }
 
     private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
+        // Q: What happens if there is a middle name?
         Map<String, String> nameQueryParams = new HashMap<String, String>();
         if(patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
             nameQueryParams.put("@PID.5.1", patient.getFamilyName());
@@ -101,6 +102,7 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         return toMatchList(patient, retVal);
     }
 
+    // Q: Why doesn't toMatchList check matches for identifiers?
     private List<PatientAndMatchQuality> toMatchList(Patient patient, List<Patient> patients) {
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 

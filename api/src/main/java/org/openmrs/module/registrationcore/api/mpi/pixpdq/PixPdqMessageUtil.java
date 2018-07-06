@@ -169,6 +169,7 @@ public class PixPdqMessageUtil {
                 for (XPN xpn : pid.getPatientName()) {
                     PersonName pn = new PersonName();
 
+                    // Family name
                     if (xpn.getFamilyName().getSurname().getValue() == null || xpn.getFamilyName().getSurname().getValue().isEmpty()) {
                         pn.setFamilyName("(none)");
                     } else {
