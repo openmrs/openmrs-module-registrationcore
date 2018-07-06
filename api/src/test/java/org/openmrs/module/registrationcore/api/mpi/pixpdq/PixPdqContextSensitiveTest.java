@@ -4,43 +4,73 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import ca.uhn.hl7v2.parser.PipeParser;
+import ca.uhn.hl7v2.model.Message;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBase {
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
+public class PixPdqContextSensitiveTest extends BaseModuleContextSensitiveTest {
+	private Message PIX_RESPONSE;
+	private Message PDQ_RESPONSE;
 
 	@InjectMocks
+	@Autowired
 	private PixPatientExporter pixPatientExporter;
+
+	@Mock
+	private Hl7SenderHolder hl7SenderHolder;
 
 	@Mock
 	private Hl7v2Sender hl7v2Sender;
 
 	@Autowired
+	private PatientService patientService;
+
+	@Autowired
 	private PixPdqMessageUtil pixPdqMessageUtil;
+
+	@InjectMocks
 	@Autowired
 	private PdqPatientFetcher pdqPatientFetcher;
-	@Autowired
-	private Hl7SenderHolder hl7SenderHolder;
-	@Autowired
-	private MpiProperties mpiProperties;
-	@Autowired
-	private PatientService patientService;
 
 	@Before
 	public void setUp() throws Exception {
 		executeDataSet("identifiers_dataset.xml");
 		executeDataSet("mpi_global_properties_dataset.xml");
 		executeDataSet("patients_dataset.xml");
+		PipeParser parser = new PipeParser();
+		String pixResponseString = "MSH|^~\\&|MESA_XREF|XYZ_HOSPITAL|OpenMRS|Demo|20180706150503-0400||ACK^A01|a0ad85c16470292a741|P|2.3.1\r"
+				+ "MSA|AA|3f0684d2-f4d1-4b4e-8608-29db94b497e3\r";
+		String pdqResponseString = "MSH|^~\\&|MESA_PD_SUPPLIER|XYZ_HOSPITAL|OpenMRS|Demo|20180706150504-0400||RSP^K22^RSP_K21|a0ad85c164702a18843|P|2.5\r"
+				+ "MSA|AA|b0e566cd-e9c5-4afc-bbf1-03c153c71553\r"
+				+ "QAK|cf4725fb-ce77-4b24-8cfa-f00c117d71ed|OK||1|1|0\r"
+				+ "QPD|Q22^Find Candidates^HL7|cf4725fb-ce77-4b24-8cfa-f00c117d71ed|@PID.3.1^1000X1~@PID.3.4^2.16.840.1.113883.4.357\r"
+				+ "PID|1||1000X1^^^2.25.71280592878078638113873461180761116318&2.25.71280592878078638113873461180761116318&PI^PI~5c11da40-812f-11e8-8a2c-06c4d099933a^^^2.16.840.1.113883.4.357&2.16.840.1.113883.4.357&hl7^PI||familyN99^givenN99^^^^^L||19550311|F|||addr1^addr2^city^state^1234^country\r";
+		PDQ_RESPONSE = parser.parse(pdqResponseString);
+		PIX_RESPONSE = parser.parse(pixResponseString);
 	}
 
 	/**
@@ -49,43 +79,24 @@ public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBas
 	@Test
 	@Verifies(value = "should export patient to the mpi and retrieve the patient from the mpi",
 			method = "exportPatient(Patient)")
-	public void exportPatient_contextSensitiveShouldExportPatientAndRetrievePatient() throws Exception {
-		Patient patient = patientService.getPatient(2);
+	public void exportPatient_ContextSensitiveShouldExportPatientAndRetrievePatient() throws Exception {
+		Patient patient = patientService.getPatient(99);
+		when(hl7SenderHolder.getHl7v2Sender()).thenReturn(hl7v2Sender);
+		when(hl7v2Sender.sendPixMessage(Mockito.any(Message.class))).thenReturn(PIX_RESPONSE);
+		when(hl7v2Sender.sendPdqMessage(Mockito.any(Message.class))).thenReturn(PDQ_RESPONSE);
 
-//		Patient patient1 = new Patient();
-//		patient1.addName(new PersonName("Johny", null, "Smith"));
-//		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
-//		patient1.setBirthdate(date);
-//		PatientIdentifier identifier = new PatientIdentifier();
-//		identifier.setIdentifier("ABCD1234");
-//		patient1.addIdentifier(identifier);
-//		patient1.setGender("M");
-//		PersonAddress personAddress = new PersonAddress();
-//		personAddress.setCountry("TesT");
-//		personAddress.setCityVillage("TeSt2");
-//		personAddress.setCountyDistrict("Test3");
-//		patient1.addAddress(personAddress);
-//
-//		String result = pixPatientExporter.exportPatient(patient1);
-//		assertEquals(IDENTIFIERS.get(0), result);
+		String result = pixPatientExporter.exportPatient(patient);
+		assertEquals(patient.getPatientIdentifier(4).toString(), result);
 	}
 
+	@Test
+	public void interpretPIDSegments_ContextSensitiveShouldReturnPatient() throws Exception {
+		Patient patient = patientService.getPatient(99);
+		List<Patient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(PDQ_RESPONSE);
 
-
-//	@Test
-//	public void testPrivilegeLevelsCreated() throws Exception {
-//		EmrApiActivator activator = new EmrApiActivator();
-//		activator.willRefreshContext();
-//		activator.contextRefreshed();
-//
-//		// ensure Privilege Level: Full role
-//		Role fullPrivsRole = userService.getRole(EmrApiConstants.PRIVILEGE_LEVEL_FULL_ROLE);
-//		assertThat(fullPrivsRole, is(notNullValue()));
-//		assertThat(fullPrivsRole.getUuid(), is(EmrApiConstants.PRIVILEGE_LEVEL_FULL_UUID));
-//
-//		// ensure Privilege Level: High role
-//		Role highPrivsRole = userService.getRole(EmrApiConstants.PRIVILEGE_LEVEL_HIGH_ROLE);
-//		assertThat(highPrivsRole, is(notNullValue()));
-//		assertThat(highPrivsRole.getUuid(), is(EmrApiConstants.PRIVILEGE_LEVEL_HIGH_UUID));
-//	}
+		assertEquals(patient.getIdentifiers().toString(), mpiPatients.get(0).getIdentifiers().toString());
+		assertEquals(patient.getAddresses().toString(), mpiPatients.get(0).getAddresses().toString());
+		assertEquals(patient.getGender(), mpiPatients.get(0).getGender());
+		assertEquals(patient.getGivenName(), mpiPatients.get(0).getGivenName());
+	}
 }

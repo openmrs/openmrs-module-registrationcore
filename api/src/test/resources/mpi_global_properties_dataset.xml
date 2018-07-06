@@ -2,7 +2,135 @@
 
 <dataset>
 
-    <global_property property="emr.checkInEncounterType" property_value="55a0d3ea-a4d7-4e88-8f01-5aceb2d3c61b"
-                     uuid="6686a8c0-fcc5-4fc5-b997-906e7ee23bd1"/>
+    <global_property property="registrationcore.mpi.implementation" 
+                     property_value="registrationcore.mpi.implementation.PixPdq"/>
+
+    <global_property property="registrationcore.mpi.sendingFacility" property_value="Demo"/>
+
+    <global_property property="registrationcore.mpi.receivingApplication" property_value="Demo MPI"/>
+    
+    <global_property property="registrationcore.mpi.receivingFacility" property_value="OpenEMPI Demo"/>
+
+    <global_property property="registrationcore.mpi.pixIdentifierTypeUuidList" 
+                     property_value="0d47284f-9e9b-4a81-a88b-8bb42bc0a904,0d47284f-9e9b-4a81-a88b-8bb42bc0a903"/>
+
+    <global_property property="registrationcore.mpi.pdqIdentifierTypeUuidList" 
+                     property_value="0d47284f-9e9b-4a81-a88b-8bb42bc0a904,0d47284f-9e9b-4a81-a88b-8bb42bc0a903"/>
+
+    <global_property property="registrationcore.openmrsIdenitfier.uuid"
+                     property_value="0d47284f-9e9b-4a81-a88b-8bb42bc0a903"/>
+
+    <global_property property="registrationcore.mpi.personIdentifierTypeUuid"
+                     property_value="0d47284f-9e9b-4a81-a88b-8bb42bc0a904"/>
+
+    <global_property property="registrationcore.local_mpi_identifierTypeMap.OpenEMPI ID"
+                     property_value="0d47284f-9e9b-4a81-a88b-8bb42bc0a904:2.16.840.1.113883.4.357:hl7"/>
+
+    <global_property property="registrationcore.local_mpi_identifierTypeMap.OpenMRS ID"
+                     property_value="0d47284f-9e9b-4a81-a88b-8bb42bc0a903:2.25.71280592878078638113873461180761116318:PI"/>
+
+    <global_property property="registrationcore.biometrics.implementation" property_value=""/>
+
+    <global_property property="registrationcore.mpi.pix.errorHandler.implementation" property_value=""/>
+
+    <global_property property="registrationcore.mpi.pdq.errorHandler.implementation" property_value=""/>
+
+
+    <global_property property="registrationcore.mpi.pdqEndpoint" property_value="http://localhost:5001/pdq"/>
+
+    <global_property property="registrationcore.mpi.pdqPort" property_value="3600"/>
+
+    <global_property property="registrationcore.mpi.pixEndpoint" property_value="http://localhost:5001/pix"/>
+
+    <global_property property="registrationcore.mpi.pixPort" property_value="3700"/>
+
+    <global_property property="registrationcore.mpi.Hl7implementation" property_value="registrationcore.mpiHl7v2HttpSender"/>
+
+    <global_property property="registrationcore.mpi.sendingApplication" property_value="OpenMRS"/>
 
 </dataset>
+
+    <!--
+
+    <global_property property="registrationcore.identifierSourceId" property_value="
+        "/>
+            Specifies the identifier source to use when generating patient identifiers
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.givenNameAutoSuggestList" property_value="
+        "/>
+            A comma separated list of common names to auto suggest for the given name field, when registering patients.
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.familyNameAutoSuggestList" property_value="
+        "/>
+            A comma separated list of common names to auto suggest for the family name field, when registering patients.
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.patientNameSearch" property_value="registrationcore.BasicPatientNameSearch
+        "/>
+            Specifies a bean used for the auto suggest name feature.
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.fastSimilarPatientSearchAlgorithm" property_value="registrationcore.BasicSimilarPatientSearchAlgorithm
+        "/>
+            Specifies a bean used for the fast similar patient search algorithm.
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.preciseSimilarPatientSearchAlgorithm" property_value="registrationcore.BasicExactPatientSearchAlgorithm
+        "/>
+            Specifies a bean used for the precise similar patient search algorithm.
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.openempi.globalIdentifierDomainId" property_value="
+        "/>
+            Specifies main identifier on MPI server (e.g. "xyz" for OpenEMPI) (GSOC OpenEMPI Specific Implementation)
+        </description>
+    </global_property>
+
+
+    <global_property property="registrationcore.mpi.url" property_value="
+        "/>
+            Specifies url to MPI server. (GSOC OpenEMPI Specific Implementation)
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.mpi.username" property_value="admin
+        "/>
+            Specifies username for authentication to MPI server
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.mpi.password" property_value="admin
+        "/>
+            Specifies password for authentication to MPI server
+        </description>
+    </global_property>
+
+    <global_property property="registrationcore.openempi.enableProbabilisticMatching" property_value="false
+        "/>
+            Specifies if probability matching should be used (GSOC OpenEMPI Specific Implementation)
+        </description>
+    </global_property>
+
+
+
+
+
+
+    <global_property property="registrationcore.birthdateEstimationStartMonth" property_value="0
+        "/>
+            The month from which the birth date is estimated, with January having a value of 0
+        </description>
+    </global_property>
+
+
+
+
+-->
