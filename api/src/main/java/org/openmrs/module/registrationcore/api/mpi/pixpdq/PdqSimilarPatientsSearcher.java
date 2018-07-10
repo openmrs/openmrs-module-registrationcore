@@ -53,38 +53,16 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     }
 
     private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
-        // Q: What happens if there is a middle name?
-        Map<String, String> nameQueryParams = new HashMap<String, String>();
-        if(patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
-            nameQueryParams.put("@PID.5.1", patient.getFamilyName());
-        if(patient.getGivenName() != null && !patient.getGivenName().isEmpty())
-            nameQueryParams.put("@PID.5.2", patient.getGivenName());
-
-        PatientIdentifier identifier = getLastIdentifier(patient.getIdentifiers());
-
-        Map<String, String> identifierQueryParams = new HashMap<String, String>();
-        if(identifier != null && identifier.getIdentifierType() != null) {
-            String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifier.getIdentifierType().getUuid());
-            if (mpiUuid != null) {
-                identifierQueryParams.put("@PID.3.1", identifier.getIdentifier());
-                identifierQueryParams.put("@PID.3.4", mpiUuid);
-            }
-        }
 
         List<Patient> retVal = new LinkedList<Patient>();
 
         try {
-            if (hasGivenNameOrFamilyName(patient)) {
-                Message pdqRequest = pixPdqMessageUtil.createPdqMessage(nameQueryParams);
-                Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
-
-                retVal = pixPdqMessageUtil.interpretPIDSegments(response);
-            } else if (identifier != null) {
-                Message pdqRequest = pixPdqMessageUtil.createPdqMessage(identifierQueryParams);
-                Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
-
-                retVal = pixPdqMessageUtil.interpretPIDSegments(response);
-            }
+	        Map<String, String> queryParams = pixPdqMessageUtil.patientToQPD3Params(patient);
+	        if (!queryParams.isEmpty()){
+		        Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
+		        Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
+		        retVal = pixPdqMessageUtil.interpretPIDSegments(response);
+	        }
         } catch (Exception e) {
             log.error("Error in PDQ Search", e);
             ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
@@ -168,20 +146,5 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         }
 
         return matchList;
-    }
-
-    private boolean hasGivenNameOrFamilyName(Patient patient) {
-        return (patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
-                || (patient.getGivenName() != null && !patient.getGivenName().isEmpty());
-    }
-
-    private PatientIdentifier getLastIdentifier(Set<PatientIdentifier> identifiers) {
-
-        PatientIdentifier lastIdentifier = new PatientIdentifier();
-
-        for (PatientIdentifier patIdentifier : identifiers) {
-                lastIdentifier = patIdentifier;
-        }
-        return  lastIdentifier;
     }
 }

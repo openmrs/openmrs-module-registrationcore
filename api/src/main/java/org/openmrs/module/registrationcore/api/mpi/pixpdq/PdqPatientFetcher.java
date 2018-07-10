@@ -55,8 +55,7 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
             if (CollectionUtils.isEmpty(mpiPatients)) {
                 return null;
             }
-            return mpiPatients.get(0);
-            //return toPatientFromMpiPatient(mpiPatients.get(0));
+            return toPatientFromMpiPatient(mpiPatients.get(0));
         } catch(Exception e) {
             throw new MpiException("Error in PDQ fetch by identifier", e);
         }
@@ -68,13 +67,14 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     }
 
 
-//    private Patient toPatientFromMpiPatient(Patient mpiPatient) {
-//        // it is a hack in order to save the MpiPatient class to DB (converting to the Patient class)
-//        Patient patient = new Patient(mpiPatient);
-//        patient.setIdentifiers(mpiPatient.getIdentifiers());
-//        for (PatientIdentifier pid : patient.getIdentifiers()) {
-//            pid.setPatient(patient);
-//        }
-//        return patient;
-//    }
+    private Patient toPatientFromMpiPatient(Patient mpiPatient) {
+    	// is this still really needed?
+        // it is a hack in order to save the MpiPatient class to DB (converting to the Patient class)
+        Patient patient = new Patient(mpiPatient);
+        patient.setIdentifiers(mpiPatient.getIdentifiers());
+        for (PatientIdentifier pid : patient.getIdentifiers()) {
+            pid.setPatient(patient);
+        }
+        return patient;
+    }
 }

@@ -65,16 +65,14 @@ public class PatientCreationListener extends PatientActionListener {
         } catch (Exception e) {
             ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
             if (errorHandler == null) {
-                LOGGER.error("PIX patient push exception occurred "
-                          + "with not configured PIX error handler", e);
-//                throw new MpiException("PIX patient push exception occurred "
-//                        + "with not configured PIX error handler", e);
+                throw new MpiException("PIX patient push exception occurred "
+                        + "with not configured PIX error handler", e);
             } else {
-                LOGGER.error("PIX patient push exception occurred", e);
                 errorHandler.handle(prepareParameters(patient),
                         PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_CREATION_DESTINATION,
                         true,
                         ExceptionUtils.getFullStackTrace(e));
+	            throw new MpiException("PIX patient push exception occurred", e);
             }
         }
         

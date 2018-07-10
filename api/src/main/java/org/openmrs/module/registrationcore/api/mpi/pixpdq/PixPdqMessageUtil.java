@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.HashMap;
+import java.util.Set;
 
 
 public class PixPdqMessageUtil {
@@ -62,8 +64,7 @@ public class PixPdqMessageUtil {
     @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
-    public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception
-    {
+    public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception {
         QBP_Q21 message = new QBP_Q21();
         updateMSH(message.getMSH(), "QBP", "Q22");
 
@@ -84,6 +85,39 @@ public class PixPdqMessageUtil {
 
         return message;
     }
+
+    public Message createPdqMessage(Patient patient) throws HL7Exception {
+        return createPdqMessage(patientToQPD3Params(patient));
+    }
+
+    public Map<String, String> patientToQPD3Params(Patient patient){
+        Map<String, String> queryParams = new HashMap<String, String>();
+        // Add Names to query
+        if(patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
+            queryParams.put("@PID.5.1", patient.getFamilyName());
+        if(patient.getGivenName() != null && !patient.getGivenName().isEmpty())
+            queryParams.put("@PID.5.2", patient.getGivenName());
+        // Add Identifiers to query
+        Set<PatientIdentifier> identifiers = patient.getIdentifiers();
+        if(!identifiers.isEmpty()){
+            for (PatientIdentifier patIdentifier : identifiers) {
+                String mappedMpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
+                if (mappedMpiUuid != null) {
+                    queryParams.put("@PID.3.1", patIdentifier.getIdentifier());
+                    queryParams.put("@PID.3.4", mappedMpiUuid);
+                }
+            }
+        }
+        // Add Gender to query
+
+        // Add Date of Birth to query (?) what if its an estimate?
+
+        // Add Address to query
+
+        return queryParams;
+    }
+
+
 
     private void updateMSH(MSH msh, String messageCode, String triggerEvent) throws DataTypeException {
         msh.getFieldSeparator().setValue("|");
@@ -252,7 +286,6 @@ public class PixPdqMessageUtil {
         ADT_A01 message = new ADT_A01();
         this.updateMSH(message.getMSH(), "ADT", "A01");
         message.getMSH().getVersionID().getVersionID().setValue("2.3.1");
-
         // Move patient data to PID
         this.updatePID(message.getPID(), patient);
 
@@ -279,16 +312,7 @@ public class PixPdqMessageUtil {
      * @throws HL7Exception
      */
     private void updatePID(PID pid, Patient patient) throws HL7Exception {
-
-        // Update the pid segment with data in the patient
-
-        // PID-3
-//        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalID().setValue(config.getShrPatientRoot());
-//        pid.getPatientIdentifierList(0).getAssigningAuthority().getNamespaceID().setValue(config.getShrPatientRoot());
-//        pid.getPatientIdentifierList(0).getAssigningAuthority().getUniversalIDType().setValue(config.getUniversalIdType());
-//        pid.getPatientIdentifierList(0).getIDNumber().setValue(patient.getId().toString());
-
-        // Other identifiers
+        // Identifiers
         List<String> uuidList = mpiProperties.getPixIdentifierTypeUuidList();
         for (PatientIdentifier patIdentifier : patient.getIdentifiers()) {
             if (uuidList.contains(patIdentifier.getIdentifierType().getUuid())) {

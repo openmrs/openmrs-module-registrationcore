@@ -18,6 +18,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -85,6 +87,9 @@ public class PdqSimilarPatientsSearcherTest {
     private void initPixPdqMessageUtil(){
         try {
             when(pixPdqMessageUtil.interpretPIDSegments(Mockito.any(Message.class))).thenReturn(RET_VAL);
+            Map<String, String> queryParams = new HashMap<String, String>();
+            queryParams.put("testKey","testValue");
+            when(pixPdqMessageUtil.patientToQPD3Params(Mockito.any(Patient.class))).thenReturn(queryParams);
         } catch (Exception e) {
             e.printStackTrace();
         }

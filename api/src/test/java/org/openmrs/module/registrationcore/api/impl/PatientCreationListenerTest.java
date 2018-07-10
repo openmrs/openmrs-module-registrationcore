@@ -5,12 +5,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.UserService;
+import org.openmrs.module.DaemonToken;
+import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -28,14 +31,21 @@ public class PatientCreationListenerTest extends BaseModuleContextSensitiveTest 
     private static final String PATIENT_UUID_EXAMPLE = "af7c3340-0503-11e3-8ffd-0800200c9a66";
     private Integer personId = 123;
 
-    @InjectMocks private PatientCreationListener patientCreationListener;
-    @Mock private PatientService patientService;
-    @Mock private RegistrationCoreProperties coreProperties;
+    @InjectMocks
+    private PatientCreationListener patientCreationListener;
 
-    @Mock private MpiProvider mpiProvider;
-    @Mock private MapMessage mapMessage;
-    @Mock private Message message;
-    @Mock private Patient patient;
+    @Mock
+    private PatientService patientService;
+    @Mock
+    private RegistrationCoreProperties coreProperties;
+    @Mock
+    private MpiProvider mpiProvider;
+    @Mock
+    private MapMessage mapMessage;
+    @Mock
+    private Message message;
+    @Mock
+    private Patient patient;
 
     @Autowired
     @Qualifier("adminService")
@@ -43,8 +53,6 @@ public class PatientCreationListenerTest extends BaseModuleContextSensitiveTest 
 
     @Autowired
     private UserService userService;
-
-
 
     @Before
     public void setUp() throws Exception {
@@ -78,7 +86,7 @@ public class PatientCreationListenerTest extends BaseModuleContextSensitiveTest 
     }
 
     @Test
-    //@Ignore //can't be performed since using static Context.openSession
+    @Ignore //can't be performed since using static Context.openSession
     public void testDoNotPerformExportIfMpiIsDisabled() throws Exception {
         when(coreProperties.isMpiEnabled()).thenReturn(false);
 
