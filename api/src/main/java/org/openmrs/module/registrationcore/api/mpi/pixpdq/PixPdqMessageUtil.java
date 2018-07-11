@@ -64,7 +64,21 @@ public class PixPdqMessageUtil {
     @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
-    public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception {
+	public Message createPdqMessage(Patient patient) throws HL7Exception {
+		return createPdqMessage(patientToQPD3Params(patient));
+	}
+
+	public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception {
+		QBP_Q21 message = initQPD123(queryParameters);
+		return message;
+	}
+
+	public Message createPdqMessage(Map<String, String> queryParameters, String qpd8IdentifierUuid) throws HL7Exception {
+		QBP_Q21 message = setQPD8(initQPD123(queryParameters), qpd8IdentifierUuid);
+		return message;
+	}
+
+    public QBP_Q21 initQPD123(Map<String, String> queryParameters) throws HL7Exception {
         QBP_Q21 message = new QBP_Q21();
         updateMSH(message.getMSH(), "QBP", "Q22");
 
@@ -86,8 +100,10 @@ public class PixPdqMessageUtil {
         return message;
     }
 
-    public Message createPdqMessage(Patient patient) throws HL7Exception {
-        return createPdqMessage(patientToQPD3Params(patient));
+    public QBP_Q21 setQPD8(QBP_Q21 message, String qpd8MappedIdentifierUuid) throws HL7Exception {
+	    Terser terser = new Terser(message);
+	    terser.set("/QPD-8-4", qpd8MappedIdentifierUuid);
+	    return message;
     }
 
     public Map<String, String> patientToQPD3Params(Patient patient){
@@ -147,8 +163,7 @@ public class PixPdqMessageUtil {
      * @return
      * @throws HL7Exception
      */
-    public List<Patient> interpretPIDSegments (
-            Message response) throws HL7Exception, ParseException {
+    public List<Patient> interpretPIDSegments (Message response) throws HL7Exception, ParseException {
         List<Patient> retVal = new ArrayList<Patient>();
 
         Terser terser = new Terser(response);
@@ -281,6 +296,26 @@ public class PixPdqMessageUtil {
 
         return retVal;
     }
+
+	/**
+	 * Filter list of patients for patients with a specific identifier for a specific identifier type
+	 */
+	public List<Patient> filterByIdentifierAndIdentifierType (  List<Patient> patients,
+																String identifier,
+																String identifierTypeUuid){
+        PatientIdentifierType identifierType = patientService.getPatientIdentifierTypeByUuid(identifierTypeUuid);
+		List<Patient> retVal = new ArrayList<Patient>();
+
+		for (Patient p : patients){
+		    if (p.getPatientIdentifier(identifierType)!= null){
+                if (p.getPatientIdentifier(identifierType).getIdentifier().equals(identifier)){
+                    retVal.add(p);
+                }
+            }
+		}
+		return retVal;
+	}
+
 
     public Message createAdmit(Patient patient) throws HL7Exception {
         ADT_A01 message = new ADT_A01();

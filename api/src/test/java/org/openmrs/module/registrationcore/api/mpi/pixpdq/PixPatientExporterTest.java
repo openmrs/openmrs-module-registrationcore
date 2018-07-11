@@ -91,7 +91,7 @@ public class PixPatientExporterTest {
 	}
 	private void initPdqPatientFetcher(){
 		try {
-			when(pdqPatientFetcher.fetchMpiPatient(Mockito.any(String.class))).thenReturn(RET_VAL.get(0));
+			when(pdqPatientFetcher.fetchMpiPatient(Mockito.any(PatientIdentifier.class))).thenReturn(RET_VAL.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

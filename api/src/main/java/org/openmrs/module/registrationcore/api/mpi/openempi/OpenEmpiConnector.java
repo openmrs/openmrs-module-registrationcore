@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.mpi.common.*;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
     private MpiProperties mpiProperties;
 
     @Override
-    public Patient fetchMpiPatient(String patientId) {
+    public Patient fetchMpiPatient(PatientIdentifier patientId) {
         authenticateIfNeeded();
         return patientImporter.fetchMpiPatient(patientId);
     }

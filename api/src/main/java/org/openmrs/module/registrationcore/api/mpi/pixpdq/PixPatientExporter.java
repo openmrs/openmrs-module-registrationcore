@@ -39,7 +39,7 @@ public class PixPatientExporter implements MpiPatientExporter {
     public String exportPatient(Patient patient) {
         try {
         	// Ensure that patient with that identifier does not already exist on the MPI
-	        Patient existingMpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier().getIdentifier());
+	        Patient existingMpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier());
 	        if (existingMpiPatient != null) {
 		        throw new MpiException("Patient with that identifier is already present on MPI. "
 				        + "Unable to create patient");
@@ -52,7 +52,7 @@ public class PixPatientExporter implements MpiPatientExporter {
                 throw new MpiException("Error querying patient data during export");
             }
 
-            Patient mpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier().getIdentifier());
+            Patient mpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier());
             if (mpiPatient == null) {
                 throw new MpiException("Patient has not been created on MPI. "
                         + "Probably patient with the same IDs already exists");

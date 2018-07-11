@@ -99,4 +99,31 @@ public class PixPdqContextSensitiveTest extends BaseModuleContextSensitiveTest {
 		assertEquals(patient.getGender(), mpiPatients.get(0).getGender());
 		assertEquals(patient.getGivenName(), mpiPatients.get(0).getGivenName());
 	}
+
+	@Test
+	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnEmptyList() throws Exception {
+		List<Patient> inputList = new ArrayList<Patient>();
+		List<Patient> resultList = new ArrayList<Patient>();
+		inputList.add(patientService.getPatient(100));
+		inputList.add(patientService.getPatient(101));
+		inputList.add(patientService.getPatient(102));
+		resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
+						inputList, "1000X1",
+						patientService.getPatientIdentifierType(3).getUuid());
+		assertEquals(true, resultList.isEmpty());
+	}
+
+	@Test
+	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnPatient() throws Exception {
+		List<Patient> inputList = new ArrayList<Patient>();
+		List<Patient> resultList = new ArrayList<Patient>();
+		inputList.add(patientService.getPatient(99));
+		inputList.add(patientService.getPatient(100));
+		inputList.add(patientService.getPatient(101));
+		inputList.add(patientService.getPatient(102));
+		resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
+				inputList, "1000X1",
+				patientService.getPatientIdentifierType(3).getUuid());
+		assertEquals(1, resultList.size());
+	}
 }

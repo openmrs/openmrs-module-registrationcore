@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientUpdater;
@@ -42,7 +43,7 @@ public class PixPdqProvider implements MpiProvider<Patient> {
     }
 
     @Override
-    public Patient fetchMpiPatient(String patientId) {
+    public Patient fetchMpiPatient(PatientIdentifier patientId) {
         return patientFetcher.fetchMpiPatient(patientId);
     }
 

@@ -41,19 +41,25 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
     @Override
     public Patient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {
-        String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid);
+        String mappedMpiIdentifierTypeUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid);
 
         Map<String, String> queryParams = new HashMap<String, String>();
         queryParams.put("@PID.3.1", patientIdentifier);
-        queryParams.put("@PID.3.4", mpiUuid);
+        queryParams.put("@PID.3.4", mappedMpiIdentifierTypeUuid);
 
         try {
             Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
             Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
 
             List<Patient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
+            mpiPatients = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(mpiPatients, patientIdentifier, identifierTypeUuid);
             if (CollectionUtils.isEmpty(mpiPatients)) {
                 return null;
+            }
+            if (mpiPatients.size() != 1){
+            	throw new MpiException(String.format("Created patient not uniquely identified in mpi! " +
+                                                        "There are %d patients with identifier %s of identifier type %s",
+                                                        mpiPatients.size(), patientIdentifier, identifierTypeUuid));
             }
             return toPatientFromMpiPatient(mpiPatients.get(0));
         } catch(Exception e) {
@@ -62,8 +68,8 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     }
 
     @Override
-    public Patient fetchMpiPatient(String patientIdentifier) {
-        return fetchMpiPatient(patientIdentifier, mpiProperties.getMpiPersonIdentifierTypeUuid());
+    public Patient fetchMpiPatient(PatientIdentifier patientIdentifier) {
+    	return fetchMpiPatient(patientIdentifier.getIdentifier(), patientIdentifier.getIdentifierType().getUuid());
     }
 
 
