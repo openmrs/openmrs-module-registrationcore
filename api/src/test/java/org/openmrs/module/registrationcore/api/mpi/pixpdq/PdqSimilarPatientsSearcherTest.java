@@ -13,6 +13,7 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -87,8 +89,8 @@ public class PdqSimilarPatientsSearcherTest {
     private void initPixPdqMessageUtil(){
         try {
             when(pixPdqMessageUtil.interpretPIDSegments(Mockito.any(Message.class))).thenReturn(RET_VAL);
-            Map<String, String> queryParams = new HashMap<String, String>();
-            queryParams.put("testKey","testValue");
+            List<Map.Entry<String, String>> queryParams = new ArrayList<Map.Entry<String, String>>();
+            queryParams.add(new AbstractMap.SimpleEntry("@PID.5.1", "Test"));
             when(pixPdqMessageUtil.patientToQPD3Params(Mockito.any(Patient.class))).thenReturn(queryParams);
         } catch (Exception e) {
             e.printStackTrace();

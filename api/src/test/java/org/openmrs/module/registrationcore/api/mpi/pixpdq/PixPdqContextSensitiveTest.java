@@ -4,33 +4,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Mockito;
+
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.model.Message;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class PixPdqContextSensitiveTest extends BaseModuleContextSensitiveTest {
 	private Message PIX_RESPONSE;
@@ -76,10 +67,10 @@ public class PixPdqContextSensitiveTest extends BaseModuleContextSensitiveTest {
 	/**
 	 * @see {@link PixPatientExporter#exportPatient(Patient)}
 	 */
-	@Test
+	@Test (expected = MpiException.class)
 	@Verifies(value = "should export patient to the mpi and retrieve the patient from the mpi",
 			method = "exportPatient(Patient)")
-	public void exportPatient_ContextSensitiveShouldExportPatientAndRetrievePatient() throws Exception {
+	public void exportPatient_ContextSensitiveShouldFailExportPatient() throws Exception {
 		Patient patient = patientService.getPatient(99);
 		when(hl7SenderHolder.getHl7v2Sender()).thenReturn(hl7v2Sender);
 		when(hl7v2Sender.sendPixMessage(Mockito.any(Message.class))).thenReturn(PIX_RESPONSE);
@@ -103,11 +94,10 @@ public class PixPdqContextSensitiveTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnEmptyList() throws Exception {
 		List<Patient> inputList = new ArrayList<Patient>();
-		List<Patient> resultList = new ArrayList<Patient>();
 		inputList.add(patientService.getPatient(100));
 		inputList.add(patientService.getPatient(101));
 		inputList.add(patientService.getPatient(102));
-		resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
+		List<Patient> resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
 						inputList, "1000X1",
 						patientService.getPatientIdentifierType(3).getUuid());
 		assertEquals(true, resultList.isEmpty());
@@ -116,14 +106,31 @@ public class PixPdqContextSensitiveTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnPatient() throws Exception {
 		List<Patient> inputList = new ArrayList<Patient>();
-		List<Patient> resultList = new ArrayList<Patient>();
 		inputList.add(patientService.getPatient(99));
 		inputList.add(patientService.getPatient(100));
 		inputList.add(patientService.getPatient(101));
 		inputList.add(patientService.getPatient(102));
-		resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
+		List<Patient> resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
 				inputList, "1000X1",
 				patientService.getPatientIdentifierType(3).getUuid());
 		assertEquals(1, resultList.size());
+	}
+
+	@Test
+	public void patientToQPD3Params_ContextSensitiveShouldReturnQPD3Params() throws Exception {
+		List<Map.Entry<String, String>>  result = pixPdqMessageUtil.patientToQPD3Params(patientService.getPatient(99));
+		assertEquals(14, result.size());
+	}
+
+	@Test
+	public void patientToQPD3Params_ContextSensitiveShouldReturnNullWhenPassedNullPatient() throws Exception {
+		List<Map.Entry<String, String>>  result = pixPdqMessageUtil.patientToQPD3Params(null);
+		assertNull(result);
+	}
+
+	@Test
+	public void patientToQPD3Params_ContextSensitiveShouldReturnNameParams() throws Exception {
+		List<Map.Entry<String, String>>  result = pixPdqMessageUtil.patientToQPD3Params(patientService.getPatient(103));
+		assertEquals(2, result.size());
 	}
 }

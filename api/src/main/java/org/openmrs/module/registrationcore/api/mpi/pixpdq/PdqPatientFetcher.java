@@ -1,14 +1,14 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.model.Message;
+
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.api.PatientService;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
@@ -16,7 +16,6 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.HashMap;
 import java.util.Map;
 import org.springframework.util.CollectionUtils;
 
@@ -43,9 +42,9 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     public Patient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {
         String mappedMpiIdentifierTypeUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid);
 
-        Map<String, String> queryParams = new HashMap<String, String>();
-        queryParams.put("@PID.3.1", patientIdentifier);
-        queryParams.put("@PID.3.4", mappedMpiIdentifierTypeUuid);
+        List<Map.Entry<String, String>> queryParams = new ArrayList<Map.Entry<String, String>>();
+        queryParams.add(new AbstractMap.SimpleEntry("@PID.3.1", patientIdentifier));
+        queryParams.add(new AbstractMap.SimpleEntry("@PID.3.4", mappedMpiIdentifierTypeUuid));
 
         try {
             Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);

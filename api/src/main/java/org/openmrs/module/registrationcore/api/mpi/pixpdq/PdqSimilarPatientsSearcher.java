@@ -5,7 +5,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
@@ -17,11 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
@@ -57,7 +54,7 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         List<Patient> retVal = new LinkedList<Patient>();
 
         try {
-	        Map<String, String> queryParams = pixPdqMessageUtil.patientToQPD3Params(patient);
+            List<Map.Entry<String, String>> queryParams = pixPdqMessageUtil.patientToQPD3Params(patient);
 	        if (!queryParams.isEmpty()){
 		        Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
 		        Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);

@@ -25,7 +25,6 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
-import org.openmrs.Relationship;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
@@ -37,13 +36,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.HashMap;
 import java.util.Set;
 
 
@@ -68,17 +67,17 @@ public class PixPdqMessageUtil {
 		return createPdqMessage(patientToQPD3Params(patient));
 	}
 
-	public Message createPdqMessage(Map<String, String> queryParameters) throws HL7Exception {
+	public Message createPdqMessage(List<Map.Entry<String, String>> queryParameters) throws HL7Exception {
 		QBP_Q21 message = initQPD123(queryParameters);
 		return message;
 	}
 
-	public Message createPdqMessage(Map<String, String> queryParameters, String qpd8IdentifierUuid) throws HL7Exception {
-		QBP_Q21 message = setQPD8(initQPD123(queryParameters), qpd8IdentifierUuid);
+	public Message createPdqMessage(List<Map.Entry<String, String>> queryParameters, String qpd8IdentifierUuid) throws HL7Exception {
+	    QBP_Q21 message = setQPD8(initQPD123(queryParameters), qpd8IdentifierUuid);
 		return message;
 	}
 
-    public QBP_Q21 initQPD123(Map<String, String> queryParameters) throws HL7Exception {
+    public QBP_Q21 initQPD123(List<Map.Entry<String, String>> queryParameters) throws HL7Exception {
         QBP_Q21 message = new QBP_Q21();
         updateMSH(message.getMSH(), "QBP", "Q22");
 
@@ -86,7 +85,7 @@ public class PixPdqMessageUtil {
 
         // Set the query parameters
         int qpdRep = 0;
-        for(Map.Entry<String, String> entry : queryParameters.entrySet())
+        for(Map.Entry<String, String> entry : queryParameters)
         {
             terser.set(String.format("/QPD-3(%d)-1", qpdRep), entry.getKey());
             terser.set(String.format("/QPD-3(%d)-2", qpdRep++), entry.getValue());
@@ -106,30 +105,71 @@ public class PixPdqMessageUtil {
 	    return message;
     }
 
-    public Map<String, String> patientToQPD3Params(Patient patient){
-        Map<String, String> queryParams = new HashMap<String, String>();
+    public List<Map.Entry<String, String>> patientToQPD3Params(Patient patient){
+        List<Map.Entry<String, String>> queryParams = new ArrayList<Map.Entry<String, String>>();
+        if (patient == null){
+            return null;
+        }
         // Add Names to query
-        if(patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
-            queryParams.put("@PID.5.1", patient.getFamilyName());
-        if(patient.getGivenName() != null && !patient.getGivenName().isEmpty())
-            queryParams.put("@PID.5.2", patient.getGivenName());
+        if(patient.getFamilyName() != null && !patient.getFamilyName().isEmpty()){
+            queryParams.add(new AbstractMap.SimpleEntry("@PID.5.1", patient.getFamilyName()));
+        }
+        if(patient.getGivenName() != null && !patient.getGivenName().isEmpty()){
+            queryParams.add(new AbstractMap.SimpleEntry("@PID.5.2", patient.getGivenName()));
+        }
         // Add Identifiers to query
         Set<PatientIdentifier> identifiers = patient.getIdentifiers();
-        if(!identifiers.isEmpty()){
+        if(identifiers != null && !identifiers.isEmpty()){
             for (PatientIdentifier patIdentifier : identifiers) {
                 String mappedMpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
                 if (mappedMpiUuid != null) {
-                    queryParams.put("@PID.3.1", patIdentifier.getIdentifier());
-                    queryParams.put("@PID.3.4", mappedMpiUuid);
+                    // We need to change the datatype so that it can have multiple with the same key
+                    queryParams.add(new AbstractMap.SimpleEntry("@PID.3.1", patIdentifier.getIdentifier()));
+                    queryParams.add(new AbstractMap.SimpleEntry("@PID.3.4", mappedMpiUuid));
                 }
             }
         }
         // Add Gender to query
-
+        if(patient.getGender() != null && !patient.getGender().isEmpty()){
+            queryParams.add(new AbstractMap.SimpleEntry("@PID.8", patient.getGender()));
+        }
         // Add Date of Birth to query (?) what if its an estimate?
-
+        if(patient.getBirthdate() != null){
+            String birthdate;
+            if(patient.getBirthdateEstimated()){
+                birthdate = new SimpleDateFormat("yyyy").format(patient.getBirthdate());
+            }
+            else{
+                birthdate = new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate());
+            }
+            queryParams.add(new AbstractMap.SimpleEntry("@PID.7", birthdate));
+        }
         // Add Address to query
-
+        if (!patient.getAddresses().isEmpty()){
+            PersonAddress pa = patient.getAddresses().iterator().next();
+            if(pa.getAddress1() != null)
+                queryParams.add(new AbstractMap.SimpleEntry("@PID.11.1", pa.getAddress1()));
+            if(pa.getAddress2() != null && pa.getAddress3() != null){
+                queryParams.add(new AbstractMap.SimpleEntry("@PID.11.2", pa.getAddress2() + " " + pa.getAddress3()));
+            }else if (pa.getAddress2() != null){
+                queryParams.add(new AbstractMap.SimpleEntry("@PID.11.2", pa.getAddress2()));
+            }
+            if(pa.getCityVillage() != null) {
+                queryParams.add(new AbstractMap.SimpleEntry("@PID.11.3", pa.getCityVillage()));
+            }
+            if(pa.getCountry() != null) {
+                queryParams.add(new AbstractMap.SimpleEntry("@PID.11.6", pa.getCountry()));
+            }
+            if(pa.getCountyDistrict() != null) {
+                queryParams.add(new AbstractMap.SimpleEntry("@PID.11.9", pa.getCountyDistrict()));
+            }
+            if(pa.getPostalCode() != null) {
+                queryParams.add(new AbstractMap.SimpleEntry("@PID.11.5", pa.getPostalCode()));
+            }
+            if(pa.getStateProvince() != null) {
+                queryParams.add(new AbstractMap.SimpleEntry("@PID.11.4", pa.getStateProvince()));
+            }
+        }
         return queryParams;
     }
 

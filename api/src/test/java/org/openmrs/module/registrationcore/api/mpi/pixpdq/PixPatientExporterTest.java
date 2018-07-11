@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.test.Verifies;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -124,10 +125,10 @@ public class PixPatientExporterTest {
 	/**
 	 * @see {@link PixPatientExporter#exportPatient(Patient)}
 	 */
-	@Test
-	@Verifies(value = "should export patient to the mpi and retrieve the patient from the mpi",
+	@Test (expected = MpiException.class)
+	@Verifies(value = "should fail to export patient to the mpi",
 			  method = "exportPatient(Patient)")
-	public void exportPatient_shouldExportPatientAndRetrievePatient() throws Exception {
+	public void exportPatient_shouldFailExportPatient() throws Exception {
 		Patient patient1 = new Patient();
 		patient1.addName(new PersonName("Johny", null, "Smith"));
 		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
