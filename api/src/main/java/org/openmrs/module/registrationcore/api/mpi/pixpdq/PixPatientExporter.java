@@ -44,7 +44,7 @@ public class PixPatientExporter implements MpiPatientExporter {
 		        throw new MpiException("Patient with that identifier is already present on MPI. "
 				        + "Unable to create patient");
 	        }
-
+	        
             Message admitMessage = pixPdqMessageUtil.createAdmit(patient);
             Message response = hl7SenderHolder.getHl7v2Sender().sendPixMessage(admitMessage);
 

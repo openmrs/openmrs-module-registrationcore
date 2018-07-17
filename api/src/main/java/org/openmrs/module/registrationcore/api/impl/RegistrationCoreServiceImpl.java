@@ -41,7 +41,6 @@ import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
-import org.openmrs.module.registrationcore.api.biometrics.model.BiometricMatch;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
@@ -71,8 +70,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * It is a default implementation of {@link RegistrationCoreService}.
@@ -103,10 +100,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Autowired
 	@Qualifier("registrationcore.mpiProperties")
 	private MpiProperties mpiProperties;
-
-	@Autowired
-	@Qualifier("registrationcore.identifierBuilder")
-	private IdentifierBuilder identifierBuilder;
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -248,6 +241,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		patient = patientService.savePatient(patient);
 
+		Context.flushSession(); // Prevents null pointer exception when trying to retrieve patient from the database before it is done being saved.
+		log.error("in Register Patient Context has been flushed immediately after savePatient");
+
 		List<Relationship> relationships = registrationData.getRelationships();
 		ArrayList<String> relationshipUuids = new ArrayList<String>();
 		for (Relationship relationship : relationships) {
@@ -275,6 +271,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		DateFormat df = new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING);
 
+		Patient verifypatient = patientService.getPatientByUuid(patient.getUuid());
+		if (verifypatient != null){
+			log.error("At the time of creating the message The patient exists in the DB SUCCESS!");
+		}else{
+			log.error("At the time of creating the message The patient does not exist in the DB FAILURE!");
+		}
+
 		EventMessage eventMessage = new EventMessage();
 		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
@@ -284,7 +287,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (!relationshipUuids.isEmpty()) {
 			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
 		}
-
 		Event.fireEvent(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, eventMessage);
 
 		return patient;
@@ -521,7 +523,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 	}
 
-	/*@Override
+	/*
+	// Functionality for saving a patient from SHR
+	// Not yet implemented
+	@Override
 	public Integer importCcd(Patient patient) {
 		Integer ccdId = null;
 		try {

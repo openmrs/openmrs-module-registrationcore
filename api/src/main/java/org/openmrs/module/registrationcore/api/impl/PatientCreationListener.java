@@ -58,26 +58,29 @@ public class PatientCreationListener extends PatientActionListener {
     @Override
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);
-    
-        String personId = null;
-        try {
-            personId = pushPatientToMpiServer(patient);
-        } catch (Exception e) {
-            ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
-            if (errorHandler == null) {
-                throw new MpiException("PIX patient push exception occurred "
-                        + "with not configured PIX error handler", e);
-            } else {
-                errorHandler.handle(prepareParameters(patient),
-                        PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_CREATION_DESTINATION,
-                        true,
-                        ExceptionUtils.getFullStackTrace(e));
-	            throw new MpiException("PIX patient push exception occurred", e);
+        if (patient != null){
+            String personId = null;
+            try {
+                personId = pushPatientToMpiServer(patient);
+            } catch (Exception e) {
+                ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
+                if (errorHandler == null) {
+                    throw new MpiException("PIX patient push exception occurred "
+                            + "with not configured PIX error handler", e);
+                } else {
+                    errorHandler.handle(prepareParameters(patient),
+                            PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_CREATION_DESTINATION,
+                            true,
+                            ExceptionUtils.getFullStackTrace(e));
+                    throw new MpiException("PIX patient push exception occurred", e);
+                }
             }
-        }
-        
-        if (personId != null) {
-            updatePatient(patient, message, personId);
+
+            if (personId != null) {
+                updatePatient(patient, message, personId);
+            }
+        }else{
+            throw new MpiException("PeformMpiAction error: extractPatient returned null patient");
         }
     }
 

@@ -24,10 +24,20 @@ public final class RegistrationCoreConstants {
 
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
 
+	/**
+	 * This constant PATIENT_REGISTRATION_EVENT_TOPIC_NAME is hardcoded into the coreapps module in the
+	 * EditPatientIdentifierFragmentController, thus removing coreapps dependency on registrationcore.
+	 * However, if it is changed here remember to change it in coreapps as well.
+	 */
 	public static final String PATIENT_REGISTRATION_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.PatientRegistrationEvent";
 
 	public static final String PATIENT_EDIT_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.PatientEditEvent";
 
+	/**
+	 * This constant KEY_PATIENT_UUID is hardcoded into the coreapps module in the
+	 * EditPatientIdentifierFragmentController, thus removing coreapps dependency on registrationcore.
+	 * However, if it is changed here remember to change it in coreapps as well.
+	 */
 	public static final String KEY_PATIENT_UUID = "patientUuid";
 
 	public static final String KEY_RELATIONSHIP_UUIDS = "relationshipUuids";

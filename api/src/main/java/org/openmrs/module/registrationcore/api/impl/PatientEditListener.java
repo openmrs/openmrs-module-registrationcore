@@ -42,10 +42,8 @@ public class PatientEditListener extends PatientActionListener {
         } catch (Exception e) {
             ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
             if (errorHandler == null) {
-                LOGGER.error("PIX patient push exception occurred "
+                throw new MpiException("PIX patient update exception occurred "
                         + "with not configured PIX error handler", e);
-//                throw new MpiException("PIX patient update exception occurred "
-//                        + "with not configured PIX error handler", e);
             } else {
                 LOGGER.error("PIX patient update exception occurred", e);
                 errorHandler.handle(prepareParameters(patient),

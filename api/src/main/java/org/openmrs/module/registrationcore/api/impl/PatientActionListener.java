@@ -1,6 +1,9 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import java.io.IOException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
@@ -19,6 +22,7 @@ import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpi
  * Abstract class for event listening.
  */
 public abstract class PatientActionListener implements EventListener {
+    protected final Log log = LogFactory.getLog(this.getClass());
 
     protected RegistrationCoreProperties coreProperties;
 
@@ -59,9 +63,7 @@ public abstract class PatientActionListener implements EventListener {
 
     protected Patient extractPatient(Message message) {
         validateMessage(message);
-
         String patientUuid = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_PATIENT_UUID);
-
         return getPatient(patientUuid);
     }
 
@@ -84,12 +86,18 @@ public abstract class PatientActionListener implements EventListener {
     }
 
     private void validateMessage(Message message) {
-        if (!(message instanceof MapMessage))
+        if (!(message instanceof MapMessage)){
             throw new APIException("Event message should be MapMessage, but it isn't");
+        }
     }
 
     private Patient getPatient(String patientUuid) {
         Patient patient = patientService.getPatientByUuid(patientUuid);
+        if (patient != null){
+            log.error("in getPatient in PatienActionListener The patient exists in the DB SUCCESS!");
+        }else{
+            log.error("in getPatient in PatienActionListener The patient does not exist in the DB FAILURE!");
+        }
         return patient;
     }
 }

@@ -120,6 +120,15 @@ public class PixPdqContextSensitiveTest extends BaseModuleContextSensitiveTest {
 	public void patientToQPD3Params_ContextSensitiveShouldReturnQPD3Params() throws Exception {
 		List<Map.Entry<String, String>>  result = pixPdqMessageUtil.patientToQPD3Params(patientService.getPatient(99));
 		assertEquals(14, result.size());
+		//PipeParser parser = new PipeParser();
+		//String result2 = parser.encode(pixPdqMessageUtil.createPdqMessage(result));
+		//String result3 = parser.encode(pixPdqMessageUtil.createPdqMessage(result, patientService.getPatientIdentifierType(3).getUuid()));
+	}
+
+	@Test
+	public void patientToQPD3Params_ContextSensitiveShouldHandleBlankDemographics() throws Exception {
+		List<Map.Entry<String, String>>  result = pixPdqMessageUtil.patientToQPD3Params(patientService.getPatient(100));
+		assertEquals(9, result.size());
 	}
 
 	@Test

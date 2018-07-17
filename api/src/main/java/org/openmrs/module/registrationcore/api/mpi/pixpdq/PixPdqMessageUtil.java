@@ -122,7 +122,8 @@ public class PixPdqMessageUtil {
         if(identifiers != null && !identifiers.isEmpty()){
             for (PatientIdentifier patIdentifier : identifiers) {
                 String mappedMpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
-                if (mappedMpiUuid != null) {
+                if (patIdentifier.getIdentifier() != null && !patIdentifier.getIdentifier().isEmpty()
+                        && mappedMpiUuid != null && !mappedMpiUuid.isEmpty()) {
                     // We need to change the datatype so that it can have multiple with the same key
                     queryParams.add(new AbstractMap.SimpleEntry("@PID.3.1", patIdentifier.getIdentifier()));
                     queryParams.add(new AbstractMap.SimpleEntry("@PID.3.4", mappedMpiUuid));
@@ -147,33 +148,32 @@ public class PixPdqMessageUtil {
         // Add Address to query
         if (!patient.getAddresses().isEmpty()){
             PersonAddress pa = patient.getAddresses().iterator().next();
-            if(pa.getAddress1() != null)
+            if(pa.getAddress1() != null && !pa.getAddress1().isEmpty())
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.1", pa.getAddress1()));
-            if(pa.getAddress2() != null && pa.getAddress3() != null){
+            if(pa.getAddress2() != null && !pa.getAddress2().isEmpty()
+                && pa.getAddress3() != null && !pa.getAddress3().isEmpty()){
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.2", pa.getAddress2() + " " + pa.getAddress3()));
-            }else if (pa.getAddress2() != null){
+            }else if (pa.getAddress2() != null && !pa.getAddress2().isEmpty()){
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.2", pa.getAddress2()));
             }
-            if(pa.getCityVillage() != null) {
+            if(pa.getCityVillage() != null && !pa.getCityVillage().isEmpty()) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.3", pa.getCityVillage()));
             }
-            if(pa.getCountry() != null) {
+            if(pa.getCountry() != null && !pa.getCountry().isEmpty()) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.6", pa.getCountry()));
             }
-            if(pa.getCountyDistrict() != null) {
+            if(pa.getCountyDistrict() != null && !pa.getCountyDistrict().isEmpty()) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.9", pa.getCountyDistrict()));
             }
-            if(pa.getPostalCode() != null) {
+            if(pa.getPostalCode() != null && !pa.getPostalCode().isEmpty()) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.5", pa.getPostalCode()));
             }
-            if(pa.getStateProvince() != null) {
+            if(pa.getStateProvince() != null && !pa.getStateProvince().isEmpty()) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.4", pa.getStateProvince()));
             }
         }
         return queryParams;
     }
-
-
 
     private void updateMSH(MSH msh, String messageCode, String triggerEvent) throws DataTypeException {
         msh.getFieldSeparator().setValue("|");
