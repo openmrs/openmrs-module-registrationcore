@@ -48,6 +48,15 @@
         <property name="patientService" ref="patientService"/>
     </bean>
 
+    <bean id="registrationcore.patientListener"
+          class="org.openmrs.module.registrationcore.api.impl.PatientListener" init-method="init">
+        <property name="coreProperties" ref="registrationcore.coreProperties"/>
+        <property name="patientService" ref="patientService"/>
+        <property name="mpiProperties" ref="registrationcore.mpiProperties"/>
+        <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
+        <property name="userService" ref="userService"/>
+    </bean>
+
     <bean id="registrationcore.coreProperties"
           class="org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties"/>
 

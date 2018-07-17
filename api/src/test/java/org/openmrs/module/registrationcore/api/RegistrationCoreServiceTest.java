@@ -23,6 +23,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.Person;
+import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.AdministrationService;
@@ -37,6 +38,7 @@ import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
+import org.openmrs.module.registrationcore.api.impl.PatientListener;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,7 +47,9 @@ import org.springframework.test.annotation.NotTransactional;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +82,9 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	
 	@Before
 	public void before() throws Exception {
+		executeDataSet("identifiers_dataset.xml");
+		executeDataSet("mpi_global_properties_dataset.xml");
+		executeDataSet("patients_dataset.xml");
 		executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
 		service = Context.getService(RegistrationCoreService.class);
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
@@ -192,6 +199,40 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 		}
 		assertEquals(relationshipUuids, listener.getRelationshipUuids());
 	}
+
+//	/**
+//	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
+//	 */
+//	@Test
+//	@Verifies(value = "should fire an event when a patient is saved", method = "registerPatient(Patient,List<Relationship>)")
+//	public void registerPatient_shouldFireAnOpenmrsObjectEventWhenAPatientIsRegistered() throws Exception {
+//
+////		Event event = new Event();
+////		PatientListener listener = new PatientListener();
+////		event.setSubscription(listener);
+//
+//		Patient patient1 = new Patient();
+//		patient1.addName(new PersonName("Johny", "Apple", "Smith"));
+//		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
+//		patient1.setBirthdate(date);
+//		patient1.setGender("M");
+//		PersonAddress personAddress = new PersonAddress();
+//		personAddress.setCountry("TesT");
+//		personAddress.setCityVillage("TeSt2");
+//		personAddress.setCountyDistrict("Test3");
+//		patient1.addAddress(personAddress);
+//		PatientIdentifier identifier = new PatientIdentifier();
+//		identifier.setIdentifier("ABCD1234");
+//		identifier.setIdentifierType(patientService.getPatientIdentifierType(3));
+//		Location location = new Location();
+//		location.setId(1);
+//		identifier.setLocation(location);
+//		patient1.addIdentifier(identifier);
+//
+//		Patient patient = patientService.savePatient(patient1);
+//
+//		TimeUnit.SECONDS.sleep(4);
+//	}
 	
 	/**
 	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}

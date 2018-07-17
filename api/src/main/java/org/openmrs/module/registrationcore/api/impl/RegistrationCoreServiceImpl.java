@@ -34,6 +34,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.event.Event;
 import org.openmrs.event.EventMessage;
+import org.openmrs.event.api.db.hibernate.HibernateEventInterceptor;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
@@ -96,6 +97,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private MpiPatientFilter mpiPatientFilter;
 
 	private RegistrationCoreProperties registrationCoreProperties;
+
+	private HibernateEventInterceptor hibernateEventInterceptor;
 
 	@Autowired
 	@Qualifier("registrationcore.mpiProperties")
@@ -241,6 +244,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		patient = patientService.savePatient(patient);
 
+		//hibernateEventInterceptor.onSave(patient,null,null,null,null);
+		//hibernateEventInterceptor.afterTransactionCompletion();
 		Context.flushSession(); // Prevents null pointer exception when trying to retrieve patient from the database before it is done being saved.
 		log.error("in Register Patient Context has been flushed immediately after savePatient");
 
@@ -269,25 +274,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			throw new APIException("registrationapp.biometrics.errorContactingBiometricsServer", e);
 		}
 
-		DateFormat df = new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING);
-
-		Patient verifypatient = patientService.getPatientByUuid(patient.getUuid());
-		if (verifypatient != null){
-			log.error("At the time of creating the message The patient exists in the DB SUCCESS!");
-		}else{
-			log.error("At the time of creating the message The patient does not exist in the DB FAILURE!");
-		}
-
-		EventMessage eventMessage = new EventMessage();
-		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
-		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
-		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, patient.getCreator().getId());
-		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, df.format(patient.getDateCreated()));
-		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
-		if (!relationshipUuids.isEmpty()) {
-			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
-		}
-		Event.fireEvent(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, eventMessage);
+//		DateFormat df = new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING);
+//		EventMessage eventMessage = new EventMessage();
+//		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
+//		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
+//		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, patient.getCreator().getId());
+//		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, df.format(patient.getDateCreated()));
+//		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
+//		if (!relationshipUuids.isEmpty()) {
+//			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
+//		}
+//		Event.fireEvent(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, eventMessage);
 
 		return patient;
 	}
