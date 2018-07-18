@@ -12,20 +12,24 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class listen for patient edit event.
  * If MPI is enabled it performs update patient in MPI.
  */
-public class PatientEditListener extends PatientActionListener {
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(PatientCreationListener.class);
-    
+public class PatientUpdatedListener extends PatientActionListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientUpdatedListener.class);
+
     /**
-     * Subscribes for patient edit event.
+     * @return a list of Actions this listener can deal with
      */
-    public void init() {
-        Event.subscribe(RegistrationCoreConstants.PATIENT_EDIT_EVENT_TOPIC_NAME, this);
+    public List<String> subscribeToActions(){
+        List actions = new ArrayList<String>();
+        actions.add(Event.Action.UPDATED.name());
+        return actions;
     }
 
     /**

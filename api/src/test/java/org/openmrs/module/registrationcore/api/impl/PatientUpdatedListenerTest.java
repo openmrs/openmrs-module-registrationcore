@@ -17,11 +17,11 @@ import javax.jms.Message;
 
 import static org.mockito.Mockito.*;
 
-public class PatientEditListenerTest {
+public class PatientUpdatedListenerTest {
 
     private static final String PATIENT_UUID_EXAMPLE = "af7c3340-0503-11e3-8ffd-0800200c9a66";
 
-    @InjectMocks private PatientEditListener patientEditListener;
+    @InjectMocks private PatientUpdatedListener patientUpdatedListener;
     @Mock private PatientService patientService;
     @Mock private RegistrationCoreProperties coreProperties;
     @Mock private MpiProvider mpiProvider;
@@ -43,7 +43,7 @@ public class PatientEditListenerTest {
         when(mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID)).thenReturn(PATIENT_UUID_EXAMPLE);
         when(patientService.getPatientByUuid(PATIENT_UUID_EXAMPLE)).thenReturn(patient);
 
-        patientEditListener.onMessage(message);
+        patientUpdatedListener.onMessage(message);
 
         verify(mpiProvider).updatePatient(patient);
     }
@@ -53,7 +53,7 @@ public class PatientEditListenerTest {
     public void testDoNotPerformUpdateOnMpiDisabled() throws Exception {
         when(coreProperties.isMpiEnabled()).thenReturn(false);
 
-        patientEditListener.onMessage(message);
+        patientUpdatedListener.onMessage(message);
 
         verify(mpiProvider, never()).updatePatient(patient);
     }

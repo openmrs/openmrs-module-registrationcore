@@ -33,28 +33,18 @@
         <property name="patientService" ref="patientService"/>
     </bean>
 
-    <bean id="registrationcore.patientCreationListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener" init-method="init">
+    <bean id="registrationcore.patientCreatedListener"
+          class="org.openmrs.module.registrationcore.api.impl.PatientCreatedListener" init-method="init">
         <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
         <property name="mpiProperties" ref="registrationcore.mpiProperties"/>
         <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
-        <property name="userService" ref="userService"/>
     </bean>
 
-    <bean id="registrationcore.patientEditListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientEditListener" init-method="init">
+    <bean id="registrationcore.patientUpdatedListener"
+          class="org.openmrs.module.registrationcore.api.impl.PatientUpdatedListener" init-method="init">
         <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
-    </bean>
-
-    <bean id="registrationcore.patientListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientListener" init-method="init">
-        <property name="coreProperties" ref="registrationcore.coreProperties"/>
-        <property name="patientService" ref="patientService"/>
-        <property name="mpiProperties" ref="registrationcore.mpiProperties"/>
-        <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
-        <property name="userService" ref="userService"/>
     </bean>
 
     <bean id="registrationcore.coreProperties"

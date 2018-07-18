@@ -38,17 +38,17 @@ public final class RegistrationCoreConstants {
 	 * EditPatientIdentifierFragmentController, thus removing coreapps dependency on registrationcore.
 	 * However, if it is changed here remember to change it in coreapps as well.
 	 */
-	public static final String KEY_PATIENT_UUID = "patientUuid";
-
-	public static final String KEY_RELATIONSHIP_UUIDS = "relationshipUuids";
-
-	public static final String KEY_REGISTERER_UUID = "registererUuid";
-
-	public static final String KEY_REGISTERER_ID = "registererId";
-
-	public static final String KEY_DATE_REGISTERED = "dateRegistered";
-
-	public static final String KEY_WAS_A_PERSON = "wasAPerson";
+	public static final String KEY_PATIENT_UUID = "uuid";
+//
+//	public static final String KEY_RELATIONSHIP_UUIDS = "relationshipUuids";
+//
+//	public static final String KEY_REGISTERER_UUID = "registererUuid";
+//
+//	public static final String KEY_REGISTERER_ID = "registererId";
+//
+//	public static final String KEY_DATE_REGISTERED = "dateRegistered";
+//
+//	public static final String KEY_WAS_A_PERSON = "wasAPerson";
 
     public static final String GP_PATIENT_NAME_SEARCH = "registrationcore.patientNameSearch";
 

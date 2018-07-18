@@ -5,7 +5,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.User;
-import org.openmrs.api.UserService;
 import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
@@ -15,20 +14,21 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class listen for patient creation event.
  * If MPI is enabled it perform export patient to MPI,
  * and perform update for local patient with new one patient identifier.
  */
-public class PatientCreationListener extends PatientActionListener {
+public class PatientCreatedListener extends PatientActionListener {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(PatientCreationListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientCreatedListener.class);
     
     private MpiProperties mpiProperties;
 
     private IdentifierBuilder identifierBuilder;
-
-    private UserService userService;
 
     public void setMpiProperties(MpiProperties mpiProperties) {
         this.mpiProperties = mpiProperties;
@@ -38,15 +38,13 @@ public class PatientCreationListener extends PatientActionListener {
         this.identifierBuilder = identifierBuilder;
     }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
     /**
-     * Subscribes for patient creation event.
+     * @return a list of Actions this listener can deal with
      */
-    public void init() {
-        Event.subscribe(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, this);
+    public List<String> subscribeToActions(){
+        List actions = new ArrayList<String>();
+        actions.add(Event.Action.CREATED.name());
+        return actions;
     }
 
     /**
@@ -59,9 +57,9 @@ public class PatientCreationListener extends PatientActionListener {
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);
         if (patient != null){
-            String personId = null;
+            String mpiPatientId = null;
             try {
-                personId = pushPatientToMpiServer(patient);
+                mpiPatientId = pushPatientToMpiServer(patient);
             } catch (Exception e) {
                 ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
                 if (errorHandler == null) {
@@ -75,9 +73,8 @@ public class PatientCreationListener extends PatientActionListener {
                     throw new MpiException("PIX patient push exception occurred", e);
                 }
             }
-
-            if (personId != null) {
-                updatePatient(patient, message, personId);
+            if (mpiPatientId != null) {
+                updatePatient(patient, mpiPatientId);
             }
         }else{
             throw new MpiException("PeformMpiAction error: extractPatient returned null patient");
@@ -88,21 +85,16 @@ public class PatientCreationListener extends PatientActionListener {
         return coreProperties.getMpiProvider().exportPatient(patient);
     }
 
-    private void updatePatient(final Patient patient, final Message message, final String personId) {
-        User creator = extractPatientCreator(message);
-        patient.addIdentifier(createPersonIdentifier(creator, personId));
+    private void updatePatient(final Patient patient, final String mpiPatientId) {
+        User creator = patient.getCreator();
+        patient.addIdentifier(createPatientIdentifier(creator, mpiPatientId));
         patientService.savePatient(patient);
     }
 
-    private User extractPatientCreator(Message message) {
-        String creatorUuid = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_REGISTERER_UUID);
-        return userService.getUserByUuid(creatorUuid);
-    }
-
-    private PatientIdentifier createPersonIdentifier(User creator, String personId) {
-        PatientIdentifier personIdentifier = identifierBuilder
-                .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeUuid(), personId, null);
-        personIdentifier.setCreator(creator);
-        return personIdentifier;
+    private PatientIdentifier createPatientIdentifier(User creator, String mpiPatientId) {
+        PatientIdentifier mpiPatientIdentifier = identifierBuilder
+                .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeUuid(), mpiPatientId, null);
+        mpiPatientIdentifier.setCreator(creator);
+        return mpiPatientIdentifier;
     }
 }

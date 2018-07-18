@@ -52,14 +52,6 @@ public class MockRegistrationEventListener extends MockEventListener {
 		MapMessage mapMessage = (MapMessage) message;
 		try {
 			patientUuid = mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID);
-			if (patientUuid != null) {
-				relationshipUuids = (List<String>) mapMessage.getObject(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS);
-				registererUuid = mapMessage.getString(RegistrationCoreConstants.KEY_REGISTERER_UUID);
-				dateRegistered = mapMessage.getString(RegistrationCoreConstants.KEY_DATE_REGISTERED);
-				wasAPerson = mapMessage.getBoolean(RegistrationCoreConstants.KEY_WAS_A_PERSON);
-
-				super.onMessage(message);
-			}
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
@@ -73,34 +65,6 @@ public class MockRegistrationEventListener extends MockEventListener {
 	 */
 	public String getPatientUuid() {
 		return patientUuid;
-	}
-	
-	/**
-	 * @return the relationshipUuids
-	 */
-	public List<String> getRelationshipUuids() {
-		return relationshipUuids;
-	}
-	
-	/**
-	 * @return the registererUuid
-	 */
-	public String getRegistererUuid() {
-		return registererUuid;
-	}
-	
-	/**
-	 * @return the dateRegistered
-	 */
-	public String getDateRegistered() {
-		return dateRegistered;
-	}
-	
-	/**
-	 * @return the wasAPerson
-	 */
-	public Boolean getWasAPerson() {
-		return wasAPerson;
 	}
 	
 }

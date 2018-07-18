@@ -26,13 +26,13 @@ import javax.jms.Message;
 
 import static org.mockito.Mockito.*;
 
-public class PatientCreationListenerTest extends BaseModuleContextSensitiveTest {
+public class PatientCreatedListenerTest extends BaseModuleContextSensitiveTest {
 
     private static final String PATIENT_UUID_EXAMPLE = "af7c3340-0503-11e3-8ffd-0800200c9a66";
     private Integer personId = 123;
 
     @InjectMocks
-    private PatientCreationListener patientCreationListener;
+    private PatientCreatedListener patientCreatedListener;
 
     @Mock
     private PatientService patientService;
@@ -64,14 +64,14 @@ public class PatientCreationListenerTest extends BaseModuleContextSensitiveTest 
 
     @Test(expected = APIException.class)
     public void testThrowApiExceptionOnNotMapMessageInstance() throws Exception {
-        patientCreationListener.onMessage(message);
+        patientCreatedListener.onMessage(message);
     }
 
     @Test(expected = APIException.class)
     @SuppressWarnings("unchecked")
     public void testThrowApiExceptionOnJMSException() throws Exception {
         when(mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID)).thenThrow(JMSException.class);
-        patientCreationListener.onMessage(message);
+        patientCreatedListener.onMessage(message);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class PatientCreationListenerTest extends BaseModuleContextSensitiveTest 
         when(mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID)).thenReturn(PATIENT_UUID_EXAMPLE);
         when(patientService.getPatientByUuid(PATIENT_UUID_EXAMPLE)).thenReturn(patient);
 
-        patientCreationListener.onMessage(mapMessage);
+        patientCreatedListener.onMessage(mapMessage);
 
         verify(mpiProvider).exportPatient(patient);
     }
@@ -90,7 +90,7 @@ public class PatientCreationListenerTest extends BaseModuleContextSensitiveTest 
     public void testDoNotPerformExportIfMpiIsDisabled() throws Exception {
         when(coreProperties.isMpiEnabled()).thenReturn(false);
 
-        patientCreationListener.onMessage(mapMessage);
+        patientCreatedListener.onMessage(mapMessage);
 
         verify(mpiProvider, never()).exportPatient(patient);
     }

@@ -1,15 +1,19 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Daemon;
-import org.openmrs.event.EventListener;
+import org.openmrs.event.Event;
+import org.openmrs.event.SubscribableEventListener;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
@@ -19,9 +23,9 @@ import javax.jms.Message;
 import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpiParameters;
 
 /**
- * Abstract class for event listening.
+ * Abstract class for subscribable event listening.
  */
-public abstract class PatientActionListener implements EventListener {
+public abstract class PatientActionListener implements SubscribableEventListener {
     protected final Log log = LogFactory.getLog(this.getClass());
 
     protected RegistrationCoreProperties coreProperties;
@@ -42,6 +46,14 @@ public abstract class PatientActionListener implements EventListener {
         this.daemonToken = daemonToken;
     }
 
+    /**
+     * Subscribes for Class - Patient and specified Actions event.
+     */
+    public void init() {
+        Event event = new Event();
+        event.setSubscription(this);
+    }
+
     @Override
     public void onMessage(final Message message) {
         Daemon.runInDaemonThread(new Runnable() {
@@ -53,6 +65,19 @@ public abstract class PatientActionListener implements EventListener {
             }
         }, daemonToken);
     }
+    /**
+     * @return a list of classes that this can handle
+     */
+    public List<Class<? extends OpenmrsObject>> subscribeToObjects(){
+        List objects = new ArrayList<Class<? extends OpenmrsObject>>();
+        objects.add(Patient.class);
+        return objects;
+    }
+
+    /**
+     * @return a list of Actions this listener can deal with
+     */
+    public abstract List<String> subscribeToActions();
 
     /**
      * Perform mpi action.
