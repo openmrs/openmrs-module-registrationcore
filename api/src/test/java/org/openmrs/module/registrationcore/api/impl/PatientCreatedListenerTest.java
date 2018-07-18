@@ -70,14 +70,14 @@ public class PatientCreatedListenerTest extends BaseModuleContextSensitiveTest {
     @Test(expected = APIException.class)
     @SuppressWarnings("unchecked")
     public void testThrowApiExceptionOnJMSException() throws Exception {
-        when(mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID)).thenThrow(JMSException.class);
+        when(mapMessage.getString("uuid")).thenThrow(JMSException.class);
         patientCreatedListener.onMessage(message);
     }
 
     @Test
     @Ignore //can't be performed since using static Context.openSession
     public void testPerformExportOfCorrectPatient() throws Exception {
-        when(mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID)).thenReturn(PATIENT_UUID_EXAMPLE);
+        when(mapMessage.getString("uuid")).thenReturn(PATIENT_UUID_EXAMPLE);
         when(patientService.getPatientByUuid(PATIENT_UUID_EXAMPLE)).thenReturn(patient);
 
         patientCreatedListener.onMessage(mapMessage);

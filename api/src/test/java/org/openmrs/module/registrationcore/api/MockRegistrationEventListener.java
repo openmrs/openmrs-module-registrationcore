@@ -51,7 +51,7 @@ public class MockRegistrationEventListener extends MockEventListener {
 	public void onMessage(Message message) {
 		MapMessage mapMessage = (MapMessage) message;
 		try {
-			patientUuid = mapMessage.getString(RegistrationCoreConstants.KEY_PATIENT_UUID);
+			patientUuid = mapMessage.getString("uuid");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());

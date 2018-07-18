@@ -88,7 +88,7 @@ public abstract class PatientActionListener implements SubscribableEventListener
 
     protected Patient extractPatient(Message message) {
         validateMessage(message);
-        String patientUuid = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_PATIENT_UUID);
+        String patientUuid = getMessagePropertyValue(message, "uuid"); // Property name referenced from org.openmrs.event.EventEngine.fireEvent(javax.jms.Destination, java.lang.Object)
         return getPatient(patientUuid);
     }
 
@@ -118,10 +118,8 @@ public abstract class PatientActionListener implements SubscribableEventListener
 
     private Patient getPatient(String patientUuid) {
         Patient patient = patientService.getPatientByUuid(patientUuid);
-        if (patient != null){
-            log.error("in getPatient in PatienActionListener The patient exists in the DB SUCCESS!");
-        }else{
-            log.error("in getPatient in PatienActionListener The patient does not exist in the DB FAILURE!");
+        if (patient == null){
+            log.error("Unable to retrieve patient by uuid");
         }
         return patient;
     }

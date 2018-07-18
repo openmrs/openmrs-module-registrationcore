@@ -346,10 +346,13 @@ public class PixPdqMessageUtil {
         PatientIdentifierType identifierType = patientService.getPatientIdentifierTypeByUuid(identifierTypeUuid);
 		List<Patient> retVal = new ArrayList<Patient>();
 
+        patientloop:
 		for (Patient p : patients){
-		    if (p.getPatientIdentifier(identifierType)!= null){
-                if (p.getPatientIdentifier(identifierType).getIdentifier().equals(identifier)){
+		    for (PatientIdentifier id :p.getIdentifiers()){
+		        if (id.getIdentifier().equals(identifier) &&
+                        id.getIdentifierType().equals(identifierType)){
                     retVal.add(p);
+                    break patientloop;
                 }
             }
 		}
