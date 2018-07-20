@@ -15,7 +15,6 @@ import org.openmrs.api.context.Daemon;
 import org.openmrs.event.Event;
 import org.openmrs.event.SubscribableEventListener;
 import org.openmrs.module.DaemonToken;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
