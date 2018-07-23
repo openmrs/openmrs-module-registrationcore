@@ -1,6 +1,5 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
-import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v25.message.ADT_A01;
 import org.junit.Before;
 import org.junit.Test;

@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.registrationcore.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.MapMessage;
@@ -20,51 +21,37 @@ import javax.jms.Message;
 
 import junit.framework.Assert;
 
+import org.openmrs.OpenmrsObject;
+import org.openmrs.Patient;
+import org.openmrs.event.Event;
 import org.openmrs.event.MockEventListener;
+import org.openmrs.event.SubscribableEventListener;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 
 /**
  * Subclass of {@link MockEventListener} that extracts the patient registration pay load for testing
  * purposes
  */
-public class MockRegistrationEventListener extends MockEventListener {
-	
-	private volatile String patientUuid;
-	
-	private volatile List<String> relationshipUuids;
-	
-	private volatile String registererUuid;
-	
-	private volatile String dateRegistered;
-	
-	private volatile Boolean wasAPerson = Boolean.FALSE;
-	
-	MockRegistrationEventListener(int expectedEventsCount) {
+public class MockSubscribableEventListener extends MockEventListener implements SubscribableEventListener {
+
+	public MockSubscribableEventListener(int expectedEventsCount) {
 		super(expectedEventsCount);
 	}
-	
-	/**
-	 * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void onMessage(Message message) {
-		MapMessage mapMessage = (MapMessage) message;
-		try {
-			patientUuid = mapMessage.getString("uuid");
-		}
-		catch (Exception e) {
-			Assert.fail(e.getMessage());
-		}
 
+	public List<Class<? extends OpenmrsObject>> subscribeToObjects(){
+		List objects = new ArrayList<Class<? extends OpenmrsObject>>();
+		objects.add(Patient.class);
+		return objects;
+	}
 
-	}
-	
 	/**
-	 * @return the patientUuid
+	 * @return a list of Actions this listener can deal with
 	 */
-	public String getPatientUuid() {
-		return patientUuid;
+	public List<String> subscribeToActions(){
+		List actions = new ArrayList<String>();
+		actions.add(Event.Action.CREATED.name());
+		actions.add(Event.Action.UPDATED.name());
+		return actions;
 	}
-	
+
 }

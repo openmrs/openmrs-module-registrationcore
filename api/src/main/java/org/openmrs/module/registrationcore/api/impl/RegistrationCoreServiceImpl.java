@@ -511,6 +511,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}*/
 
 	private String persistImportedMpiPatient(Patient mpiPatient) {
+		// TODO: Fix bug MPI-11 Updating of Locally generated ID in MPI after MPI import not occurring
 		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
 
 		PatientIdentifierType openMrsIdType = patientService.getPatientIdentifierTypeByUuid(openMrsIdTypeUuid);
@@ -518,11 +519,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (mpiPatient.getPatientIdentifier(openMrsIdType) == null) {
 			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
 			mpiPatient.addIdentifier(localId);
-			// If there was no localId originally this first savePatient will trigger the patient CREATED event the second
-			// savePatient will trigger the patient UPDATED event which will update the MPI.
-			patient = patientService.savePatient(mpiPatient);
 		}
-		// If there was already a local ID then it is not necessary to trigger an update to the MPI
 		patient = patientService.savePatient(mpiPatient);
 		return patient.getUuid();
 	}

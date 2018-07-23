@@ -68,7 +68,7 @@ public class PixPdqContextSensitiveTest extends BaseModuleContextSensitiveTest {
 	 * @see {@link PixPatientExporter#exportPatient(Patient)}
 	 */
 	@Test (expected = MpiException.class)
-	@Verifies(value = "should export patient to the mpi and retrieve the patient from the mpi",
+	@Verifies(value = "should not export patient to the mpi",
 			method = "exportPatient(Patient)")
 	public void exportPatient_ContextSensitiveShouldFailExportPatient() throws Exception {
 		Patient patient = patientService.getPatient(99);

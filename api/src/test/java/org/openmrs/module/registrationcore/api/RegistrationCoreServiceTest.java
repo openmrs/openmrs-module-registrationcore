@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.registrationcore.api;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import org.openmrs.LocationTag;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.Person;
+import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.Relationship;
 import org.openmrs.api.AdministrationService;
@@ -42,12 +43,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.annotation.NotTransactional;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 import static org.junit.Assert.*;
 
@@ -171,63 +171,42 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	/**
 	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
 	 */
-//	@Test
-//	@Verifies(value = "should fire an event when a patient is registered", method = "registerPatient(Patient,List<Relationship>)")
-//	public void registerPatient_shouldFireAnEventWhenAPatientIsRegistered() throws Exception {
-//		MockRegistrationEventListener listener = new MockRegistrationEventListener(1);
-//		Event.subscribe(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, listener);
-//
-//		Relationship r1 = new Relationship(null, personService.getPerson(2), personService.getRelationshipType(2));
-//		Relationship r2 = new Relationship(personService.getPerson(7), null, personService.getRelationshipType(2));
-//		Patient createdPatient = service.registerPatient(createBasicPatient(), Arrays.asList(r1, r2), null);
-//
-//		listener.waitForEvents(15, TimeUnit.SECONDS);
-//
-//		assertEquals(createdPatient.getUuid(), listener.getPatientUuid());
-//
-//		List<String> relationshipUuids = new ArrayList<String>();
-//		for (Relationship r : Arrays.asList(r1, r2)) {
-//			relationshipUuids.add(r.getUuid());
-//		}
-//	}
+	@Test
+	@Ignore // Have not been able to get this test to work and for the listener to catch the patient creation event.
+	@Verifies(value = "should fire an event when a patient is saved", method = "registerPatient(Patient,List<Relationship>)")
+	public void registerPatient_shouldFireAnOpenmrsObjectEventWhenAPatientIsRegistered() throws Exception {
 
-//	/**
-//	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
-//	 */
-//	@Test
-//	@Verifies(value = "should fire an event when a patient is saved", method = "registerPatient(Patient,List<Relationship>)")
-//	public void registerPatient_shouldFireAnOpenmrsObjectEventWhenAPatientIsRegistered() throws Exception {
-//
-////		Event event = new Event();
-////		event.setSubscription(listener);
-//
-//		Patient patient1 = new Patient();
-//		patient1.addName(new PersonName("Johny", "Apple", "Smith"));
-//		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
-//		patient1.setBirthdate(date);
-//		patient1.setGender("M");
-//		PersonAddress personAddress = new PersonAddress();
-//		personAddress.setCountry("TesT");
-//		personAddress.setCityVillage("TeSt2");
-//		personAddress.setCountyDistrict("Test3");
-//		patient1.addAddress(personAddress);
-//		PatientIdentifier identifier = new PatientIdentifier();
-//		identifier.setIdentifier("ABCD1234");
-//		identifier.setIdentifierType(patientService.getPatientIdentifierType(3));
-//		Location location = new Location();
-//		location.setId(1);
-//		identifier.setLocation(location);
-//		patient1.addIdentifier(identifier);
-//
-//		Patient patient = patientService.savePatient(patient1);
-//
-//		TimeUnit.SECONDS.sleep(4);
-//	}
+		Event event = new Event();
+		MockSubscribableEventListener listener = new MockSubscribableEventListener(1);
+		event.setSubscription(listener);
+
+		Patient patient1 = new Patient();
+		patient1.addName(new PersonName("Johny", "Apple", "Smith"));
+		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
+		patient1.setBirthdate(date);
+		patient1.setGender("M");
+		PersonAddress personAddress = new PersonAddress();
+		personAddress.setCountry("TesT");
+		personAddress.setCityVillage("TeSt2");
+		personAddress.setCountyDistrict("Test3");
+		patient1.addAddress(personAddress);
+		PatientIdentifier identifier = new PatientIdentifier();
+		identifier.setIdentifier("ABCD1234");
+		identifier.setIdentifierType(patientService.getPatientIdentifierType(3));
+		Location location = new Location();
+		location.setId(1);
+		identifier.setLocation(location);
+		patient1.addIdentifier(identifier);
+
+		Patient patient = patientService.savePatient(patient1);
+		listener.waitForEvents();
+		Assert.assertEquals(1, listener.getCreatedCount());
+	}
 	
-//	/**
-//	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
-//     * This needs to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
-//	 */
+	/**
+	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
+     * This needs to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
+	 */
 //	@Test
 //	@Ignore
 //	@Verifies(value = "should set wasPerson field to true for an existing person on the registration event", method = "registerPatient(Patient,List<Relationship>)")
