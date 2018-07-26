@@ -5,18 +5,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.UserService;
-import org.openmrs.module.DaemonToken;
-import org.openmrs.module.ModuleFactory;
-import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -26,7 +22,7 @@ import javax.jms.Message;
 
 import static org.mockito.Mockito.*;
 
-public class PatientCreatedListenerTest extends BaseModuleContextSensitiveTest {
+public class PatientCreatedListenerTest extends RegistrationCoreSensitiveTestBase {
 
     private static final String PATIENT_UUID_EXAMPLE = "af7c3340-0503-11e3-8ffd-0800200c9a66";
     private Integer personId = 123;
