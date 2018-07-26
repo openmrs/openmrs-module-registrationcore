@@ -419,15 +419,15 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	@Override
-	public String importMpiPatient(String personId) {
+	public Patient importMpiPatient(String personId) {
 		return importMpiPatient(personId, mpiProperties.getMpiPersonIdentifierTypeUuid());
 	}
 
 	@Override
-	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
+	public Patient importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
 		Patient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
 
-		String savedPatientUuid = null;
+		Patient savedPatient = null;
 		try {
 			if (foundPatient == null) {
 				throw new MpiException(String.format(
@@ -435,13 +435,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 								+ "Patient ID: %s of identifier type: %s has not been found in MPI",
 						patientIdentifier, patientIdentifierTypeUuid));
 			}
-			savedPatientUuid = persistImportedMpiPatient(foundPatient);
+			savedPatient = persistImportedMpiPatient(foundPatient);
 		} catch (RuntimeException e) {
 			servePdqExceptionAndThrowAgain(e,
 					prepareParameters(patientIdentifier, patientIdentifierTypeUuid),
 					PdqErrorHandlingService.PERSIST_MPI_PATIENT_DESTINATION);
 		}
-		return savedPatientUuid;
+		return savedPatient;
 	}
 
 	private void servePdqExceptionAndThrowAgain(RuntimeException e, String message,
@@ -496,21 +496,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 	}
 
-	/*
-	// Functionality for saving a patient from SHR
-	// Not yet implemented
-	@Override
-	public Integer importCcd(Patient patient) {
-		Integer ccdId = null;
-		try {
-			ccdId = xdsCcdImporter.downloadAndSaveCcd(patient).getId();
-		} catch (Exception e) {
-			log.error(e);
-		}
-		return ccdId;
-	}*/
-
-	private String persistImportedMpiPatient(Patient mpiPatient) {
+	private Patient persistImportedMpiPatient(Patient mpiPatient) {
 		// TODO: Fix bug MPI-11 Updating of Locally generated ID in MPI after MPI import not occurring
 		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
 
@@ -521,7 +507,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			mpiPatient.addIdentifier(localId);
 		}
 		patient = patientService.savePatient(mpiPatient);
-		return patient.getUuid();
+		return patient;
 	}
 
 	private IdentifierSourceService getIssAndUpdateIdSource() {

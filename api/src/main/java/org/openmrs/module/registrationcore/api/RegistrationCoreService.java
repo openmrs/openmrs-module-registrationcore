@@ -157,9 +157,9 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * and save that patient to local DB.
      *
 	 * @param personId person identifier of patient which should be imported
-	 * @return uuid of imported patient
+	 * @return Imported patient
 	 */
-	String importMpiPatient(String personId);
+	Patient importMpiPatient(String personId);
 
 	/**
 	 * Query to MPI server to find patient with Id "patientIdentifier" and specific patient identifier type
@@ -167,9 +167,9 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 *
 	 * @param patientIdentifier person identifier of patient which should be imported
 	 * @param patientIdentifierTypeUuid identifier type uuid of given patientId
-	 * @return uuid of imported patient
+	 * @return Imported patient
 	 */
-	String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid);
+	Patient importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid);
 
 	/**
 	 * @return the engine used for biometric operations, if one is enabled

@@ -119,7 +119,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
         OpenEmpiPatientResult mpiPatient = marshaller.getQuery(PATIENT_WITHOUT_OPENMRS_ID);
         mockMpiResponse(mpiPatient);
 
-        String uuid = service.importMpiPatient(MPI_PERSON_ID);
+        String uuid = service.importMpiPatient(MPI_PERSON_ID).getUuid();
 
         verifyRemoteMpiServerQuerying();
         Patient savedPatient = patientService.getPatientByUuid(uuid);
@@ -178,7 +178,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
         OpenEmpiPatientResult mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
         mockMpiResponse(mpiPatient);
 
-        String uuid = service.importMpiPatient(MPI_PERSON_ID);
+        String uuid = service.importMpiPatient(MPI_PERSON_ID).getUuid();
 
         verifyRemoteMpiServerQuerying();
         Patient savedPatient = patientService.getPatientByUuid(uuid);
