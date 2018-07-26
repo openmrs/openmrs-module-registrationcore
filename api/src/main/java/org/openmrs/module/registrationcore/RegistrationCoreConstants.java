@@ -20,7 +20,7 @@ public final class RegistrationCoreConstants {
 	 */
 	public static final String GP_OPENMRS_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
 
-	public static final String GP_OPENMRS_IDENTIFIER_UUID = "registrationcore.openmrsIdenitfier.uuid";
+	public static final String GP_OPENMRS_IDENTIFIER_UUID = "registrationcore.openmrsIdentifier.uuid";
 
     public static final String GP_PATIENT_NAME_SEARCH = "registrationcore.patientNameSearch";
 
