@@ -203,8 +203,8 @@ public class PixPdqMessageUtil {
      * @return
      * @throws HL7Exception
      */
-    public List<Patient> interpretPIDSegments (Message response) throws HL7Exception, ParseException {
-        List<Patient> retVal = new ArrayList<Patient>();
+    public List<MpiPatient> interpretPIDSegments (Message response) throws HL7Exception, ParseException {
+        List<MpiPatient> retVal = new ArrayList<MpiPatient>();
 
         Terser terser = new Terser(response);
         // Check for AA and OK in QAK
@@ -220,7 +220,7 @@ public class PixPdqMessageUtil {
             Group queryResponseGroup = (Group)queryResponseStruct;
             for (Structure pidStruct : queryResponseGroup.getAll("PID")) {
                 PID pid = (PID)pidStruct;
-                Patient patient = new MpiPatient();
+                MpiPatient patient = new MpiPatient();
                 // Attempt to load a patient by identifier
                 for (CX id : pid.getPatientIdentifierList()) {
 
@@ -338,16 +338,16 @@ public class PixPdqMessageUtil {
     }
 
 	/**
-	 * Filter list of patients for patients with a specific identifier for a specific identifier type
+	 * Filter list of mpiPatients for mpiPatients with a specific identifier for a specific identifier type
 	 */
-	public List<Patient> filterByIdentifierAndIdentifierType (  List<Patient> patients,
+	public List<MpiPatient> filterByIdentifierAndIdentifierType (  List<MpiPatient> patients,
 																String identifier,
 																String identifierTypeUuid){
         PatientIdentifierType identifierType = patientService.getPatientIdentifierTypeByUuid(identifierTypeUuid);
-		List<Patient> retVal = new ArrayList<Patient>();
+		List<MpiPatient> retVal = new ArrayList<MpiPatient>();
 
         patientloop:
-		for (Patient p : patients){
+		for (MpiPatient p : patients){
 		    for (PatientIdentifier id :p.getIdentifiers()){
 		        if (id.getIdentifier().equals(identifier) &&
                         id.getIdentifierType().equals(identifierType)){

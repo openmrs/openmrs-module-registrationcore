@@ -41,7 +41,7 @@ public class OpenEmpiConnectorTest {
     @Test
     public void testImportMpiPatient() throws Exception {
         mockAuthentication(false);
-        Patient mockPatient = mock(Patient.class);
+        MpiPatient mockPatient = mock(MpiPatient.class);
         when(patientImporter.fetchMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
 
         Patient patient = mpiProvider.fetchMpiPatient(PATIENT_ID);
@@ -54,7 +54,7 @@ public class OpenEmpiConnectorTest {
     @Test
     public void testImportDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
         mockAuthentication(true);
-        Patient mockPatient = mock(Patient.class);
+        MpiPatient mockPatient = mock(MpiPatient.class);
         when(patientImporter.fetchMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
 
         mpiProvider.fetchMpiPatient(PATIENT_ID);

@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class OpenEmpiPatientSearchAlgorithmTest {
 
     @Mock private Patient patient;
     @Mock private OpenEmpiPatientResult patientQuery;
-    @Mock private Patient mpiPatient;
+    @Mock private MpiPatient mpiPatient;
 
     @Before
     public void setUp() throws Exception {

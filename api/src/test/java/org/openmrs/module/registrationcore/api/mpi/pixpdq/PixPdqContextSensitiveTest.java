@@ -12,6 +12,7 @@ import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import ca.uhn.hl7v2.parser.PipeParser;
@@ -83,7 +84,7 @@ public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBas
 	@Test
 	public void interpretPIDSegments_ContextSensitiveShouldReturnPatient() throws Exception {
 		Patient patient = patientService.getPatient(99);
-		List<Patient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(PDQ_RESPONSE);
+		List<MpiPatient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(PDQ_RESPONSE);
 
 		assertEquals(patient.getIdentifiers().toString(), mpiPatients.get(0).getIdentifiers().toString());
 		assertEquals(patient.getAddresses().toString(), mpiPatients.get(0).getAddresses().toString());
@@ -93,11 +94,11 @@ public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBas
 
 	@Test
 	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnEmptyList() throws Exception {
-		List<Patient> inputList = new ArrayList<Patient>();
-		inputList.add(patientService.getPatient(100));
-		inputList.add(patientService.getPatient(101));
-		inputList.add(patientService.getPatient(102));
-		List<Patient> resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
+		List<MpiPatient> inputList = new ArrayList<MpiPatient>();
+		inputList.add((MpiPatient) patientService.getPatient(100));
+		inputList.add((MpiPatient) patientService.getPatient(101));
+		inputList.add((MpiPatient) patientService.getPatient(102));
+		List<MpiPatient> resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
 						inputList, "1000X1",
 						patientService.getPatientIdentifierType(3).getUuid());
 		assertEquals(true, resultList.isEmpty());
@@ -105,12 +106,12 @@ public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBas
 
 	@Test
 	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnPatient() throws Exception {
-		List<Patient> inputList = new ArrayList<Patient>();
-		inputList.add(patientService.getPatient(99));
-		inputList.add(patientService.getPatient(100));
-		inputList.add(patientService.getPatient(101));
-		inputList.add(patientService.getPatient(102));
-		List<Patient> resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
+		List<MpiPatient> inputList = new ArrayList<MpiPatient>();
+		inputList.add((MpiPatient) patientService.getPatient(99));
+		inputList.add((MpiPatient) patientService.getPatient(100));
+		inputList.add((MpiPatient) patientService.getPatient(101));
+		inputList.add((MpiPatient) patientService.getPatient(102));
+		List<MpiPatient> resultList = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(
 				inputList, "1000X1",
 				patientService.getPatientIdentifierType(3).getUuid());
 		assertEquals(1, resultList.size());
@@ -120,9 +121,6 @@ public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBas
 	public void patientToQPD3Params_ContextSensitiveShouldReturnQPD3Params() throws Exception {
 		List<Map.Entry<String, String>>  result = pixPdqMessageUtil.patientToQPD3Params(patientService.getPatient(99));
 		assertEquals(14, result.size());
-		//PipeParser parser = new PipeParser();
-		//String result2 = parser.encode(pixPdqMessageUtil.createPdqMessage(result));
-		//String result3 = parser.encode(pixPdqMessageUtil.createPdqMessage(result, patientService.getPatientIdentifierType(3).getUuid()));
 	}
 
 	@Test

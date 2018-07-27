@@ -22,6 +22,7 @@ import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.io.IOException;
@@ -150,7 +151,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @param identifierTypeUuid person identifier type of patient which will be found
 	 * @return found patient
 	 */
-	Patient findMpiPatient(String identifier, String identifierTypeUuid);
+	MpiPatient findMpiPatient(String identifier, String identifierTypeUuid);
 
 	/**
 	 * Query to MPI server to find patient with Id "patientId"
@@ -174,14 +175,21 @@ public interface RegistrationCoreService extends OpenmrsService {
 	/**
 	 * @return the engine used for biometric operations, if one is enabled
 	 */
-
 	BiometricEngine getBiometricEngine();
 
 	/**
-	 * Enrolls the given biometric data
+	 * Saves the given biometric data to the specified patient.
+	 *
+	 * @param patient patient to save biometric data to
+	 * @param biometricData biometric data to save to the patient
 	 */
-
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
 
+	/**
+	 * Finds and returns a patient by their identifier for a specific identifier type
+	 *
+	 * @param patientIdentifier patient identifier to use to search for the patient
+	 * @param patientIdentifierTypeUuid patient identifier type uuid for the patient identifier provided
+	 */
 	Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid);
 }

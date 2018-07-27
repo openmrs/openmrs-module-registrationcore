@@ -8,6 +8,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,20 +38,20 @@ public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
     private RegistrationCoreProperties coreProperties;
 
     @Override
-    public Patient fetchMpiPatient(PatientIdentifier patientId) {
+    public MpiPatient fetchMpiPatient(PatientIdentifier patientId) {
         OpenEmpiPatientResult mpiPatient = queryExecutor.getPatientById(authenticator.getToken(), patientId.getIdentifier());
 
         return buildPatient(mpiPatient);
     }
 
     @Override
-    public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
+    public MpiPatient fetchMpiPatient(String patientId, String identifierTypeUuid) {
         throw new NotImplementedException("Method fetchMpiPatient for OpenEmpiPatientFetcher is not implemented yet");
     }
 
-    private Patient buildPatient(OpenEmpiPatientResult mpiPatient) {
-        patientBuilder.setPatient(new Patient());
-        Patient patient = patientBuilder.buildPatient(mpiPatient);
+    private MpiPatient buildPatient(OpenEmpiPatientResult mpiPatient) {
+        patientBuilder.setPatient(new MpiPatient());
+        MpiPatient patient = patientBuilder.buildPatient(mpiPatient);
 
         if (!containsOpenMrsIdentifier(patient))
             addOpenMrsIdentifier(patient);

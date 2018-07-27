@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.test.Verifies;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -91,7 +92,7 @@ public class PixPatientExporterTest {
 	}
 	private void initPdqPatientFetcher(){
 		try {
-			when(pdqPatientFetcher.fetchMpiPatient(Mockito.any(PatientIdentifier.class))).thenReturn(RET_VAL.get(0));
+			when(pdqPatientFetcher.fetchMpiPatient(Mockito.any(PatientIdentifier.class))).thenReturn((MpiPatient) RET_VAL.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

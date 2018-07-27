@@ -37,13 +37,13 @@ public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
     private MpiProperties mpiProperties;
 
     @Override
-    public Patient fetchMpiPatient(PatientIdentifier patientId) {
+    public MpiPatient fetchMpiPatient(PatientIdentifier patientId) {
         authenticateIfNeeded();
         return patientImporter.fetchMpiPatient(patientId);
     }
 
     @Override
-    public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
+    public MpiPatient fetchMpiPatient(String patientId, String identifierTypeUuid) {
         authenticateIfNeeded();
         return patientImporter.fetchMpiPatient(patientId, identifierTypeUuid);
     }

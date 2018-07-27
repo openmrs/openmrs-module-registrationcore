@@ -11,6 +11,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.AbstractMap;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class PdqSimilarPatientsSearcherTest {
-    private List<Patient> RET_VAL = new ArrayList<Patient>();
+    private List<MpiPatient> RET_VAL = new ArrayList<MpiPatient>();
 
     @InjectMocks
     private PdqSimilarPatientsSearcher pdqSimilarPatientsSearcher;
@@ -51,7 +52,7 @@ public class PdqSimilarPatientsSearcherTest {
      * Initialize data that is returned every time pixPdqMessageUtil.interpretPIDSegments is called
      */
     private void initData(){
-        Patient patient1 = new Patient();
+        MpiPatient patient1 = new MpiPatient();
         patient1.addName(new PersonName("Johny", "Apple", "Smith"));
         Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
         patient1.setBirthdate(date);
@@ -63,7 +64,7 @@ public class PdqSimilarPatientsSearcherTest {
         patient1.addAddress(personAddress);
         RET_VAL.add(patient1);
 
-        Patient patient2 = new Patient();
+        MpiPatient patient2 = new MpiPatient();
         patient2.addName(new PersonName("tOM", null, "SmItH"));
         Date date2 = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
         patient2.setBirthdate(date2);
@@ -74,7 +75,7 @@ public class PdqSimilarPatientsSearcherTest {
         patient2.addAddress(personAddress);
         RET_VAL.add(patient2);
 
-        Patient patient3 = new Patient();
+        MpiPatient patient3 = new MpiPatient();
         PatientIdentifier identifierA = new PatientIdentifier();
         identifierA.setIdentifier("ABCD1234");
         patient3.addIdentifier(identifierA);

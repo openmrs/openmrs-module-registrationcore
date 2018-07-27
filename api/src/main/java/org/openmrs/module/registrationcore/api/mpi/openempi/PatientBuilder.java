@@ -7,6 +7,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +32,13 @@ public class PatientBuilder {
     @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
-    private Patient patient;
+    private MpiPatient patient;
 
-    public void setPatient(Patient patient) {
+    public void setPatient(MpiPatient patient) {
         this.patient = patient;
     }
 
-    public Patient buildPatient(OpenEmpiPatientResult patientQuery) {
+    public MpiPatient buildPatient(OpenEmpiPatientResult patientQuery) {
         patient.setGender(patientQuery.getGender().getGenderCode());
 
         setNames(patientQuery, patient);

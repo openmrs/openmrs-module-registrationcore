@@ -9,6 +9,7 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
@@ -51,14 +52,14 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
 
-        List<Patient> retVal = new LinkedList<Patient>();
+        List<MpiPatient> mpiPatientList = new LinkedList<MpiPatient>();
 
         try {
             List<Map.Entry<String, String>> queryParams = pixPdqMessageUtil.patientToQPD3Params(patient);
 	        if (!queryParams.isEmpty()){
 		        Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
 		        Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
-		        retVal = pixPdqMessageUtil.interpretPIDSegments(response);
+		        mpiPatientList = pixPdqMessageUtil.interpretPIDSegments(response);
 	        }
         } catch (Exception e) {
             log.error("Error in PDQ Search", e);
@@ -70,15 +71,15 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
             }
         }
 
-        if (maxResults != null && retVal.size() > maxResults) {
-            retVal = retVal.subList(0, maxResults);
+        if (maxResults != null && mpiPatientList.size() > maxResults) {
+            mpiPatientList = mpiPatientList.subList(0, maxResults);
         }
-
+        List<? extends Patient> retVal = mpiPatientList;
         return toMatchList(patient, retVal);
     }
 
     // Q: Why doesn't toMatchList check matches for identifiers?
-    private List<PatientAndMatchQuality> toMatchList(Patient patient, List<Patient> patients) {
+    private List<PatientAndMatchQuality> toMatchList(Patient patient, List<? extends Patient> patients) {
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 
         for (Patient match : patients) {

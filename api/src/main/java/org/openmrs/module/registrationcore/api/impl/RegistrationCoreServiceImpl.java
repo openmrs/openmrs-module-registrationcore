@@ -45,6 +45,7 @@ import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingServic
 import org.openmrs.module.registrationcore.api.errorhandling.FetchingMpiPatientParameters;
 import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
@@ -402,20 +403,20 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	}
 
 	@Override
-	public Patient findMpiPatient(String identifier, String identifierTypeUuid) {
+	public MpiPatient findMpiPatient(String identifier, String identifierTypeUuid) {
 		if (!registrationCoreProperties.isMpiEnabled()) {
 			throw new MpiException("Should not perform 'findMpiPatient' when MPI is disabled");
 		}
 		MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
-		Patient patient = null;
+		MpiPatient mpiPatient = null;
 		try {
-			patient = mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
+			mpiPatient = mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
 		} catch (RuntimeException e) {
 			servePdqExceptionAndThrowAgain(e,
 					prepareParameters(identifier, identifierTypeUuid),
 					PdqErrorHandlingService.FIND_MPI_PATIENT_DESTINATION);
 		}
-		return patient;
+		return mpiPatient;
 	}
 
 	@Override
@@ -425,7 +426,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	@Override
 	public Patient importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
-		Patient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
+		MpiPatient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
 
 		Patient savedPatient = null;
 		try {
@@ -496,7 +497,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 	}
 
-	private Patient persistImportedMpiPatient(Patient mpiPatient) {
+	private Patient persistImportedMpiPatient(MpiPatient mpiPatient) {
 		// TODO: Fix bug MPI-11 Updating of Locally generated ID in MPI after MPI import not occurring
 		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
 

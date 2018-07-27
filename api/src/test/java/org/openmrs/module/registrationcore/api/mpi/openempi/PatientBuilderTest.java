@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
 import static org.junit.Assert.assertEquals;
@@ -60,7 +61,7 @@ public class PatientBuilderTest {
     public void testBuildPatient() throws Exception {
         OpenEmpiPatientResult query = readPatient(PATIENT_WITH_OPENMRS_ID);
 
-        patientBuilder.setPatient(new Patient());
+        patientBuilder.setPatient(new MpiPatient());
         Patient patient = patientBuilder.buildPatient(query);
 
         assertEquals(patient.getGender(), query.getGender().getGenderCode());

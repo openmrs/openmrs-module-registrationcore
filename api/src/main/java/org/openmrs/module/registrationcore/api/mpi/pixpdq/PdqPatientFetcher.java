@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
@@ -39,7 +40,7 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     protected final Log log = LogFactory.getLog(this.getClass());
 
     @Override
-    public Patient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {
+    public MpiPatient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {
         String mappedMpiIdentifierTypeUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid);
 
         List<Map.Entry<String, String>> queryParams = new ArrayList<Map.Entry<String, String>>();
@@ -50,7 +51,7 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
             Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
             Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
 
-            List<Patient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
+            List<MpiPatient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
             mpiPatients = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(mpiPatients, patientIdentifier, identifierTypeUuid);
             if (CollectionUtils.isEmpty(mpiPatients)) {
                 return null;
@@ -60,26 +61,14 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
                                                         "There are %d patients with identifier %s of identifier type %s",
                                                         mpiPatients.size(), patientIdentifier, identifierTypeUuid));
             }
-            return toPatientFromMpiPatient(mpiPatients.get(0));
+            return mpiPatients.get(0);
         } catch(Exception e) {
             throw new MpiException("Error in PDQ fetch by identifier", e);
         }
     }
 
     @Override
-    public Patient fetchMpiPatient(PatientIdentifier patientIdentifier) {
+    public MpiPatient fetchMpiPatient(PatientIdentifier patientIdentifier) {
     	return fetchMpiPatient(patientIdentifier.getIdentifier(), patientIdentifier.getIdentifierType().getUuid());
-    }
-
-
-    private Patient toPatientFromMpiPatient(Patient mpiPatient) {
-    	// is this still really needed?
-        // it is a hack in order to save the MpiPatient class to DB (converting to the Patient class)
-        Patient patient = new Patient(mpiPatient);
-        patient.setIdentifiers(mpiPatient.getIdentifiers());
-        for (PatientIdentifier pid : patient.getIdentifiers()) {
-            pid.setPatient(patient);
-        }
-        return patient;
     }
 }
