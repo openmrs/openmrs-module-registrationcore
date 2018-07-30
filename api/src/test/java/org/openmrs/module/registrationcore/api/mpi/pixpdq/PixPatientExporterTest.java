@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class PixPatientExporterTest {
-	private List<Patient> RET_VAL = new ArrayList<Patient>();
+	private List<MpiPatient> RET_VAL = new ArrayList<MpiPatient>();
 	private List<String> IDENTIFIERS = new ArrayList<String>();
 	private PatientIdentifierType PID_TYPE = new PatientIdentifierType();
 
@@ -65,7 +65,7 @@ public class PixPatientExporterTest {
 		IDENTIFIERS.add("ABCD1234");
 		PID_TYPE.setUuid("XYZ");
 
-		Patient patient1 = new Patient();
+		MpiPatient patient1 = new MpiPatient();
 		patient1.addName(new PersonName("Johny", "Apple", "Smith"));
 		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
 		patient1.setBirthdate(date);
@@ -92,7 +92,7 @@ public class PixPatientExporterTest {
 	}
 	private void initPdqPatientFetcher(){
 		try {
-			when(pdqPatientFetcher.fetchMpiPatient(Mockito.any(PatientIdentifier.class))).thenReturn((MpiPatient) RET_VAL.get(0));
+			when(pdqPatientFetcher.fetchMpiPatient(Mockito.any(PatientIdentifier.class))).thenReturn(RET_VAL.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -129,7 +129,7 @@ public class PixPatientExporterTest {
 	@Verifies(value = "should fail to export patient to the mpi",
 			  method = "exportPatient(Patient)")
 	public void exportPatient_shouldFailExportPatient() throws Exception {
-		Patient patient1 = new Patient();
+		MpiPatient patient1 = new MpiPatient();
 		patient1.addName(new PersonName("Johny", null, "Smith"));
 		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
 		patient1.setBirthdate(date);
