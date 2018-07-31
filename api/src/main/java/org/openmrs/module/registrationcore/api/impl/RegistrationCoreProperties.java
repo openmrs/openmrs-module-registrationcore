@@ -54,7 +54,6 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
     /**
      * @return the id of the Biometric Engine that is configured
      */
-
     public BiometricEngine getBiometricEngine() {
         String propertyName = RegistrationCoreConstants.GP_BIOMETRICS_IMPLEMENTATION;
         String engineId = administrationService.getGlobalProperty(propertyName);

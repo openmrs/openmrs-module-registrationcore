@@ -171,17 +171,4 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
         throw new RuntimeException("Patient identifiers doesn't contains identifier: " + identifierName);
     }
 
-    @Test
-    @Ignore("This functionality is currently not used and not implemented")
-    public void testPerformCorrectImportForPatientWithOpenMrsIdentifier() throws Exception {
-        mockMpiAuthentication();
-        OpenEmpiPatientResult mpiPatient = marshaller.getQuery(PATIENT_WITH_OPENMRS_ID);
-        mockMpiResponse(mpiPatient);
-
-        String uuid = service.importMpiPatient(MPI_PERSON_ID).getUuid();
-
-        verifyRemoteMpiServerQuerying();
-        Patient savedPatient = patientService.getPatientByUuid(uuid);
-        assertPatientEquals(mpiPatient, savedPatient, 4);
-    }
 }

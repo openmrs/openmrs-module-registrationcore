@@ -2,7 +2,7 @@ package org.openmrs.module.registrationcore.api.errorhandling;
 
 import java.io.Serializable;
 import org.apache.commons.lang.StringUtils;
-
+// TODO add javadoc
 public class SendingPatientToMpiParameters implements Serializable {
 
 	private String patientUuid;

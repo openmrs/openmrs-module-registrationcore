@@ -7,19 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Map;
 import org.springframework.util.CollectionUtils;
 
+// TODO add javadocs
 public class PdqPatientFetcher implements MpiPatientFetcher {
 
     @Autowired
@@ -33,11 +32,7 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
     @Autowired
     private PatientIdentifierMapper identifierMapper;
 
-    @Autowired
-    @Qualifier("registrationcore.mpiProperties")
-    private MpiProperties mpiProperties;
-
-    protected final Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     @Override
     public MpiPatient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {

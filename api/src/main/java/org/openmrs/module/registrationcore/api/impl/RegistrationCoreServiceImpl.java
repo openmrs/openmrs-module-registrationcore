@@ -162,6 +162,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 
 	@Override
+	// TODO try to get rid of it
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString,
 								   Location identifierLocation, BiometricData biometricData) {
 		RegistrationData data = new RegistrationData();
@@ -182,16 +183,17 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	@Override
 	public Patient registerPatient(RegistrationData registrationData) {
 		if (log.isInfoEnabled()) {
-			log.info("Registering new patient..");
-		}
-		Patient patient = registrationData.getPatient();
+            log.info("Registering new patient..");
+        }
+        Patient patient = registrationData.getPatient();
 		String identifierString = registrationData.getIdentifier();
 		Location identifierLocation = registrationData.getIdentifierLocation();
 
 		if (patient == null) {
-			throw new APIException("Patient cannot be null");
-		}
+            throw new APIException("Patient cannot be null");
+        }
 
+        //TODO getOpenMRSIdentifierSource extract out duplicate code and then make a ticket and discuss (its already below) use it
 		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
 		if (idSource == null) {
 			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
@@ -212,26 +214,26 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (identifierLocation == null) {
 			identifierLocation = locationService.getDefaultLocation();
 			if (identifierLocation == null) {
-				throw new APIException("Failed to resolve location to associate to patient identifiers");
-			}
+                throw new APIException("Failed to resolve location to associate to patient identifiers");
+            }
 		}
 
-		// see if there is a primary identifier location further up the chain, use that instead if there is
-		Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(identifierLocation);
-		if (identifierAssignmentLocationAssociatedWith != null) {
-			identifierLocation = identifierAssignmentLocationAssociatedWith;
-		}
+        // see if there is a primary identifier location further up the chain, use that instead if there is
+        Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(identifierLocation);
+        if (identifierAssignmentLocationAssociatedWith != null) {
+            identifierLocation = identifierAssignmentLocationAssociatedWith;
+        }
 
-		// generate identifier if necessary, otherwise validate
-		if (StringUtils.isBlank(identifierString)) {
-			identifierString = iss.generateIdentifier(idSource, null);
-		}
-		else {
-			PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
-		}
+        // generate identifier if necessary, otherwise validate
+        if (StringUtils.isBlank(identifierString)) {
+            identifierString = iss.generateIdentifier(idSource, null);
+        }
+        else {
+            PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
+        }
 		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
 		patient.addIdentifier(pId);
-		pId.setPreferred(true);
+        pId.setPreferred(true);
 
 		//TODO fix this when creating a patient from a person is possible
 		boolean wasAPerson = patient.getPersonId() != null;
@@ -240,21 +242,21 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		List<Relationship> relationships = registrationData.getRelationships();
 		ArrayList<String> relationshipUuids = new ArrayList<String>();
-		for (Relationship relationship : relationships) {
-			if (relationship.getPersonA() == null) {
-				relationship.setPersonA(patient);
-			}
-			else if (relationship.getPersonB() == null) {
-				relationship.setPersonB(patient);
-			}
-			else {
-				throw new APIException("Only one side of a relationship should be specified");
-			}
-			personService.saveRelationship(relationship);
-			relationshipUuids.add(relationship.getUuid());
-		}
+        for (Relationship relationship : relationships) {
+            if (relationship.getPersonA() == null) {
+                relationship.setPersonA(patient);
+            }
+            else if (relationship.getPersonB() == null) {
+                relationship.setPersonB(patient);
+            }
+            else {
+                throw new APIException("Only one side of a relationship should be specified");
+            }
+            personService.saveRelationship(relationship);
+            relationshipUuids.add(relationship.getUuid());
+        }
 
-		try {
+        try {
 			for (BiometricData biometricData : registrationData.getBiometrics()) {
 				Context.getService(RegistrationCoreService.class).saveBiometricsForPatient(patient, biometricData);
 			}
@@ -262,6 +264,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		catch (Exception e) {
 			throw new APIException("registrationapp.biometrics.errorContactingBiometricsServer", e);
 		}
+		//Add event firing back in
 
 		return patient;
 	}
@@ -417,6 +420,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 					PdqErrorHandlingService.FIND_MPI_PATIENT_DESTINATION);
 		}
 		return mpiPatient;
+		//TODO throw error if you get more than one patient
 	}
 
 	@Override
@@ -494,6 +498,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				dao.getSessionFactory().getCurrentSession().refresh(patient);
 				return patient;
 			}
+			//TODO Add error if more than one patient is has that identifier!
 		}
 	}
 

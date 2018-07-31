@@ -11,7 +11,6 @@ import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingServic
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
-import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+// TODO: Add Javadocs
 public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Autowired
@@ -30,15 +30,12 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     @Autowired
     @Qualifier("registrationcore.Hl7SenderHolder")
     private Hl7SenderHolder hl7SenderHolder;
-
-    @Autowired
-    private PatientIdentifierMapper identifierMapper;
     
     @Autowired
     @Qualifier("registrationcore.coreProperties")
     private RegistrationCoreProperties registrationCoreProperties;
 
-    protected final Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     @Override
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {

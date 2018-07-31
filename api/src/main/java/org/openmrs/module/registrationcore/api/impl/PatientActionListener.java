@@ -25,7 +25,7 @@ import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpi
  * Abstract class for subscribable event listening.
  */
 public abstract class PatientActionListener implements SubscribableEventListener {
-    protected final Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     protected RegistrationCoreProperties coreProperties;
 
@@ -53,18 +53,27 @@ public abstract class PatientActionListener implements SubscribableEventListener
         event.setSubscription(this);
     }
 
+    /**
+     * Performs action based on messaged received.
+     *
+     * @param message message that is received by the listener.
+     * @return a list of classes that this can handle
+     */
     @Override
     public void onMessage(final Message message) {
-        Daemon.runInDaemonThread(new Runnable() {
-            @Override
-            public void run() {
-                if (coreProperties.isMpiEnabled()) {
+        if (coreProperties.isMpiEnabled()) {
+            Daemon.runInDaemonThread(new Runnable() {
+                @Override
+                public void run() {
                     performMpiAction(message);
                 }
-            }
-        }, daemonToken);
+            }, daemonToken);
+        }
     }
+
     /**
+     * Defines the list of classes that this subscribable event listener class listens for changes to.
+     *
      * @return a list of classes that this can handle
      */
     public List<Class<? extends OpenmrsObject>> subscribeToObjects(){
@@ -74,23 +83,39 @@ public abstract class PatientActionListener implements SubscribableEventListener
     }
 
     /**
+     * Defines the list of Actions that this subscribable event listener class listens out for.
+     *
      * @return a list of Actions this listener can deal with
      */
     public abstract List<String> subscribeToActions();
 
     /**
-     * Perform mpi action.
+     * Perform action on the MPI.
      *
      * @param message message with properties.
      */
     public abstract void performMpiAction(Message message);
 
+    /**
+     * Retrieves the patient from the DB based on PatientUuid in message.
+     *
+     * @param message message with properties.
+     * @return retrieved patient
+     */
     protected Patient extractPatient(Message message) {
         validateMessage(message);
-        String patientUuid = getMessagePropertyValue(message, "uuid"); // Property name referenced from org.openmrs.event.EventEngine.fireEvent(javax.jms.Destination, java.lang.Object)
+        // Property name referenced from org.openmrs.event.EventEngine.fireEvent(javax.jms.Destination, java.lang.Object)
+        String patientUuid = getMessagePropertyValue(message, "uuid");
         return getPatient(patientUuid);
     }
 
+    /**
+     * Gets value of the property with the provided name from the provided message.
+     *
+     * @param message message with property
+     * @param propertyName name of the property that you want to get the value of
+     * @return retrieved patient
+     */
     protected String getMessagePropertyValue(Message message, String propertyName) {
         validateMessage(message);
         try {
@@ -100,6 +125,14 @@ public abstract class PatientActionListener implements SubscribableEventListener
         }
     }
 
+    /**
+     * Prepares the parameters required for sending the patient to the MPI (the message)
+     * via the error handling module (specified in the global properties)
+     * in the case of initial failure.
+     *
+     * @param patient patient to be sent to MPI
+     * @return parameters as a string
+     */
     protected String prepareParameters(Patient patient) {
         SendingPatientToMpiParameters parameters = new SendingPatientToMpiParameters(patient.getUuid());
         try {
@@ -109,12 +142,23 @@ public abstract class PatientActionListener implements SubscribableEventListener
         }
     }
 
+    /**
+     * Validate that the message is an instance of MapMessage.
+     *
+     * @param message message to be validated
+     */
     private void validateMessage(Message message) {
         if (!(message instanceof MapMessage)){
             throw new APIException("Event message should be MapMessage, but it isn't");
         }
     }
 
+    /**
+     * Gets patient from local DB using patient uuid provided.
+     *
+     * @param patientUuid uuid of patient to be retrieved.
+     * @return retrieved patient
+     */
     private Patient getPatient(String patientUuid) {
         Patient patient = patientService.getPatientByUuid(patientUuid);
         if (patient == null){

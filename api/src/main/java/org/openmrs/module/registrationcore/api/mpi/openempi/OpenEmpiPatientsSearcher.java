@@ -36,7 +36,7 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher{
     @Qualifier("registrationcore.mpiPixPdqMessageUtil")
     private PixPdqMessageUtil pixPdqMessageUtil;
 
-    protected final Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
 
     @Override
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient,

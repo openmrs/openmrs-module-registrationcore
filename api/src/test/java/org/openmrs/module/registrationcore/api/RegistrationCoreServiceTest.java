@@ -173,6 +173,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	 */
 	@Test
 	@Ignore // Have not been able to get this test to work and for the listener to catch the patient creation event.
+	// TODO fix this!
 	@Verifies(value = "should fire an event when a patient is saved", method = "registerPatient(Patient,List<Relationship>)")
 	public void registerPatient_shouldFireAnOpenmrsObjectEventWhenAPatientIsRegistered() throws Exception {
 
@@ -207,6 +208,7 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
      * This needs to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
 	 */
+	// TODO Fix this!
 //	@Test
 //	@Ignore
 //	@Verifies(value = "should set wasPerson field to true for an existing person on the registration event", method = "registerPatient(Patient,List<Relationship>)")
@@ -243,7 +245,6 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
      * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
      */
     @Test
-    @NotTransactional
     @Ignore // TODO: this passes when run on its own, but not in a suite
     public void registerPatient_shouldFailIfBiometricsSuppliedButNoEngineEnabled() throws Exception {
         RegistrationData data = getSampleRegistrationDataWithBiometrics();

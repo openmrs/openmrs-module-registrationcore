@@ -15,14 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class listen for patient edit event.
- * If MPI is enabled it performs update patient in MPI.
+ * This class listens for patient UPDATED events.
+ * If MPI is enabled it updates patient in MPI.
  */
 public class PatientUpdatedListener extends PatientActionListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientUpdatedListener.class);
 
     /**
+     * Defines the list of Actions that this subscribable event listener class listens out for.
+     *
      * @return a list of Actions this listener can deal with
      */
     public List<String> subscribeToActions(){
@@ -32,25 +34,29 @@ public class PatientUpdatedListener extends PatientActionListener {
     }
 
     /**
-     * Update patient at MPI server.
+     * Update patient in MPI server.
      *
      * @param message message with properties.
      */
+    // TODO what should we do if patient is voided? discuss
     @Override
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);
         // if patient voided is true then don't update the MPI
         if (patient.getVoided()){
             return;
-        }else{
+        }
+        else {
             try {
                 coreProperties.getMpiProvider().updatePatient(patient);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
                 if (errorHandler == null) {
                     throw new MpiException("PIX patient update exception occurred "
                             + "with not configured PIX error handler", e);
-                } else {
+                }
+                else {
                     LOGGER.error("PIX patient update exception occurred", e);
                     errorHandler.handle(prepareParameters(patient),
                             PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_UPDATE_DESTINATION,

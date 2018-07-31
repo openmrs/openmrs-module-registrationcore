@@ -138,6 +138,7 @@
 				<scope>test</scope>
 			</dependency>
 
+			<!-- TODO Get rid and see if it fails -->
 			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>

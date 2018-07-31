@@ -150,7 +150,7 @@ public class PdqSimilarPatientsSearcherTest {
         result = pdqSimilarPatientsSearcher.findSimilarMatches(patient4, null, null, 10);
         assertEquals(5, result.get(1).getMatchedFields().size());
 
-        // Patient Identifier Test
+        // TODO Patient Identifier Test
         // Why doesn't it match these and actually whats the point of the getMatchedFields?
         // I should reformat this test so that each one is in its own method and its more explicitly named,
         // follow RegistrationCoreServiceTest.java

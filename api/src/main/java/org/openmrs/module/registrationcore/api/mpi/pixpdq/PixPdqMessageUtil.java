@@ -356,6 +356,11 @@ public class PixPdqMessageUtil {
                 }
             }
 		}
+		/*
+		TODO Should just break instead of breaking out of both loops, because in this case if theres more than one patient
+		it will just be ignored, but it should be caught in the function that calls this method, since this method is supposed to
+		return the whole list.
+		 */
 		return retVal;
 	}
 

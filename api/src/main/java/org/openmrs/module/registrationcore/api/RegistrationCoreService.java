@@ -78,7 +78,7 @@ public interface RegistrationCoreService extends OpenmrsService {
     public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation);
 
 	/**
-	 * Creates patient and saves them and their fingerprints in the database,
+	 * Creates patient and saves them and their biometric data in the database,
 	 * setting their identifier as specified instead of assigning automatically
 	 *
 	 * @return the created patient
@@ -89,6 +89,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 
 	/**
 	 * Registers patient and saves them in the database.
+	 *
 	 * @return the created patient
 	 * @should create a patient from record with relationships
 	 * @should fire an event when a patient is registered
@@ -145,7 +146,7 @@ public interface RegistrationCoreService extends OpenmrsService {
 	List<String> findSimilarFamilyNames(String searchPhrase);
 
 	/**
-	 * Query to MPI server to find patient with Id "patientId".
+	 * Query to MPI server to find patient with Identifier of IdentifierType with IdentifierTypeUuid provided.
 	 *
 	 * @param identifier person identifier of patient which should be imported
 	 * @param identifierTypeUuid person identifier type of patient which will be found
@@ -154,7 +155,8 @@ public interface RegistrationCoreService extends OpenmrsService {
 	MpiPatient findMpiPatient(String identifier, String identifierTypeUuid);
 
 	/**
-	 * Query to MPI server to find patient with Id "patientId"
+	 * Import a specific patient by sending
+	 * Query to MPI server to find patient with identifier
 	 * and save that patient to local DB.
      *
 	 * @param personId person identifier of patient which should be imported
@@ -163,7 +165,8 @@ public interface RegistrationCoreService extends OpenmrsService {
 	Patient importMpiPatient(String personId);
 
 	/**
-	 * Query to MPI server to find patient with Id "patientIdentifier" and specific patient identifier type
+	 * Import a specific patient by sending
+	 * Query to MPI server to find patient with Identifier of IdentifierType with IdentifierTypeUuid provided.
 	 * and save that patient to local DB.
 	 *
 	 * @param patientIdentifier person identifier of patient which should be imported
