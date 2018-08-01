@@ -94,9 +94,10 @@ public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBas
 	}
 
 
-	/*
-		Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient from a provided patient
-		See TRUNK-5408
+	/**
+	 * Note: Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient from a provided patient
+	 *
+	 * @see <a href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>
 	*/
 	@Test
 	@Ignore
@@ -113,8 +114,13 @@ public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBas
 		assertEquals(true, resultList.isEmpty());
 	}
 
+	/**
+	 * Note: Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient from a provided patient
+	 *
+	 * @see <a href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>
+	 */
 	@Test
-	@Ignore // Requires openmrs-core version 2.2.0-SNAPSHOT
+	@Ignore
 	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnPatient() throws Exception {
 		List<MpiPatient> inputList = new ArrayList<MpiPatient>();
 		inputList.add(new MpiPatient(patientService.getPatient(99)));

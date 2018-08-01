@@ -39,9 +39,9 @@
 		<eventVersion>2.3</eventVersion>
 		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jodaTimeVersion>2.2</jodaTimeVersion>
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
 		<apacheHttpClientVersion>4.5</apacheHttpClientVersion>
-		<jodaTimeVersion>2.2</jodaTimeVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -131,19 +131,18 @@
 			</dependency>
 
 			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${jodaTimeVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
 				<groupId>org.openmrs</groupId>
 				<artifactId>event-api-tests</artifactId>
 				<version>${eventVersion}</version>
 				<type>test-jar</type>
 				<scope>test</scope>
-			</dependency>
-
-			<!-- TODO Get rid and see if it fails -->
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>${jodaTimeVersion}</version>
-				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
@@ -152,6 +151,7 @@
 				<version>${apacheHttpCoreVersion}</version>
 				<scope>test</scope>
 			</dependency>
+
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
@@ -213,10 +213,6 @@
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
-		</repository>
-		<repository>
-			<id>marc-te-main</id>
-			<url>http://te.marc-hi.ca/mvn</url>
 		</repository>
 	</repositories>
 

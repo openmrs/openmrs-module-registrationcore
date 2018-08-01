@@ -32,6 +32,8 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.event.Event;
+import org.openmrs.event.EventMessage;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
@@ -59,10 +61,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -160,23 +162,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
         return registerPatient(data);
     }
 
-
-	@Override
-	// TODO try to get rid of it
-	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString,
-								   Location identifierLocation, BiometricData biometricData) {
-		RegistrationData data = new RegistrationData();
-		data.setPatient(patient);
-		data.setRelationships(relationships);
-		data.setIdentifier(identifierString);
-		data.setIdentifierLocation(identifierLocation);
-		if (biometricData != null) {
-			data.addBiometricData(biometricData);
-		}
-
-		return registerPatient(data);
-	}
-
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#registerPatient(RegistrationData)
 	 */
@@ -193,45 +178,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
             throw new APIException("Patient cannot be null");
         }
 
-        //TODO getOpenMRSIdentifierSource extract out duplicate code and then make a ticket and discuss (its already below) use it
-		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
-		if (idSource == null) {
-			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
-			if (StringUtils.isBlank(idSourceId)) {
-				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
-			}
-			try {
-				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
-				if (idSource == null) {
-					throw new APIException("cannot find identifier source with id:" + idSourceId);
-				}
-			}
-			catch (NumberFormatException e) {
-				throw new APIException("Identifier source id should be a number");
-			}
-		}
+		PatientIdentifier pId =validateOrGenerateIdentifier(identifierString, identifierLocation);
 
-		if (identifierLocation == null) {
-			identifierLocation = locationService.getDefaultLocation();
-			if (identifierLocation == null) {
-                throw new APIException("Failed to resolve location to associate to patient identifiers");
-            }
-		}
-
-        // see if there is a primary identifier location further up the chain, use that instead if there is
-        Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(identifierLocation);
-        if (identifierAssignmentLocationAssociatedWith != null) {
-            identifierLocation = identifierAssignmentLocationAssociatedWith;
-        }
-
-        // generate identifier if necessary, otherwise validate
-        if (StringUtils.isBlank(identifierString)) {
-            identifierString = iss.generateIdentifier(idSource, null);
-        }
-        else {
-            PatientIdentifierValidator.validateIdentifier(identifierString, idSource.getIdentifierType());
-        }
-		PatientIdentifier pId = new PatientIdentifier(identifierString, idSource.getIdentifierType(), identifierLocation);
 		patient.addIdentifier(pId);
         pId.setPreferred(true);
 
@@ -262,15 +210,27 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 		}
 		catch (Exception e) {
-			throw new APIException("registrationapp.biometrics.errorContactingBiometricsServer", e);
+        	throw new APIException("registrationapp.biometrics.errorContactingBiometricsServer", e);
 		}
-		//Add event firing back in
+
+        DateFormat df = new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING);
+
+		EventMessage eventMessage = new EventMessage();
+		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
+		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_ID, patient.getCreator().getId());
+		eventMessage.put(RegistrationCoreConstants.KEY_DATE_REGISTERED, df.format(patient.getDateCreated()));
+		eventMessage.put(RegistrationCoreConstants.KEY_WAS_A_PERSON, wasAPerson);
+		if (!relationshipUuids.isEmpty()) {
+			eventMessage.put(RegistrationCoreConstants.KEY_RELATIONSHIP_UUIDS, relationshipUuids);
+		}
+
+		Event.fireEvent(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, eventMessage);
 
 		return patient;
 	}
 
-
-	private Location getIdentifierAssignmentLocationAssociatedWith(Location location) {
+    private Location getIdentifierAssignmentLocationAssociatedWith(Location location) {
         if (location != null) {
             if (location.hasTag(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION)) {
                 return location;
@@ -405,6 +365,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return getPatientNameSearch().findSimilarFamilyNames(searchPhrase);
 	}
 
+	/**
+	 * Query to MPI server to find a single patient with Identifier of IdentifierType with IdentifierTypeUuid provided.
+	 *
+	 * @param identifier person identifier of patient to be found
+	 * @param identifierTypeUuid person identifier type of patient which will be found
+	 * @return found mpiPatient
+	 * @should fail if more than one patient exits in the MPI for that specific identifier and identifier type
+	 */
 	@Override
 	public MpiPatient findMpiPatient(String identifier, String identifierTypeUuid) {
 		if (!registrationCoreProperties.isMpiEnabled()) {
@@ -420,18 +388,31 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 					PdqErrorHandlingService.FIND_MPI_PATIENT_DESTINATION);
 		}
 		return mpiPatient;
-		//TODO throw error if you get more than one patient
 	}
 
+	/**
+	 * Imports a patient from the MPI based on the MPI identifier string provided.
+	 *
+	 * @param personId person identifier of patient which should be imported
+	 * @return Patient object that has been persisted locally
+	 * @should fail if more than one patient exits in the MPI for that specific identifier and identifier type
+	 */
 	@Override
 	public Patient importMpiPatient(String personId) {
 		return importMpiPatient(personId, mpiProperties.getMpiPersonIdentifierTypeUuid());
 	}
 
+	/**
+	 * Imports a patient from the MPI based on an identifier for a specific identifier type.
+	 *
+	 * @param patientIdentifier person identifier of patient which should be imported
+	 * @param patientIdentifierTypeUuid identifier type uuid of given patientId
+	 * @return Patient object that has been persisted locally
+	 * @should fail if more than one patient exits in the MPI for that specific identifier and identifier type
+	 */
 	@Override
 	public Patient importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
 		MpiPatient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
-
 		Patient savedPatient = null;
 		try {
 			if (foundPatient == null) {
@@ -449,6 +430,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return savedPatient;
 	}
 
+	/**
+	 * Serves the PDQ exception if a PDQ error handling service has been specified in the global properties.
+	 * Then, throws MPI exception again.
+	 *
+	 * @param e runtime exception triggered
+	 * @param message message to be resent by the error handling service
+	 * @param destination the destination the message was supposed to be sent to
+	 */
 	private void servePdqExceptionAndThrowAgain(RuntimeException e, String message,
 			String destination) {
 		ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
@@ -461,6 +450,13 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 	}
 
+	/**
+	 * Prepares the string of parameters required by the retrying service in the error handler
+	 *
+	 * @param identifier identifier for patient that is to be fetched by the retry service from the MPI
+	 * @param identifierTypeUuid uuid of the identifier type for the identifier provided
+	 * @return parameters in the form of a string
+	 */
 	private String prepareParameters(String identifier, String identifierTypeUuid) {
 		FetchingMpiPatientParameters parameters = new FetchingMpiPatientParameters(identifier,
 				identifierTypeUuid);
@@ -468,37 +464,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			return new ObjectMapper().writeValueAsString(parameters);
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot prepare parameters for OutgoingMessageException", e);
-		}
-	}
-
-	@Override
-	public Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid) {
-		PatientIdentifierType idType = patientService.getPatientIdentifierTypeByUuid(patientIdentifierTypeUuid);
-		if (idType == null) {
-			throw new APIException(String.format("PatientIdentifierType is missing: UUID %s",
-					patientIdentifierTypeUuid));
-		} else {
-			//Currently method getPatients() does not take into consideration the identifierTypes,
-			//so it needs to be filtered anyway
-			List<Patient> patients = new ArrayList<Patient>();
-			for (Patient p : patientService.getPatients(null, patientIdentifier,
-					Collections.singletonList(idType), true)) {
-				for (PatientIdentifier pi : p.getIdentifiers()) {
-					if (pi.getIdentifierType().equals(idType)) {
-						patients.add(p);
-						break;
-					}
-				}
-			}
-
-			if (CollectionUtils.isEmpty(patients)) {
-				return null;
-			} else {
-				Patient patient = patients.get(0);
-				dao.getSessionFactory().getCurrentSession().refresh(patient);
-				return patient;
-			}
-			//TODO Add error if more than one patient is has that identifier!
 		}
 	}
 

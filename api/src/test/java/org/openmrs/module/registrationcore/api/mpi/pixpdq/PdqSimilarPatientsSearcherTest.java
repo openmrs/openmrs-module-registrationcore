@@ -107,54 +107,54 @@ public class PdqSimilarPatientsSearcherTest {
     }
 
     @Test
-    public void testFindSimilarMatches() throws Exception {
-        // Name Test
-        Patient patient = new Patient();
-        patient.addName(new PersonName("Johny",null,"Smith"));
+    public void findSimilarMatches_shouldMatchName() throws Exception {
+	    Patient patient = new Patient();
+	    patient.addName(new PersonName("Johny", null, "Smith"));
 
-        List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient, null, null, 10);
-        assertEquals(2, result.get(0).getMatchedFields().size());
+	    List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient, null, null, 10);
+	    assertEquals(2, result.get(0).getMatchedFields().size());
+    }
 
-        // Name and Birthday Test
-        Patient patient2 = new Patient();
-        patient2.addName(new PersonName("Johny", null, "Smith"));
-        Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
-        patient2.setBirthdate(date);
+	@Test
+	public void findSimilarMatches_shouldMatchNameAndBirthday() throws Exception {
+		Patient patient2 = new Patient();
+		patient2.addName(new PersonName("Johny", null, "Smith"));
+		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
+		patient2.setBirthdate(date);
 
-        result = pdqSimilarPatientsSearcher.findSimilarMatches(patient2, null, null, 10);
-        assertEquals(3, result.get(0).getMatchedFields().size());
+		List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient2, null, null, 10);
+		assertEquals(3, result.get(0).getMatchedFields().size());
+	}
 
-        // Name, Birthday, Gender and Address Test
-        Patient patient3 = new Patient();
-        patient3.addName(new PersonName("Johny", null, "Smith"));
-        date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
-        patient3.setBirthdate(date);
-        patient3.setGender("M");
-        PersonAddress personAddress = new PersonAddress();
-        personAddress.setCountry("TesT");
-        personAddress.setCityVillage("TeSt2");
-        personAddress.setCountyDistrict("Test3");
-        patient3.addAddress(personAddress);
+	@Test
+	public void findSimilarMatches_shouldMatchNameBirthdayAndAddress() throws Exception {
+		Patient patient3 = new Patient();
+		patient3.addName(new PersonName("Johny", null, "Smith"));
+		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
+		patient3.setBirthdate(date);
+		patient3.setGender("M");
+		PersonAddress personAddress = new PersonAddress();
+		personAddress.setCountry("TesT");
+		personAddress.setCityVillage("TeSt2");
+		personAddress.setCountyDistrict("Test3");
+		patient3.addAddress(personAddress);
 
-        result = pdqSimilarPatientsSearcher.findSimilarMatches(patient3, null, null, 10);
-        assertEquals(7, result.get(0).getMatchedFields().size());
+		List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient3, null, null, 10);
+		assertEquals(7, result.get(0).getMatchedFields().size());
+	}
 
-        // Case Insensitivity Test
+	@Test
+	public void findSimilarMatches_shouldBeCaseInsensitive() throws Exception {
         Patient patient4 = new Patient();
         patient4.addName(new PersonName("tom", null, "smith"));
+		PersonAddress personAddress = new PersonAddress();
         personAddress.setCountry("test");
         personAddress.setCityVillage("TEST2");
         personAddress.setCountyDistrict("TeSt3");
         patient4.addAddress(personAddress);
 
-        result = pdqSimilarPatientsSearcher.findSimilarMatches(patient4, null, null, 10);
+		List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient4, null, null, 10);
         assertEquals(5, result.get(1).getMatchedFields().size());
-
-        // TODO Patient Identifier Test
-        // Why doesn't it match these and actually whats the point of the getMatchedFields?
-        // I should reformat this test so that each one is in its own method and its more explicitly named,
-        // follow RegistrationCoreServiceTest.java
-
     }
 
 }

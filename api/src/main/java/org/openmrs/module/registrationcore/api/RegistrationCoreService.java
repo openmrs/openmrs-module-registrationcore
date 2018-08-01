@@ -21,11 +21,9 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
-import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -77,26 +75,15 @@ public interface RegistrationCoreService extends OpenmrsService {
      */
     public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation);
 
-	/**
-	 * Creates patient and saves them and their biometric data in the database,
-	 * setting their identifier as specified instead of assigning automatically
-	 *
-	 * @return the created patient
-	 */
-
-	public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString,
-								   Location identifierLocation, BiometricData biometricData);
-
-	/**
-	 * Registers patient and saves them in the database.
-	 *
-	 * @return the created patient
-	 * @should create a patient from record with relationships
-	 * @should fire an event when a patient is registered
-	 * @should set wasPerson field to true for an existing person on the registration event
-	 * @should fail if identifier does not pass validation
-	 */
-	public Patient registerPatient(RegistrationData registrationData);
+    /**
+     * Registers patient and saves them in the database.
+     * @return the created patient
+     * @should create a patient from record with relationships
+     * @should fire an event when a patient is registered
+     * @should set wasPerson field to true for an existing person on the registration event
+     * @should fail if identifier does not pass validation
+     */
+    public Patient registerPatient(RegistrationData registrationData);
 
 	/**
 	 * Returns a list of matching patients using the fast algorithm.
@@ -146,11 +133,12 @@ public interface RegistrationCoreService extends OpenmrsService {
 	List<String> findSimilarFamilyNames(String searchPhrase);
 
 	/**
-	 * Query to MPI server to find patient with Identifier of IdentifierType with IdentifierTypeUuid provided.
+	 * Query to MPI server to find a single patient with Identifier of IdentifierType with IdentifierTypeUuid provided.
 	 *
-	 * @param identifier person identifier of patient which should be imported
+	 * @param identifier person identifier of patient to be found
 	 * @param identifierTypeUuid person identifier type of patient which will be found
 	 * @return found patient
+	 * @should fail if more than one patient exits in the MPI for that specific identifier and identifier type
 	 */
 	MpiPatient findMpiPatient(String identifier, String identifierTypeUuid);
 
@@ -187,12 +175,4 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @param biometricData biometric data to save to the patient
 	 */
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
-
-	/**
-	 * Finds and returns a patient by their identifier for a specific identifier type
-	 *
-	 * @param patientIdentifier patient identifier to use to search for the patient
-	 * @param patientIdentifierTypeUuid patient identifier type uuid for the patient identifier provided
-	 */
-	Patient findByPatientIdentifier(String patientIdentifier, String patientIdentifierTypeUuid);
 }
