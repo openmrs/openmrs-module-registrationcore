@@ -53,12 +53,12 @@ public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
         patientBuilder.setPatient(new MpiPatient());
         MpiPatient patient = patientBuilder.buildPatient(mpiPatient);
 
-        if (!containsOpenMrsIdentifier(patient))
+        if (!containsPreferredIdentifier(patient))
             addOpenMrsIdentifier(patient);
         return patient;
     }
 
-    private boolean containsOpenMrsIdentifier(Patient patientQuery) {
+    private boolean containsPreferredIdentifier(Patient patientQuery) {
         for (PatientIdentifier identifier : patientQuery.getIdentifiers()) {
             if (identifier.isPreferred())
                 return true;

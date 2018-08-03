@@ -467,17 +467,21 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 	}
 
+	/**
+	 * Save the MPI patient imported from the MPI to the local DB and return the patient.
+	 *
+	 * @param mpiPatient MPI patient fetched from MPI
+	 * @return local patient object of saved MPI patient
+	 */
 	private Patient persistImportedMpiPatient(MpiPatient mpiPatient) {
-		// TODO: Fix bug MPI-11 Updating of Locally generated ID in MPI after MPI import not occurring
 		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
-
 		PatientIdentifierType openMrsIdType = patientService.getPatientIdentifierTypeByUuid(openMrsIdTypeUuid);
 		Patient patient;
 		if (mpiPatient.getPatientIdentifier(openMrsIdType) == null) {
 			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
 			mpiPatient.addIdentifier(localId);
 		}
-		patient = patientService.savePatient(mpiPatient);
+		patient = patientService.savePatient(mpiPatient.convertToPatient());
 		return patient;
 	}
 

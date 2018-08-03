@@ -38,10 +38,10 @@ public class PatientUpdatedListener extends PatientActionListener {
      *
      * @param message message with properties.
      */
-    // TODO what should we do if patient is voided? discuss
     @Override
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);
+        // TODO what should we do if patient is voided? discuss
         // if patient voided is true then don't update the MPI
         if (patient.getVoided()){
             return;

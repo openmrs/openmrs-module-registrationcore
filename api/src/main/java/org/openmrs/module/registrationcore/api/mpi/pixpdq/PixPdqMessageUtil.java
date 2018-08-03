@@ -14,6 +14,7 @@ import ca.uhn.hl7v2.model.v25.message.QBP_Q21;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import ca.uhn.hl7v2.util.Terser;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
@@ -111,10 +112,10 @@ public class PixPdqMessageUtil {
             return null;
         }
         // Add Names to query
-        if(patient.getFamilyName() != null && !patient.getFamilyName().isEmpty()){
+        if(StringUtils.isNotBlank(patient.getFamilyName())){
             queryParams.add(new AbstractMap.SimpleEntry("@PID.5.1", patient.getFamilyName()));
         }
-        if(patient.getGivenName() != null && !patient.getGivenName().isEmpty()){
+        if(StringUtils.isNotBlank(patient.getGivenName())){
             queryParams.add(new AbstractMap.SimpleEntry("@PID.5.2", patient.getGivenName()));
         }
         // Add Identifiers to query
@@ -122,8 +123,8 @@ public class PixPdqMessageUtil {
         if(identifiers != null && !identifiers.isEmpty()){
             for (PatientIdentifier patIdentifier : identifiers) {
                 String mappedMpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
-                if (patIdentifier.getIdentifier() != null && !patIdentifier.getIdentifier().isEmpty()
-                        && mappedMpiUuid != null && !mappedMpiUuid.isEmpty()) {
+                if (StringUtils.isNotBlank(patIdentifier.getIdentifier())
+                        && StringUtils.isNotBlank(mappedMpiUuid)) {
                     // We need to change the datatype so that it can have multiple with the same key
                     queryParams.add(new AbstractMap.SimpleEntry("@PID.3.1", patIdentifier.getIdentifier()));
                     queryParams.add(new AbstractMap.SimpleEntry("@PID.3.4", mappedMpiUuid));
@@ -131,7 +132,7 @@ public class PixPdqMessageUtil {
             }
         }
         // Add Gender to query
-        if(patient.getGender() != null && !patient.getGender().isEmpty()){
+        if(StringUtils.isNotBlank(patient.getGender())){
             queryParams.add(new AbstractMap.SimpleEntry("@PID.8", patient.getGender()));
         }
         // Add Date of Birth to query (?) what if its an estimate?
@@ -148,27 +149,29 @@ public class PixPdqMessageUtil {
         // Add Address to query
         if (!patient.getAddresses().isEmpty()){
             PersonAddress pa = patient.getAddresses().iterator().next();
-            if(pa.getAddress1() != null && !pa.getAddress1().isEmpty())
+            if(StringUtils.isNotBlank(pa.getAddress1())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.1", pa.getAddress1()));
-            if(pa.getAddress2() != null && !pa.getAddress2().isEmpty()
-                && pa.getAddress3() != null && !pa.getAddress3().isEmpty()){
+            }
+            if(StringUtils.isNotBlank(pa.getAddress2())
+                && StringUtils.isNotBlank(pa.getAddress3())){
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.2", pa.getAddress2() + " " + pa.getAddress3()));
-            }else if (pa.getAddress2() != null && !pa.getAddress2().isEmpty()){
+            }
+            else if (StringUtils.isNotBlank(pa.getAddress2())){
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.2", pa.getAddress2()));
             }
-            if(pa.getCityVillage() != null && !pa.getCityVillage().isEmpty()) {
+            if(StringUtils.isNotBlank(pa.getCityVillage())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.3", pa.getCityVillage()));
             }
-            if(pa.getCountry() != null && !pa.getCountry().isEmpty()) {
+            if(StringUtils.isNotBlank(pa.getCountry())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.6", pa.getCountry()));
             }
-            if(pa.getCountyDistrict() != null && !pa.getCountyDistrict().isEmpty()) {
+            if(StringUtils.isNotBlank(pa.getCountyDistrict())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.9", pa.getCountyDistrict()));
             }
-            if(pa.getPostalCode() != null && !pa.getPostalCode().isEmpty()) {
+            if(StringUtils.isNotBlank(pa.getPostalCode())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.5", pa.getPostalCode()));
             }
-            if(pa.getStateProvince() != null && !pa.getStateProvince().isEmpty()) {
+            if(StringUtils.isNotBlank(pa.getStateProvince())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.4", pa.getStateProvince()));
             }
         }
@@ -225,14 +228,11 @@ public class PixPdqMessageUtil {
                 for (CX id : pid.getPatientIdentifierList()) {
 
                     PatientIdentifierType pit = null;
-
-                    if (id.getAssigningAuthority().getUniversalID().getValue() != null &&
-                            !id.getAssigningAuthority().getUniversalID().getValue().isEmpty()) {
+                    if (StringUtils.isNotBlank(id.getAssigningAuthority().getUniversalID().getValue())) {
                         pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
                                 identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getUniversalID().getValue()));
                     }
-                    if (pit == null && id.getAssigningAuthority().getNamespaceID().getValue() != null &&
-                            !id.getAssigningAuthority().getNamespaceID().getValue().isEmpty()) {
+                    if (pit == null && StringUtils.isNotBlank(id.getAssigningAuthority().getNamespaceID().getValue())) {
                         pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
                                 identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getNamespaceID().getValue()));
                     }
@@ -259,7 +259,7 @@ public class PixPdqMessageUtil {
                     PersonName pn = new PersonName();
 
                     // Family name
-                    if (xpn.getFamilyName().getSurname().getValue() == null || xpn.getFamilyName().getSurname().getValue().isEmpty()) {
+                    if (StringUtils.isBlank(xpn.getFamilyName().getSurname().getValue())) {
                         pn.setFamilyName("(none)");
                     } else {
                         pn.setFamilyName(xpn.getFamilyName().getSurname().getValue());
@@ -267,7 +267,7 @@ public class PixPdqMessageUtil {
                     pn.setFamilyName2(xpn.getFamilyName().getSurnameFromPartnerSpouse().getValue());
 
                     // Given name
-                    if (xpn.getGivenName().getValue() == null || xpn.getGivenName().getValue().isEmpty()) {
+                    if (StringUtils.isBlank(xpn.getGivenName().getValue())) {
                         pn.setGivenName("(none)");
                     } else {
                         pn.setGivenName(xpn.getGivenName().getValue());

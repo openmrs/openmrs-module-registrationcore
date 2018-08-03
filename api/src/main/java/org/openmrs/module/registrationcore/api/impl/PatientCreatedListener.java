@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import javax.jms.Message;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -10,9 +11,12 @@ import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
+import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,9 @@ public class PatientCreatedListener extends PatientActionListener {
     private MpiProperties mpiProperties;
 
     private IdentifierBuilder identifierBuilder;
+
+    @Autowired
+    private RegistrationCoreService registrationCoreService;
 
     public void setMpiProperties(MpiProperties mpiProperties) {
         this.mpiProperties = mpiProperties;
@@ -61,9 +68,15 @@ public class PatientCreatedListener extends PatientActionListener {
         if (patient != null){
             PatientIdentifierType mpiPatientIdType = patientService.getPatientIdentifierTypeByUuid(mpiProperties.getMpiPersonIdentifierTypeUuid());
             PatientIdentifier mpiPatientId = patient.getPatientIdentifier(mpiPatientIdType);
-            if (mpiPatientId != null && !mpiPatientId.getIdentifier().isEmpty()) {
-                // Patient originated in MPI and thus should not be pushed to the MPI
-                // TODO does mpi have openmrs id, if no update, if yes stop
+            if (mpiPatientId != null && StringUtils.isNotBlank(mpiPatientId.getIdentifier())) {
+                // Patient exists in MPI and thus should not be created in the MPI
+                // Check if patient has all local identifiers (that could have just been generated in importMpiPatient)
+                MpiPatient mpiPatient = registrationCoreService.findMpiPatient( mpiPatientId.getIdentifier(),
+                                                                                mpiProperties.getMpiPersonIdentifierTypeUuid());
+                if (patient.getIdentifiers().size() > mpiPatient.getIdentifiers().size()){
+                    // Trigger the patient UPDATED event to push new identifiers to MPI
+                    patientService.savePatient(patient);
+                }
                 return;
             }else{
                 String mpiPatientIdString = null;
