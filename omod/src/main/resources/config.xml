@@ -250,7 +250,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.sendingFacility</property>
-		<defaultValue>Demo</defaultValue>
+		<defaultValue>Demo Sending Facility</defaultValue>
 		<description>
 			Specifies sending Facility in the MSH header section of the HL7 message
 		</description>
@@ -267,7 +267,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.receivingFacility</property>
-		<defaultValue>OpenEMPI Demo</defaultValue>
+		<defaultValue>Demo Receiving Facility</defaultValue>
 		<description>
 			Specifies sending Facility in the MSH header section of the HL7 message
 		</description>

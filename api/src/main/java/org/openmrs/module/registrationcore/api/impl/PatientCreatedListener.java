@@ -11,12 +11,9 @@ import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
-import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,14 +63,16 @@ public class PatientCreatedListener extends PatientActionListener {
             PatientIdentifierType mpiPatientIdType = patientService.getPatientIdentifierTypeByUuid(mpiProperties.getMpiPersonIdentifierTypeUuid());
             PatientIdentifier mpiPatientId = patient.getPatientIdentifier(mpiPatientIdType);
             if (mpiPatientId != null && StringUtils.isNotBlank(mpiPatientId.getIdentifier())) {
+                /* TODO Implement a way to push the locally created Identifiers to the MPI: See Ticket RC-31
                 // Patient exists in MPI and thus should not be created in the MPI
                 // Check if patient has all local identifiers (that could have just been generated in importMpiPatient)
-                MpiPatient mpiPatient = registrationCoreService.findMpiPatient( mpiPatientId.getIdentifier(),
+                MpiPatient mpiPatient = Context.getService(RegistrationCoreService.class).findMpiPatient( mpiPatientId.getIdentifier(),
                                                                                 mpiProperties.getMpiPersonIdentifierTypeUuid());
                 if (patient.getIdentifiers().size() > mpiPatient.getIdentifiers().size()){
-                    // Trigger the patient UPDATED event to push new identifiers to MPI
-                    patientService.savePatient(patient);
+                    // Sending an ADT_08 Update message does not work to update Patient Identifiers
+                    // Need to implement a different message type/ solution
                 }
+                */
                 return;
             }else{
                 String mpiPatientIdString = null;
@@ -133,7 +132,8 @@ public class PatientCreatedListener extends PatientActionListener {
     private PatientIdentifier createPatientIdentifier(User creator, String mpiPatientId) {
         PatientIdentifier mpiPatientIdentifier = identifierBuilder
                 .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeUuid(), mpiPatientId, null);
-        mpiPatientIdentifier.setCreator(creator);
+        // TODO test not setting the creator here as service layer should automatically set it to the authenticated user
+        //mpiPatientIdentifier.setCreator(creator);
         return mpiPatientIdentifier;
     }
 }

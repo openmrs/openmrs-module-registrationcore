@@ -11,7 +11,6 @@ import org.openmrs.OpenmrsObject;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
-import org.openmrs.api.context.Context;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.Event;
 import org.openmrs.event.SubscribableEventListener;
@@ -21,7 +20,6 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
-import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpiParameters;
 
 /**
@@ -33,8 +31,6 @@ public abstract class PatientActionListener implements SubscribableEventListener
     protected RegistrationCoreProperties coreProperties;
 
     protected PatientService patientService;
-
-    protected RegistrationCoreService registrationCoreService;
 
     private DaemonToken daemonToken;
 
@@ -54,7 +50,6 @@ public abstract class PatientActionListener implements SubscribableEventListener
      * Subscribes for Class - Patient and specified Actions event.
      */
     public void init() {
-        registrationCoreService = Context.getService(RegistrationCoreService.class);
         Event event = new Event();
         event.setSubscription(this);
     }

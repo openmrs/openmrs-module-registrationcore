@@ -72,7 +72,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         String propertyName = RegistrationCoreConstants.GP_MPI_PIX_ERROR_HANDLER_IMPLEMENTATION;
         PixErrorHandlingService handler = null;
         if (isPropertySet(propertyName)) {
-            handler = getComponentByPropertyName(propertyName, PixErrorHandlingService.class);
+            handler = Context.getRegisteredComponent(propertyName, PixErrorHandlingService.class);
         }
         return handler;
     }
@@ -81,7 +81,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         String propertyName = RegistrationCoreConstants.GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION;
         PdqErrorHandlingService handler = null;
         if (isPropertySet(propertyName)) {
-            handler = getComponentByPropertyName(propertyName, PdqErrorHandlingService.class);
+            handler = Context.getRegisteredComponent(propertyName, PdqErrorHandlingService.class);
         }
         return handler;
     }
@@ -101,7 +101,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
      */
     public Integer getPdqPort() {
         return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PDQ_PORT, "8989"));
+                RegistrationCoreConstants.GP_MPI_PDQ_PORT, "3600"));
     }
 
     public String getPixEndpoint() {
@@ -111,7 +111,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 
     public Integer getPixPort() {
         return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PIX_PORT, "3600"));
+                RegistrationCoreConstants.GP_MPI_PIX_PORT, "3700"));
     }
 
     public String getMpiUsername() {
@@ -124,29 +124,24 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
                 RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, "admin");
     }
 
-    public String getShrPatientRoot() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PATIENT_ROOT, "1.2.3.4.5.9");
-    }
-
     public String getReceivingApplication() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_RECEIVING_APPLICATION, "CR");
+                RegistrationCoreConstants.GP_MPI_RECEIVING_APPLICATION, "Demo MPI");
     }
 
     public String getReceivingFacility() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_RECEIVING_FACILITY, "Clinic");
+                RegistrationCoreConstants.GP_MPI_RECEIVING_FACILITY, "Demo Receiving Facility");
     }
 
     public String getSendingApplication() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_SENDING_APPLICATION, "OPENMRS");
+                RegistrationCoreConstants.GP_MPI_SENDING_APPLICATION, "OpenMRS");
     }
 
     public String getSendingFacility() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_SENDING_FACILITY, "LOCATION");
+                RegistrationCoreConstants.GP_MPI_SENDING_FACILITY, "Demo Sending Facility");
     }
 
     public String getUniversalIdType() {
@@ -157,12 +152,6 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
     private boolean isPropertySet(String globalProperty) {
         return StringUtils.isNotBlank(
                 Context.getAdministrationService().getGlobalProperty(globalProperty));
-    }
-    
-    private <T> T getComponentByPropertyName(String propertyName, Class<T> type) {
-        String handlerId = getProperty(propertyName);
-        log.debug("Looking up component: " + handlerId);
-        return Context.getRegisteredComponent(handlerId, type);
     }
 
 }

@@ -46,23 +46,21 @@ public class PatientUpdatedListener extends PatientActionListener {
         if (patient.getVoided()){
             return;
         }
-        else {
-            try {
-                coreProperties.getMpiProvider().updatePatient(patient);
+        try {
+            coreProperties.getMpiProvider().updatePatient(patient);
+        }
+        catch (Exception e) {
+            ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
+            if (errorHandler == null) {
+                throw new MpiException("PIX patient update exception occurred "
+                        + "with not configured PIX error handler", e);
             }
-            catch (Exception e) {
-                ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
-                if (errorHandler == null) {
-                    throw new MpiException("PIX patient update exception occurred "
-                            + "with not configured PIX error handler", e);
-                }
-                else {
-                    LOGGER.error("PIX patient update exception occurred", e);
-                    errorHandler.handle(prepareParameters(patient),
-                            PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_UPDATE_DESTINATION,
-                            true,
-                            ExceptionUtils.getFullStackTrace(e));
-                }
+            else {
+                LOGGER.error("PIX patient update exception occurred", e);
+                errorHandler.handle(prepareParameters(patient),
+                        PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_UPDATE_DESTINATION,
+                        true,
+                        ExceptionUtils.getFullStackTrace(e));
             }
         }
     }
