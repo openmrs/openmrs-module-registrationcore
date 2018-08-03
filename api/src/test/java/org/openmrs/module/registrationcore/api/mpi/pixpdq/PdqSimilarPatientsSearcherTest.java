@@ -7,16 +7,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
-import org.openmrs.module.registrationcore.api.RegistrationCoreService;
-import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
-import org.openmrs.module.registrationcore.api.impl.RegistrationCoreServiceImpl;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.AbstractMap;
@@ -26,8 +21,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Map.Entry;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -43,14 +36,6 @@ public class PdqSimilarPatientsSearcherTest {
     private Hl7v2Sender hl7v2Sender;
     @Mock
     private Hl7SenderHolder hl7SenderHolder;
-
-	@InjectMocks
-	private RegistrationCoreService service = new RegistrationCoreServiceImpl();
-	@Mock
-	private MpiProvider mpiProvider;
-	@Mock
-	private RegistrationCoreProperties registrationCoreProperties;
-
 
     @Before
     public void setUp() {
@@ -168,34 +153,4 @@ public class PdqSimilarPatientsSearcherTest {
 		List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient4, null, null, 10);
         assertEquals(5, result.get(1).getMatchedFields().size());
     }
-
-	@Test
-	public void importPatient_shouldSavePatientFromMpiPatient() throws Exception{
-		MpiPatient mpiPatient = new MpiPatient();
-		mpiPatient.addName(new PersonName("Johny", "Apple", "Smith"));
-		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
-		mpiPatient.setBirthdate(date);
-		mpiPatient.setGender("M");
-		PersonAddress personAddress = new PersonAddress();
-		personAddress.setCountry("TesT");
-		personAddress.setCityVillage("TeSt2");
-		personAddress.setCountyDistrict("Test3");
-		mpiPatient.addAddress(personAddress);
-		PatientIdentifier identifier = new PatientIdentifier();
-		identifier.setIdentifier("ABCD1234");
-		Location location = new Location();
-		location.setId(1);
-		identifier.setLocation(location);
-		mpiPatient.addIdentifier(identifier);
-
-		when(registrationCoreProperties.getMpiProvider()).thenReturn(mpiProvider);
-		when(registrationCoreProperties.isMpiEnabled()).thenReturn(true);
-		when(mpiProvider.fetchMpiPatient(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(mpiPatient);
-		MpiPatient mpiPatient1= service.findMpiPatient("abc", "efg");
-
-		Patient patient = service.importMpiPatient("ABCD1234");
-
-		assertEquals(patient.getUuid(), mpiPatient.getUuid());
-	}
-
 }

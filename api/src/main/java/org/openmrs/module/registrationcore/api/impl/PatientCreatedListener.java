@@ -34,9 +34,6 @@ public class PatientCreatedListener extends PatientActionListener {
 
     private IdentifierBuilder identifierBuilder;
 
-    @Autowired
-    private RegistrationCoreService registrationCoreService;
-
     public void setMpiProperties(MpiProperties mpiProperties) {
         this.mpiProperties = mpiProperties;
     }

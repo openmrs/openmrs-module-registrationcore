@@ -13,15 +13,10 @@
  */
 package org.openmrs.module.registrationcore.api;
 
-import ca.uhn.hl7v2.model.Message;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.LocationTag;
@@ -44,10 +39,6 @@ import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
-import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
-import org.openmrs.module.registrationcore.api.impl.RegistrationCoreServiceImpl;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -60,19 +51,11 @@ import java.util.GregorianCalendar;
 import java.util.Calendar;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests {@link RegistrationCoreService} .
  */
 public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBase {
-
-	@InjectMocks
-	private RegistrationCoreService serviceForMocks = new RegistrationCoreServiceImpl();
-	@Mock
-	private MpiProvider mpiProvider;
-	@Mock
-	private RegistrationCoreProperties registrationCoreProperties = new RegistrationCoreProperties();
 
 	private RegistrationCoreService service;
 	
@@ -100,8 +83,6 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
 		executeDataSet("mpi_global_properties_dataset.xml");
 		executeDataSet("patients_dataset.xml");
 		executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
-		serviceForMocks = Context.getService(RegistrationCoreService.class);
-		MockitoAnnotations.initMocks(this);
 		service = Context.getService(RegistrationCoreService.class);
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
         biometricsIdentifierType = new PatientIdentifierType();
@@ -312,36 +293,5 @@ public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBa
     private int getNumPatients() {
         List<List<Object>> results = adminService.executeSQL("select count(*) from patient", true);
         return ((Number)results.get(0).get(0)).intValue();
-    }
-
-    @Test
-	public void importPatient_shouldSavePatientFromMpiPatient() throws Exception{
-	    MpiPatient mpiPatient = new MpiPatient();
-	    mpiPatient.addName(new PersonName("Johny", "Apple", "Smith"));
-	    Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
-	    mpiPatient.setBirthdate(date);
-	    mpiPatient.setGender("M");
-	    PersonAddress personAddress = new PersonAddress();
-	    personAddress.setCountry("TesT");
-	    personAddress.setCityVillage("TeSt2");
-	    personAddress.setCountyDistrict("Test3");
-	    mpiPatient.addAddress(personAddress);
-	    PatientIdentifier identifier = new PatientIdentifier();
-	    identifier.setIdentifier("ABCD1234");
-	    identifier.setIdentifierType(patientService.getPatientIdentifierType(3));
-	    Location location = new Location();
-	    location.setId(1);
-	    identifier.setLocation(location);
-	    mpiPatient.addIdentifier(identifier);
-
-	    when(registrationCoreProperties.getMpiProvider()).thenReturn(mpiProvider);
-	    when(registrationCoreProperties.isMpiEnabled()).thenReturn(true);
-	    when(mpiProvider.fetchMpiPatient(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(mpiPatient);
-	    //when(mpiProperties.getMpiPersonIdentifierTypeUuid()).thenReturn(Mockito.any(String.class))
-	    //MpiPatient mpiPatient1= serviceForMocks.findMpiPatient("abc", "efg");
-
-	    Patient patient = serviceForMocks.importMpiPatient("ABCD1234", "asdf");
-
-	    assertEquals(patient.getUuid(), mpiPatient.getUuid());
     }
 }

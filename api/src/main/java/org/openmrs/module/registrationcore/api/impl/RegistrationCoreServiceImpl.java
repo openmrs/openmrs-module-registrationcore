@@ -398,8 +398,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @should fail if more than one patient exits in the MPI for that specific identifier and identifier type
 	 */
 	@Override
-	public Patient importMpiPatient(String personId) {
-		return importMpiPatient(personId, mpiProperties.getMpiPersonIdentifierTypeUuid());
+	public Patient importMpiPatient(String mpiPatientIdentifier) {
+		return importMpiPatient(mpiPatientIdentifier, mpiProperties.getMpiPersonIdentifierTypeUuid());
 	}
 
 	/**
