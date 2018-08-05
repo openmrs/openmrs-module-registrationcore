@@ -72,7 +72,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         String propertyName = RegistrationCoreConstants.GP_MPI_PIX_ERROR_HANDLER_IMPLEMENTATION;
         PixErrorHandlingService handler = null;
         if (isPropertySet(propertyName)) {
-            handler = Context.getRegisteredComponent(propertyName, PixErrorHandlingService.class);
+            handler = Context.getRegisteredComponent(getProperty(propertyName), PixErrorHandlingService.class);
         }
         return handler;
     }
@@ -81,7 +81,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         String propertyName = RegistrationCoreConstants.GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION;
         PdqErrorHandlingService handler = null;
         if (isPropertySet(propertyName)) {
-            handler = Context.getRegisteredComponent(propertyName, PdqErrorHandlingService.class);
+            handler = Context.getRegisteredComponent(getProperty(propertyName), PdqErrorHandlingService.class);
         }
         return handler;
     }
@@ -153,5 +153,4 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return StringUtils.isNotBlank(
                 Context.getAdministrationService().getGlobalProperty(globalProperty));
     }
-
 }

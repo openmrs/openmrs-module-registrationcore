@@ -132,8 +132,7 @@ public class PatientCreatedListener extends PatientActionListener {
     private PatientIdentifier createPatientIdentifier(User creator, String mpiPatientId) {
         PatientIdentifier mpiPatientIdentifier = identifierBuilder
                 .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeUuid(), mpiPatientId, null);
-        // TODO test not setting the creator here as service layer should automatically set it to the authenticated user
-        //mpiPatientIdentifier.setCreator(creator);
+        mpiPatientIdentifier.setCreator(creator);
         return mpiPatientIdentifier;
     }
 }
