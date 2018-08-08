@@ -16,7 +16,7 @@
                 patient_identifier_type WHERE uuid ='a5d38e09-efcb-4d91-a526-50ce1ba5011a';
             </sqlCheck>
         </preConditions>
-        <comment></comment>
+        <comment>Creates a Patient Identifier Type which acts as the MPI Global Identifier for the Demo of the MPI Functionality with OpenEMPI</comment>
         <insert tableName="patient_identifier_type">
             <column name="name" value="OpenEMPI ID"/>
             <column name="description"

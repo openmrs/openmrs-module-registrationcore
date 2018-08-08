@@ -20,7 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-// TODO: Add Javadocs
+/**
+ * Uses PQD profile to search the MPI for similar patients
+ */
 public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Autowired
@@ -75,7 +77,6 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         return toMatchList(patient, retVal);
     }
 
-    // Q: Why doesn't toMatchList check matches for identifiers?
     private List<PatientAndMatchQuality> toMatchList(Patient patient, List<? extends Patient> patients) {
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 

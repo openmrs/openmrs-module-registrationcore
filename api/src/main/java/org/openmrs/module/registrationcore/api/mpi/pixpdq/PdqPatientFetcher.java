@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.Map;
 import org.springframework.util.CollectionUtils;
 
-// TODO add javadocs
+/**
+ * Fetches a single patient from the MPI by submitting a PDQ with the patient identifier
+ */
 public class PdqPatientFetcher implements MpiPatientFetcher {
 
     @Autowired

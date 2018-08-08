@@ -19,8 +19,7 @@ public class Hl7SenderHolder {
             String beanId = Context.getAdministrationService().getGlobalProperty(propertyName);
             bean = context.getBean(beanId);
         } catch (APIException e) {
-            // TODO Do not ignore this!
-            return null;
+            throw new APIException(e);
         }
         if (!(bean instanceof Hl7v2Sender))
             throw new IllegalArgumentException(propertyName

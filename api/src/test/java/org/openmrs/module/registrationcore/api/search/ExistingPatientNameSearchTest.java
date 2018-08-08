@@ -16,7 +16,7 @@ package org.openmrs.module.registrationcore.api.search;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
+import org.openmrs.module.registrationcore.api.BaseRegistrationCoreSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Tests ExistingPatientNameSearchTest
  */
-public class ExistingPatientNameSearchTest extends RegistrationCoreSensitiveTestBase {
+public class ExistingPatientNameSearchTest extends BaseRegistrationCoreSensitiveTest {
 
     @Autowired
     ExistingPatientNameSearch search;

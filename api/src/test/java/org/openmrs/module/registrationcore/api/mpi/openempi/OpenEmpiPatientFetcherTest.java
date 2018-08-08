@@ -6,12 +6,13 @@ import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
-import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
+import org.openmrs.module.registrationcore.api.BaseRegistrationCoreSensitiveTest;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.when;
 import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier;
 
 @Ignore
-public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBase {
+public class OpenEmpiPatientFetcherTest extends BaseRegistrationCoreSensitiveTest {
 
     private static final String PATIENT_WITH_OPENMRS_ID = "patient_with_openmrs_id.xml";
     private static final String PATIENT_WITHOUT_OPENMRS_ID = "patient_without_openmrs_id.xml";
@@ -168,7 +169,7 @@ public class OpenEmpiPatientFetcherTest extends RegistrationCoreSensitiveTestBas
                 return;
             }
         }
-        throw new RuntimeException("Patient identifiers doesn't contains identifier: " + identifierName);
+        throw new APIException("Patient identifiers doesn't contains identifier: " + identifierName);
     }
 
 }

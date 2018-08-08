@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
-import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
+import org.openmrs.module.registrationcore.api.BaseRegistrationCoreSensitiveTest;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class PixPdqContextSensitiveTest extends RegistrationCoreSensitiveTestBase {
+public class PixPdqContextSensitiveTest extends BaseRegistrationCoreSensitiveTest {
 	private Message PIX_RESPONSE;
 	private Message PDQ_RESPONSE;
 

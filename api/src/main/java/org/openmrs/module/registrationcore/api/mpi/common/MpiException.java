@@ -1,9 +1,11 @@
 package org.openmrs.module.registrationcore.api.mpi.common;
 
+import org.openmrs.api.APIException;
+
 /**
  * Represents errors that occur during interactions with the Master Patient Index.
  */
-public class MpiException extends RuntimeException {
+public class MpiException extends APIException {
 
     /**
      * General constructor to give the end user a helpful message that relates to why this error

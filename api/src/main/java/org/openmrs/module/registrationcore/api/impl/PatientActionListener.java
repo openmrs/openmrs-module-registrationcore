@@ -139,7 +139,7 @@ public abstract class PatientActionListener implements SubscribableEventListener
         try {
             return new ObjectMapper().writeValueAsString(parameters);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot prepare parameters for OutgoingMessageException", e);
+            throw new APIException("Cannot prepare parameters for OutgoingMessageException", e);
         }
     }
 
@@ -163,7 +163,7 @@ public abstract class PatientActionListener implements SubscribableEventListener
     private Patient getPatient(String patientUuid) {
         Patient patient = patientService.getPatientByUuid(patientUuid);
         if (patient == null){
-            throw new RuntimeException("Unable to retrieve patient by uuid");
+            throw new APIException("Unable to retrieve patient by uuid");
         }
         return patient;
     }

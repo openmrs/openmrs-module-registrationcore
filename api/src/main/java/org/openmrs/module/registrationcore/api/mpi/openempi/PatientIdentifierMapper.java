@@ -24,7 +24,7 @@ public class PatientIdentifierMapper {
     public String getMappedLocalIdentifierTypeUuid(String mpiIdentifierTypeId) {
         validateInit();
         for (IdentifierTypeMap typeMap : MAPPED_ID) {
-            if (typeMap.mpiIdentifierId.equals(mpiIdentifierTypeId)) {
+            if (typeMap.mpiIdentifierUuid.equals(mpiIdentifierTypeId)) {
                 log.info("mpiIdentifierTypeId " + mpiIdentifierTypeId + " " +
                         "properly mapped for "+ typeMap.localIdentifierUuid);
                 return typeMap.localIdentifierUuid;
@@ -39,8 +39,8 @@ public class PatientIdentifierMapper {
         for (IdentifierTypeMap typeMap : MAPPED_ID) {
             if (typeMap.localIdentifierUuid.equals(localIdentifierTypeUuid)) {
                 log.info("localIdentifierTypeUuid " + localIdentifierTypeUuid + " " +
-                        "properly mapped for "+ typeMap.mpiIdentifierId);
-                return typeMap.mpiIdentifierId;
+                        "properly mapped for "+ typeMap.mpiIdentifierUuid);
+                return typeMap.mpiIdentifierUuid;
             }
         }
         throw new MpiException("No proper mapping found for localIdentifierTypeUuid=" + localIdentifierTypeUuid + ". " +
@@ -75,7 +75,7 @@ public class PatientIdentifierMapper {
             MAPPED_ID.add(typeMap);
 
             log.info("Initialized identifier type map - Local: " + typeMap.localIdentifierUuid
-                    + " , MPI: " + typeMap.mpiIdentifierId + " , Type: " + typeMap.universalIdType);
+                    + " , MPI: " + typeMap.mpiIdentifierUuid + " , Type: " + typeMap.universalIdType);
         }
     }
 
@@ -123,13 +123,13 @@ public class PatientIdentifierMapper {
 
         public final String localIdentifierUuid;
 
-        public final String mpiIdentifierId;
+        public final String mpiIdentifierUuid;
 
         public final String universalIdType;
 
-        public IdentifierTypeMap(String localIdentifierUuid, String mpiIdentifierId, String universalIdType) {
+        public IdentifierTypeMap(String localIdentifierUuid, String mpiIdentifierUuid, String universalIdType) {
             this.localIdentifierUuid = localIdentifierUuid;
-            this.mpiIdentifierId = mpiIdentifierId;
+            this.mpiIdentifierUuid = mpiIdentifierUuid;
             this.universalIdType = universalIdType;
         }
     }

@@ -6,7 +6,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.User;
 import org.openmrs.event.Event;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingService;
@@ -117,22 +116,10 @@ public class PatientCreatedListener extends PatientActionListener {
      * @param mpiPatientId MPI global identifier for the provided patient
      */
     private void updatePatient(final Patient patient, final String mpiPatientId) {
-        User creator = patient.getCreator();
-        patient.addIdentifier(createPatientIdentifier(creator, mpiPatientId));
+        PatientIdentifier mpiPatientIdentifier = identifierBuilder
+                .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeUuid(), mpiPatientId, null);
+        patient.addIdentifier(mpiPatientIdentifier);
         patientService.savePatient(patient);
     }
 
-    /**
-     * Utility to create a Patient Identifier object based on a creator and MPI identifier.
-     *
-     * @param creator the user which is set as the creator of the identifier
-     * @param mpiPatientId the identifier string to be stored in the created identifier
-     * @return created Patient Identifier object
-     */
-    private PatientIdentifier createPatientIdentifier(User creator, String mpiPatientId) {
-        PatientIdentifier mpiPatientIdentifier = identifierBuilder
-                .createIdentifier(mpiProperties.getMpiPersonIdentifierTypeUuid(), mpiPatientId, null);
-        mpiPatientIdentifier.setCreator(creator);
-        return mpiPatientIdentifier;
-    }
 }

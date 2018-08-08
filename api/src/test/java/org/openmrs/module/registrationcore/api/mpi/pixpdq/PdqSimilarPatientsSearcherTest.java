@@ -45,7 +45,7 @@ public class PdqSimilarPatientsSearcherTest {
         initHl7SenderHolder();
     }
 
-    /*
+    /**
      * Initialize data that is returned every time pixPdqMessageUtil.interpretPIDSegments is called
      */
     private void initData(){

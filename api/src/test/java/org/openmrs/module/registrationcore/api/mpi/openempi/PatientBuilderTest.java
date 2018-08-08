@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
@@ -31,6 +32,7 @@ public class PatientBuilderTest {
     @Mock private PatientIdentifierMapper identifierMapper;
     @Mock private IdentifierBuilder identifierBuilder;
     @Mock private MpiProperties mpiProperties;
+    @Mock private RegistrationCoreProperties registrationCoreProperties;
     private XmlMarshaller xmlMarshaller = new XmlMarshaller();
 
 
@@ -42,6 +44,7 @@ public class PatientBuilderTest {
         MockitoAnnotations.initMocks(this);
         mockIdentifierMapper();
         mockIdentifierBuilder();
+        mockRegistrationCoreProperties();
         when(mpiProperties.getMpiPersonIdentifierTypeUuid()).thenReturn(PERSON_IDENTIFIER_TYPE_UUID);
     }
 
@@ -55,6 +58,10 @@ public class PatientBuilderTest {
                 .thenReturn(openmrsidentifier);
         when(identifierBuilder.createIdentifier(LOCAL_ECID_IDENTIFIER_TYPE_UUID, PATIENT_ECID_IDENTIFIER_VALUE, null))
                 .thenReturn(ecidIdentifier);
+    }
+
+    private void mockRegistrationCoreProperties(){
+        when(registrationCoreProperties.getOpenMrsIdentifierUuid()).thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID);
     }
 
     @Test

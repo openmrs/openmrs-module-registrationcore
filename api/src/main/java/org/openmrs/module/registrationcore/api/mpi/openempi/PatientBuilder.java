@@ -7,6 +7,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.PersonIdentifier;
@@ -17,8 +18,9 @@ import java.util.*;
 
 public class PatientBuilder {
 
-    private static final String OPENMRS_IDENTIFIER_NAME = "OpenMRS";
     private final Log log = LogFactory.getLog(this.getClass());
+
+    private RegistrationCoreProperties registrationCoreProperties;
 
     @Autowired
     @Qualifier("registrationcore.identifierMapper")
@@ -107,7 +109,7 @@ public class PatientBuilder {
         log.info("Create identifier for imported Mpi patient. Identifier name: " + identifierName + ". Identifier UUID: "
                 + identifierTypeUuid + ". Identifier value: " + identifierValue);
         PatientIdentifier identifier = identifierBuilder.createIdentifier(identifierTypeUuid, identifierValue, null);
-        if (OPENMRS_IDENTIFIER_NAME.equals(identifierName)) {
+        if (registrationCoreProperties.getOpenMrsIdentifierUuid().equals(identifierTypeUuid)) {
             identifier.setPreferred(true);
         }
         return identifier;

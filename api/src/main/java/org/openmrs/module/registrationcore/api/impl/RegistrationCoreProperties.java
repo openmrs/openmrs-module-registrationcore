@@ -31,6 +31,11 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return getIntegerProperty(propertyName);
     }
 
+    public String getOpenMrsIdentifierUuid() {
+        String propertyName = RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID;
+        return getProperty(propertyName);
+    }
+
     public boolean isMpiEnabled() {
         return getMpiProvider() != null;
     }

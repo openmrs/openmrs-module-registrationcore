@@ -6,8 +6,8 @@ import ca.uhn.hl7v2.llp.LLPException;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.parser.PipeParser;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
@@ -20,7 +20,7 @@ import java.net.URL;
 
 public class HttpSender implements Hl7v2Sender {
 
-    private final Log log = LogFactory.getLog(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private RegistrationCoreProperties config;
@@ -51,8 +51,7 @@ public class HttpSender implements Hl7v2Sender {
 
         try
         {
-            if(log.isDebugEnabled())
-                log.debug(String.format("Sending to %s : %s", url, parser.encode(request)));
+            log.debug(String.format("Sending to %s : %s", url, parser.encode(request)));
 
             String message = "\u000B" + request.toString() + "\u001C" + "\r";
             connection.getOutputStream().write(message.getBytes("UTF-8"));
@@ -69,11 +68,8 @@ public class HttpSender implements Hl7v2Sender {
                 ));
             }
             response = getResponse(connection, parser);
-    
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Response from %s : %s", url, parser.encode(response)));
-            }
-            
+            log.debug(String.format("Response from %s : %s", url, parser.encode(response)));
+
             return response;
         }
         finally
@@ -82,7 +78,7 @@ public class HttpSender implements Hl7v2Sender {
         }
     }
 
-    private Message getResponse(HttpURLConnection connection,  PipeParser parser) throws HL7Exception, LLPException, IOException
+    private Message getResponse(HttpURLConnection connection,  PipeParser parser) throws HL7Exception, IOException
     {
         InputStream inputStr = connection.getInputStream();
         String encoding = connection.getContentEncoding() == null ? "UTF-8"

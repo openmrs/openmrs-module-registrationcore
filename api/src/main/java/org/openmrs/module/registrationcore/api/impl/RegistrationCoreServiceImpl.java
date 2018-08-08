@@ -382,7 +382,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		MpiPatient mpiPatient = null;
 		try {
 			mpiPatient = mpiProvider.fetchMpiPatient(identifier, identifierTypeUuid);
-		} catch (RuntimeException e) {
+		} catch (APIException e) {
 			servePdqExceptionAndThrowAgain(e,
 					prepareParameters(identifier, identifierTypeUuid),
 					PdqErrorHandlingService.FIND_MPI_PATIENT_DESTINATION);
@@ -422,7 +422,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 						patientIdentifier, patientIdentifierTypeUuid));
 			}
 			savedPatient = persistImportedMpiPatient(foundPatient);
-		} catch (RuntimeException e) {
+		} catch (APIException e) {
 			servePdqExceptionAndThrowAgain(e,
 					prepareParameters(patientIdentifier, patientIdentifierTypeUuid),
 					PdqErrorHandlingService.PERSIST_MPI_PATIENT_DESTINATION);
@@ -434,11 +434,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * Serves the PDQ exception if a PDQ error handling service has been specified in the global properties.
 	 * Then, throws MPI exception again.
 	 *
-	 * @param e runtime exception triggered
+	 * @param e APIException triggered
 	 * @param message message to be resent by the error handling service
 	 * @param destination the destination the message was supposed to be sent to
 	 */
-	private void servePdqExceptionAndThrowAgain(RuntimeException e, String message,
+	private void servePdqExceptionAndThrowAgain(APIException e, String message,
 			String destination) {
 		ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
 		if (errorHandler == null) {
@@ -463,7 +463,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		try {
 			return new ObjectMapper().writeValueAsString(parameters);
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot prepare parameters for OutgoingMessageException", e);
+			throw new APIException("Cannot prepare parameters for OutgoingMessageException", e);
 		}
 	}
 
@@ -474,35 +474,24 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @return local patient object of saved MPI patient
 	 */
 	private Patient persistImportedMpiPatient(MpiPatient mpiPatient) {
-		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
-		PatientIdentifierType openMrsIdType = patientService.getPatientIdentifierTypeByUuid(openMrsIdTypeUuid);
-		Patient patient;
+		PatientIdentifierType openMrsIdType = patientService.getPatientIdentifierTypeByUuid(registrationCoreProperties.getOpenMrsIdentifierUuid());
 		if (mpiPatient.getPatientIdentifier(openMrsIdType) == null) {
-			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
+			PatientIdentifier localId = validateOrGenerateIdentifier(null,null);
 			mpiPatient.addIdentifier(localId);
 		}
-		patient = patientService.savePatient(mpiPatient.convertToPatient());
+		Patient patient = patientService.savePatient(mpiPatient.convertToPatient());
 		return patient;
 	}
 
 	private IdentifierSourceService getIssAndUpdateIdSource() {
 		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
 		if (idSource == null) {
-			String idSourceId = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID);
-			if (StringUtils.isBlank(idSourceId)) {
-				throw new APIException("Please set the id of the identifier source to use to generate patient identifiers");
-			}
-			try {
-				idSource = iss.getIdentifierSource(Integer.valueOf(idSourceId));
-				if (idSource == null) {
-					throw new APIException("cannot find identifier source with id:" + idSourceId);
-				}
-			}
-			catch (NumberFormatException e) {
-				throw new APIException("Identifier source id should be a number");
+			Integer idSourceId = registrationCoreProperties.getOpenMrsIdentifierSourceId();
+			idSource = iss.getIdentifierSource(idSourceId);
+			if (idSource == null) {
+				throw new APIException("cannot find identifier source with id:" + idSourceId);
 			}
 		}
-
 		return iss;
 	}
 
@@ -540,15 +529,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return pId;
 	}
-
-	private String getGlobalProperty(String propertyName) {
-		String propertyValue = adminService.getGlobalProperty(propertyName);
-		if (StringUtils.isBlank(propertyValue)) {
-			throw new APIException(String.format("Property value for '%s' is not set", propertyName));
-		}
-		return propertyValue;
-	}
-
 
     @Override
     public BiometricEngine getBiometricEngine() {

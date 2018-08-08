@@ -50,12 +50,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests {@link RegistrationCoreService} .
  */
-public class RegistrationCoreServiceTest extends RegistrationCoreSensitiveTestBase {
+public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTest {
 
 	private RegistrationCoreService service;
 	
