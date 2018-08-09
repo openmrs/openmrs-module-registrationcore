@@ -98,8 +98,6 @@ public class OpenEmpiPatientFetcherTest extends BaseRegistrationCoreSensitiveTes
     private void saveGlobalProperties() {
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_IMPLEMENTATION, "registrationcore.mpi.implementation.OpenEMPI"));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME, GP_MPI_USERNAME));
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, GP_MPI_PASSWORD));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_URL, "server.url"));
         adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID, PERSON_IDENTIFIER_TYPE_UUID));
 

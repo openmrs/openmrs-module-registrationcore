@@ -19,18 +19,14 @@
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.RegistrationCoreActivator</activator>
     <require_modules>
-		<require_module version="${idgenVersion}">
-			org.openmrs.module.idgen
-		</require_module>
+
+    <require_module version="${idgenVersion}">
+        org.openmrs.module.idgen
+    </require_module>
         <require_module version="${eventVersion}">
             org.openmrs.event
         </require_module>
     </require_modules>
-
-	<extension>
-		<point>org.openmrs.admin.list</point>
-		<class>org.openmrs.module.registrationcore.extension.html.AdminList</class>
-	</extension>
     
     <aware_of_modules>
        <aware_of_module version="${namephoneticsVersion}">org.openmrs.module.namephonetics</aware_of_module>
@@ -108,22 +104,6 @@
 		<defaultValue></defaultValue>
 		<description>
 			Specifies url to MPI server. (GSOC OpenEMPI Specific Implementation)
-		</description>
-	</globalProperty>
-
-	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.username</property>
-		<defaultValue>admin</defaultValue>
-		<description>
-			Specifies username for authentication to MPI server
-		</description>
-	</globalProperty>
-
-	<globalProperty>
-		<property>${project.parent.artifactId}.mpi.password</property>
-		<defaultValue>admin</defaultValue>
-		<description>
-			Specifies password for authentication to MPI server
 		</description>
 	</globalProperty>
 
@@ -263,7 +243,6 @@
 			Specifies the receiving application in the MSH header section of the HL7 message
 		</description>
 	</globalProperty>
-
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.receivingFacility</property>

@@ -16,6 +16,16 @@ package org.openmrs.module.registrationcore;
 public final class RegistrationCoreConstants {
 
 	/**
+	 * Specifies the runtime property for the MPI Username defined in the .OpenMRS/openmrs-runtime.properties file
+	 */
+	public static final String RTP_MPI_ACCESS_USERNAME = "registrationcore.mpi.username";
+
+	/**
+	 * Specifies the runtime property for the MPI Password defined in the .OpenMRS/openmrs-runtime.properties file
+	 */
+	public static final String RTP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
+
+	/**
 	 * Specifies the identifier source to use when generating patient identifiers
 	 */
 	public static final String GP_OPENMRS_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
@@ -59,10 +69,6 @@ public final class RegistrationCoreConstants {
 	public static final String GP_MPI_HL7_IMPLEMENTATION = "registrationcore.mpi.Hl7implementation";
 
 	public static final String GP_MPI_URL = "registrationcore.mpi.url";
-
-	public static final String GP_MPI_ACCESS_USERNAME = "registrationcore.mpi.username";
-
-	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
 
 	public static final String GP_PROBABLY_MATCH_ENABLED = "registrationcore.openempi.enableProbabilisticMatching";
 

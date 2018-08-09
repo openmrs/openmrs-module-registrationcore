@@ -1,23 +1,26 @@
 package org.openmrs.module.registrationcore.api.impl;
 
+import java.util.Properties;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.ModuleProperties;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingService;
 import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingService;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 public class RegistrationCoreProperties extends ModuleProperties implements ApplicationContextAware {
     //TODO move getting properties related to Registration Core in this class.
 
-    protected final Log log = LogFactory.getLog(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private ApplicationContext applicationContext;
 
@@ -97,7 +100,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
      */
     public String getPdqEndpoint() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PDQ_ENDPOINT, "localhost");
+                RegistrationCoreConstants.GP_MPI_PDQ_ENDPOINT);
     }
 
     /**
@@ -106,27 +109,35 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
      */
     public Integer getPdqPort() {
         return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PDQ_PORT, "3600"));
+                RegistrationCoreConstants.GP_MPI_PDQ_PORT));
     }
 
     public String getPixEndpoint() {
         return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PIX_ENDPOINT, "localhost");
+                RegistrationCoreConstants.GP_MPI_PIX_ENDPOINT);
     }
 
     public Integer getPixPort() {
         return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PIX_PORT, "3700"));
+                RegistrationCoreConstants.GP_MPI_PIX_PORT));
     }
 
     public String getMpiUsername() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_ACCESS_USERNAME, "admin");
+        Properties props = OpenmrsUtil.getRuntimeProperties(null);
+        String username = props.getProperty(RegistrationCoreConstants.RTP_MPI_ACCESS_USERNAME);
+        if (StringUtils.isBlank(username)){
+            log.error("MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
+        }
+        return username;
     }
 
     public String getMpiPassword() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_ACCESS_PASSWORD, "admin");
+        Properties props = OpenmrsUtil.getRuntimeProperties(null);
+        String password = props.getProperty(RegistrationCoreConstants.RTP_MPI_ACCESS_PASSWORD);
+        if (StringUtils.isBlank(password)){
+            log.error("MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
+        }
+        return password;
     }
 
     public String getReceivingApplication() {
