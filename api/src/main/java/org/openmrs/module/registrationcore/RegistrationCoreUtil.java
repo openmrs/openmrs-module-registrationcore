@@ -6,16 +6,11 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+
 
 public class RegistrationCoreUtil {
 
-    @Autowired
-    private ApplicationContext context;
-    
     private static final Log log = LogFactory.getLog(RegistrationCoreUtil.class);
     /**
      * Converts an age (specified in year, month, and day) to a birthdate.
@@ -76,18 +71,5 @@ public class RegistrationCoreUtil {
         }
         
         return startMonth;
-    }
-
-
-
-    public Object getBeanFromName(String propertyName) {
-        Object bean;
-        try {
-            String beanId = Context.getAdministrationService().getGlobalProperty(propertyName);
-            bean = context.getBean(beanId);
-        } catch (APIException e) {
-            throw new APIException(e);
-        }
-        return bean;
     }
 }

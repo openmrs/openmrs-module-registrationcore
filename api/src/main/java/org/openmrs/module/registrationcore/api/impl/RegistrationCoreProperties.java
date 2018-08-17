@@ -169,4 +169,15 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         return StringUtils.isNotBlank(
                 Context.getAdministrationService().getGlobalProperty(globalProperty));
     }
+
+    public Object getBeanFromName(String propertyName) {
+        Object bean;
+        try {
+            String beanId = Context.getAdministrationService().getGlobalProperty(propertyName);
+            bean = applicationContext.getBean(beanId);
+        } catch (APIException e) {
+            throw new APIException(e);
+        }
+        return bean;
+    }
 }

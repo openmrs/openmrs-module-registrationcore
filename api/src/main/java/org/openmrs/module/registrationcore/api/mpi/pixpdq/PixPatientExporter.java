@@ -6,8 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.module.registrationcore.RegistrationCoreUtil;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
@@ -18,13 +18,11 @@ public class PixPatientExporter implements MpiPatientExporter {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
+    private RegistrationCoreProperties registrationCoreProperties;
+
     @Autowired
     @Qualifier("registrationcore.mpiPixPdqMessageUtil")
     private PixPdqMessageUtil pixPdqMessageUtil;
-
-    @Autowired
-    @Qualifier("registrationcore.coreUtil")
-    private RegistrationCoreUtil registrationCoreUtil;
 
     @Autowired
     @Qualifier("registrationcore.mpiPatientFetcherPdq")
@@ -48,7 +46,7 @@ public class PixPatientExporter implements MpiPatientExporter {
 	        }
 	        
             Message admitMessage = pixPdqMessageUtil.createAdmit(patient);
-	        Hl7v2Sender sender = (Hl7v2Sender) registrationCoreUtil.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
+	        Hl7v2Sender sender = (Hl7v2Sender) registrationCoreProperties.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
             Message response = sender.sendPixMessage(admitMessage);
 
             if (pixPdqMessageUtil.isQueryError(response)) {
