@@ -11,6 +11,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.BaseRegistrationCoreSensitiveTest;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
@@ -34,7 +35,7 @@ public class PixPdqContextSensitiveTest extends BaseRegistrationCoreSensitiveTes
 	private PixPatientExporter pixPatientExporter;
 
 	@Mock
-	private Hl7SenderHolder hl7SenderHolder;
+	private RegistrationCoreProperties registrationCoreProperties;
 
 	@Mock
 	private Hl7v2Sender hl7v2Sender;
@@ -74,7 +75,7 @@ public class PixPdqContextSensitiveTest extends BaseRegistrationCoreSensitiveTes
 			method = "exportPatient(Patient)")
 	public void exportPatient_ContextSensitiveShouldFailExportPatient() throws Exception {
 		Patient patient = patientService.getPatient(99);
-		when(hl7SenderHolder.getHl7v2Sender()).thenReturn(hl7v2Sender);
+		when(registrationCoreProperties.getBeanFromName(Mockito.anyString())).thenReturn(hl7v2Sender);
 		when(hl7v2Sender.sendPixMessage(Mockito.any(Message.class))).thenReturn(PIX_RESPONSE);
 		when(hl7v2Sender.sendPdqMessage(Mockito.any(Message.class))).thenReturn(PDQ_RESPONSE);
 

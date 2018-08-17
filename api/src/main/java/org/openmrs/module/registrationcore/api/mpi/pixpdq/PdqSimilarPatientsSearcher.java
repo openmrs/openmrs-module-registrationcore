@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
+import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
@@ -28,10 +29,6 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     @Autowired
     @Qualifier("registrationcore.mpiPixPdqMessageUtil")
     private PixPdqMessageUtil pixPdqMessageUtil;
-
-    @Autowired
-    @Qualifier("registrationcore.Hl7SenderHolder")
-    private Hl7SenderHolder hl7SenderHolder;
     
     @Autowired
     @Qualifier("registrationcore.coreProperties")
@@ -57,7 +54,8 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
             List<Map.Entry<String, String>> queryParams = pixPdqMessageUtil.patientToQPD3Params(patient);
 	        if (!queryParams.isEmpty()){
 		        Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
-		        Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
+                Hl7v2Sender hl7v2Sender = (Hl7v2Sender) registrationCoreProperties.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
+                Message response = hl7v2Sender.sendPdqMessage(pdqRequest);
 		        mpiPatientList = pixPdqMessageUtil.interpretPIDSegments(response);
 	        }
         } catch (Exception e) {

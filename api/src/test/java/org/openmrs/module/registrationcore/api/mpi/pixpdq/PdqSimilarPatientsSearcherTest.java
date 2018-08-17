@@ -11,6 +11,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
@@ -35,14 +36,14 @@ public class PdqSimilarPatientsSearcherTest {
     @Mock
     private Hl7v2Sender hl7v2Sender;
     @Mock
-    private Hl7SenderHolder hl7SenderHolder;
+    private RegistrationCoreProperties registrationCoreProperties;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         initData();
         initPixPdqMessageUtil();
-        initHl7SenderHolder();
+        initRegistrationCoreProperties();
     }
 
     /**
@@ -95,9 +96,9 @@ public class PdqSimilarPatientsSearcherTest {
         }
     }
 
-    private void initHl7SenderHolder() {
+    private void initRegistrationCoreProperties() {
         try {
-            when(hl7SenderHolder.getHl7v2Sender()).thenReturn(hl7v2Sender);
+            when(registrationCoreProperties.getBeanFromName(Mockito.anyString())).thenReturn(hl7v2Sender);
         } catch (Exception e) {
             e.printStackTrace();
         }

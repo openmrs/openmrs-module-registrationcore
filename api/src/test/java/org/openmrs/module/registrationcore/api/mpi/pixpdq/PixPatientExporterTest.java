@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.test.Verifies;
@@ -41,7 +42,7 @@ public class PixPatientExporterTest {
 	@Mock
 	private Hl7v2Sender hl7v2Sender;
 	@Mock
-	private Hl7SenderHolder hl7SenderHolder;
+	private RegistrationCoreProperties registrationCoreProperties;
 	@Mock
 	private MpiProperties mpiProperties;
 	@Mock
@@ -100,7 +101,7 @@ public class PixPatientExporterTest {
 
 	private void initHl7SenderHolder() {
 		try {
-			when(hl7SenderHolder.getHl7v2Sender()).thenReturn(hl7v2Sender);
+			when(registrationCoreProperties.getBeanFromName(Mockito.anyString())).thenReturn(hl7v2Sender);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

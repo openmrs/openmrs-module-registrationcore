@@ -18,6 +18,7 @@ public class PixPatientExporter implements MpiPatientExporter {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
+    @Autowired
     private RegistrationCoreProperties registrationCoreProperties;
 
     @Autowired
@@ -46,8 +47,8 @@ public class PixPatientExporter implements MpiPatientExporter {
 	        }
 	        
             Message admitMessage = pixPdqMessageUtil.createAdmit(patient);
-	        Hl7v2Sender sender = (Hl7v2Sender) registrationCoreProperties.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
-            Message response = sender.sendPixMessage(admitMessage);
+	        Hl7v2Sender hl7v2Sender = (Hl7v2Sender) registrationCoreProperties.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
+            Message response = hl7v2Sender.sendPixMessage(admitMessage);
 
             if (pixPdqMessageUtil.isQueryError(response)) {
                 throw new MpiException("Error querying patient data during export");

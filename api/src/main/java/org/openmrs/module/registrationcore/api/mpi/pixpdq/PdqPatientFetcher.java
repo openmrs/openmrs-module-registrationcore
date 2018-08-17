@@ -8,6 +8,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.module.registrationcore.RegistrationCoreConstants;
+import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
@@ -24,12 +26,11 @@ import org.springframework.util.CollectionUtils;
 public class PdqPatientFetcher implements MpiPatientFetcher {
 
     @Autowired
-    @Qualifier("registrationcore.mpiPixPdqMessageUtil")
-    private PixPdqMessageUtil pixPdqMessageUtil;
+    private RegistrationCoreProperties registrationCoreProperties;
 
     @Autowired
-    @Qualifier("registrationcore.Hl7SenderHolder")
-    private Hl7SenderHolder hl7SenderHolder;
+    @Qualifier("registrationcore.mpiPixPdqMessageUtil")
+    private PixPdqMessageUtil pixPdqMessageUtil;
 
     @Autowired
     private PatientIdentifierMapper identifierMapper;
@@ -46,7 +47,8 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
         try {
             Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
-            Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
+            Hl7v2Sender hl7v2Sender = (Hl7v2Sender) registrationCoreProperties.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
+            Message response = hl7v2Sender.sendPdqMessage(pdqRequest);
 
             List<MpiPatient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
             mpiPatients = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(mpiPatients, patientIdentifier, identifierTypeUuid);
