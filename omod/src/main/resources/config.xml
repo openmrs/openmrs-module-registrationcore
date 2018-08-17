@@ -92,7 +92,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.implementation</property>
-		<defaultValue>registrationcore.mpi.implementation.PixPdq</defaultValue>
+		<defaultValue></defaultValue>
 		<description>
 			Which MPI to should we connect to? Specify a Spring bean name, or leave blank to disable MPI integration. Options include:
 			"registrationcore.mpi.implementation.PixPdq", "registrationcore.mpi.implementation.OpenEMPI".
@@ -230,7 +230,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.sendingFacility</property>
-		<defaultValue>Demo Sending Facility</defaultValue>
+		<defaultValue></defaultValue>
 		<description>
 			Specifies sending Facility in the MSH header section of the HL7 message
 		</description>
@@ -238,7 +238,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.receivingApplication</property>
-		<defaultValue>Demo MPI</defaultValue>
+		<defaultValue></defaultValue>
 		<description>
 			Specifies the receiving application in the MSH header section of the HL7 message
 		</description>
@@ -246,7 +246,7 @@
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.mpi.receivingFacility</property>
-		<defaultValue>Demo Receiving Facility</defaultValue>
+		<defaultValue></defaultValue>
 		<description>
 			Specifies sending Facility in the MSH header section of the HL7 message
 		</description>
