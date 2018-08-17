@@ -50,6 +50,9 @@
     <bean id="registrationcore.coreProperties"
           class="org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties"/>
 
+    <bean id="registrationcore.coreUtil"
+          class="org.openmrs.module.registrationcore.RegistrationCoreUtil"/>
+
     <!-- Services accessible via Context.getService() -->
     <bean parent="serviceContext">
         <property name="moduleService">

@@ -6,6 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.PatientIdentifierType;
+import org.openmrs.module.registrationcore.RegistrationCoreUtil;
+import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
@@ -21,8 +23,8 @@ public class PixPatientExporter implements MpiPatientExporter {
     private PixPdqMessageUtil pixPdqMessageUtil;
 
     @Autowired
-    @Qualifier("registrationcore.Hl7SenderHolder")
-    private Hl7SenderHolder hl7SenderHolder;
+    @Qualifier("registrationcore.coreUtil")
+    private RegistrationCoreUtil registrationCoreUtil;
 
     @Autowired
     @Qualifier("registrationcore.mpiPatientFetcherPdq")
@@ -46,7 +48,8 @@ public class PixPatientExporter implements MpiPatientExporter {
 	        }
 	        
             Message admitMessage = pixPdqMessageUtil.createAdmit(patient);
-            Message response = hl7SenderHolder.getHl7v2Sender().sendPixMessage(admitMessage);
+	        Hl7v2Sender sender = (Hl7v2Sender) registrationCoreUtil.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
+            Message response = sender.sendPixMessage(admitMessage);
 
             if (pixPdqMessageUtil.isQueryError(response)) {
                 throw new MpiException("Error querying patient data during export");
