@@ -2,7 +2,9 @@ package org.openmrs.module.registrationcore.api.errorhandling;
 
 import java.io.Serializable;
 
-// TODO add javadoc and investigate
+/**
+ * Class that holds required parameters for fetching patient from MPI
+ */
 public class FetchingMpiPatientParameters implements Serializable {
 
 	private String identifier;

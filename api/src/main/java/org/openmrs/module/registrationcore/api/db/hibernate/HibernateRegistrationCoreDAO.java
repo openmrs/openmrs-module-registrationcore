@@ -42,7 +42,6 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
 	/**
 	 * @return the sessionFactory
 	 */
-	@Override
 	public DbSessionFactory getSessionFactory() {
 		return sessionFactory;
 	}

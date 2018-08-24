@@ -23,8 +23,6 @@ import java.util.List;
  */
 public interface RegistrationCoreDAO {
 
-    DbSessionFactory getSessionFactory();
-
     List<String> findExistingSimilarGivenNames(String searchPhrase);
 
     List<String> findExistingSimilarFamilyNames(String searchPhrase);
