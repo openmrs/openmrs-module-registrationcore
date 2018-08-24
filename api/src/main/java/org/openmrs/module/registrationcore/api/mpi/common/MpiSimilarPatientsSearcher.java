@@ -26,7 +26,7 @@ import java.util.Map;
 public interface MpiSimilarPatientsSearcher {
 
     /**
-     * Perform search on MPI server for similar patients.
+     * Perform search on MPI server for patients using Hl7 PDQ message.
      *
      * @param patient
      * @param otherDataPoints
@@ -38,7 +38,7 @@ public interface MpiSimilarPatientsSearcher {
                                                     Integer maxResults);
 
     /**
-     * Perform search on MPI server for precise similar patients.
+     * Perform search on MPI server for patients using Hl7 PDQ message.
      * You would use this to perform one final check before actually creating a patient, after all data has been filled.
      *
      * @param patient

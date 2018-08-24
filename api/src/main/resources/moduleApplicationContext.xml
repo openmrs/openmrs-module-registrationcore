@@ -33,23 +33,25 @@
         <property name="patientService" ref="patientService"/>
     </bean>
 
-    <bean id="registrationcore.patientCreationListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientCreationListener" init-method="init">
+    <bean id="registrationcore.patientCreatedListener"
+          class="org.openmrs.module.registrationcore.api.impl.PatientCreatedListener" init-method="init">
         <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
         <property name="mpiProperties" ref="registrationcore.mpiProperties"/>
         <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
-        <property name="userService" ref="userService"/>
     </bean>
 
-    <bean id="registrationcore.patientEditListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientEditListener" init-method="init">
+    <bean id="registrationcore.patientUpdatedListener"
+          class="org.openmrs.module.registrationcore.api.impl.PatientUpdatedListener" init-method="init">
         <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
     </bean>
 
     <bean id="registrationcore.coreProperties"
           class="org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties"/>
+
+    <bean id="registrationcore.coreUtil"
+          class="org.openmrs.module.registrationcore.RegistrationCoreUtil"/>
 
     <!-- Services accessible via Context.getService() -->
     <bean parent="serviceContext">
@@ -88,6 +90,31 @@
 
     <bean id="registrationcore.mpiPatientSearcher"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientsSearcher"/>
+
+    <!-- PixPdq Mpi implementation part -->
+    <bean id="registrationcore.mpi.implementation.PixPdq"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqProvider"/>
+
+    <bean id="registrationcore.mpiPatientFetcherPdq"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqPatientFetcher"/>
+
+    <bean id="registrationcore.mpiPatientExporterPix"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPatientExporter"/>
+
+    <bean id="registrationcore.mpiPatientUpdaterPix"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPatientUpdater"/>
+
+    <bean id="registrationcore.mpiPatientSearcherPdq"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqSimilarPatientsSearcher"/>
+
+    <bean id="registrationcore.mpiPixPdqMessageUtil"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqMessageUtil"/>
+
+    <bean id="registrationcore.mpiHl7v2HttpSender"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.HttpSender"/>
+
+    <bean id="registrationcore.mpiHl7v2MllpSender"
+          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.MllpSender"/>
 
     <!--help classes related to MPI implementation:-->
 

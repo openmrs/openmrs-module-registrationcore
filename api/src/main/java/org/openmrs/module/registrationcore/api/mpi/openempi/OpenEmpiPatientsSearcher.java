@@ -1,9 +1,12 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
+import org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqMessageUtil;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
+public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher{
 
     @Autowired
     @Qualifier("registrationcore.restQueryExecutor")
@@ -28,6 +31,12 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
     private MpiAuthenticator authenticator;
 
     private FindPatientQueryBuilder queryMapper = new FindPatientQueryBuilder();
+
+    @Autowired
+    @Qualifier("registrationcore.mpiPixPdqMessageUtil")
+    private PixPdqMessageUtil pixPdqMessageUtil;
+
+    private final Log log = LogFactory.getLog(this.getClass());
 
     @Override
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient,

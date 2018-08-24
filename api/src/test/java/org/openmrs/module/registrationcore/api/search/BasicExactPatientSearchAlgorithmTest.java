@@ -8,7 +8,7 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
-import org.openmrs.module.registrationcore.api.RegistrationCoreSensitiveTestBase;
+import org.openmrs.module.registrationcore.api.BaseRegistrationCoreSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -23,7 +23,7 @@ import java.util.Map;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class BasicExactPatientSearchAlgorithmTest extends RegistrationCoreSensitiveTestBase {
+public class BasicExactPatientSearchAlgorithmTest extends BaseRegistrationCoreSensitiveTest {
 
     @Autowired
     private BasicExactPatientSearchAlgorithm algorithm;

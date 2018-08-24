@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.registrationcore.api.db;
 
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 
 import java.util.List;

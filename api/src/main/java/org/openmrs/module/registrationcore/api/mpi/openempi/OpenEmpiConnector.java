@@ -1,6 +1,7 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.mpi.common.*;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.List;
 import java.util.Map;
 
-public class OpenEmpiConnector implements MpiProvider {
+public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
 
     @Autowired
     @Qualifier("registrationcore.mpiPatientFetcher")
@@ -36,9 +37,15 @@ public class OpenEmpiConnector implements MpiProvider {
     private MpiProperties mpiProperties;
 
     @Override
-    public Patient fetchMpiPatient(String patientId) {
+    public MpiPatient fetchMpiPatient(PatientIdentifier patientId) {
         authenticateIfNeeded();
         return patientImporter.fetchMpiPatient(patientId);
+    }
+
+    @Override
+    public MpiPatient fetchMpiPatient(String patientId, String identifierTypeUuid) {
+        authenticateIfNeeded();
+        return patientImporter.fetchMpiPatient(patientId, identifierTypeUuid);
     }
 
     @Override

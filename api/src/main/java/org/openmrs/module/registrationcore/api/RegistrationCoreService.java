@@ -21,6 +21,7 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
 import java.util.List;
@@ -132,21 +133,46 @@ public interface RegistrationCoreService extends OpenmrsService {
 	List<String> findSimilarFamilyNames(String searchPhrase);
 
 	/**
-	 * Query to MPI server to find patient with Id "patientId"
+	 * Query to MPI server to find a single patient with Identifier of IdentifierType with IdentifierTypeUuid provided.
+	 *
+	 * @param identifier person identifier of patient to be found
+	 * @param identifierTypeUuid person identifier type of patient which will be found
+	 * @return found patient
+	 * @should fail if more than one patient exits in the MPI for that specific identifier and identifier type
+	 */
+	MpiPatient findMpiPatient(String identifier, String identifierTypeUuid);
+
+	/**
+	 * Import a specific patient by sending
+	 * Query to MPI server to find patient with identifier
 	 * and save that patient to local DB.
      *
 	 * @param personId person identifier of patient which should be imported
-	 * @return uuid of imported patient
+	 * @return Imported patient
 	 */
-	String importMpiPatient(String personId);
+	Patient importMpiPatient(String personId);
 
-    /**
-     * @return the engine used for biometric operations, if one is enabled
-     */
+	/**
+	 * Import a specific patient by sending
+	 * Query to MPI server to find patient with Identifier of IdentifierType with IdentifierTypeUuid provided.
+	 * and save that patient to local DB.
+	 *
+	 * @param patientIdentifier person identifier of patient which should be imported
+	 * @param patientIdentifierTypeUuid identifier type uuid of given patientId
+	 * @return Imported patient
+	 */
+	Patient importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid);
+
+	/**
+	 * @return the engine used for biometric operations, if one is enabled
+	 */
 	BiometricEngine getBiometricEngine();
 
-    /**
-     * Enrolls the given biometric data
-     */
+	/**
+	 * Saves the given biometric data to the specified patient.
+	 *
+	 * @param patient patient to save biometric data to
+	 * @param biometricData biometric data to save to the patient
+	 */
 	BiometricData saveBiometricsForPatient(Patient patient, BiometricData biometricData);
 }

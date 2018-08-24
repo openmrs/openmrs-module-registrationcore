@@ -8,9 +8,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 
+
 public class RegistrationCoreUtil {
-    
-    protected static final Log log = LogFactory.getLog(RegistrationCoreUtil.class);
+
+    private static final Log log = LogFactory.getLog(RegistrationCoreUtil.class);
     /**
      * Converts an age (specified in year, month, and day) to a birthdate.
      * You can specify the specific date to calculate the age from, or, if

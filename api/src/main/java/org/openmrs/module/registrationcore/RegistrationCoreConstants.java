@@ -16,9 +16,21 @@ package org.openmrs.module.registrationcore;
 public final class RegistrationCoreConstants {
 
 	/**
+	 * Specifies the runtime property for the MPI Username defined in the .OpenMRS/openmrs-runtime.properties file
+	 */
+	public static final String RTP_MPI_ACCESS_USERNAME = "registrationcore.mpi.username";
+
+	/**
+	 * Specifies the runtime property for the MPI Password defined in the .OpenMRS/openmrs-runtime.properties file
+	 */
+	public static final String RTP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
+
+	/**
 	 * Specifies the identifier source to use when generating patient identifiers
 	 */
 	public static final String GP_OPENMRS_IDENTIFIER_SOURCE_ID = "registrationcore.identifierSourceId";
+
+	public static final String GP_OPENMRS_IDENTIFIER_UUID = "registrationcore.openmrsIdentifier.uuid";
 
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
 
@@ -48,22 +60,44 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_GLOBAL_IDENTIFIER_DOMAIN_ID = "registrationcore.openempi.globalIdentifierDomainId";
 
-	public static final String GP_MPI_PERSON_IDENTIFIER_ID = "registrationcore.mpi.personIdentifierId";
+	public static final String GP_MPI_PERSON_IDENTIFIER_TYPE_UUID = "registrationcore.mpi.personIdentifierTypeUuid";
 
 	public static final String GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP = "registrationcore.local_mpi_identifierTypeMap.";
 
 	public static final String GP_MPI_IMPLEMENTATION = "registrationcore.mpi.implementation";
 
+	public static final String GP_MPI_HL7_IMPLEMENTATION = "registrationcore.mpi.Hl7implementation";
+
 	public static final String GP_MPI_URL = "registrationcore.mpi.url";
-
-	public static final String GP_MPI_ACCESS_USERNAME = "registrationcore.mpi.username";
-
-	public static final String GP_MPI_ACCESS_PASSWORD = "registrationcore.mpi.password";
 
 	public static final String GP_PROBABLY_MATCH_ENABLED = "registrationcore.openempi.enableProbabilisticMatching";
 
 	public static final String GP_BIRTHDATE_ESTIMATION_START_MONTH = "registrationcore.birthdateEstimationStartMonth";
 
     public static final String GP_BIOMETRICS_IMPLEMENTATION = "registrationcore.biometrics.implementation";
+
+	public static final String GP_MPI_PDQ_ENDPOINT= "registrationcore.mpi.pdqEndpoint";
+
+	public static final String GP_MPI_PDQ_PORT = "registrationcore.mpi.pdqPort";
+
+	public static final String GP_MPI_PIX_ENDPOINT= "registrationcore.mpi.pixEndpoint";
+
+	public static final String GP_MPI_PIX_PORT = "registrationcore.mpi.pixPort";
+
+	public static final String GP_MPI_SENDING_APPLICATION = "registrationcore.mpi.sendingApplication";
+
+	public static final String GP_MPI_SENDING_FACILITY = "registrationcore.mpi.sendingFacility";
+
+	public static final String GP_MPI_UNI_ID_TYPE = "registrationcore.mpi.universalIdType";
+
+	public static final String GP_MPI_RECEIVING_APPLICATION = "registsrationcore.mpi.receivingApplication";
+
+	public static final String GP_MPI_RECEIVING_FACILITY = "registrationcore.mpi.receivingFacility";
+
+	public static final String GP_MPI_PIX_IDENTTIFIER_TYPE_UUID_LIST = "registrationcore.mpi.pixIdentifierTypeUuidList";
+
+	public static final String GP_MPI_PIX_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pix.errorHandler.implementation";
+
+	public static final String GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pdq.errorHandler.implementation";
 
 }

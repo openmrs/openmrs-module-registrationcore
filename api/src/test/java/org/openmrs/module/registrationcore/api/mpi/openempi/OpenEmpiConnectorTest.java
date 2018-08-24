@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
 import org.openmrs.module.registrationcore.api.mpi.common.*;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 public class OpenEmpiConnectorTest {
 
-    private static final String PATIENT_ID = "13";
+    private static final PatientIdentifier PATIENT_ID = new PatientIdentifier();
 
     @InjectMocks private MpiProvider mpiProvider = new OpenEmpiConnector();
     @Mock private MpiSimilarPatientsSearcher searchAlgorithm;
@@ -34,12 +35,13 @@ public class OpenEmpiConnectorTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        PATIENT_ID.setIdentifier("13");
     }
 
     @Test
     public void testImportMpiPatient() throws Exception {
         mockAuthentication(false);
-        Patient mockPatient = mock(Patient.class);
+        MpiPatient mockPatient = mock(MpiPatient.class);
         when(patientImporter.fetchMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
 
         Patient patient = mpiProvider.fetchMpiPatient(PATIENT_ID);
@@ -52,7 +54,7 @@ public class OpenEmpiConnectorTest {
     @Test
     public void testImportDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
         mockAuthentication(true);
-        Patient mockPatient = mock(Patient.class);
+        MpiPatient mockPatient = mock(MpiPatient.class);
         when(patientImporter.fetchMpiPatient(PATIENT_ID)).thenReturn(mockPatient);
 
         mpiProvider.fetchMpiPatient(PATIENT_ID);

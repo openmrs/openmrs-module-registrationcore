@@ -43,17 +43,17 @@ public class PatientIdentifierMapperTest {
     public void testReturnCorrectMpiIdentifierTypeId() throws Exception {
         identifierMapper.init();
 
-        Integer mpiIdentifierTypeId = identifierMapper.getMappedMpiIdentifierTypeId(PROPERTY_LOCAL_PART);
+        String mpiIdentifierTypeId = identifierMapper.getMappedMpiIdentifierTypeId(PROPERTY_LOCAL_PART.toString());
 
-        assertEquals(mpiIdentifierTypeId, PROPERTY_MPI_PART);
+        assertEquals(mpiIdentifierTypeId, PROPERTY_MPI_PART.toString());
     }
 
     @Test
     public void testReturnCorrectLocalIdentifierTypeId() throws Exception {
         identifierMapper.init();
 
-        Integer localIdentifierTypeId = identifierMapper.getMappedLocalIdentifierTypeId(PROPERTY_MPI_PART);
+        String localIdentifierTypeId = identifierMapper.getMappedLocalIdentifierTypeUuid(PROPERTY_MPI_PART.toString());
 
-        assertEquals(localIdentifierTypeId, PROPERTY_LOCAL_PART);
+        assertEquals(localIdentifierTypeId, PROPERTY_LOCAL_PART.toString());
     }
 }
