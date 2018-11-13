@@ -18,6 +18,7 @@
                 <property name="locationService" ref="locationService"/>
                 <property name="mpiPatientFilter" ref="registrationcore.openEmpiPatientFilter"/>
                 <property name="registrationCoreProperties" ref="registrationcore.coreProperties"/>
+                <property name="mpiProperties" ref="registrationcore.mpiProperties"/>
             </bean>
         </property>
         <property name="preInterceptors">

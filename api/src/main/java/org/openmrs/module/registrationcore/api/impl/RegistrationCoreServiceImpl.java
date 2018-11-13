@@ -96,8 +96,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private RegistrationCoreProperties registrationCoreProperties;
 
-	@Autowired
-	@Qualifier("registrationcore.mpiProperties")
 	private MpiProperties mpiProperties;
 
 	@Override
@@ -138,6 +136,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	public void setRegistrationCoreProperties(RegistrationCoreProperties coreProperties) {
 		this.registrationCoreProperties = coreProperties;
+	}
+
+	public void setMpiProperties(MpiProperties mpiProperties) {
+		this.mpiProperties = mpiProperties;
 	}
 
 	/**
