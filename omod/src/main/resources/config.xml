@@ -278,6 +278,13 @@
 		</description>
 		<defaultValue>05a29f94-c0ed-11e2-94be-8c13b969e334</defaultValue>
 	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.identifierSourceId.UnKnownPatients</property>
+		<description>
+			ID of the OpenMRS identifier Source that will be used to generate an Identifier for UnKown Patient. By default set to Identifier Source of OpenMRS ID.
+		</description>
+		<defaultValue>1</defaultValue>
+	</globalProperty>
 
 
 	<!-- Maps hibernate file's, if present -->

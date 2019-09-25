@@ -13,6 +13,18 @@
  */
 package org.openmrs.module.registrationcore.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -42,18 +54,6 @@ import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.GregorianCalendar;
-import java.util.Calendar;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests {@link RegistrationCoreService} .
@@ -282,7 +282,28 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
         assertEquals("ISO", fingerprint.getFormat());
         assertEquals("xxxyyyzzz", fingerprint.getTemplate());
     }
-
+    
+    @Test
+    public void registerPatient_shouldRegisterUnknownPatientWithDefaultStrategy() throws Exception {
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_FOR_UNKNOWN_PATIENTS, "1"));
+        Patient unKnownPatient = service.registerUnKnownPatient(null,"M");
+        assertEquals("UNKNOWN", unKnownPatient.getFamilyName());
+        assertEquals("UNKNOWN", unKnownPatient.getGivenName());
+        assertEquals("G-0", unKnownPatient.getPatientIdentifier().toString());
+        assertEquals("true", unKnownPatient.getAttribute(RegistrationCoreConstants.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME).getValue());
+    }
+    
+    @Test
+    public void registerPatient_shouldRegisterUnknownPatientWithAnotherStrategy() throws Exception {
+        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_FOR_UNKNOWN_PATIENTS, "1"));
+        service.setCreateUnknownPatientStrategy(OtherCreateUnknownPatientStrategyDummyClass.class);
+        Patient unKnownPatient = service.registerUnKnownPatient(null,"M");
+        assertEquals("UNKNOWN_STRATEGY2", unKnownPatient.getFamilyName());
+        assertEquals("UNKNOWN_STRATEGY2", unKnownPatient.getGivenName());
+        assertEquals("G-0", unKnownPatient.getPatientIdentifier().toString());
+        assertEquals("true", unKnownPatient.getAttribute(RegistrationCoreConstants.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME).getValue());
+    }
+    
     private RegistrationData getSampleRegistrationDataWithBiometrics() {
         RegistrationData data = new RegistrationData();
         data.setPatient(createBasicPatient());
@@ -296,5 +317,5 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
     private int getNumPatients() {
         List<List<Object>> results = adminService.executeSQL("select count(*) from patient", true);
         return ((Number)results.get(0).get(0)).intValue();
-    }
+    }   
 }

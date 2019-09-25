@@ -222,5 +222,6 @@
   <person person_id="103" dead="false" creator="1" date_created="2018-07-06 11:09:24.0" voided="false" uuid="bdacf9aa-6050-4a83-b457-7b3f12357b9g"/>
   <patient patient_id="103"  creator="1" date_created="2018-07-06 11:09:24.0" voided="false"/>
   <person_name person_name_id="108" preferred="false" person_id="103" given_name="givenN103" middle_name="middleN103" family_name="lastN103" creator="1" date_created="2018-07-06 11:09:24.0" voided="false" uuid="75d48d9e-79fa-75f6-3b48-5240932c74bf"/>
-
+  <person_attribute_type person_attribute_type_id="100" name="Unknown patient" description="Used to flag patients that cannot be identified during the check-in process" format="java.lang.String" searchable="false" creator="1" date_created="2007-05-03 09:20:37.0" uuid="cdc6a460-2700-102b-80cb-0017a47871b3" retired="false" sort_weight="1" />
+  
 </dataset>
