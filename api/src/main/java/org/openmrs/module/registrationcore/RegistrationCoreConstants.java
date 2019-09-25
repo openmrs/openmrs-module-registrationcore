@@ -99,5 +99,9 @@ public final class RegistrationCoreConstants {
 	public static final String GP_MPI_PIX_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pix.errorHandler.implementation";
 
 	public static final String GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pdq.errorHandler.implementation";
-
+	
+	public static final String GP_IDENTIFIER_SOURCE_ID_FOR_UNKNOWN_PATIENTS = "registrationcore.identifierSourceId.UnKnownPatients";
+	
+	public static final String UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME = "Unknown patient";
+	
 }

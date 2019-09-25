@@ -13,6 +13,14 @@
  */
 package org.openmrs.module.registrationcore.api.impl;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
@@ -23,6 +31,8 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
 import org.openmrs.Relationship;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
@@ -38,6 +48,8 @@ import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.RegistrationData;
+import org.openmrs.module.registrationcore.api.CreateUnknownPatientStrategy;
+import org.openmrs.module.registrationcore.api.DefaultCreateUnknownPatientStrategyImpl;
 import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
@@ -49,26 +61,16 @@ import org.openmrs.module.registrationcore.api.errorhandling.PdqErrorHandlingSer
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFilter;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.io.IOException;
 
 /**
  * It is a default implementation of {@link RegistrationCoreService}.
@@ -97,6 +99,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private RegistrationCoreProperties registrationCoreProperties;
 
 	private MpiProperties mpiProperties;
+	
+	private Class createUnknownPatientStrategy;
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -592,4 +596,48 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
         return biometricData;
     }
+       
+	@Override
+	public Patient registerUnKnownPatient(Location identifierLocation, String gender) throws Exception {
+		getDefaultCreateUnknownPatientStrategy();
+		PersonService personService = Context.getPersonService();
+		PersonAttributeType type = personService.getPersonAttributeTypeByName(RegistrationCoreConstants.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME);
+		if (type == null) {
+			throw new IllegalStateException("Configuration required: " + RegistrationCoreConstants.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME);
+		}
+		Patient patient = getCreateUnknownPatientStrategy().createUnknownPatient();
+		patient.setGender(gender);
+		patient.addAttribute(new PersonAttribute(type, "true"));
+		IdentifierSourceService idSourceService = Context.getService(IdentifierSourceService.class );		
+		String identifier = "";	
+		String identifierSourceStr = Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_IDENTIFIER_SOURCE_ID_FOR_UNKNOWN_PATIENTS); 
+		if (StringUtils.isNotBlank(identifierSourceStr) && StringUtils.isNumeric(identifierSourceStr)) {
+			IdentifierSource idSource = idSourceService.getIdentifierSource(Integer.parseInt(identifierSourceStr));
+			identifier = idSourceService.generateIdentifier(idSource, "");
+		}	
+		RegistrationData registrationData = new RegistrationData();
+		registrationData.setPatient(patient);
+		registrationData.setIdentifier(identifier);
+		registrationData.setIdentifierLocation(identifierLocation);		
+		return registerPatient(registrationData);
+	}
+	
+	@Override
+	public void setCreateUnknownPatientStrategy(Class<? extends CreateUnknownPatientStrategy> clazz) throws Exception {
+		if (clazz != null && CreateUnknownPatientStrategy.class.isAssignableFrom(clazz)) {
+			this.createUnknownPatientStrategy = clazz;
+		}
+	}
+	
+	public CreateUnknownPatientStrategy getDefaultCreateUnknownPatientStrategy() throws Exception {
+		if (this.createUnknownPatientStrategy == null) {
+			DefaultCreateUnknownPatientStrategyImpl defaultStrategy = new DefaultCreateUnknownPatientStrategyImpl();
+			this.createUnknownPatientStrategy = defaultStrategy.getClass();
+		}	
+		return (CreateUnknownPatientStrategy) this.createUnknownPatientStrategy.newInstance();
+	}
+	
+	public CreateUnknownPatientStrategy getCreateUnknownPatientStrategy() throws Exception {
+		return (CreateUnknownPatientStrategy) this.createUnknownPatientStrategy.newInstance();
+	}
 }

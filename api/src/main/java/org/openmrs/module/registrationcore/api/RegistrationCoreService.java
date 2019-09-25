@@ -15,6 +15,7 @@ package org.openmrs.module.registrationcore.api;
 
 import org.openmrs.Location;
 import org.openmrs.Patient;
+import org.openmrs.PersonAttribute;
 import org.openmrs.Relationship;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.OpenmrsService;
@@ -74,7 +75,27 @@ public interface RegistrationCoreService extends OpenmrsService {
      * @should fail if identifier does not pass validation
      */
     public Patient registerPatient(Patient patient, List<Relationship> relationships, String identifierString, Location identifierLocation);
+    
+    /**
+     * Creates patient and saves them in the database, setting their identifier as specified instead of assigning
+     * automatically
+     *
+     * @param identifierLocation the location to set for the patient identifier, if not specified,
+     *            it defaults to the system default locale see
+     *            {@link LocationService#getDefaultLocation()}
+     * @return the created patient
+     * @throws Exception 
+     * @should create a patient from record with relationships
+     * @should fire an event when a patient is registered
+     * @should set wasPerson field to true for an existing person on the registration event
+     * @should fail if identifier does not pass validation
+     */
+    public Patient registerUnKnownPatient(Location identifierLocation, String gender) throws Exception;
 
+	 /*Allows Modules to set custom CreateUnknownPatientStrategy 
+	 to overide the defaultCreateUnknownPatientStrategy */
+    public void setCreateUnknownPatientStrategy(Class<? extends CreateUnknownPatientStrategy> clazz) throws Exception;
+    
     /**
      * Registers patient and saves them in the database.
      * @return the created patient
@@ -84,7 +105,7 @@ public interface RegistrationCoreService extends OpenmrsService {
      * @should fail if identifier does not pass validation
      */
     public Patient registerPatient(RegistrationData registrationData);
-
+   
 	/**
 	 * Returns a list of matching patients using the fast algorithm.
 	 * <p>
