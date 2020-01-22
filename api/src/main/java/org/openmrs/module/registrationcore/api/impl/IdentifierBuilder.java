@@ -1,5 +1,6 @@
 package org.openmrs.module.registrationcore.api.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
@@ -36,10 +37,23 @@ public class IdentifierBuilder {
 	 * @param sourceId identifier source id
 	 * @param location identifier location
 	 * @return generated patient identifier
+	 * @deprecated as of 1.9.0, replaced by {@link #generateIdentifier(String, Location)}
 	 */
+	@Deprecated
 	public PatientIdentifier generateIdentifier(Integer sourceId, Location location) {
+		return generateIdentifier(sourceId.toString(), location);
+	}
+	
+	/**
+	 * Generate new identifier
+	 * 
+	 * @param sourceIdentifier identifier source id or uuid
+	 * @param location identifier location
+	 * @return generated patient identifier
+	 */
+	public PatientIdentifier generateIdentifier(String sourceIdentifier, Location location) {
 		location = getLocation(location);
-		IdentifierSource idSource = getSource(sourceId);
+		IdentifierSource idSource = getSource(sourceIdentifier);
 		String identifierValue = getIss().generateIdentifier(idSource, null);
 		
 		return new PatientIdentifier(identifierValue, idSource.getIdentifierType(), location);
@@ -69,9 +83,14 @@ public class IdentifierBuilder {
 		return identifierLocation;
 	}
 	
-	private IdentifierSource getSource(Integer identifierId) {
-		IdentifierSource identifierSource = getIss().getIdentifierSource(identifierId);
-		validateIdentifierSource(identifierSource, identifierId);
+	private IdentifierSource getSource(String sourceIdentifier) {
+		IdentifierSource identifierSource = null;
+		if (StringUtils.isNumeric(sourceIdentifier)) {
+			identifierSource = getIss().getIdentifierSource(Integer.valueOf(sourceIdentifier));
+		} else {
+			identifierSource = iss.getIdentifierSourceByUuid(sourceIdentifier);
+		}
+		validateIdentifierSource(identifierSource, sourceIdentifier);
 		return identifierSource;
 	}
 	
@@ -87,8 +106,8 @@ public class IdentifierBuilder {
 			throw new APIException("Failed to resolve location to associate to patient identifiers");
 	}
 	
-	private void validateIdentifierSource(IdentifierSource idSource, Integer identifierId) {
+	private void validateIdentifierSource(IdentifierSource idSource, String sourceIdentifier) {
 		if (idSource == null)
-			throw new APIException("cannot find identifier source with id:" + identifierId);
+			throw new APIException("cannot find identifier source with id:" + sourceIdentifier);
 	}
 }

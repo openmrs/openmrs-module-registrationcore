@@ -19,7 +19,9 @@ import static org.mockito.Mockito.*;
 
 public class IdentifierBuilderTest {
 	
-	private static final String OPENMRS_IDENTIFIER_SOURCE_ID = "1";
+	private static final Integer OPENMRS_IDENTIFIER_SOURCE_ID = 1;
+	
+	private static final String OPENMRS_IDENTIFIER_SOURCE_STRING_ID = "1";
 	
 	private static final String OPENMRS_GENERATED_IDENTIFIER = "10012NF";
 	
@@ -65,8 +67,7 @@ public class IdentifierBuilderTest {
 		mockIdentifierSource(identifierSource);
 		mockGeneratedIdentifier();
 		
-		PatientIdentifier patientIdentifier = generator.generateIdentifier(Integer.valueOf(OPENMRS_IDENTIFIER_SOURCE_ID),
-		    null);
+		PatientIdentifier patientIdentifier = generator.generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_STRING_ID, null);
 		
 		verify(locationService).getDefaultLocation();
 		verify(iss).getIdentifierSource(Integer.valueOf(OPENMRS_IDENTIFIER_SOURCE_ID));
@@ -96,7 +97,7 @@ public class IdentifierBuilderTest {
 		mockIdentifierSource(identifierSource);
 		mockGeneratedIdentifier();
 		
-		PatientIdentifier patientIdentifier = generator.generateIdentifier(Integer.valueOf(OPENMRS_IDENTIFIER_SOURCE_ID),
+		PatientIdentifier patientIdentifier = generator.generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_STRING_ID,
 		    customLocation);
 		
 		verify(locationService, never()).getDefaultLocation();
@@ -111,7 +112,7 @@ public class IdentifierBuilderTest {
 	public void testGenerateIdentifierThrowExceptionOnEmptyDefaultLocation() throws Exception {
 		mockDefaultLocation(null);
 		
-		generator.generateIdentifier(Integer.valueOf(OPENMRS_IDENTIFIER_SOURCE_ID), null);
+		generator.generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_STRING_ID, null);
 	}
 	
 	@Test(expected = APIException.class)
@@ -119,7 +120,7 @@ public class IdentifierBuilderTest {
 		mockDefaultLocation(defaultLocation);
 		mockIdentifierSource(null);
 		
-		generator.generateIdentifier(Integer.valueOf(OPENMRS_IDENTIFIER_SOURCE_ID), null);
+		generator.generateIdentifier(OPENMRS_IDENTIFIER_SOURCE_STRING_ID, null);
 	}
 	
 	@Test
@@ -162,5 +163,20 @@ public class IdentifierBuilderTest {
 		mockDefaultLocation(null);
 		
 		generator.createIdentifier(PERSON_IDENTIFIER_TYPE_UUID, CUSTOM_MPI_IDENTIFIER_VALUE, null);
+	}
+	
+	@Test
+	public void generateIdentifier_shouldConsumeUuidAsSourceId() {
+		String identifierSourceUuid = "0d47284f-9e9b-4a81-a88b-8bb42bc0a901";
+		mockDefaultLocation(defaultLocation);
+		when(iss.getIdentifierSourceByUuid(identifierSourceUuid)).thenReturn(identifierSource);
+		when(identifierSource.getIdentifierType()).thenReturn(identifierType);
+		mockGeneratedIdentifier();
+		
+		PatientIdentifier patientIdentifier = generator.generateIdentifier(identifierSourceUuid, null);
+		
+		assertEquals(OPENMRS_GENERATED_IDENTIFIER, patientIdentifier.getIdentifier());
+		assertEquals(identifierType, patientIdentifier.getIdentifierType());
+		assertEquals(defaultLocation, patientIdentifier.getLocation());
 	}
 }
