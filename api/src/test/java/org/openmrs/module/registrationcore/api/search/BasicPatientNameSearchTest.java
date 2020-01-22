@@ -26,8 +26,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 /**
  * Tests BasicPatientNameSearch
  */
-public class BasicPatientNameSearchTest extends BaseRegistrationCoreSensitiveTest{
-
+public class BasicPatientNameSearchTest extends BaseRegistrationCoreSensitiveTest {
+	
 	@Autowired
 	@Qualifier("registrationcore.BasicPatientNameSearch")
 	PatientNameSearch patientNameSearch;
@@ -43,7 +43,8 @@ public class BasicPatientNameSearchTest extends BaseRegistrationCoreSensitiveTes
 	@Test
 	public void findSimilarGivenNames_shouldFindByPartialGivenName() throws Exception {
 		
-		adminService.saveGlobalProperty(new GlobalProperty(BasicPatientNameSearch.GP_GIVEN_NAME_AUTO_SUGGEST_LIST, " Horatio, Horctio,Harison,Horbtio, Kiptogom  "));
+		adminService.saveGlobalProperty(new GlobalProperty(BasicPatientNameSearch.GP_GIVEN_NAME_AUTO_SUGGEST_LIST,
+		        " Horatio, Horctio,Harison,Horbtio, Kiptogom  "));
 		
 		List<String> names = patientNameSearch.findSimilarGivenNames("hor");
 		Assert.assertNotNull(names);
@@ -57,8 +58,9 @@ public class BasicPatientNameSearchTest extends BaseRegistrationCoreSensitiveTes
 	@Test
 	public void findSimilarFamilyNames_shouldFindByPartialFamilyName() throws Exception {
 		
-		adminService.saveGlobalProperty(new GlobalProperty(BasicPatientNameSearch.GP_FAMILY_NAME_AUTO_SUGGEST_LIST, "Hornblower ,Hornblewer, Hornblower ,Seroney,Rapondi"));
-
+		adminService.saveGlobalProperty(new GlobalProperty(BasicPatientNameSearch.GP_FAMILY_NAME_AUTO_SUGGEST_LIST,
+		        "Hornblower ,Hornblewer, Hornblower ,Seroney,Rapondi"));
+		
 		List<String> names = patientNameSearch.findSimilarFamilyNames("blo");
 		Assert.assertNotNull(names);
 		Assert.assertEquals(2, names.size());

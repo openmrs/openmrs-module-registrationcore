@@ -19,36 +19,36 @@ import java.util.List;
  * Provides primary API for interacting with the biometric matching engine
  */
 public interface BiometricEngine {
-
-    BiometricEngineStatus getStatus();
-
-    /**
-     * Enrolls biometrics for the passed subject
-     */
-    BiometricSubject enroll(BiometricSubject subject);
-
-    /**
-     * Updates the biometrics for a given subject, enrolling that subject if they do not already exist
-     */
-    BiometricSubject update(BiometricSubject subject);
-
-    /**
-     * Change an existing subjectId to a new value
-     */
-    BiometricSubject updateSubjectId(String oldId, String newId);
-
-    /**
-     * @return a List of PatientAndMatchQuality for the given subject in order to find matching patients
-     */
-    List<BiometricMatch> search(BiometricSubject subject);
-
-    /**
-     * @return the subject saved for the given subjectId
-     */
-    BiometricSubject lookup(String subjectId);
-
-    /**
-     * Deletes the saved subject for the given subjectId
-     */
-    void delete(String subjectId);
+	
+	BiometricEngineStatus getStatus();
+	
+	/**
+	 * Enrolls biometrics for the passed subject
+	 */
+	BiometricSubject enroll(BiometricSubject subject);
+	
+	/**
+	 * Updates the biometrics for a given subject, enrolling that subject if they do not already exist
+	 */
+	BiometricSubject update(BiometricSubject subject);
+	
+	/**
+	 * Change an existing subjectId to a new value
+	 */
+	BiometricSubject updateSubjectId(String oldId, String newId);
+	
+	/**
+	 * @return a List of PatientAndMatchQuality for the given subject in order to find matching patients
+	 */
+	List<BiometricMatch> search(BiometricSubject subject);
+	
+	/**
+	 * @return the subject saved for the given subjectId
+	 */
+	BiometricSubject lookup(String subjectId);
+	
+	/**
+	 * Deletes the saved subject for the given subjectId
+	 */
+	void delete(String subjectId);
 }

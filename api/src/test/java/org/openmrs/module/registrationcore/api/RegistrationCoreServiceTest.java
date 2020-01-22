@@ -59,7 +59,7 @@ import static org.junit.Assert.assertNotNull;
  * Tests {@link RegistrationCoreService} .
  */
 public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTest {
-
+	
 	private RegistrationCoreService service;
 	
 	@Autowired
@@ -77,7 +77,7 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 	@Autowired
 	@Qualifier("locationService")
 	private LocationService locationService;
-
+	
 	private PatientIdentifierType biometricsIdentifierType;
 	
 	@Before
@@ -88,11 +88,11 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
 		service = Context.getService(RegistrationCoreService.class);
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
-        biometricsIdentifierType = new PatientIdentifierType();
-        biometricsIdentifierType.setName("Biometrics Reference Code");
-        biometricsIdentifierType.setDescription("Biometrics Reference Code");
-        biometricsIdentifierType.setLocationBehavior(PatientIdentifierType.LocationBehavior.NOT_USED);
-        biometricsIdentifierType = patientService.savePatientIdentifierType(biometricsIdentifierType);
+		biometricsIdentifierType = new PatientIdentifierType();
+		biometricsIdentifierType.setName("Biometrics Reference Code");
+		biometricsIdentifierType.setDescription("Biometrics Reference Code");
+		biometricsIdentifierType.setLocationBehavior(PatientIdentifierType.LocationBehavior.NOT_USED);
+		biometricsIdentifierType = patientService.savePatientIdentifierType(biometricsIdentifierType);
 	}
 	
 	private Patient createBasicPatient() {
@@ -128,61 +128,64 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		assertNotNull(personService.getPerson(createdPatient.getPersonId()));
 		assertEquals(2, personService.getRelationshipsByPerson(createdPatient).size());
 	}
-
-    @Test
-    @Verifies(value = "should set identifier locaton to primary identifier location if tagged", method = "registerPatient(Patient,List<Relationship>, Location)")
-    public void registerPatient_shouldSetProperIdentifierLocationBasedOnTag() throws Exception {
-
-        LocationTag primaryIdentifierLocationTag = new LocationTag();
-        primaryIdentifierLocationTag.setName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION);
-        locationService.saveLocationTag(primaryIdentifierLocationTag);
-
-        Location parentLocation = locationService.getLocation(2);
-        parentLocation.addTag(locationService.getLocationTagByName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION));
-        locationService.saveLocation(parentLocation);
-
-        Location location = new Location();
-        location.setName("My house");
-        location.setParentLocation(parentLocation);
-        locationService.saveLocation(location);
-
-        Patient createdPatient = service.registerPatient(createBasicPatient(), null, location);
-        assertEquals(parentLocation, createdPatient.getPatientIdentifier().getLocation());;
-    }
-
-    @Test
-    @Verifies(value = "should create a patient with manually entered identifier", method = "registerPatient(Patient,List<Relationship>, String identifier, Location)")
-    public void registerPatient_shouldCreateAPatientWithManuallyEnteredIdentifier() throws Exception {
-        Location location = locationService.getLocation(2);
-        Patient createdPatient = service.registerPatient(createBasicPatient(), null, "202-2", location);
-        assertNotNull(createdPatient.getPatientId());
-        assertNotNull(createdPatient.getPatientIdentifier());
-        assertEquals("202-2", createdPatient.getPatientIdentifier().getIdentifier());
-        assertEquals(location, createdPatient.getPatientIdentifier().getLocation());
-        assertNotNull(patientService.getPatient(createdPatient.getPatientId()));
-        assertNotNull(createdPatient.getPersonId());
-        assertNotNull(personService.getPerson(createdPatient.getPersonId()));
-    }
-
-    @Test(expected = InvalidCheckDigitException.class)
-    @Verifies(value = "should throw exception when invalid identifier", method = "registerPatient(Patient,List<Relationship>, String identifier, Location)")
-    public void registerPatient_shouldThrowExceptionWhenInvalidIdentifier() throws Exception {
-        Location location = locationService.getLocation(2);
-        service.registerPatient(createBasicPatient(), null, "bah", location);
-    }
-
+	
+	@Test
+	@Verifies(value = "should set identifier locaton to primary identifier location if tagged", method = "registerPatient(Patient,List<Relationship>, Location)")
+	public void registerPatient_shouldSetProperIdentifierLocationBasedOnTag() throws Exception {
+		
+		LocationTag primaryIdentifierLocationTag = new LocationTag();
+		primaryIdentifierLocationTag.setName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION);
+		locationService.saveLocationTag(primaryIdentifierLocationTag);
+		
+		Location parentLocation = locationService.getLocation(2);
+		parentLocation.addTag(
+		    locationService.getLocationTagByName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION));
+		locationService.saveLocation(parentLocation);
+		
+		Location location = new Location();
+		location.setName("My house");
+		location.setParentLocation(parentLocation);
+		locationService.saveLocation(location);
+		
+		Patient createdPatient = service.registerPatient(createBasicPatient(), null, location);
+		assertEquals(parentLocation, createdPatient.getPatientIdentifier().getLocation());
+		;
+	}
+	
+	@Test
+	@Verifies(value = "should create a patient with manually entered identifier", method = "registerPatient(Patient,List<Relationship>, String identifier, Location)")
+	public void registerPatient_shouldCreateAPatientWithManuallyEnteredIdentifier() throws Exception {
+		Location location = locationService.getLocation(2);
+		Patient createdPatient = service.registerPatient(createBasicPatient(), null, "202-2", location);
+		assertNotNull(createdPatient.getPatientId());
+		assertNotNull(createdPatient.getPatientIdentifier());
+		assertEquals("202-2", createdPatient.getPatientIdentifier().getIdentifier());
+		assertEquals(location, createdPatient.getPatientIdentifier().getLocation());
+		assertNotNull(patientService.getPatient(createdPatient.getPatientId()));
+		assertNotNull(createdPatient.getPersonId());
+		assertNotNull(personService.getPerson(createdPatient.getPersonId()));
+	}
+	
+	@Test(expected = InvalidCheckDigitException.class)
+	@Verifies(value = "should throw exception when invalid identifier", method = "registerPatient(Patient,List<Relationship>, String identifier, Location)")
+	public void registerPatient_shouldThrowExceptionWhenInvalidIdentifier() throws Exception {
+		Location location = locationService.getLocation(2);
+		service.registerPatient(createBasicPatient(), null, "bah", location);
+	}
+	
 	/**
 	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
 	 */
 	@Test
-	@Ignore // TODO fix this! Have not been able to get this test to work and for the listener to catch the patient creation event.
+	@Ignore
+	// TODO fix this! Have not been able to get this test to work and for the listener to catch the patient creation event.
 	@Verifies(value = "should fire an event when a patient is saved", method = "registerPatient(Patient,List<Relationship>)")
 	public void registerPatient_shouldFireAnOpenmrsObjectEventWhenAPatientIsRegistered() throws Exception {
-
+		
 		Event event = new Event();
 		MockSubscribableEventListener listener = new MockSubscribableEventListener(1);
 		event.setSubscription(listener);
-
+		
 		Patient patient1 = new Patient();
 		patient1.addName(new PersonName("Johny", "Apple", "Smith"));
 		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
@@ -200,15 +203,15 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		location.setId(1);
 		identifier.setLocation(location);
 		patient1.addIdentifier(identifier);
-
+		
 		Patient patient = patientService.savePatient(patient1);
 		listener.waitForEvents();
 		Assert.assertEquals(1, listener.getCreatedCount());
 	}
 	
 	/**
-	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)}
-     * This needs to be fixed after fixing https://tickets.openmrs.org/browse/RC-9
+	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)} This needs to be
+	 *      fixed after fixing https://tickets.openmrs.org/browse/RC-9
 	 */
 	@Test
 	@Ignore
@@ -216,7 +219,7 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 	public void registerPatient_shouldSetWasPersonFieldToTrueForAnExistingPersonOnTheRegistrationEvent() throws Exception {
 		MockRegistrationEventListener listener = new MockRegistrationEventListener(1);
 		Event.subscribe(RegistrationCoreConstants.PATIENT_REGISTRATION_EVENT_TOPIC_NAME, listener);
-
+		
 		Relationship r1 = new Relationship(null, personService.getPerson(2), personService.getRelationshipType(2));
 		Relationship r2 = new Relationship(personService.getPerson(7), null, personService.getRelationshipType(2));
 		final Integer personId = 9;
@@ -224,77 +227,79 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		Person person = personService.getPerson(personId);
 		assertNotNull(person);
 		service.registerPatient(createBasicPatient(), Arrays.asList(r1, r2), null);
-
+		
 		listener.waitForEvents(10, TimeUnit.SECONDS);
 		assertTrue(listener.getWasAPerson());
 	}
-
-    /**
-     * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
-     */
-    @Test
-    public void registerPatient_shouldNotRequireBiometrics() throws Exception {
-        RegistrationData data = new RegistrationData();
-        data.setPatient(createBasicPatient());
-        int startPatients = getNumPatients();
-        Patient p = service.registerPatient(data);
-        assertEquals(0, p.getPatientIdentifiers(biometricsIdentifierType).size());
-        assertEquals(startPatients+1, getNumPatients());
-    }
-
-    /**
-     * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
-     */
-    @Test
-    @Ignore // TODO: this passes when run on its own, but not in a suite
-    public void registerPatient_shouldFailIfBiometricsSuppliedButNoEngineEnabled() throws Exception {
-        RegistrationData data = getSampleRegistrationDataWithBiometrics();
-        int numPatients = getNumPatients();
-        boolean exceptionThrown = false;
-        try {
-            Patient p = service.registerPatient(data);
-        }
-        catch (IllegalStateException e) {
-            exceptionThrown = true;
-        }
-        assertTrue(exceptionThrown);
-        assertEquals(numPatients, getNumPatients()); // Make sure that transaction rolled back and no patient was created
-    }
-
-    /**
-     * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
-     */
-    @Test
-    public void registerPatient_shouldSucceedIfBiometricsSuppliedAndEngineEnabled() throws Exception {
-        adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_IMPLEMENTATION, "testBiometricEngine"));
-        RegistrationData data = getSampleRegistrationDataWithBiometrics();
-        int startPatients = getNumPatients();
-        Patient p = service.registerPatient(data);
-        List<PatientIdentifier> identifiers = p.getPatientIdentifiers(biometricsIdentifierType);
-        assertEquals(1, identifiers.size());
-        assertEquals(startPatients+1, getNumPatients());
-        PatientIdentifier identifier = identifiers.get(0);
-        BiometricSubject subject = service.getBiometricEngine().lookup(identifier.getIdentifier());
-        assertNotNull(subject);
-        assertEquals(1, subject.getFingerprints().size());
-        Fingerprint fingerprint = subject.getFingerprints().get(0);
-        assertEquals("LEFT-INDEX", fingerprint.getType());
-        assertEquals("ISO", fingerprint.getFormat());
-        assertEquals("xxxyyyzzz", fingerprint.getTemplate());
-    }
-
-    private RegistrationData getSampleRegistrationDataWithBiometrics() {
-        RegistrationData data = new RegistrationData();
-        data.setPatient(createBasicPatient());
-
-        BiometricSubject subject = new BiometricSubject();
-        subject.addFingerprint(new Fingerprint("LEFT-INDEX", "ISO", "xxxyyyzzz"));
-        data.addBiometricData(new BiometricData(subject, biometricsIdentifierType));
-        return data;
-    }
-
-    private int getNumPatients() {
-        List<List<Object>> results = adminService.executeSQL("select count(*) from patient", true);
-        return ((Number)results.get(0).get(0)).intValue();
-    }
+	
+	/**
+	 * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
+	 */
+	@Test
+	public void registerPatient_shouldNotRequireBiometrics() throws Exception {
+		RegistrationData data = new RegistrationData();
+		data.setPatient(createBasicPatient());
+		int startPatients = getNumPatients();
+		Patient p = service.registerPatient(data);
+		assertEquals(0, p.getPatientIdentifiers(biometricsIdentifierType).size());
+		assertEquals(startPatients + 1, getNumPatients());
+	}
+	
+	/**
+	 * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
+	 */
+	@Test
+	@Ignore
+	// TODO: this passes when run on its own, but not in a suite
+	public void registerPatient_shouldFailIfBiometricsSuppliedButNoEngineEnabled() throws Exception {
+		RegistrationData data = getSampleRegistrationDataWithBiometrics();
+		int numPatients = getNumPatients();
+		boolean exceptionThrown = false;
+		try {
+			Patient p = service.registerPatient(data);
+		}
+		catch (IllegalStateException e) {
+			exceptionThrown = true;
+		}
+		assertTrue(exceptionThrown);
+		assertEquals(numPatients, getNumPatients()); // Make sure that transaction rolled back and no patient was created
+	}
+	
+	/**
+	 * @see {@link RegistrationCoreService#registerPatient(org.openmrs.module.registrationcore.RegistrationData)}
+	 */
+	@Test
+	public void registerPatient_shouldSucceedIfBiometricsSuppliedAndEngineEnabled() throws Exception {
+		adminService.saveGlobalProperty(
+		    new GlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_IMPLEMENTATION, "testBiometricEngine"));
+		RegistrationData data = getSampleRegistrationDataWithBiometrics();
+		int startPatients = getNumPatients();
+		Patient p = service.registerPatient(data);
+		List<PatientIdentifier> identifiers = p.getPatientIdentifiers(biometricsIdentifierType);
+		assertEquals(1, identifiers.size());
+		assertEquals(startPatients + 1, getNumPatients());
+		PatientIdentifier identifier = identifiers.get(0);
+		BiometricSubject subject = service.getBiometricEngine().lookup(identifier.getIdentifier());
+		assertNotNull(subject);
+		assertEquals(1, subject.getFingerprints().size());
+		Fingerprint fingerprint = subject.getFingerprints().get(0);
+		assertEquals("LEFT-INDEX", fingerprint.getType());
+		assertEquals("ISO", fingerprint.getFormat());
+		assertEquals("xxxyyyzzz", fingerprint.getTemplate());
+	}
+	
+	private RegistrationData getSampleRegistrationDataWithBiometrics() {
+		RegistrationData data = new RegistrationData();
+		data.setPatient(createBasicPatient());
+		
+		BiometricSubject subject = new BiometricSubject();
+		subject.addFingerprint(new Fingerprint("LEFT-INDEX", "ISO", "xxxyyyzzz"));
+		data.addBiometricData(new BiometricData(subject, biometricsIdentifierType));
+		return data;
+	}
+	
+	private int getNumPatients() {
+		List<List<Object>> results = adminService.executeSQL("select count(*) from patient", true);
+		return ((Number) results.get(0).get(0)).intValue();
+	}
 }

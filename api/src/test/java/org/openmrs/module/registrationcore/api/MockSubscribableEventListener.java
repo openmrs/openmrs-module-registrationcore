@@ -33,25 +33,25 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
  * purposes
  */
 public class MockSubscribableEventListener extends MockEventListener implements SubscribableEventListener {
-
+	
 	public MockSubscribableEventListener(int expectedEventsCount) {
 		super(expectedEventsCount);
 	}
-
-	public List<Class<? extends OpenmrsObject>> subscribeToObjects(){
+	
+	public List<Class<? extends OpenmrsObject>> subscribeToObjects() {
 		List objects = new ArrayList<Class<? extends OpenmrsObject>>();
 		objects.add(Patient.class);
 		return objects;
 	}
-
+	
 	/**
 	 * @return a list of Actions this listener can deal with
 	 */
-	public List<String> subscribeToActions(){
+	public List<String> subscribeToActions() {
 		List actions = new ArrayList<String>();
 		actions.add(Event.Action.CREATED.name());
 		actions.add(Event.Action.UPDATED.name());
 		return actions;
 	}
-
+	
 }

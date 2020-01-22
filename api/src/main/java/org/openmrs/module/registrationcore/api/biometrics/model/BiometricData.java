@@ -14,33 +14,36 @@ import org.openmrs.PatientIdentifierType;
 import java.io.Serializable;
 
 /**
- * Encapsulates both a BiometricSubject and the mechanism by which these Biometrics are referenced on the patient
+ * Encapsulates both a BiometricSubject and the mechanism by which these Biometrics are referenced
+ * on the patient
  */
 public class BiometricData implements Serializable {
-
-    private BiometricSubject subject;
-    private PatientIdentifierType identifierType;
-
-    public BiometricData() { }
-
-    public BiometricData(BiometricSubject subject, PatientIdentifierType identifierType) {
-        this.subject = subject;
-        this.identifierType = identifierType;
-    }
-
-    public BiometricSubject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(BiometricSubject subject) {
-        this.subject = subject;
-    }
-
-    public PatientIdentifierType getIdentifierType() {
-        return identifierType;
-    }
-
-    public void setIdentifierType(PatientIdentifierType identifierType) {
-        this.identifierType = identifierType;
-    }
+	
+	private BiometricSubject subject;
+	
+	private PatientIdentifierType identifierType;
+	
+	public BiometricData() {
+	}
+	
+	public BiometricData(BiometricSubject subject, PatientIdentifierType identifierType) {
+		this.subject = subject;
+		this.identifierType = identifierType;
+	}
+	
+	public BiometricSubject getSubject() {
+		return subject;
+	}
+	
+	public void setSubject(BiometricSubject subject) {
+		this.subject = subject;
+	}
+	
+	public PatientIdentifierType getIdentifierType() {
+		return identifierType;
+	}
+	
+	public void setIdentifierType(PatientIdentifierType identifierType) {
+		this.identifierType = identifierType;
+	}
 }

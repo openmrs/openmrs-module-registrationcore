@@ -26,26 +26,26 @@ import java.util.List;
  * Tests ExistingPatientNameSearchTest
  */
 public class ExistingPatientNameSearchTest extends BaseRegistrationCoreSensitiveTest {
-
-    @Autowired
-    ExistingPatientNameSearch search;
-
-    @Before
-    public void setup() throws Exception {
-        executeDataSet("patients_dataset.xml");
-    }
-
-    @Test
-    public void findSimilarGivenNames_shouldFindAmongExistingGivenNames() {
-        List<String> names = search.findSimilarGivenNames("Kip");
-
-        Assert.assertEquals(Arrays.asList("Kiptogom"), names);
-    }
-
-    @Test
-    public void findSimilarFamilyNames_shouldFindAmongExistingFamilyNames() {
-        List<String> names = search.findSimilarFamilyNames("Nar");
-
-        Assert.assertEquals(Arrays.asList("Nari"), names);
-    }
+	
+	@Autowired
+	ExistingPatientNameSearch search;
+	
+	@Before
+	public void setup() throws Exception {
+		executeDataSet("patients_dataset.xml");
+	}
+	
+	@Test
+	public void findSimilarGivenNames_shouldFindAmongExistingGivenNames() {
+		List<String> names = search.findSimilarGivenNames("Kip");
+		
+		Assert.assertEquals(Arrays.asList("Kiptogom"), names);
+	}
+	
+	@Test
+	public void findSimilarFamilyNames_shouldFindAmongExistingFamilyNames() {
+		List<String> names = search.findSimilarFamilyNames("Nar");
+		
+		Assert.assertEquals(Arrays.asList("Nari"), names);
+	}
 }

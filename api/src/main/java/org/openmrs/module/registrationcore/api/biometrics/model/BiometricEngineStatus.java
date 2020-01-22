@@ -15,34 +15,37 @@ import java.io.Serializable;
  * Simple bean to encapsulate the status of the Biometrics Engine
  */
 public class BiometricEngineStatus implements Serializable {
-
-    private boolean enabled = false;
-    private String description;
-    private String statusMessage;
-
-    public BiometricEngineStatus() { }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getStatusMessage() {
-        return statusMessage;
-    }
-
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
-    }
+	
+	private boolean enabled = false;
+	
+	private String description;
+	
+	private String statusMessage;
+	
+	public BiometricEngineStatus() {
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+	
+	public void setStatusMessage(String statusMessage) {
+		this.statusMessage = statusMessage;
+	}
 }

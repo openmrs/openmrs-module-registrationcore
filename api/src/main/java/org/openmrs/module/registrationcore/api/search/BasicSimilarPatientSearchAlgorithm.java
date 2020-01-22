@@ -103,33 +103,33 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 	@Override
 	@Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
-	                                                        Double cutoff, Integer maxResults) {
-
-        // used to track whether we've added any criteria besides voided=false
-        boolean hasCriteria = false;
-
+	        Double cutoff, Integer maxResults) {
+		
+		// used to track whether we've added any criteria besides voided=false
+		boolean hasCriteria = false;
+		
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Patient.class);
 		
 		criteria.add(Restrictions.eq("voided", false));
 		
 		if (!StringUtils.isBlank(patient.getGender())) {
-            hasCriteria = true;
+			hasCriteria = true;
 			criteria.add(Restrictions.eq("gender", patient.getGender()));
 		}
 		
 		if (patient.getBirthdate() != null) {
-            hasCriteria = true;
+			hasCriteria = true;
 			Date birthdate = patient.getBirthdate();
 			addDateWithinPeriodRestriction(criteria, birthdate, birthdateRangePeriod);
 		}
-
-        if (patient.getNames() != null && !patient.getNames().isEmpty()) {
-            hasCriteria = true;
-            addNameCriteria(criteria, patient);
-        }
+		
+		if (patient.getNames() != null && !patient.getNames().isEmpty()) {
+			hasCriteria = true;
+			addNameCriteria(criteria, patient);
+		}
 		
 		if (patient.getAttributes() != null && !patient.getAttributes().isEmpty()) {
-            hasCriteria = true;
+			hasCriteria = true;
 			criteria.createAlias("attributes", "attributes");
 			
 			for (PersonAttribute attribute : patient.getAttributes()) {
@@ -144,7 +144,7 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 		}
 		
 		if (patient.getAddresses() != null && !patient.getAddresses().isEmpty()) {
-            hasCriteria = true;
+			hasCriteria = true;
 			criteria.createAlias("addresses", "addresses");
 			for (PersonAddress address : patient.getAddresses()) {
 				criteria.add(Restrictions.eq("addresses.voided", false));
@@ -161,13 +161,13 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 				criteria.add(and);
 			}
 		}
-
-        // if we haven't added any criteria, don't search, we never want to return the entire patient list
-        if (!hasCriteria) {
-            return new ArrayList<PatientAndMatchQuality>();
-        }
-
-        @SuppressWarnings("unchecked")
+		
+		// if we haven't added any criteria, don't search, we never want to return the entire patient list
+		if (!hasCriteria) {
+			return new ArrayList<PatientAndMatchQuality>();
+		}
+		
+		@SuppressWarnings("unchecked")
 		List<Patient> patients = criteria.list();
 		
 		patients = filterPatients(patients, patient);
@@ -197,7 +197,8 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 						matchedFields.add("names.familyName");
 					}
 					
-					double givenNameScore = countStartWithScoreForField(matchName.getGivenName(), patientName.getGivenName());
+					double givenNameScore = countStartWithScoreForField(matchName.getGivenName(),
+					    patientName.getGivenName());
 					if (givenNameScore != 0) {
 						matchedFields.add("names.givenName");
 						score += givenNameScore;

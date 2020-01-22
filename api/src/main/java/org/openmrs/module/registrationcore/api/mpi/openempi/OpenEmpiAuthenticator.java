@@ -6,32 +6,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 public class OpenEmpiAuthenticator implements MpiAuthenticator {
-
-    @Autowired
-    @Qualifier("registrationcore.restQueryExecutor")
-    private RestQueryExecutor queryExecutor;
-
-    @Autowired
-    @Qualifier("registrationcore.mpiProperties")
-    private MpiProperties mpiProperties;
-
-    private String token;
-
-    @Override
-    public boolean isAuthenticated() {
-        return token != null;
-    }
-
-    @Override
-    public String getToken() {
-        if (token == null) {
-            performAuthentication();
-        }
-        return token;
-    }
-
-    @Override
-    public void performAuthentication() {
-        token = queryExecutor.processAuthentication(mpiProperties.getMpiCredentials());
-    }
+	
+	@Autowired
+	@Qualifier("registrationcore.restQueryExecutor")
+	private RestQueryExecutor queryExecutor;
+	
+	@Autowired
+	@Qualifier("registrationcore.mpiProperties")
+	private MpiProperties mpiProperties;
+	
+	private String token;
+	
+	@Override
+	public boolean isAuthenticated() {
+		return token != null;
+	}
+	
+	@Override
+	public String getToken() {
+		if (token == null) {
+			performAuthentication();
+		}
+		return token;
+	}
+	
+	@Override
+	public void performAuthentication() {
+		token = queryExecutor.processAuthentication(mpiProperties.getMpiCredentials());
+	}
 }

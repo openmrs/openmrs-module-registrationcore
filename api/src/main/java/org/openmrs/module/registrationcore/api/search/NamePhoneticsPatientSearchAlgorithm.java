@@ -88,10 +88,10 @@ public class NamePhoneticsPatientSearchAlgorithm extends BasicSimilarPatientSear
 		//patient has no names to use for filtering. But is this possible anyway? :)
 		return patients;
 	}
-
+	
 	/**
 	 * Returns a score higher than 0 if value and matches strings are not empty.
-	 *
+	 * 
 	 * @param value
 	 * @param matches
 	 * @return 0 if value or matches strings are empty else return 1

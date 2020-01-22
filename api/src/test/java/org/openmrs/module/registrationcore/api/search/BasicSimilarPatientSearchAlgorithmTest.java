@@ -23,7 +23,7 @@ public class BasicSimilarPatientSearchAlgorithmTest extends BaseRegistrationCore
 	@Autowired
 	@Qualifier("registrationcore.BasicSimilarPatientSearchAlgorithm")
 	SimilarPatientSearchAlgorithm patientSearch;
-
+	
 	@Autowired
 	@Qualifier("registrationcore.NamePhoneticsPatientSearchAlgorithm")
 	SimilarPatientSearchAlgorithm namePhoneticsPatientSearch;
@@ -137,14 +137,14 @@ public class BasicSimilarPatientSearchAlgorithmTest extends BaseRegistrationCore
 		assertThat(bestPatient.getPersonName().getGivenName(), is("Sharolyne"));
 		assertThat(bestPatient.getPersonName().getFamilyName(), is("Lenye"));
 	}
-
-    @Test
-    public void findSimilarPatients_shouldReturnEmptyListIfNoDataToQueryOn() throws Exception {
-        Patient patient = new Patient();
-        assertThat(patientSearch.findSimilarPatients(patient, null, null, 10).size(), is(0));
-
-    }
-
+	
+	@Test
+	public void findSimilarPatients_shouldReturnEmptyListIfNoDataToQueryOn() throws Exception {
+		Patient patient = new Patient();
+		assertThat(patientSearch.findSimilarPatients(patient, null, null, 10).size(), is(0));
+		
+	}
+	
 	/**
 	 * @see BasicSimilarPatientSearchAlgorithm#findSimilarPatients(Patient,Integer)
 	 * @verifies find by phonetic name match
@@ -152,16 +152,16 @@ public class BasicSimilarPatientSearchAlgorithmTest extends BaseRegistrationCore
 	@Test
 	public void findSimilarPatients_shouldFindByPhoneticNameMatch() throws Exception {
 		executeDataSet("name_phonetics_dataset.xml");
-
+		
 		Patient patient = new Patient();
-
+		
 		PersonName name = new PersonName();
 		patient.addName(name);
 		name.setGivenName("Jarusz");
 		name.setFamilyName("Rapondee");
-
+		
 		List<PatientAndMatchQuality> results = namePhoneticsPatientSearch.findSimilarPatients(patient, null, null, 10);
-
+		
 		assertThat(results.size(), is(1));
 		assertThat(results.get(0).getPatient().getPersonName().getGivenName(), is("Jarus"));
 		assertThat(results.get(0).getPatient().getPersonName().getFamilyName(), is("Rapondi"));

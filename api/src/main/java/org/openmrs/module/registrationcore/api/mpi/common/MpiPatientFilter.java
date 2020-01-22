@@ -8,6 +8,6 @@ import java.util.List;
  * Perform patients filtering.
  */
 public interface MpiPatientFilter {
-
-    void filter(List<PatientAndMatchQuality> patients);
+	
+	void filter(List<PatientAndMatchQuality> patients);
 }

@@ -57,15 +57,14 @@ public class MockRegistrationEventListener extends MockEventListener {
 				registererUuid = mapMessage.getString(RegistrationCoreConstants.KEY_REGISTERER_UUID);
 				dateRegistered = mapMessage.getString(RegistrationCoreConstants.KEY_DATE_REGISTERED);
 				wasAPerson = mapMessage.getBoolean(RegistrationCoreConstants.KEY_WAS_A_PERSON);
-
+				
 				super.onMessage(message);
 			}
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
-
-
+		
 	}
 	
 	/**

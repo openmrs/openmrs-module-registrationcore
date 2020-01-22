@@ -14,40 +14,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A subject represents a Person for whom one or more biometric samples are being collected,
- * and for whom we want to associate all of these biometrics together with a single subjectId identifier
+ * A subject represents a Person for whom one or more biometric samples are being collected, and for
+ * whom we want to associate all of these biometrics together with a single subjectId identifier
  */
 public class BiometricSubject implements Serializable {
-
-    private String subjectId;
-    private List<Fingerprint> fingerprints;
-
-    public BiometricSubject() { }
-
-    public BiometricSubject(String subjectId) {
-        this.subjectId = subjectId;
-    }
-
-    public String getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(String subjectId) {
-        this.subjectId = subjectId;
-    }
-
-    public List<Fingerprint> getFingerprints() {
-        if (fingerprints == null) {
-            fingerprints = new ArrayList<Fingerprint>();
-        }
-        return fingerprints;
-    }
-
-    public void setFingerprints(List<Fingerprint> fingerprints) {
-        this.fingerprints = fingerprints;
-    }
-
-    public void addFingerprint(Fingerprint fingerprint) {
-        getFingerprints().add(fingerprint);
-    }
+	
+	private String subjectId;
+	
+	private List<Fingerprint> fingerprints;
+	
+	public BiometricSubject() {
+	}
+	
+	public BiometricSubject(String subjectId) {
+		this.subjectId = subjectId;
+	}
+	
+	public String getSubjectId() {
+		return subjectId;
+	}
+	
+	public void setSubjectId(String subjectId) {
+		this.subjectId = subjectId;
+	}
+	
+	public List<Fingerprint> getFingerprints() {
+		if (fingerprints == null) {
+			fingerprints = new ArrayList<Fingerprint>();
+		}
+		return fingerprints;
+	}
+	
+	public void setFingerprints(List<Fingerprint> fingerprints) {
+		this.fingerprints = fingerprints;
+	}
+	
+	public void addFingerprint(Fingerprint fingerprint) {
+		getFingerprints().add(fingerprint);
+	}
 }

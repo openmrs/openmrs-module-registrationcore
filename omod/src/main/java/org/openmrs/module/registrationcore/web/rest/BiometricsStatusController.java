@@ -30,34 +30,33 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class BiometricsStatusController {
-
-    @Autowired
-    BaseUriSetup baseUriSetup;
-
-    @Autowired
-    RegistrationCoreProperties registrationCoreProperties;
-
-    @RequestMapping(value="/rest/v1/registrationcore/biometrics/enginestatus", method = RequestMethod.GET)
-    @ResponseBody
-    public SimpleObject get(HttpServletRequest request, HttpServletResponse response) throws ResponseException {
-        baseUriSetup.setup(request);
-        BiometricEngineStatus status;
-        try {
-            BiometricEngine engine = registrationCoreProperties.getBiometricEngine();
-            if (engine != null) {
-                status = engine.getStatus();
-            }
-            else {
-                status = new BiometricEngineStatus();
-                status.setEnabled(false);
-                status.setStatusMessage("registrationcore.biometrics.noEngineConfigured");
-            }
-        }
-        catch (Exception e) {
-            status = new BiometricEngineStatus();
-            status.setEnabled(false);
-            status.setStatusMessage(e.getMessage());
-        }
-        return new SimpleObject().add("results", status);
-    }
+	
+	@Autowired
+	BaseUriSetup baseUriSetup;
+	
+	@Autowired
+	RegistrationCoreProperties registrationCoreProperties;
+	
+	@RequestMapping(value = "/rest/v1/registrationcore/biometrics/enginestatus", method = RequestMethod.GET)
+	@ResponseBody
+	public SimpleObject get(HttpServletRequest request, HttpServletResponse response) throws ResponseException {
+		baseUriSetup.setup(request);
+		BiometricEngineStatus status;
+		try {
+			BiometricEngine engine = registrationCoreProperties.getBiometricEngine();
+			if (engine != null) {
+				status = engine.getStatus();
+			} else {
+				status = new BiometricEngineStatus();
+				status.setEnabled(false);
+				status.setStatusMessage("registrationcore.biometrics.noEngineConfigured");
+			}
+		}
+		catch (Exception e) {
+			status = new BiometricEngineStatus();
+			status.setEnabled(false);
+			status.setStatusMessage(e.getMessage());
+		}
+		return new SimpleObject().add("results", status);
+	}
 }

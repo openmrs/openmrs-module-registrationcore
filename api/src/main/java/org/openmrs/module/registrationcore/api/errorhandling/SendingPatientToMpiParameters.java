@@ -7,12 +7,12 @@ import org.apache.commons.lang.StringUtils;
  * Class that holds required parameters for sending patient to MPI
  */
 public class SendingPatientToMpiParameters implements Serializable {
-
+	
 	private String patientUuid;
-
+	
 	public SendingPatientToMpiParameters() {
 	}
-
+	
 	public SendingPatientToMpiParameters(String patientUuid) {
 		this.patientUuid = patientUuid;
 	}

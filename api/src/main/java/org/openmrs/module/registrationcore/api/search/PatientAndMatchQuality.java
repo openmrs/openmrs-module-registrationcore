@@ -54,7 +54,7 @@ public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality
 	public int compareTo(PatientAndMatchQuality o) {
 		return o.score.compareTo(score);
 	}
-
+	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -66,7 +66,7 @@ public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality
 		PatientAndMatchQuality that = (PatientAndMatchQuality) o;
 		return Objects.equals(patient, that.patient);
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(patient);

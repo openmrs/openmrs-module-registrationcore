@@ -7,23 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 public class OpenEmpiPatientUpdater implements MpiPatientUpdater {
-
-    @Autowired
-    @Qualifier("registrationcore.openEmpiPatientQueryBuilder")
-    private OpenEmpiPatientQueryBuilder queryBuilder;
-
-    @Autowired
-    @Qualifier("registrationcore.mpiAuthenticator")
-    private MpiAuthenticator authenticator;
-
-    @Autowired
-    @Qualifier("registrationcore.restQueryExecutor")
-    private RestQueryExecutor queryExecutor;
-
-    @Override
-    public void updatePatient(Patient patient) {
-        OpenEmpiPatientResult patientQuery = queryBuilder.build(patient);
-
-        queryExecutor.updatePatient(authenticator.getToken(), patientQuery);
-    }
+	
+	@Autowired
+	@Qualifier("registrationcore.openEmpiPatientQueryBuilder")
+	private OpenEmpiPatientQueryBuilder queryBuilder;
+	
+	@Autowired
+	@Qualifier("registrationcore.mpiAuthenticator")
+	private MpiAuthenticator authenticator;
+	
+	@Autowired
+	@Qualifier("registrationcore.restQueryExecutor")
+	private RestQueryExecutor queryExecutor;
+	
+	@Override
+	public void updatePatient(Patient patient) {
+		OpenEmpiPatientResult patientQuery = queryBuilder.build(patient);
+		
+		queryExecutor.updatePatient(authenticator.getToken(), patientQuery);
+	}
 }

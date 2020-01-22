@@ -19,73 +19,85 @@ import static org.mockito.Mockito.when;
 import static org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientResult.*;
 
 public class OpenEmpiPatientResultBuilderTest {
-
-    private static final String LOCAL_IDENTIFIER_TYPE_UUID = "5";
-    private static final Integer MPI_IDENTIFIER_TYPE_ID = 6;
-    private static final String IDENTIFIER_VALUE = "identifierValue";
-
-    private static final String FAMILY_NAME = "familyName";
-    private static final String GIVEN_NAME = "givenName";
-    private static final String MIDDLE_NAME = "middleName";
-    private static final String GENDER_CODE = "M";
-    private static final Date BIRTHDATE = new Date();
-    private static final String PERSON_IDENTIFIER_TYPE_UUID = "6";
-
-    @InjectMocks OpenEmpiPatientQueryBuilder queryBuilder;
-    @Mock PatientIdentifierMapper identifierMapper;
-    @Mock private MpiProperties mpiProperties;
-
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        mockIdentifierMapper();
-        when(mpiProperties.getMpiPersonIdentifierTypeUuid()).thenReturn(PERSON_IDENTIFIER_TYPE_UUID);
-    }
-
-    @Test
-    public void testCorrectPatientConverting() throws Exception {
-        Patient patient = createPatient();
-
-        OpenEmpiPatientResult query = queryBuilder.build(patient);
-
-        assertEquals(patient.getGender(), query.getGender().getGenderCode());
-
-        assertEquals(patient.getFamilyName(), query.getFamilyName());
-        assertEquals(patient.getGivenName(), query.getGivenName());
-        assertEquals(patient.getMiddleName(), query.getMiddleName());
-
-        assertEquals(patient.getBirthdate(), query.getDateOfBirth());
-
-        PersonIdentifier personIdentifier = query.getPersonIdentifiers().get(0);
-        assertEquals(personIdentifier.getIdentifierDomain().getIdentifierDomainId(), MPI_IDENTIFIER_TYPE_ID);
-        assertEquals(personIdentifier.getIdentifier(), IDENTIFIER_VALUE);
-    }
-
-    private Patient createPatient() {
-        Patient patient = new Patient();
-
-        patient.setGender(GENDER_CODE);
-
-        HashSet<PersonName> names = new HashSet<PersonName>();
-        PersonName personName = new PersonName();
-        personName.setFamilyName(FAMILY_NAME);
-        personName.setGivenName(GIVEN_NAME);
-        personName.setMiddleName(MIDDLE_NAME);
-        names.add(personName);
-        patient.setNames(names);
-
-        patient.setBirthdate(BIRTHDATE);
-
-        PatientIdentifierType patientIdentifierType = new PatientIdentifierType();
-        patientIdentifierType.setUuid(LOCAL_IDENTIFIER_TYPE_UUID);
-        PatientIdentifier patientIdentifier = new PatientIdentifier(IDENTIFIER_VALUE,
-                patientIdentifierType, null);
-
-        patient.addIdentifier(patientIdentifier);
-        return patient;
-    }
-
-    private void mockIdentifierMapper() {
-        when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_UUID)).thenReturn(MPI_IDENTIFIER_TYPE_ID.toString());
-    }
+	
+	private static final String LOCAL_IDENTIFIER_TYPE_UUID = "5";
+	
+	private static final Integer MPI_IDENTIFIER_TYPE_ID = 6;
+	
+	private static final String IDENTIFIER_VALUE = "identifierValue";
+	
+	private static final String FAMILY_NAME = "familyName";
+	
+	private static final String GIVEN_NAME = "givenName";
+	
+	private static final String MIDDLE_NAME = "middleName";
+	
+	private static final String GENDER_CODE = "M";
+	
+	private static final Date BIRTHDATE = new Date();
+	
+	private static final String PERSON_IDENTIFIER_TYPE_UUID = "6";
+	
+	@InjectMocks
+	OpenEmpiPatientQueryBuilder queryBuilder;
+	
+	@Mock
+	PatientIdentifierMapper identifierMapper;
+	
+	@Mock
+	private MpiProperties mpiProperties;
+	
+	@Before
+	public void setUp() throws Exception {
+		MockitoAnnotations.initMocks(this);
+		mockIdentifierMapper();
+		when(mpiProperties.getMpiPersonIdentifierTypeUuid()).thenReturn(PERSON_IDENTIFIER_TYPE_UUID);
+	}
+	
+	@Test
+	public void testCorrectPatientConverting() throws Exception {
+		Patient patient = createPatient();
+		
+		OpenEmpiPatientResult query = queryBuilder.build(patient);
+		
+		assertEquals(patient.getGender(), query.getGender().getGenderCode());
+		
+		assertEquals(patient.getFamilyName(), query.getFamilyName());
+		assertEquals(patient.getGivenName(), query.getGivenName());
+		assertEquals(patient.getMiddleName(), query.getMiddleName());
+		
+		assertEquals(patient.getBirthdate(), query.getDateOfBirth());
+		
+		PersonIdentifier personIdentifier = query.getPersonIdentifiers().get(0);
+		assertEquals(personIdentifier.getIdentifierDomain().getIdentifierDomainId(), MPI_IDENTIFIER_TYPE_ID);
+		assertEquals(personIdentifier.getIdentifier(), IDENTIFIER_VALUE);
+	}
+	
+	private Patient createPatient() {
+		Patient patient = new Patient();
+		
+		patient.setGender(GENDER_CODE);
+		
+		HashSet<PersonName> names = new HashSet<PersonName>();
+		PersonName personName = new PersonName();
+		personName.setFamilyName(FAMILY_NAME);
+		personName.setGivenName(GIVEN_NAME);
+		personName.setMiddleName(MIDDLE_NAME);
+		names.add(personName);
+		patient.setNames(names);
+		
+		patient.setBirthdate(BIRTHDATE);
+		
+		PatientIdentifierType patientIdentifierType = new PatientIdentifierType();
+		patientIdentifierType.setUuid(LOCAL_IDENTIFIER_TYPE_UUID);
+		PatientIdentifier patientIdentifier = new PatientIdentifier(IDENTIFIER_VALUE, patientIdentifierType, null);
+		
+		patient.addIdentifier(patientIdentifier);
+		return patient;
+	}
+	
+	private void mockIdentifierMapper() {
+		when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_UUID))
+		        .thenReturn(MPI_IDENTIFIER_TYPE_ID.toString());
+	}
 }

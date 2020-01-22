@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.registrationcore.web.rest;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Patient;
@@ -38,62 +37,62 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class PatientsBySimilarPatientSearchHandlerTest extends MainResourceControllerTest {
-
-    private static final String PATIENT_UUID = "dd553355-1691-11df-97a5-7038c432aabf";
-
-    @Override
-    public String getURI() {
-        return "patient";
-    }
-
-    @Override
-    public String getUuid() {
-        return PATIENT_UUID;
-    }
-
-    @Override
-    public long getAllCount() {
-        return Context.getPatientService().getAllPatients().size();
-    }
-
-    @Before
-    public void setUp() throws Exception{
-        executeDataSet("patients_dataset.xml");
-    }
-
-    @Test
-    public void shouldReturnOneSimilarPatient() throws Exception{
-        MockHttpServletRequest req = request(RequestMethod.GET, getURI());
-        req.addParameter("matchSimilar", "true");
-        req.addHeader("givenname", "Jarus");
-        req.addParameter("middlename", "Agemba");
-        req.addParameter("familyname", "Rapondi");
-        req.addParameter("gender", "M");
-        req.addParameter("city", "Shiseso");
-
-        SimpleObject result = deserialize(handle(req));
-        List<Object> patients = result.get("results");
-        assertThat(patients.size(), is(1));
-    }
-
-    @Test
-    public void shouldNotReturnSimilarPatient() throws Exception{
-        MockHttpServletRequest req = request(RequestMethod.GET, getURI());
-        req.addParameter("matchSimilar", "true");
-        req.addHeader("givenname", "New");
-        req.addParameter("middlename", "User");
-        req.addParameter("familyname", "User");
-        req.addParameter("gender", "M");
-        req.addParameter("city", "city");
-
-        SimpleObject result = deserialize(handle(req));
-        List<Object> patients = result.get("results");
-        assertThat(patients.size(), is(0));
-    }
-
-    @Override
-    @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void shouldGetAll() throws Exception {
-        super.shouldGetAll();
-    }
+	
+	private static final String PATIENT_UUID = "dd553355-1691-11df-97a5-7038c432aabf";
+	
+	@Override
+	public String getURI() {
+		return "patient";
+	}
+	
+	@Override
+	public String getUuid() {
+		return PATIENT_UUID;
+	}
+	
+	@Override
+	public long getAllCount() {
+		return Context.getPatientService().getAllPatients().size();
+	}
+	
+	@Before
+	public void setUp() throws Exception {
+		executeDataSet("patients_dataset.xml");
+	}
+	
+	@Test
+	public void shouldReturnOneSimilarPatient() throws Exception {
+		MockHttpServletRequest req = request(RequestMethod.GET, getURI());
+		req.addParameter("matchSimilar", "true");
+		req.addHeader("givenname", "Jarus");
+		req.addParameter("middlename", "Agemba");
+		req.addParameter("familyname", "Rapondi");
+		req.addParameter("gender", "M");
+		req.addParameter("city", "Shiseso");
+		
+		SimpleObject result = deserialize(handle(req));
+		List<Object> patients = result.get("results");
+		assertThat(patients.size(), is(1));
+	}
+	
+	@Test
+	public void shouldNotReturnSimilarPatient() throws Exception {
+		MockHttpServletRequest req = request(RequestMethod.GET, getURI());
+		req.addParameter("matchSimilar", "true");
+		req.addHeader("givenname", "New");
+		req.addParameter("middlename", "User");
+		req.addParameter("familyname", "User");
+		req.addParameter("gender", "M");
+		req.addParameter("city", "city");
+		
+		SimpleObject result = deserialize(handle(req));
+		List<Object> patients = result.get("results");
+		assertThat(patients.size(), is(0));
+	}
+	
+	@Override
+	@Test(expected = ResourceDoesNotSupportOperationException.class)
+	public void shouldGetAll() throws Exception {
+		super.shouldGetAll();
+	}
 }

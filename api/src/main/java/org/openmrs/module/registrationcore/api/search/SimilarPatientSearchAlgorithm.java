@@ -24,6 +24,6 @@ import org.openmrs.Patient;
 public interface SimilarPatientSearchAlgorithm {
 	
 	List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-	                                                 Integer maxResults);
+	        Integer maxResults);
 	
 }

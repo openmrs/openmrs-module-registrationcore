@@ -22,62 +22,67 @@ import java.util.List;
  * Encapsulates the data that may be collected and saved within a patient registration transaction
  */
 public class RegistrationData implements Serializable {
-
-    private Patient patient;
-    private List<Relationship> relationships;
-    private String identifier;
-    private Location identifierLocation;
-    private List<BiometricData> biometrics;
-
-    public RegistrationData() {}
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    public List<Relationship> getRelationships() {
-        if (relationships == null) {
-            relationships = new ArrayList<Relationship>();
-        }
-        return relationships;
-    }
-
-    public void setRelationships(List<Relationship> relationships) {
-        this.relationships = relationships;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public Location getIdentifierLocation() {
-        return identifierLocation;
-    }
-
-    public void setIdentifierLocation(Location identifierLocation) {
-        this.identifierLocation = identifierLocation;
-    }
-
-    public List<BiometricData> getBiometrics() {
-        if (biometrics == null) {
-            biometrics = new ArrayList<BiometricData>();
-        }
-        return biometrics;
-    }
-
-    public void setBiometrics(List<BiometricData> biometrics) {
-        this.biometrics = biometrics;
-    }
-
-    public void addBiometricData(BiometricData biometricData) {
-        getBiometrics().add(biometricData);
-    }
+	
+	private Patient patient;
+	
+	private List<Relationship> relationships;
+	
+	private String identifier;
+	
+	private Location identifierLocation;
+	
+	private List<BiometricData> biometrics;
+	
+	public RegistrationData() {
+	}
+	
+	public Patient getPatient() {
+		return patient;
+	}
+	
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+	
+	public List<Relationship> getRelationships() {
+		if (relationships == null) {
+			relationships = new ArrayList<Relationship>();
+		}
+		return relationships;
+	}
+	
+	public void setRelationships(List<Relationship> relationships) {
+		this.relationships = relationships;
+	}
+	
+	public String getIdentifier() {
+		return identifier;
+	}
+	
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+	
+	public Location getIdentifierLocation() {
+		return identifierLocation;
+	}
+	
+	public void setIdentifierLocation(Location identifierLocation) {
+		this.identifierLocation = identifierLocation;
+	}
+	
+	public List<BiometricData> getBiometrics() {
+		if (biometrics == null) {
+			biometrics = new ArrayList<BiometricData>();
+		}
+		return biometrics;
+	}
+	
+	public void setBiometrics(List<BiometricData> biometrics) {
+		this.biometrics = biometrics;
+	}
+	
+	public void addBiometricData(BiometricData biometricData) {
+		getBiometrics().add(biometricData);
+	}
 }

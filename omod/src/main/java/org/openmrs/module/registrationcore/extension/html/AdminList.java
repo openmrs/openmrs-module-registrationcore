@@ -21,7 +21,7 @@ import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 /**
  * This class defines the links that will appear on the administration page under the
- * "registrationcore.title" heading. 
+ * "registrationcore.title" heading.
  */
 public class AdminList extends AdministrationSectionExt {
 	

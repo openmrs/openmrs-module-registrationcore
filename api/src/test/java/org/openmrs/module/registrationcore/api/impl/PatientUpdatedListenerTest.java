@@ -18,43 +18,57 @@ import javax.jms.Message;
 import static org.mockito.Mockito.*;
 
 public class PatientUpdatedListenerTest {
-
-    private static final String PATIENT_UUID_EXAMPLE = "af7c3340-0503-11e3-8ffd-0800200c9a66";
-
-    @InjectMocks private PatientUpdatedListener patientUpdatedListener;
-    @Mock private PatientService patientService;
-    @Mock private RegistrationCoreProperties coreProperties;
-    @Mock private MpiProvider mpiProvider;
-
-    @Mock private MapMessage mapMessage;
-    @Mock private Message message;
-    @Mock private Patient patient;
-
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        when(coreProperties.getMpiProvider()).thenReturn(mpiProvider);
-    }
-
-    @Test
-    @Ignore //Can't mock static method : "Context.openSession"
-    public void testPerformUpdate() throws Exception {
-        when(coreProperties.isMpiEnabled()).thenReturn(true);
-        when(mapMessage.getString("uuid")).thenReturn(PATIENT_UUID_EXAMPLE);
-        when(patientService.getPatientByUuid(PATIENT_UUID_EXAMPLE)).thenReturn(patient);
-
-        patientUpdatedListener.onMessage(message);
-
-        verify(mpiProvider).updatePatient(patient);
-    }
-
-    @Test
-    @Ignore //Can't be tested since can't mock daemon class.
-    public void testDoNotPerformUpdateOnMpiDisabled() throws Exception {
-        when(coreProperties.isMpiEnabled()).thenReturn(false);
-
-        patientUpdatedListener.onMessage(message);
-
-        verify(mpiProvider, never()).updatePatient(patient);
-    }
+	
+	private static final String PATIENT_UUID_EXAMPLE = "af7c3340-0503-11e3-8ffd-0800200c9a66";
+	
+	@InjectMocks
+	private PatientUpdatedListener patientUpdatedListener;
+	
+	@Mock
+	private PatientService patientService;
+	
+	@Mock
+	private RegistrationCoreProperties coreProperties;
+	
+	@Mock
+	private MpiProvider mpiProvider;
+	
+	@Mock
+	private MapMessage mapMessage;
+	
+	@Mock
+	private Message message;
+	
+	@Mock
+	private Patient patient;
+	
+	@Before
+	public void setUp() throws Exception {
+		MockitoAnnotations.initMocks(this);
+		when(coreProperties.getMpiProvider()).thenReturn(mpiProvider);
+	}
+	
+	@Test
+	@Ignore
+	//Can't mock static method : "Context.openSession"
+	public void testPerformUpdate() throws Exception {
+		when(coreProperties.isMpiEnabled()).thenReturn(true);
+		when(mapMessage.getString("uuid")).thenReturn(PATIENT_UUID_EXAMPLE);
+		when(patientService.getPatientByUuid(PATIENT_UUID_EXAMPLE)).thenReturn(patient);
+		
+		patientUpdatedListener.onMessage(message);
+		
+		verify(mpiProvider).updatePatient(patient);
+	}
+	
+	@Test
+	@Ignore
+	//Can't be tested since can't mock daemon class.
+	public void testDoNotPerformUpdateOnMpiDisabled() throws Exception {
+		when(coreProperties.isMpiEnabled()).thenReturn(false);
+		
+		patientUpdatedListener.onMessage(message);
+		
+		verify(mpiProvider, never()).updatePatient(patient);
+	}
 }

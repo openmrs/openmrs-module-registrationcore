@@ -15,20 +15,21 @@ import java.io.Serializable;
  * Represents a single fingerprint sample
  */
 public class Fingerprint extends BiometricSample implements Serializable {
-
-    private String image;
-
-    public Fingerprint() { }
-
-    public Fingerprint(String type, String templateFormat, String template) {
-        super(type, templateFormat, template);
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
+	
+	private String image;
+	
+	public Fingerprint() {
+	}
+	
+	public Fingerprint(String type, String templateFormat, String template) {
+		super(type, templateFormat, template);
+	}
+	
+	public String getImage() {
+		return image;
+	}
+	
+	public void setImage(String image) {
+		this.image = image;
+	}
 }

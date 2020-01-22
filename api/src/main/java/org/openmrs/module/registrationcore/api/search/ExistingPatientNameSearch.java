@@ -21,17 +21,17 @@ import java.util.List;
 
 @Service("registrationcore.ExistingPatientNameSearch")
 public class ExistingPatientNameSearch implements PatientNameSearch {
-
-    @Autowired
-    private RegistrationCoreDAO dao;
-
-    @Override
-    public List<String> findSimilarGivenNames(String searchPhrase) {
-        return dao.findExistingSimilarGivenNames(searchPhrase);
-    }
-
-    @Override
-    public List<String> findSimilarFamilyNames(String searchPhrase) {
-        return dao.findExistingSimilarFamilyNames(searchPhrase);
-    }
+	
+	@Autowired
+	private RegistrationCoreDAO dao;
+	
+	@Override
+	public List<String> findSimilarGivenNames(String searchPhrase) {
+		return dao.findExistingSimilarGivenNames(searchPhrase);
+	}
+	
+	@Override
+	public List<String> findSimilarFamilyNames(String searchPhrase) {
+		return dao.findExistingSimilarFamilyNames(searchPhrase);
+	}
 }

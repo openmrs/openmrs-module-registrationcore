@@ -19,12 +19,12 @@ import java.util.List;
  * An interface for finding similar patient names.
  */
 public interface PatientNameSearch {
-
+	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
 	 */
 	List<String> findSimilarGivenNames(String searchPhrase);
-
+	
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarFamilyNames(String)
 	 */

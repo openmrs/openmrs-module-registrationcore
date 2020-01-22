@@ -23,85 +23,83 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Not meant for actual production usage, this is a simple
- * implementation of the Biometrics Engine that is intended to
- * enable testing or demonstration of functionality by storing
- * biometric subjects in memory in a Map, and doing simple text matching
- * on template contents
+ * Not meant for actual production usage, this is a simple implementation of the Biometrics Engine
+ * that is intended to enable testing or demonstration of functionality by storing biometric
+ * subjects in memory in a Map, and doing simple text matching on template contents
  */
 @Component
 public class TestBiometricEngine implements BiometricEngine {
-
-    private Map<String, BiometricSubject> enrolledSubjects = new HashMap<String, BiometricSubject>();
-
-    @Override
-    public BiometricEngineStatus getStatus() {
-        BiometricEngineStatus status = new BiometricEngineStatus();
-        status.setEnabled(true);
-        status.setDescription("Test biometrics engine for demonstration purposes");
-        return status;
-    }
-
-    @Override
-    public BiometricSubject enroll(BiometricSubject subject) {
-        if (subject.getSubjectId() == null) {
-            subject.setSubjectId(UUID.randomUUID().toString());
-        }
-        enrolledSubjects.put(subject.getSubjectId(), subject);
-        return subject;
-    }
-
-    @Override
-    public BiometricSubject update(BiometricSubject subject) {
-        if (subject.getSubjectId() == null) {
-            return enroll(subject);
-        }
-        BiometricSubject existing = lookup(subject.getSubjectId());
-        if (existing == null) {
-            throw new IllegalArgumentException("No subject with id <" + subject.getSubjectId() + "> found.");
-        }
-        existing.setFingerprints(subject.getFingerprints());
-        return existing;
-    }
-
-    @Override
-    public BiometricSubject updateSubjectId(String oldId, String newId) {
-        BiometricSubject s = enrolledSubjects.remove(oldId);
-        s.setSubjectId(newId);
-        enroll(s);
-        return s;
-    }
-
-    @Override
-    public List<BiometricMatch> search(BiometricSubject subject) {
-        List<BiometricMatch> ret = new ArrayList<BiometricMatch>();
-        for (BiometricSubject s : enrolledSubjects.values()) {
-            double score = 0;
-            if (s.getSubjectId().equals(subject.getSubjectId())) {
-                score += 10000;
-            }
-            for (Fingerprint fp : s.getFingerprints()) {
-                for (Fingerprint fp2 : subject.getFingerprints()) {
-                    if (fp.getTemplate().equals(fp2.getTemplate())) {
-                        score += 1000;
-                    }
-                }
-            }
-            if (score > 0) {
-                ret.add(new BiometricMatch(s.getSubjectId(), score));
-            }
-        }
-        Collections.sort(ret);
-        return ret;
-    }
-
-    @Override
-    public BiometricSubject lookup(String subjectId) {
-        return enrolledSubjects.get(subjectId);
-    }
-
-    @Override
-    public void delete(String subjectId) {
-        enrolledSubjects.remove(subjectId);
-    }
+	
+	private Map<String, BiometricSubject> enrolledSubjects = new HashMap<String, BiometricSubject>();
+	
+	@Override
+	public BiometricEngineStatus getStatus() {
+		BiometricEngineStatus status = new BiometricEngineStatus();
+		status.setEnabled(true);
+		status.setDescription("Test biometrics engine for demonstration purposes");
+		return status;
+	}
+	
+	@Override
+	public BiometricSubject enroll(BiometricSubject subject) {
+		if (subject.getSubjectId() == null) {
+			subject.setSubjectId(UUID.randomUUID().toString());
+		}
+		enrolledSubjects.put(subject.getSubjectId(), subject);
+		return subject;
+	}
+	
+	@Override
+	public BiometricSubject update(BiometricSubject subject) {
+		if (subject.getSubjectId() == null) {
+			return enroll(subject);
+		}
+		BiometricSubject existing = lookup(subject.getSubjectId());
+		if (existing == null) {
+			throw new IllegalArgumentException("No subject with id <" + subject.getSubjectId() + "> found.");
+		}
+		existing.setFingerprints(subject.getFingerprints());
+		return existing;
+	}
+	
+	@Override
+	public BiometricSubject updateSubjectId(String oldId, String newId) {
+		BiometricSubject s = enrolledSubjects.remove(oldId);
+		s.setSubjectId(newId);
+		enroll(s);
+		return s;
+	}
+	
+	@Override
+	public List<BiometricMatch> search(BiometricSubject subject) {
+		List<BiometricMatch> ret = new ArrayList<BiometricMatch>();
+		for (BiometricSubject s : enrolledSubjects.values()) {
+			double score = 0;
+			if (s.getSubjectId().equals(subject.getSubjectId())) {
+				score += 10000;
+			}
+			for (Fingerprint fp : s.getFingerprints()) {
+				for (Fingerprint fp2 : subject.getFingerprints()) {
+					if (fp.getTemplate().equals(fp2.getTemplate())) {
+						score += 1000;
+					}
+				}
+			}
+			if (score > 0) {
+				ret.add(new BiometricMatch(s.getSubjectId(), score));
+			}
+		}
+		Collections.sort(ret);
+		return ret;
+	}
+	
+	@Override
+	public BiometricSubject lookup(String subjectId) {
+		return enrolledSubjects.get(subjectId);
+	}
+	
+	@Override
+	public void delete(String subjectId) {
+		enrolledSubjects.remove(subjectId);
+	}
 }
