@@ -43,11 +43,13 @@ public class MpiProperties extends ModuleProperties {
         Properties props = OpenmrsUtil.getRuntimeProperties(null);
         String username = props.getProperty(RegistrationCoreConstants.RTP_MPI_ACCESS_USERNAME);
         String password = props.getProperty(RegistrationCoreConstants.RTP_MPI_ACCESS_PASSWORD);
-        if (StringUtils.isBlank(username)){
-            log.error("MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
+        if (StringUtils.isBlank(username)) {
+            log.error(
+                    "MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
         }
-        if (StringUtils.isBlank(password)){
-            log.error("MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
+        if (StringUtils.isBlank(password)) {
+            log.error(
+                    "MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
         }
         return new MpiCredentials(username, password);
     }
@@ -68,7 +70,7 @@ public class MpiProperties extends ModuleProperties {
             String isEnabled = getProperty(propertyName);
             return Boolean.getBoolean(isEnabled);
         } catch (APIException e) {
-            //If exception is thrown if property is missed, so by default return false;
+            // If exception is thrown if property is missed, so by default return false;
             return false;
         }
     }
@@ -77,7 +79,7 @@ public class MpiProperties extends ModuleProperties {
         return splitIntoList(RegistrationCoreConstants.GP_MPI_PIX_IDENTTIFIER_TYPE_UUID_LIST);
     }
 
-    private List<String> splitIntoList (String property) {
+    private List<String> splitIntoList(String property) {
         String uuidList = getProperty(property);
         List<String> list = new ArrayList<String>();
         for (String uuid : uuidList.split(",")) {

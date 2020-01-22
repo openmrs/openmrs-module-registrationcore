@@ -28,16 +28,22 @@ public class PatientBuilderTest {
     private static final String PATIENT_ECID_IDENTIFIER_VALUE = "019bb820-1bd3-11e5-8a7f-040158db6201";
     private static final String PERSON_IDENTIFIER_TYPE_UUID = "6";
 
-    @InjectMocks private PatientBuilder patientBuilder;
-    @Mock private PatientIdentifierMapper identifierMapper;
-    @Mock private IdentifierBuilder identifierBuilder;
-    @Mock private MpiProperties mpiProperties;
-    @Mock private RegistrationCoreProperties registrationCoreProperties;
+    @InjectMocks
+    private PatientBuilder patientBuilder;
+    @Mock
+    private PatientIdentifierMapper identifierMapper;
+    @Mock
+    private IdentifierBuilder identifierBuilder;
+    @Mock
+    private MpiProperties mpiProperties;
+    @Mock
+    private RegistrationCoreProperties registrationCoreProperties;
     private XmlMarshaller xmlMarshaller = new XmlMarshaller();
 
-
-    @Mock private PatientIdentifier openmrsidentifier;
-    @Mock private PatientIdentifier ecidIdentifier;
+    @Mock
+    private PatientIdentifier openmrsidentifier;
+    @Mock
+    private PatientIdentifier ecidIdentifier;
 
     @Before
     public void setUp() throws Exception {
@@ -49,18 +55,20 @@ public class PatientBuilderTest {
     }
 
     private void mockIdentifierMapper() {
-        when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_OPENMRS_IDENTIFIER_TYPE_ID)).thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID);
-        when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_ECID_IDENTIFIER_TYPE_ID)).thenReturn(LOCAL_ECID_IDENTIFIER_TYPE_UUID);
+        when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_OPENMRS_IDENTIFIER_TYPE_ID))
+                .thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID);
+        when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_ECID_IDENTIFIER_TYPE_ID))
+                .thenReturn(LOCAL_ECID_IDENTIFIER_TYPE_UUID);
     }
 
     private void mockIdentifierBuilder() {
-        when(identifierBuilder.createIdentifier(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID, PATIENT_OPENMRS_IDENTIFIER_VALUE, null))
-                .thenReturn(openmrsidentifier);
+        when(identifierBuilder.createIdentifier(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID, PATIENT_OPENMRS_IDENTIFIER_VALUE,
+                null)).thenReturn(openmrsidentifier);
         when(identifierBuilder.createIdentifier(LOCAL_ECID_IDENTIFIER_TYPE_UUID, PATIENT_ECID_IDENTIFIER_VALUE, null))
                 .thenReturn(ecidIdentifier);
     }
 
-    private void mockRegistrationCoreProperties(){
+    private void mockRegistrationCoreProperties() {
         when(registrationCoreProperties.getOpenMrsIdentifierUuid()).thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID);
     }
 

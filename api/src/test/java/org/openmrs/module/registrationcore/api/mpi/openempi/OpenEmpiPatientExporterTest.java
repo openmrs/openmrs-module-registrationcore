@@ -22,14 +22,22 @@ public class OpenEmpiPatientExporterTest {
     private static final String TOKEN = "token";
     private static final int MPI_GLOBAL_DOMAIN_ID = 13;
     private static final int PERSON_ID = 13;
-    @InjectMocks private OpenEmpiPatientExporter patientExport = new OpenEmpiPatientExporter();
-    @Mock private OpenEmpiPatientQueryBuilder queryBuilder;
-    @Mock private MpiProperties mpiProperties;
-    @Mock private MpiAuthenticator authenticator;
-    @Mock private RestQueryExecutor queryCreator;
-    @Mock private Patient patient;
-    @Mock private OpenEmpiPatientResult query;
-    @Mock private OpenEmpiPatientResult queryResult;
+    @InjectMocks
+    private OpenEmpiPatientExporter patientExport = new OpenEmpiPatientExporter();
+    @Mock
+    private OpenEmpiPatientQueryBuilder queryBuilder;
+    @Mock
+    private MpiProperties mpiProperties;
+    @Mock
+    private MpiAuthenticator authenticator;
+    @Mock
+    private RestQueryExecutor queryCreator;
+    @Mock
+    private Patient patient;
+    @Mock
+    private OpenEmpiPatientResult query;
+    @Mock
+    private OpenEmpiPatientResult queryResult;
 
     @Before
     public void setUp() throws Exception {
@@ -48,7 +56,7 @@ public class OpenEmpiPatientExporterTest {
         ArgumentCaptor<OpenEmpiPatientResult> queryCaptor = ArgumentCaptor.forClass(OpenEmpiPatientResult.class);
         verify(queryCreator).exportPatient(eq(TOKEN), queryCaptor.capture());
 
-        //assert that GlobalDomainIdentifier was removed before exportPatient:
+        // assert that GlobalDomainIdentifier was removed before exportPatient:
         assertEquals(queryCaptor.getValue().getPersonIdentifiers().size(), 0);
     }
 

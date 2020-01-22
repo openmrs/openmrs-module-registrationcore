@@ -23,11 +23,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Not meant for actual production usage, this is a simple
- * implementation of the Biometrics Engine that is intended to
- * enable testing or demonstration of functionality by storing
- * biometric subjects in memory in a Map, and doing simple text matching
- * on template contents
+ * Not meant for actual production usage, this is a simple implementation of the Biometrics Engine that is intended to
+ * enable testing or demonstration of functionality by storing biometric subjects in memory in a Map, and doing simple
+ * text matching on template contents
  */
 @Component
 public class TestBiometricEngine implements BiometricEngine {

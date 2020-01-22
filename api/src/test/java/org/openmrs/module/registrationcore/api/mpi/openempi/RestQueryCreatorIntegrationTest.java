@@ -19,9 +19,11 @@ public class RestQueryCreatorIntegrationTest {
     private static final Integer OPENEMPI_GLOBAL_DOMAIN_ID = 60;
 
     private XmlMarshaller xmlMarshaller = new XmlMarshaller();
-    @Mock private MpiProperties properties;
+    @Mock
+    private MpiProperties properties;
     private RestUrlBuilder urlBuilder = new RestUrlBuilder();
-    @InjectMocks private RestQueryExecutor queryCreator;
+    @InjectMocks
+    private RestQueryExecutor queryCreator;
 
     @Before
     public void setUp() throws Exception {
@@ -32,7 +34,7 @@ public class RestQueryCreatorIntegrationTest {
         ReflectionTestUtils.setField(queryCreator, "urlBuilder", urlBuilder);
     }
 
-    //    @Test
+    // @Test
     public void testPerformExport() throws Exception {
         OpenEmpiPatientResult person = getPerson();
         removeGlobalIdentifier(person);
@@ -40,7 +42,7 @@ public class RestQueryCreatorIntegrationTest {
         queryCreator.exportPatient(TOKEN, person);
     }
 
-    //    @Test
+    // @Test
     public void testPerformUpdate() throws Exception {
         OpenEmpiPatientResult person = getPerson();
 

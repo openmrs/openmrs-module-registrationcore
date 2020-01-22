@@ -28,12 +28,17 @@ public class OpenEmpiPatientFilterTest {
     private static final String PERSON_IDENTIFIER = "4";
     private List<PatientAndMatchQuality> patients;
 
-    @Mock private MpiProperties mpiProperties;
-    @Mock private PatientIdentifierMapper identifierMapper;
-    @InjectMocks private OpenEmpiPatientFilter filter;
+    @Mock
+    private MpiProperties mpiProperties;
+    @Mock
+    private PatientIdentifierMapper identifierMapper;
+    @InjectMocks
+    private OpenEmpiPatientFilter filter;
 
-    @Mock private PatientAndMatchQuality patientWrapper;
-    @Mock private PatientAndMatchQuality mpiPatientWrapper;
+    @Mock
+    private PatientAndMatchQuality patientWrapper;
+    @Mock
+    private PatientAndMatchQuality mpiPatientWrapper;
 
     @Before
     public void setUp() throws Exception {
@@ -56,7 +61,8 @@ public class OpenEmpiPatientFilterTest {
         when(mpiProperties.getMpiPersonIdentifierTypeUuid()).thenReturn(PERSON_IDENTIFIER_TYPE_UUID);
     }
 
-    private void generatePatients(Class<? extends Patient> firstPatientClass, Class<? extends Patient> secondPatientClass) {
+    private void generatePatients(Class<? extends Patient> firstPatientClass,
+            Class<? extends Patient> secondPatientClass) {
         patients = new LinkedList<PatientAndMatchQuality>();
 
         patientWrapper = createPatient(firstPatientClass, patientWrapper);
@@ -67,7 +73,7 @@ public class OpenEmpiPatientFilterTest {
     }
 
     private PatientAndMatchQuality createPatient(Class<? extends Patient> patientClass,
-                                                 PatientAndMatchQuality localPatientWrapper) {
+            PatientAndMatchQuality localPatientWrapper) {
         Patient patient = mock(patientClass);
         PatientIdentifier identifier = mock(PatientIdentifier.class);
         PatientIdentifierType patientIdentifierType = mock(PatientIdentifierType.class);

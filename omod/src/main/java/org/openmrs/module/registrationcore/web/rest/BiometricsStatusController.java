@@ -37,7 +37,7 @@ public class BiometricsStatusController {
     @Autowired
     RegistrationCoreProperties registrationCoreProperties;
 
-    @RequestMapping(value="/rest/v1/registrationcore/biometrics/enginestatus", method = RequestMethod.GET)
+    @RequestMapping(value = "/rest/v1/registrationcore/biometrics/enginestatus", method = RequestMethod.GET)
     @ResponseBody
     public SimpleObject get(HttpServletRequest request, HttpServletResponse response) throws ResponseException {
         baseUriSetup.setup(request);
@@ -46,14 +46,12 @@ public class BiometricsStatusController {
             BiometricEngine engine = registrationCoreProperties.getBiometricEngine();
             if (engine != null) {
                 status = engine.getStatus();
-            }
-            else {
+            } else {
                 status = new BiometricEngineStatus();
                 status.setEnabled(false);
                 status.setStatusMessage("registrationcore.biometrics.noEngineConfigured");
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             status = new BiometricEngineStatus();
             status.setEnabled(false);
             status.setStatusMessage(e.getMessage());

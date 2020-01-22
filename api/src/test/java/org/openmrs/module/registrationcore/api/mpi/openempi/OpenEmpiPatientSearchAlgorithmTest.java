@@ -26,15 +26,23 @@ public class OpenEmpiPatientSearchAlgorithmTest {
     private static final List<String> MATCHED_FIELDS = Arrays.asList("personName", "gender", "birthdate");
     private static final int MPI_PERSON_ID = 143;
 
-    @InjectMocks private OpenEmpiPatientsSearcher searchAlgorithm;
-    @Mock private RestQueryExecutor queryCreator;
-    @Mock private FindPatientQueryBuilder queryMapper;
-    @Mock private PatientBuilder patientBuilder;
-    @Mock private MpiAuthenticator authenticator;
+    @InjectMocks
+    private OpenEmpiPatientsSearcher searchAlgorithm;
+    @Mock
+    private RestQueryExecutor queryCreator;
+    @Mock
+    private FindPatientQueryBuilder queryMapper;
+    @Mock
+    private PatientBuilder patientBuilder;
+    @Mock
+    private MpiAuthenticator authenticator;
 
-    @Mock private Patient patient;
-    @Mock private OpenEmpiPatientResult patientQuery;
-    @Mock private MpiPatient mpiPatient;
+    @Mock
+    private Patient patient;
+    @Mock
+    private OpenEmpiPatientResult patientQuery;
+    @Mock
+    private MpiPatient mpiPatient;
 
     @Before
     public void setUp() throws Exception {
@@ -49,7 +57,8 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         List<OpenEmpiPatientResult> patients = createPatients(MAX_RESULTS + 2);
         when(queryCreator.findProbablySimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
 
-        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findSimilarMatches(patient, null, cutoff, MAX_RESULTS);
+        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findSimilarMatches(patient, null, cutoff,
+                MAX_RESULTS);
 
         verify(queryMapper).create(patient);
         verify(queryCreator).findProbablySimilarPatients(TOKEN_VALUE, patientQuery);
@@ -71,7 +80,8 @@ public class OpenEmpiPatientSearchAlgorithmTest {
         List<OpenEmpiPatientResult> patients = createPatients(MAX_RESULTS + 2);
         when(queryCreator.findPreciseSimilarPatients(TOKEN_VALUE, patientQuery)).thenReturn(patients);
 
-        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findExactMatches(patient, null, cutoff, MAX_RESULTS);
+        List<PatientAndMatchQuality> actualPatients = searchAlgorithm.findExactMatches(patient, null, cutoff,
+                MAX_RESULTS);
 
         verify(queryMapper).create(patient);
         verify(queryCreator).findPreciseSimilarPatients(TOKEN_VALUE, patientQuery);

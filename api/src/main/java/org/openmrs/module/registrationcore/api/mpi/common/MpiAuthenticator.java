@@ -1,8 +1,8 @@
 package org.openmrs.module.registrationcore.api.mpi.common;
 
 /**
- * This service perform authentication to MPI server. It is a Spring managed bean which is configured
- * in moduleApplicationContext.xml.
+ * This service perform authentication to MPI server. It is a Spring managed bean which is configured in
+ * moduleApplicationContext.xml.
  */
 public interface MpiAuthenticator {
 
@@ -19,8 +19,8 @@ public interface MpiAuthenticator {
     void performAuthentication();
 
     /**
-     * Returns token value if authentication was performed, otherwise
-     * performs authentication before, and return token value.
+     * Returns token value if authentication was performed, otherwise performs authentication before, and return token
+     * value.
      *
      * @return authentication token
      */

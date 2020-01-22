@@ -31,9 +31,12 @@ public class OpenEmpiPatientResultBuilderTest {
     private static final Date BIRTHDATE = new Date();
     private static final String PERSON_IDENTIFIER_TYPE_UUID = "6";
 
-    @InjectMocks OpenEmpiPatientQueryBuilder queryBuilder;
-    @Mock PatientIdentifierMapper identifierMapper;
-    @Mock private MpiProperties mpiProperties;
+    @InjectMocks
+    OpenEmpiPatientQueryBuilder queryBuilder;
+    @Mock
+    PatientIdentifierMapper identifierMapper;
+    @Mock
+    private MpiProperties mpiProperties;
 
     @Before
     public void setUp() throws Exception {
@@ -78,14 +81,14 @@ public class OpenEmpiPatientResultBuilderTest {
 
         PatientIdentifierType patientIdentifierType = new PatientIdentifierType();
         patientIdentifierType.setUuid(LOCAL_IDENTIFIER_TYPE_UUID);
-        PatientIdentifier patientIdentifier = new PatientIdentifier(IDENTIFIER_VALUE,
-                patientIdentifierType, null);
+        PatientIdentifier patientIdentifier = new PatientIdentifier(IDENTIFIER_VALUE, patientIdentifierType, null);
 
         patient.addIdentifier(patientIdentifier);
         return patient;
     }
 
     private void mockIdentifierMapper() {
-        when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_UUID)).thenReturn(MPI_IDENTIFIER_TYPE_ID.toString());
+        when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_UUID))
+                .thenReturn(MPI_IDENTIFIER_TYPE_ID.toString());
     }
 }

@@ -60,7 +60,7 @@ public class OpenEmpiPatientQueryBuilder {
     }
 
     private void setAddresses(OpenEmpiPatientResult query, Patient patient) {
-        //TODO improve it by setting all available addresses.
+        // TODO improve it by setting all available addresses.
         Set<PersonAddress> addresses = patient.getAddresses();
         for (PersonAddress address : addresses) {
             query.setAddress1(address.getAddress1());
@@ -75,17 +75,18 @@ public class OpenEmpiPatientQueryBuilder {
             String identifierTypeUuid = patientIdentifier.getIdentifierType().getUuid();
             String identifier = patientIdentifier.getIdentifier();
             if (identifierTypeUuid.equals(mpiProperties.getMpiPersonIdentifierTypeUuid())) {
-                //person identifier should be placed in separate field, not in list of identifiers.
+                // person identifier should be placed in separate field, not in list of identifiers.
                 setPersonIdentifier(identifier, query);
                 continue;
             }
-            Integer mpiIdentifierTypeId = Integer.valueOf(identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid.toString()));
+            Integer mpiIdentifierTypeId = Integer
+                    .valueOf(identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid.toString()));
 
             if (mpiIdentifierTypeId != null) {
                 personIdentifiers.add(createPersonIdentifier(mpiIdentifierTypeId, identifier));
             } else {
-                log.error("Do not add patient identifier type uuid: " + identifierTypeUuid + " to Exported patient. " +
-                        "Reason: there is no matched appropriate MPI identifier for this type.");
+                log.error("Do not add patient identifier type uuid: " + identifierTypeUuid + " to Exported patient. "
+                        + "Reason: there is no matched appropriate MPI identifier for this type.");
             }
         }
         query.setPersonIdentifiers(personIdentifiers);

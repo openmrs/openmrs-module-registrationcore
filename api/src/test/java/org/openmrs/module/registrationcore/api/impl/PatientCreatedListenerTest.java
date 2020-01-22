@@ -71,7 +71,7 @@ public class PatientCreatedListenerTest extends BaseRegistrationCoreSensitiveTes
     }
 
     @Test
-    @Ignore //can't be performed since using static Context.openSession
+    @Ignore // can't be performed since using static Context.openSession
     public void testPerformExportOfCorrectPatient() throws Exception {
         when(mapMessage.getString("uuid")).thenReturn(PATIENT_UUID_EXAMPLE);
         when(patientService.getPatientByUuid(PATIENT_UUID_EXAMPLE)).thenReturn(patient);
@@ -82,7 +82,7 @@ public class PatientCreatedListenerTest extends BaseRegistrationCoreSensitiveTes
     }
 
     @Test
-    @Ignore //can't be performed since using static Context.openSession
+    @Ignore // can't be performed since using static Context.openSession
     public void testDoNotPerformExportIfMpiIsDisabled() throws Exception {
         when(coreProperties.isMpiEnabled()).thenReturn(false);
 

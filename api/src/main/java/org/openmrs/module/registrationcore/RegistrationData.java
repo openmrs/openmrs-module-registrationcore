@@ -29,7 +29,8 @@ public class RegistrationData implements Serializable {
     private Location identifierLocation;
     private List<BiometricData> biometrics;
 
-    public RegistrationData() {}
+    public RegistrationData() {
+    }
 
     public Patient getPatient() {
         return patient;

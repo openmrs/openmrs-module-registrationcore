@@ -16,7 +16,7 @@ package org.openmrs.module.registrationcore.api.db.hibernate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
-import org.openmrs.api.db.hibernate.DbSessionFactory;  
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.registrationcore.api.db.RegistrationCoreDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,24 +27,25 @@ import java.util.List;
  * It is a default implementation of {@link RegistrationCoreDAO}.
  */
 public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
-	
-	protected final Log log = LogFactory.getLog(this.getClass());
-	
-	private DbSessionFactory sessionFactory;
-	
-	/**
-	 * @param sessionFactory the sessionFactory to set
-	 */
-	public void setSessionFactory(DbSessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-	
-	/**
-	 * @return the sessionFactory
-	 */
-	public DbSessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
+
+    protected final Log log = LogFactory.getLog(this.getClass());
+
+    private DbSessionFactory sessionFactory;
+
+    /**
+     * @param sessionFactory
+     *            the sessionFactory to set
+     */
+    public void setSessionFactory(DbSessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    /**
+     * @return the sessionFactory
+     */
+    public DbSessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -56,12 +57,13 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
             return results;
         }
 
-        Query query = sessionFactory.getCurrentSession().createQuery("select givenName from PersonName where voided = 0 and " +
-                "givenName like :query group by givenName having count(*) > 3 order by count(*) desc");
+        Query query = sessionFactory.getCurrentSession()
+                .createQuery("select givenName from PersonName where voided = 0 and "
+                        + "givenName like :query group by givenName having count(*) > 3 order by count(*) desc");
         query.setString("query", "%" + searchPhrase + "%");
 
         List<Object> rows = query.list();
-        for (Object row: rows) {
+        for (Object row : rows) {
             results.add((String) row);
         }
 
@@ -78,12 +80,13 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
             return results;
         }
 
-        Query query = sessionFactory.getCurrentSession().createQuery("select familyName from PersonName where voided = 0 and " +
-                "familyName like :query group by familyName having count(*) > 3 order by count(*) desc");
+        Query query = sessionFactory.getCurrentSession()
+                .createQuery("select familyName from PersonName where voided = 0 and "
+                        + "familyName like :query group by familyName having count(*) > 3 order by count(*) desc");
         query.setString("query", "%" + searchPhrase + "%");
 
         List<Object> rows = query.list();
-        for (Object row: rows) {
+        for (Object row : rows) {
             results.add((String) row);
         }
 

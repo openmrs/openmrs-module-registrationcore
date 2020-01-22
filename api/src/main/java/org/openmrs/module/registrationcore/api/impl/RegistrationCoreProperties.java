@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 public class RegistrationCoreProperties extends ModuleProperties implements ApplicationContextAware {
-    //TODO move getting properties related to Registration Core in this class.
+    // TODO move getting properties related to Registration Core in this class.
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -53,8 +53,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
             return null;
         }
         if (!(bean instanceof MpiProvider))
-            throw new IllegalArgumentException(propertyName
-                    + " must point to bean implementing MpiProvider");
+            throw new IllegalArgumentException(propertyName + " must point to bean implementing MpiProvider");
 
         return (MpiProvider) bean;
     }
@@ -70,7 +69,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
             log.debug("Looking up biometrics engine component: " + engineId);
             engine = Context.getRegisteredComponent(engineId, BiometricEngine.class);
             if (engine == null) {
-                throw new IllegalStateException(propertyName + " must point to a bean implementing BiometricEngine. " + engineId + " is not valid.");
+                throw new IllegalStateException(propertyName + " must point to a bean implementing BiometricEngine. "
+                        + engineId + " is not valid.");
             }
         }
         return engine;
@@ -84,7 +84,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         }
         return handler;
     }
-    
+
     public PdqErrorHandlingService getPdqErrorHandlingService() {
         String propertyName = RegistrationCoreConstants.GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION;
         PdqErrorHandlingService handler = null;
@@ -93,40 +93,41 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         }
         return handler;
     }
-    
+
     /**
      * Get the PDQ endpoint
+     * 
      * @return
      */
     public String getPdqEndpoint() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PDQ_ENDPOINT);
+        return Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PDQ_ENDPOINT);
     }
 
     /**
      * Get the PDQ port
+     * 
      * @return
      */
     public Integer getPdqPort() {
-        return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PDQ_PORT));
+        return Integer.valueOf(
+                Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PDQ_PORT));
     }
 
     public String getPixEndpoint() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PIX_ENDPOINT);
+        return Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PIX_ENDPOINT);
     }
 
     public Integer getPixPort() {
-        return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_PIX_PORT));
+        return Integer.valueOf(
+                Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PIX_PORT));
     }
 
     public String getMpiUsername() {
         Properties props = OpenmrsUtil.getRuntimeProperties(null);
         String username = props.getProperty(RegistrationCoreConstants.RTP_MPI_ACCESS_USERNAME);
-        if (StringUtils.isBlank(username)){
-            log.error("MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
+        if (StringUtils.isBlank(username)) {
+            log.error(
+                    "MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
         }
         return username;
     }
@@ -134,40 +135,39 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
     public String getMpiPassword() {
         Properties props = OpenmrsUtil.getRuntimeProperties(null);
         String password = props.getProperty(RegistrationCoreConstants.RTP_MPI_ACCESS_PASSWORD);
-        if (StringUtils.isBlank(password)){
-            log.error("MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
+        if (StringUtils.isBlank(password)) {
+            log.error(
+                    "MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
         }
         return password;
     }
 
     public String getReceivingApplication() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_RECEIVING_APPLICATION, "Demo MPI");
+        return Context.getAdministrationService()
+                .getGlobalProperty(RegistrationCoreConstants.GP_MPI_RECEIVING_APPLICATION, "Demo MPI");
     }
 
     public String getReceivingFacility() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_RECEIVING_FACILITY, "Demo Receiving Facility");
+        return Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_RECEIVING_FACILITY,
+                "Demo Receiving Facility");
     }
 
     public String getSendingApplication() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_SENDING_APPLICATION, "OpenMRS");
+        return Context.getAdministrationService()
+                .getGlobalProperty(RegistrationCoreConstants.GP_MPI_SENDING_APPLICATION, "OpenMRS");
     }
 
     public String getSendingFacility() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_SENDING_FACILITY, "Demo Sending Facility");
+        return Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_SENDING_FACILITY,
+                "Demo Sending Facility");
     }
 
     public String getUniversalIdType() {
-        return Context.getAdministrationService().getGlobalProperty(
-                RegistrationCoreConstants.GP_MPI_UNI_ID_TYPE, "PI");
+        return Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_UNI_ID_TYPE, "PI");
     }
-    
+
     private boolean isPropertySet(String globalProperty) {
-        return StringUtils.isNotBlank(
-                Context.getAdministrationService().getGlobalProperty(globalProperty));
+        return StringUtils.isNotBlank(Context.getAdministrationService().getGlobalProperty(globalProperty));
     }
 
     public Object getBeanFromName(String propertyName) {

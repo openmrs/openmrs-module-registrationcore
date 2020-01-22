@@ -16,11 +16,12 @@ public class MpiCredentials {
      * Default constructor
      */
     public MpiCredentials() {
-        //Is used for XML marshalling.
+        // Is used for XML marshalling.
     }
 
     /**
      * Constructor with username & password
+     * 
      * @param username
      * @param password
      */

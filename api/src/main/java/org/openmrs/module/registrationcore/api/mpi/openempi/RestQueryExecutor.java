@@ -24,8 +24,8 @@ public class RestQueryExecutor {
 
     public String processAuthentication(MpiCredentials credentials) throws APIException {
         String url = urlBuilder.createAuthenticationUrl();
-        ResponseEntity<String> token = restTemplate.exchange(url,
-                HttpMethod.PUT, new HttpEntity<MpiCredentials>(credentials), String.class);
+        ResponseEntity<String> token = restTemplate.exchange(url, HttpMethod.PUT,
+                new HttpEntity<MpiCredentials>(credentials), String.class);
         String tokenValue = token.getBody();
 
         if (tokenValue != null) {
@@ -40,8 +40,8 @@ public class RestQueryExecutor {
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
         String url = urlBuilder.createGetPatientUrl(id);
-        ResponseEntity<OpenEmpiPatientResult> person = restTemplate.exchange(url,
-                HttpMethod.GET, entity, OpenEmpiPatientResult.class);
+        ResponseEntity<OpenEmpiPatientResult> person = restTemplate.exchange(url, HttpMethod.GET, entity,
+                OpenEmpiPatientResult.class);
 
         return person.getBody();
     }
@@ -61,12 +61,12 @@ public class RestQueryExecutor {
         HttpEntity<OpenEmpiPatientResult> entity = new HttpEntity<OpenEmpiPatientResult>(patientQuery, headers);
 
         String url = urlBuilder.createExportPatientUrl();
-        ResponseEntity<OpenEmpiPatientResult> personResponse = restTemplate.exchange(url,
-                HttpMethod.PUT, entity, OpenEmpiPatientResult.class);
+        ResponseEntity<OpenEmpiPatientResult> personResponse = restTemplate.exchange(url, HttpMethod.PUT, entity,
+                OpenEmpiPatientResult.class);
 
         if (personResponse.getBody() == null)
-            throw new APIException("Fail while Patient export to Mpi server. " +
-                    "Check if patient with same identifiers do not exist on MPI server.");
+            throw new APIException("Fail while Patient export to Mpi server. "
+                    + "Check if patient with same identifiers do not exist on MPI server.");
         return personResponse.getBody();
     }
 
@@ -76,12 +76,11 @@ public class RestQueryExecutor {
         HttpEntity<OpenEmpiPatientResult> entity = new HttpEntity<OpenEmpiPatientResult>(patientQuery, headers);
 
         String url = urlBuilder.createUpdatePatientUrl();
-        ResponseEntity<String> response = restTemplate.exchange(url,
-                HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, entity, String.class);
 
         if (response.getStatusCode() != HttpStatus.NO_CONTENT)
-            throw new APIException("Fail while Patient update on Mpi server. " +
-                    "Check if patient with same identifiers exist in  MPI server.");
+            throw new APIException("Fail while Patient update on Mpi server. "
+                    + "Check if patient with same identifiers exist in  MPI server.");
     }
 
     private HttpHeaders getAuthenticationHeader(String token) {
@@ -102,8 +101,8 @@ public class RestQueryExecutor {
         HttpHeaders headers = getAuthenticationHeader(token);
         HttpEntity<OpenEmpiPatientResult> entity = new HttpEntity<OpenEmpiPatientResult>(query, headers);
 
-        ResponseEntity<OpenEmpiPeopleWrapper> people = restTemplate.exchange(url,
-                HttpMethod.POST, entity, OpenEmpiPeopleWrapper.class);
+        ResponseEntity<OpenEmpiPeopleWrapper> people = restTemplate.exchange(url, HttpMethod.POST, entity,
+                OpenEmpiPeopleWrapper.class);
 
         return unwrapResult(people.getBody());
     }

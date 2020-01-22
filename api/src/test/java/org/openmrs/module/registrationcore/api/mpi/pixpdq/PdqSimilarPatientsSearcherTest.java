@@ -49,7 +49,7 @@ public class PdqSimilarPatientsSearcherTest {
     /**
      * Initialize data that is returned every time pixPdqMessageUtil.interpretPIDSegments is called
      */
-    private void initData(){
+    private void initData() {
         MpiPatient patient1 = new MpiPatient();
         patient1.addName(new PersonName("Johny", "Apple", "Smith"));
         Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
@@ -85,7 +85,7 @@ public class PdqSimilarPatientsSearcherTest {
         RET_VAL.add(patient3);
     }
 
-    private void initPixPdqMessageUtil(){
+    private void initPixPdqMessageUtil() {
         try {
             when(pixPdqMessageUtil.interpretPIDSegments(Mockito.any(Message.class))).thenReturn(RET_VAL);
             List<Map.Entry<String, String>> queryParams = new ArrayList<Map.Entry<String, String>>();
@@ -106,52 +106,52 @@ public class PdqSimilarPatientsSearcherTest {
 
     @Test
     public void findSimilarMatches_shouldMatchName() throws Exception {
-	    Patient patient = new Patient();
-	    patient.addName(new PersonName("Johny", null, "Smith"));
+        Patient patient = new Patient();
+        patient.addName(new PersonName("Johny", null, "Smith"));
 
-	    List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient, null, null, 10);
-	    assertEquals(2, result.get(0).getMatchedFields().size());
+        List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient, null, null, 10);
+        assertEquals(2, result.get(0).getMatchedFields().size());
     }
 
-	@Test
-	public void findSimilarMatches_shouldMatchNameAndBirthday() throws Exception {
-		Patient patient2 = new Patient();
-		patient2.addName(new PersonName("Johny", null, "Smith"));
-		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
-		patient2.setBirthdate(date);
+    @Test
+    public void findSimilarMatches_shouldMatchNameAndBirthday() throws Exception {
+        Patient patient2 = new Patient();
+        patient2.addName(new PersonName("Johny", null, "Smith"));
+        Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
+        patient2.setBirthdate(date);
 
-		List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient2, null, null, 10);
-		assertEquals(3, result.get(0).getMatchedFields().size());
-	}
+        List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient2, null, null, 10);
+        assertEquals(3, result.get(0).getMatchedFields().size());
+    }
 
-	@Test
-	public void findSimilarMatches_shouldMatchNameBirthdayAndAddress() throws Exception {
-		Patient patient3 = new Patient();
-		patient3.addName(new PersonName("Johny", null, "Smith"));
-		Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
-		patient3.setBirthdate(date);
-		patient3.setGender("M");
-		PersonAddress personAddress = new PersonAddress();
-		personAddress.setCountry("TesT");
-		personAddress.setCityVillage("TeSt2");
-		personAddress.setCountyDistrict("Test3");
-		patient3.addAddress(personAddress);
+    @Test
+    public void findSimilarMatches_shouldMatchNameBirthdayAndAddress() throws Exception {
+        Patient patient3 = new Patient();
+        patient3.addName(new PersonName("Johny", null, "Smith"));
+        Date date = new GregorianCalendar(2017, Calendar.JULY, 17).getTime();
+        patient3.setBirthdate(date);
+        patient3.setGender("M");
+        PersonAddress personAddress = new PersonAddress();
+        personAddress.setCountry("TesT");
+        personAddress.setCityVillage("TeSt2");
+        personAddress.setCountyDistrict("Test3");
+        patient3.addAddress(personAddress);
 
-		List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient3, null, null, 10);
-		assertEquals(7, result.get(0).getMatchedFields().size());
-	}
+        List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient3, null, null, 10);
+        assertEquals(7, result.get(0).getMatchedFields().size());
+    }
 
-	@Test
-	public void findSimilarMatches_shouldBeCaseInsensitive() throws Exception {
+    @Test
+    public void findSimilarMatches_shouldBeCaseInsensitive() throws Exception {
         Patient patient4 = new Patient();
         patient4.addName(new PersonName("tom", null, "smith"));
-		PersonAddress personAddress = new PersonAddress();
+        PersonAddress personAddress = new PersonAddress();
         personAddress.setCountry("test");
         personAddress.setCityVillage("TEST2");
         personAddress.setCountyDistrict("TeSt3");
         patient4.addAddress(personAddress);
 
-		List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient4, null, null, 10);
+        List<PatientAndMatchQuality> result = pdqSimilarPatientsSearcher.findSimilarMatches(patient4, null, null, 10);
         assertEquals(5, result.get(1).getMatchedFields().size());
     }
 }

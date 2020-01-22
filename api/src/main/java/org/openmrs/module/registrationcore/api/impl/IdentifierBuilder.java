@@ -33,8 +33,10 @@ public class IdentifierBuilder {
     /**
      * Generate new identifier
      *
-     * @param sourceId identifier source id
-     * @param location identifier location
+     * @param sourceId
+     *            identifier source id
+     * @param location
+     *            identifier location
      * @return generated patient identifier
      */
     public PatientIdentifier generateIdentifier(Integer sourceId, Location location) {
@@ -48,9 +50,12 @@ public class IdentifierBuilder {
     /**
      * Create identifier with existing value.
      *
-     * @param identifierTypeUuid    identifier type uuid
-     * @param identifierValue       identifier value
-     * @param location              identifier location
+     * @param identifierTypeUuid
+     *            identifier type uuid
+     * @param identifierValue
+     *            identifier value
+     * @param location
+     *            identifier location
      * @return created patient identifier
      */
     public PatientIdentifier createIdentifier(String identifierTypeUuid, String identifierValue, Location location) {

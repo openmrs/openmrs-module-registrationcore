@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher{
+public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Autowired
     @Qualifier("registrationcore.restQueryExecutor")
@@ -39,13 +39,12 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher{
     private final Log log = LogFactory.getLog(this.getClass());
 
     @Override
-    public List<PatientAndMatchQuality> findSimilarMatches(Patient patient,
-                                                           Map<String, Object> otherDataPoints,
-                                                           Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
+            Double cutoff, Integer maxResults) {
         OpenEmpiPatientResult patientQuery = queryMapper.create(patient);
 
-        List<OpenEmpiPatientResult> mpiPatients = queryExecutor
-                .findProbablySimilarPatients(authenticator.getToken(), patientQuery);
+        List<OpenEmpiPatientResult> mpiPatients = queryExecutor.findProbablySimilarPatients(authenticator.getToken(),
+                patientQuery);
 
         mpiPatients = limitResults(maxResults, mpiPatients);
 
@@ -53,27 +52,24 @@ public class OpenEmpiPatientsSearcher implements MpiSimilarPatientsSearcher{
     }
 
     @Override
-    public List<PatientAndMatchQuality> findExactMatches(Patient patient,
-                                                         Map<String, Object> otherDataPoints,
-                                                         Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints,
+            Double cutoff, Integer maxResults) {
         OpenEmpiPatientResult patientQuery = queryMapper.create(patient);
 
-        List<OpenEmpiPatientResult> mpiPatients = queryExecutor
-                .findPreciseSimilarPatients(authenticator.getToken(), patientQuery);
+        List<OpenEmpiPatientResult> mpiPatients = queryExecutor.findPreciseSimilarPatients(authenticator.getToken(),
+                patientQuery);
 
         mpiPatients = limitResults(maxResults, mpiPatients);
 
         return convertMpiPatients(mpiPatients, cutoff);
     }
 
-    private List<PatientAndMatchQuality> convertMpiPatients(List<OpenEmpiPatientResult> mpiPatients,
-                                                            Double cutoff) {
+    private List<PatientAndMatchQuality> convertMpiPatients(List<OpenEmpiPatientResult> mpiPatients, Double cutoff) {
         List<String> matchedFields = Arrays.asList("personName", "gender", "birthdate");
         List<PatientAndMatchQuality> result = new LinkedList<PatientAndMatchQuality>();
         for (OpenEmpiPatientResult mpiPatient : mpiPatients) {
             Patient convertedPatient = convertMpiPatient(mpiPatient);
-            PatientAndMatchQuality resultPatient =
-                    new PatientAndMatchQuality(convertedPatient, cutoff, matchedFields);
+            PatientAndMatchQuality resultPatient = new PatientAndMatchQuality(convertedPatient, cutoff, matchedFields);
             result.add(resultPatient);
         }
         return result;

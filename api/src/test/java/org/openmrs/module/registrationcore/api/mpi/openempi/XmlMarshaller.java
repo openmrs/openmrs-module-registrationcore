@@ -1,6 +1,5 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;

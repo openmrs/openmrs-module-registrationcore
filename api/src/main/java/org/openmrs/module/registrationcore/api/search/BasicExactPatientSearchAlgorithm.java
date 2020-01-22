@@ -23,9 +23,9 @@ import org.springframework.stereotype.Service;
 /**
  * Implementation of SimilarPatientSearchAlgorithm that searches for:
  * <ul>
- *     <li>Every name must exactly match (on each name component specified on the passed-in patient)</li>
- *     <li>Birthdate within 1 year</li>
- *     <li>Same gender</li>
+ * <li>Every name must exactly match (on each name component specified on the passed-in patient)</li>
+ * <li>Birthdate within 1 year</li>
+ * <li>Same gender</li>
  * </ul>
  * You would use this to perform one final check before actually creating a patient, after all data has been filled.
  */
@@ -37,8 +37,10 @@ public class BasicExactPatientSearchAlgorithm implements SimilarPatientSearchAlg
     private DbSessionFactory sessionFactory;
 
     @Override
-    public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Patient.class);criteria.add(Restrictions.eq("voided", false));
+    public List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+            Double cutoff, Integer maxResults) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Patient.class);
+        criteria.add(Restrictions.eq("voided", false));
 
         if (patient.getGender() != null) {
             criteria.add(Restrictions.eq("gender", patient.getGender()));
@@ -46,18 +48,21 @@ public class BasicExactPatientSearchAlgorithm implements SimilarPatientSearchAlg
 
         Date birthdateForQuery = null;
 
-        // TODO change this to only do a "between" match if patient or match birthdate is estimated, otherwise require an exact birthdate match
+        // TODO change this to only do a "between" match if patient or match birthdate is estimated, otherwise require
+        // an exact birthdate match
         // our query birthdate is the patient birthdate if it known
         if (patient.getBirthdate() != null) {
             birthdateForQuery = patient.getBirthdate();
         }
-        // otherwise see if we have an estimated birthdate passed in via "birthdateYears" and "birthdateMonth" parameters (which is what the registration app uses)
-        else if (otherDataPoints != null && otherDataPoints.containsKey("birthdateYears") && otherDataPoints.get("birthdateYears") != null) {
+        // otherwise see if we have an estimated birthdate passed in via "birthdateYears" and "birthdateMonth"
+        // parameters (which is what the registration app uses)
+        else if (otherDataPoints != null && otherDataPoints.containsKey("birthdateYears")
+                && otherDataPoints.get("birthdateYears") != null) {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.YEAR, -(Integer) otherDataPoints.get("birthdateYears"));
             birthdateForQuery = cal.getTime();
-        }
-        else if (otherDataPoints != null && otherDataPoints.containsKey("birthdateMonths") && otherDataPoints.get("birthdateMonths") != null) {
+        } else if (otherDataPoints != null && otherDataPoints.containsKey("birthdateMonths")
+                && otherDataPoints.get("birthdateMonths") != null) {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MONTH, -(Integer) otherDataPoints.get("birthdateMonths"));
             birthdateForQuery = cal.getTime();
@@ -86,10 +91,8 @@ public class BasicExactPatientSearchAlgorithm implements SimilarPatientSearchAlg
         return matches;
     }
 
-    private String[] nameFields = new String[] {
-            "prefix", "givenName", "middleName", "familyNamePrefix",
-            "familyName", "familyName2", "familyNameSuffix", "degree"
-    };
+    private String[] nameFields = new String[] { "prefix", "givenName", "middleName", "familyNamePrefix", "familyName",
+            "familyName2", "familyNameSuffix", "degree" };
 
     private void addNameCriteria(Criteria criteria, Patient patient) {
         criteria.createAlias("names", "names");

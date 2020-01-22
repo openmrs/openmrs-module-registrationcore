@@ -20,32 +20,31 @@ import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 /**
- * This class defines the links that will appear on the administration page under the
- * "registrationcore.title" heading. 
+ * This class defines the links that will appear on the administration page under the "registrationcore.title" heading.
  */
 public class AdminList extends AdministrationSectionExt {
-	
-	/**
-	 * @see AdministrationSectionExt#getMediaType()
-	 */
-	public Extension.MEDIA_TYPE getMediaType() {
-		return Extension.MEDIA_TYPE.html;
-	}
-	
-	/**
-	 * @see AdministrationSectionExt#getTitle()
-	 */
-	public String getTitle() {
-		return "registrationcore.title";
-	}
-	
-	/**
-	 * @see AdministrationSectionExt#getLinks()
-	 */
-	public Map<String, String> getLinks() {
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("/module/registrationcore/manage.form", "registrationcore.manage");
-		return map;
-	}
-	
+
+    /**
+     * @see AdministrationSectionExt#getMediaType()
+     */
+    public Extension.MEDIA_TYPE getMediaType() {
+        return Extension.MEDIA_TYPE.html;
+    }
+
+    /**
+     * @see AdministrationSectionExt#getTitle()
+     */
+    public String getTitle() {
+        return "registrationcore.title";
+    }
+
+    /**
+     * @see AdministrationSectionExt#getLinks()
+     */
+    public Map<String, String> getLinks() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        map.put("/module/registrationcore/manage.form", "registrationcore.manage");
+        return map;
+    }
+
 }

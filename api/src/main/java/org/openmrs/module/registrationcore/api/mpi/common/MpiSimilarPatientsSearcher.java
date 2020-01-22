@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.registrationcore.api.mpi.common;
 
-
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 
@@ -35,11 +34,11 @@ public interface MpiSimilarPatientsSearcher {
      * @return list of possible matched patients
      */
     List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-                                                    Integer maxResults);
+            Integer maxResults);
 
     /**
-     * Perform search on MPI server for patients using Hl7 PDQ message.
-     * You would use this to perform one final check before actually creating a patient, after all data has been filled.
+     * Perform search on MPI server for patients using Hl7 PDQ message. You would use this to perform one final check
+     * before actually creating a patient, after all data has been filled.
      *
      * @param patient
      * @param otherDataPoints
@@ -48,5 +47,5 @@ public interface MpiSimilarPatientsSearcher {
      * @return list of possible matched patients
      */
     List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-                                                  Integer maxResults);
+            Integer maxResults);
 }

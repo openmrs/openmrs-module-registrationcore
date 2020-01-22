@@ -26,41 +26,43 @@ import org.springframework.beans.factory.annotation.Qualifier;
 /**
  * Tests BasicPatientNameSearch
  */
-public class BasicPatientNameSearchTest extends BaseRegistrationCoreSensitiveTest{
+public class BasicPatientNameSearchTest extends BaseRegistrationCoreSensitiveTest {
 
-	@Autowired
-	@Qualifier("registrationcore.BasicPatientNameSearch")
-	PatientNameSearch patientNameSearch;
-	
-	@Autowired
-	@Qualifier("adminService")
-	private AdministrationService adminService;
-	
-	/**
-	 * @see PatientNameSearch#findSimilarGivenNames(String)
-	 * @verifies find by partial given name
-	 */
-	@Test
-	public void findSimilarGivenNames_shouldFindByPartialGivenName() throws Exception {
-		
-		adminService.saveGlobalProperty(new GlobalProperty(BasicPatientNameSearch.GP_GIVEN_NAME_AUTO_SUGGEST_LIST, " Horatio, Horctio,Harison,Horbtio, Kiptogom  "));
-		
-		List<String> names = patientNameSearch.findSimilarGivenNames("hor");
-		Assert.assertNotNull(names);
-		Assert.assertEquals(3, names.size());
-	}
-	
-	/**
-	 * @see PatientNameSearch#findSimilarFamilyNames(String)
-	 * @verifies find by partial family name
-	 */
-	@Test
-	public void findSimilarFamilyNames_shouldFindByPartialFamilyName() throws Exception {
-		
-		adminService.saveGlobalProperty(new GlobalProperty(BasicPatientNameSearch.GP_FAMILY_NAME_AUTO_SUGGEST_LIST, "Hornblower ,Hornblewer, Hornblower ,Seroney,Rapondi"));
+    @Autowired
+    @Qualifier("registrationcore.BasicPatientNameSearch")
+    PatientNameSearch patientNameSearch;
 
-		List<String> names = patientNameSearch.findSimilarFamilyNames("blo");
-		Assert.assertNotNull(names);
-		Assert.assertEquals(2, names.size());
-	}
+    @Autowired
+    @Qualifier("adminService")
+    private AdministrationService adminService;
+
+    /**
+     * @see PatientNameSearch#findSimilarGivenNames(String)
+     * @verifies find by partial given name
+     */
+    @Test
+    public void findSimilarGivenNames_shouldFindByPartialGivenName() throws Exception {
+
+        adminService.saveGlobalProperty(new GlobalProperty(BasicPatientNameSearch.GP_GIVEN_NAME_AUTO_SUGGEST_LIST,
+                " Horatio, Horctio,Harison,Horbtio, Kiptogom  "));
+
+        List<String> names = patientNameSearch.findSimilarGivenNames("hor");
+        Assert.assertNotNull(names);
+        Assert.assertEquals(3, names.size());
+    }
+
+    /**
+     * @see PatientNameSearch#findSimilarFamilyNames(String)
+     * @verifies find by partial family name
+     */
+    @Test
+    public void findSimilarFamilyNames_shouldFindByPartialFamilyName() throws Exception {
+
+        adminService.saveGlobalProperty(new GlobalProperty(BasicPatientNameSearch.GP_FAMILY_NAME_AUTO_SUGGEST_LIST,
+                "Hornblower ,Hornblewer, Hornblower ,Seroney,Rapondi"));
+
+        List<String> names = patientNameSearch.findSimilarFamilyNames("blo");
+        Assert.assertNotNull(names);
+        Assert.assertEquals(2, names.size());
+    }
 }

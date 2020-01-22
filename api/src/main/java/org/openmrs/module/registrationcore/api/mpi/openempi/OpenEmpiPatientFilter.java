@@ -29,7 +29,8 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
 
         for (PatientAndMatchQuality patientWrapper : patients) {
             if (hasIdentifierTypeUuid(patientWrapper.getPatient(), filterIdentifierTypeUuid)) {
-                patientsToRemove.addAll(getPatientsWithSameIdentifier(filterIdentifierTypeUuid, patientWrapper, patients));
+                patientsToRemove
+                        .addAll(getPatientsWithSameIdentifier(filterIdentifierTypeUuid, patientWrapper, patients));
             }
         }
         patients.removeAll(patientsToRemove);
@@ -40,7 +41,7 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
     }
 
     private String getPatientIdentifierByIdentifierTypeUuid(Patient patient, String patientIdentifierTypeUuid) {
-        for(PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
+        for (PatientIdentifier patientIdentifier : patient.getIdentifiers()) {
             if (patientIdentifier.getIdentifierType() != null
                     && patientIdentifier.getIdentifierType().getUuid().equals(patientIdentifierTypeUuid)) {
                 return patientIdentifier.getIdentifier();
@@ -49,8 +50,8 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
         return null;
     }
 
-    private List<PatientAndMatchQuality> getPatientsWithSameIdentifier(String patientIdentifierTypeUuid, PatientAndMatchQuality initialPatient,
-            List<PatientAndMatchQuality> patients) {
+    private List<PatientAndMatchQuality> getPatientsWithSameIdentifier(String patientIdentifierTypeUuid,
+            PatientAndMatchQuality initialPatient, List<PatientAndMatchQuality> patients) {
         String initialPatientIdentifier = getPatientIdentifierByIdentifierTypeUuid(initialPatient.getPatient(),
                 patientIdentifierTypeUuid);
 
@@ -60,8 +61,8 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
             if (secondaryPatient == initialPatient)
                 continue;
 
-            String secondaryPatientIdentifier = getPatientIdentifierByIdentifierTypeUuid(
-                    secondaryPatient.getPatient(), patientIdentifierTypeUuid);
+            String secondaryPatientIdentifier = getPatientIdentifierByIdentifierTypeUuid(secondaryPatient.getPatient(),
+                    patientIdentifierTypeUuid);
 
             if (secondaryPatientIdentifier != null && secondaryPatientIdentifier.equals(initialPatientIdentifier)) {
                 addPatientToRemove(initialPatient, secondaryPatient, patientsToRemove);
@@ -71,8 +72,8 @@ public class OpenEmpiPatientFilter implements MpiPatientFilter {
         return patientsToRemove;
     }
 
-    private void addPatientToRemove(PatientAndMatchQuality initialPatient,
-                                    PatientAndMatchQuality secondaryPatient, List<PatientAndMatchQuality> patientsToRemove) {
+    private void addPatientToRemove(PatientAndMatchQuality initialPatient, PatientAndMatchQuality secondaryPatient,
+            List<PatientAndMatchQuality> patientsToRemove) {
         if (initialPatient.getPatient() instanceof MpiPatient) {
             patientsToRemove.add(initialPatient);
         } else if (secondaryPatient.getPatient() instanceof MpiPatient) {

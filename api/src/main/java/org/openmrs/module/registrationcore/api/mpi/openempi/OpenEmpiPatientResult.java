@@ -104,7 +104,6 @@ public class OpenEmpiPatientResult {
         }
     }
 
-
     @XmlRootElement(name = "personIdentifiers")
     public static class PersonIdentifier {
         private String identifier;

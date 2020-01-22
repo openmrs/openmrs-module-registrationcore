@@ -114,7 +114,7 @@ public class BasicExactPatientSearchAlgorithmTest extends BaseRegistrationCoreSe
     public void shouldNotMatchForFarEstimatedBirthdate() throws Exception {
         Patient patient = buildPatient(buildPersonName(), "M", null);
 
-        Map<String,Object> otherDataPoints = new HashMap<String, Object>();
+        Map<String, Object> otherDataPoints = new HashMap<String, Object>();
         otherDataPoints.put("birthdateYears", 80);
 
         List<PatientAndMatchQuality> matches = algorithm.findSimilarPatients(patient, otherDataPoints, 0d, null);
@@ -125,7 +125,7 @@ public class BasicExactPatientSearchAlgorithmTest extends BaseRegistrationCoreSe
     public void shouldMatchForCloseEstimatedBirthYear() throws Exception {
         Patient patient = buildPatient(buildPersonName(), "M", null);
 
-        Map<String,Object> otherDataPoints = new HashMap<String, Object>();
+        Map<String, Object> otherDataPoints = new HashMap<String, Object>();
         Calendar cal = Calendar.getInstance();
         otherDataPoints.put("birthdateYears", cal.get(Calendar.YEAR) - 1975);
 
@@ -137,9 +137,10 @@ public class BasicExactPatientSearchAlgorithmTest extends BaseRegistrationCoreSe
     public void shouldMatchForCloseEstimatedBirthMonth() throws Exception {
         Patient patient = buildPatient(buildPersonName(), "M", null);
 
-        Map<String,Object> otherDataPoints = new HashMap<String, Object>();
+        Map<String, Object> otherDataPoints = new HashMap<String, Object>();
         Calendar cal = Calendar.getInstance();
-        otherDataPoints.put("birthdateMonth", (cal.get(Calendar.YEAR) - 1975) * 12);  // kind of cheat, should really only have months < 12
+        otherDataPoints.put("birthdateMonth", (cal.get(Calendar.YEAR) - 1975) * 12); // kind of cheat, should really
+                                                                                     // only have months < 12
 
         List<PatientAndMatchQuality> matches = algorithm.findSimilarPatients(patient, otherDataPoints, 0d, null);
         assertThat(matches.size(), is(1));

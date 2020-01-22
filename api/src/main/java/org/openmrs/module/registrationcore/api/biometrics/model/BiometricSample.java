@@ -12,10 +12,9 @@ package org.openmrs.module.registrationcore.api.biometrics.model;
 import java.io.Serializable;
 
 /**
- * Represents a sample of biometric data for a person
- * type: represents an implementation-configurable representation of the given sample (eg. "LEFT_MIDDLE_FINGER")
- * format: represents an implementation-configurable representation of the template format (eg. "ISO")
- * template:  the textual representation of the sample, generally Base64 encoded binary data
+ * Represents a sample of biometric data for a person type: represents an implementation-configurable representation of
+ * the given sample (eg. "LEFT_MIDDLE_FINGER") format: represents an implementation-configurable representation of the
+ * template format (eg. "ISO") template: the textual representation of the sample, generally Base64 encoded binary data
  */
 public class BiometricSample implements Serializable {
 
@@ -23,7 +22,8 @@ public class BiometricSample implements Serializable {
     private String format;
     private String template;
 
-    public BiometricSample() { }
+    public BiometricSample() {
+    }
 
     public BiometricSample(String type, String format, String template) {
         this.type = type;

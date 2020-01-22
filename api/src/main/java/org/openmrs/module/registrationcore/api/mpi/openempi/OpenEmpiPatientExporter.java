@@ -38,8 +38,8 @@ public class OpenEmpiPatientExporter implements MpiPatientExporter {
         return String.valueOf(mpiPerson.getPersonId());
     }
 
-    //patient can't be exported to MPI server if it contains identifier which is Global in MPI.
-    //The reason is that MPI server should manually generate Global identifier.
+    // patient can't be exported to MPI server if it contains identifier which is Global in MPI.
+    // The reason is that MPI server should manually generate Global identifier.
     private void removeOpenEmpiGlobalIdentifier(OpenEmpiPatientResult patientQuery) {
         Integer mpiGlobalIdentifierId = mpiProperties.getGlobalIdentifierDomainId();
 

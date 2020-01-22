@@ -1,8 +1,8 @@
 package org.openmrs.module.registrationcore.api.errorhandling;
 
 /**
- * Interface for PIX error handling service that is provided by the OutgoingMessageExceptions Module
- * These strings are displayed in the Outgoing Message Exceptions PIX error list
+ * Interface for PIX error handling service that is provided by the OutgoingMessageExceptions Module These strings are
+ * displayed in the Outgoing Message Exceptions PIX error list
  */
 public interface PixErrorHandlingService extends ErrorHandlingService {
 

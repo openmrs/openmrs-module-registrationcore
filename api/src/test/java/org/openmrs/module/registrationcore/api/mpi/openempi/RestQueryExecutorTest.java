@@ -29,12 +29,18 @@ public class RestQueryExecutorTest {
     private static final String PATIENT_QUERY_GIVENNAME = "Michael";
     private static final String PATIENT_QUERY_FAMILYNAME = "Louis";
 
-    @InjectMocks private RestQueryExecutor restQueryExecutor = new RestQueryExecutor();
-    @Mock private RestUrlBuilder urlBuilder;
-    @Mock private RestTemplate restTemplate;
-    @Mock private OpenEmpiPatientResult patientQuery;
-    @Mock private OpenEmpiPeopleWrapper peopleWrapper;
-    @Mock private List<OpenEmpiPatientResult> patientQueryList;
+    @InjectMocks
+    private RestQueryExecutor restQueryExecutor = new RestQueryExecutor();
+    @Mock
+    private RestUrlBuilder urlBuilder;
+    @Mock
+    private RestTemplate restTemplate;
+    @Mock
+    private OpenEmpiPatientResult patientQuery;
+    @Mock
+    private OpenEmpiPeopleWrapper peopleWrapper;
+    @Mock
+    private List<OpenEmpiPatientResult> patientQueryList;
     private ResponseEntity response;
 
     @Before
@@ -52,10 +58,9 @@ public class RestQueryExecutorTest {
         String actualToken = restQueryExecutor.processAuthentication(createCredentials());
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        //verify correct request creation:
-        verify(restTemplate).exchange(eq(authUrl),
-                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(String.class));
-        //verify request body was set correctly
+        // verify correct request creation:
+        verify(restTemplate).exchange(eq(authUrl), eq(HttpMethod.PUT), argumentCaptor.capture(), eq(String.class));
+        // verify request body was set correctly
         assertEquals(argumentCaptor.getValue().getBody(), createCredentials());
         assertEquals(actualToken, TOKEN_VALUE);
     }
@@ -76,11 +81,11 @@ public class RestQueryExecutorTest {
         OpenEmpiPatientResult actualPatient = restQueryExecutor.getPatientById(TOKEN_VALUE, PATIENT_ID);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        //verify correct request creation:
-        verify(restTemplate).exchange(eq(patientUrl),
-                eq(HttpMethod.GET), argumentCaptor.capture(), eq(OpenEmpiPatientResult.class));
+        // verify correct request creation:
+        verify(restTemplate).exchange(eq(patientUrl), eq(HttpMethod.GET), argumentCaptor.capture(),
+                eq(OpenEmpiPatientResult.class));
         assertNull(argumentCaptor.getValue().getBody());
-        //verify that header with token was sett:
+        // verify that header with token was sett:
         assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
         assertEquals(patientQuery, actualPatient);
     }
@@ -96,12 +101,12 @@ public class RestQueryExecutorTest {
         List<OpenEmpiPatientResult> patients = restQueryExecutor.findPreciseSimilarPatients(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        //verify correct request creation:
-        verify(restTemplate).exchange(eq(findPrecise),
-                eq(HttpMethod.POST), argumentCaptor.capture(), eq(OpenEmpiPeopleWrapper.class));
-        //verify request body was set correctly:
+        // verify correct request creation:
+        verify(restTemplate).exchange(eq(findPrecise), eq(HttpMethod.POST), argumentCaptor.capture(),
+                eq(OpenEmpiPeopleWrapper.class));
+        // verify request body was set correctly:
         assertEquals(argumentCaptor.getValue().getBody(), query);
-        //verify that header with token was sett:
+        // verify that header with token was sett:
         assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
         assertEquals(patients, patientQueryList);
     }
@@ -127,12 +132,12 @@ public class RestQueryExecutorTest {
         restQueryExecutor.exportPatient(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        //verify correct request creation:
-        verify(restTemplate).exchange(eq(exportUrl),
-                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(OpenEmpiPatientResult.class));
-        //verify request body was set correctly:
+        // verify correct request creation:
+        verify(restTemplate).exchange(eq(exportUrl), eq(HttpMethod.PUT), argumentCaptor.capture(),
+                eq(OpenEmpiPatientResult.class));
+        // verify request body was set correctly:
         assertEquals(argumentCaptor.getValue().getBody(), query);
-        //verify that header with token was sett:
+        // verify that header with token was sett:
         assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
     }
 
@@ -147,12 +152,11 @@ public class RestQueryExecutorTest {
         restQueryExecutor.updatePatient(TOKEN_VALUE, query);
 
         ArgumentCaptor<HttpEntity> argumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        //verify correct request creation:
-        verify(restTemplate).exchange(eq(updateUrl),
-                eq(HttpMethod.PUT), argumentCaptor.capture(), eq(String.class));
-        //verify request body was set correctly:
+        // verify correct request creation:
+        verify(restTemplate).exchange(eq(updateUrl), eq(HttpMethod.PUT), argumentCaptor.capture(), eq(String.class));
+        // verify request body was set correctly:
         assertEquals(argumentCaptor.getValue().getBody(), query);
-        //verify that header with token was sett:
+        // verify that header with token was sett:
         assertEquals(argumentCaptor.getValue().getHeaders(), getAuthenticationHeader(TOKEN_VALUE));
     }
 
@@ -166,8 +170,7 @@ public class RestQueryExecutorTest {
     private void mockServerResponse(Object body, Class<?> value) {
         response = mock(ResponseEntity.class);
         when(response.getBody()).thenReturn(body);
-        when(restTemplate.exchange(anyString(),
-                any(HttpMethod.class), any(HttpEntity.class), eq(value)))
+        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), eq(value)))
                 .thenReturn(response);
     }
 
@@ -180,7 +183,6 @@ public class RestQueryExecutorTest {
         headers.add(OpenEmpiVariables.TOKEN_HEADER_KEY, token);
         return headers;
     }
-
 
     private void mockRestTemplate() {
         ReflectionTestUtils.setField(restQueryExecutor, "restTemplate", restTemplate);

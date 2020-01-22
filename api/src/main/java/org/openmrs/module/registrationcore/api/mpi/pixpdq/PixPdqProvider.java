@@ -54,12 +54,14 @@ public class PixPdqProvider implements MpiProvider<Patient> {
     }
 
     @Override
-    public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
+            Double cutoff, Integer maxResults) {
         return searchAlgorithm.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
     }
 
     @Override
-    public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
+    public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints,
+            Double cutoff, Integer maxResults) {
         return searchAlgorithm.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
     }
 }

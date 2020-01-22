@@ -18,7 +18,8 @@ public class Fingerprint extends BiometricSample implements Serializable {
 
     private String image;
 
-    public Fingerprint() { }
+    public Fingerprint() {
+    }
 
     public Fingerprint(String type, String templateFormat, String template) {
         super(type, templateFormat, template);

@@ -22,53 +22,53 @@ import org.openmrs.Patient;
  * The results for {@link SimilarPatientSearchAlgorithm}.
  */
 public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality> {
-	
-	private final Patient patient;
-	
-	private final Double score;
-	
-	private final List<String> matchedFields;
-	
-	public PatientAndMatchQuality(Patient patient, Double score, List<String> matchedFields) {
-		this.patient = patient;
-		this.score = score;
-		this.matchedFields = matchedFields;
-	}
-	
-	public Patient getPatient() {
-		return patient;
-	}
-	
-	public Double getScore() {
-		return score;
-	}
-	
-	public List<String> getMatchedFields() {
-		return matchedFields;
-	}
-	
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	@Override
-	public int compareTo(PatientAndMatchQuality o) {
-		return o.score.compareTo(score);
-	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		PatientAndMatchQuality that = (PatientAndMatchQuality) o;
-		return Objects.equals(patient, that.patient);
-	}
+    private final Patient patient;
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(patient);
-	}
+    private final Double score;
+
+    private final List<String> matchedFields;
+
+    public PatientAndMatchQuality(Patient patient, Double score, List<String> matchedFields) {
+        this.patient = patient;
+        this.score = score;
+        this.matchedFields = matchedFields;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public List<String> getMatchedFields() {
+        return matchedFields;
+    }
+
+    /**
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(PatientAndMatchQuality o) {
+        return o.score.compareTo(score);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PatientAndMatchQuality that = (PatientAndMatchQuality) o;
+        return Objects.equals(patient, that.patient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(patient);
+    }
 }

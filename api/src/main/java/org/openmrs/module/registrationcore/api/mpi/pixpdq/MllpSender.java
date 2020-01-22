@@ -36,28 +36,26 @@ public class MllpSender implements Hl7v2Sender {
         return sendMessage(request, endpoint, port);
     }
 
-    private Message sendMessage(Message request, String endpoint, int port) throws HL7Exception, LLPException, IOException {
+    private Message sendMessage(Message request, String endpoint, int port)
+            throws HL7Exception, LLPException, IOException {
         PipeParser parser = new PipeParser();
         ConnectionHub hub = ConnectionHub.getInstance();
         Connection connection = null;
 
-        try
-        {
-            if(log.isDebugEnabled())
+        try {
+            if (log.isDebugEnabled())
                 log.debug(String.format("Sending to %s:%s : %s", endpoint, port, parser.encode(request)));
 
             connection = hub.attach(endpoint, port, parser, MinLowerLayerProtocol.class);
             Initiator initiator = connection.getInitiator();
             Message response = initiator.sendAndReceive(request);
 
-            if(log.isDebugEnabled())
+            if (log.isDebugEnabled())
                 log.debug(String.format("Response from %s:%s : %s", endpoint, port, parser.encode(response)));
 
             return response;
-        }
-        finally
-        {
-            if(connection != null)
+        } finally {
+            if (connection != null)
                 hub.discard(connection);
         }
     }

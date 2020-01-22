@@ -19,7 +19,7 @@ import org.openmrs.module.registrationcore.api.RegistrationCoreService;
 import java.util.List;
 
 /**
- *  Database methods for {@link RegistrationCoreService}.
+ * Database methods for {@link RegistrationCoreService}.
  */
 public interface RegistrationCoreDAO {
 

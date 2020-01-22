@@ -1,6 +1,5 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
-
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.llp.LLPException;
 import ca.uhn.hl7v2.model.Message;
@@ -44,13 +43,12 @@ public class HttpSender implements Hl7v2Sender {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/hl7-v2+er7; charset=utf-8");
         String authentication = config.getMpiUsername() + ":" + config.getMpiPassword();
-        String encoded = "Basic "+ Base64.encode(authentication.getBytes());
+        String encoded = "Basic " + Base64.encode(authentication.getBytes());
         connection.setRequestProperty("Authorization", encoded);
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
 
-        try
-        {
+        try {
             log.debug(String.format("Sending to %s : %s", url, parser.encode(request)));
 
             String message = "\u000B" + request.toString() + "\u001C" + "\r";
@@ -60,29 +58,22 @@ public class HttpSender implements Hl7v2Sender {
             Message response = null;
 
             if (!isSuccessfulResponseCode(code)) {
-                throw new MpiException(String.format("MPI connection error. "
-                                + "Response code: %s, response message: %s, error stream: %n%s ",
-                        code,
-                        connection.getResponseMessage(),
-                        IOUtils.toString(connection.getErrorStream())
-                ));
+                throw new MpiException(String.format(
+                        "MPI connection error. " + "Response code: %s, response message: %s, error stream: %n%s ", code,
+                        connection.getResponseMessage(), IOUtils.toString(connection.getErrorStream())));
             }
             response = getResponse(connection, parser);
             log.debug(String.format("Response from %s : %s", url, parser.encode(response)));
 
             return response;
-        }
-        finally
-        {
+        } finally {
             connection.disconnect();
         }
     }
 
-    private Message getResponse(HttpURLConnection connection,  PipeParser parser) throws HL7Exception, IOException
-    {
+    private Message getResponse(HttpURLConnection connection, PipeParser parser) throws HL7Exception, IOException {
         InputStream inputStr = connection.getInputStream();
-        String encoding = connection.getContentEncoding() == null ? "UTF-8"
-                : connection.getContentEncoding();
+        String encoding = connection.getContentEncoding() == null ? "UTF-8" : connection.getContentEncoding();
         String decoded = IOUtils.toString(inputStr, encoding);
         decoded = decoded.substring(1, decoded.length() - 1);
         return parser.parse(decoded);

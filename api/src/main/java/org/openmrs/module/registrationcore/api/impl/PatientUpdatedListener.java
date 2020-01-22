@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class listens for patient UPDATED events.
- * If MPI is enabled it updates patient in MPI.
+ * This class listens for patient UPDATED events. If MPI is enabled it updates patient in MPI.
  */
 public class PatientUpdatedListener extends PatientActionListener {
 
@@ -27,7 +26,7 @@ public class PatientUpdatedListener extends PatientActionListener {
      *
      * @return a list of Actions this listener can deal with
      */
-    public List<String> subscribeToActions(){
+    public List<String> subscribeToActions() {
         List actions = new ArrayList<String>();
         actions.add(Event.Action.UPDATED.name());
         return actions;
@@ -36,30 +35,28 @@ public class PatientUpdatedListener extends PatientActionListener {
     /**
      * Update patient in MPI server.
      *
-     * @param message message with properties.
+     * @param message
+     *            message with properties.
      */
     @Override
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);
         // TODO what should we do if patient is voided? discuss
         // if patient voided is true then don't update the MPI
-        if (patient.getVoided()){
+        if (patient.getVoided()) {
             return;
         }
         try {
             coreProperties.getMpiProvider().updatePatient(patient);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             ErrorHandlingService errorHandler = coreProperties.getPixErrorHandlingService();
             if (errorHandler == null) {
-                throw new MpiException("PIX patient update exception occurred "
-                        + "with not configured PIX error handler", e);
-            }
-            else {
+                throw new MpiException(
+                        "PIX patient update exception occurred " + "with not configured PIX error handler", e);
+            } else {
                 LOGGER.error("PIX patient update exception occurred", e);
                 errorHandler.handle(prepareParameters(patient),
-                        PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_UPDATE_DESTINATION,
-                        true,
+                        PixErrorHandlingService.SENDING_PATIENT_AFTER_PATIENT_UPDATE_DESTINATION, true,
                         ExceptionUtils.getFullStackTrace(e));
             }
         }

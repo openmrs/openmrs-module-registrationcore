@@ -20,13 +20,13 @@ import java.util.List;
  */
 public interface PatientNameSearch {
 
-	/**
-	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
-	 */
-	List<String> findSimilarGivenNames(String searchPhrase);
+    /**
+     * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
+     */
+    List<String> findSimilarGivenNames(String searchPhrase);
 
-	/**
-	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarFamilyNames(String)
-	 */
-	List<String> findSimilarFamilyNames(String searchPhrase);
+    /**
+     * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarFamilyNames(String)
+     */
+    List<String> findSimilarFamilyNames(String searchPhrase);
 }

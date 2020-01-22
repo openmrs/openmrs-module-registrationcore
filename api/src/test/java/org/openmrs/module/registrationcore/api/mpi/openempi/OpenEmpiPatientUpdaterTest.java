@@ -15,13 +15,19 @@ public class OpenEmpiPatientUpdaterTest {
 
     private static final String TOKEN = "TOKEN_VALUE";
 
-    @Mock private OpenEmpiPatientQueryBuilder queryBuilder;
-    @Mock private MpiAuthenticator authenticator;
-    @Mock private RestQueryExecutor queryCreator;
-    @InjectMocks private OpenEmpiPatientUpdater patientUpdater;
+    @Mock
+    private OpenEmpiPatientQueryBuilder queryBuilder;
+    @Mock
+    private MpiAuthenticator authenticator;
+    @Mock
+    private RestQueryExecutor queryCreator;
+    @InjectMocks
+    private OpenEmpiPatientUpdater patientUpdater;
 
-    @Mock private Patient patient;
-    @Mock private OpenEmpiPatientResult query;
+    @Mock
+    private Patient patient;
+    @Mock
+    private OpenEmpiPatientResult query;
 
     @Before
     public void setUp() throws Exception {

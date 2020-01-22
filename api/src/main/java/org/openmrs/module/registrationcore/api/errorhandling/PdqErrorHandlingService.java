@@ -1,8 +1,8 @@
 package org.openmrs.module.registrationcore.api.errorhandling;
 
 /**
- * Interface for Pdq error handling service that is provided by the OutgoingMessageExceptions Module
- * These strings are displayed in the Outgoing Message Exceptions PDQ error list
+ * Interface for Pdq error handling service that is provided by the OutgoingMessageExceptions Module These strings are
+ * displayed in the Outgoing Message Exceptions PDQ error list
  */
 public interface PdqErrorHandlingService extends ErrorHandlingService {
 

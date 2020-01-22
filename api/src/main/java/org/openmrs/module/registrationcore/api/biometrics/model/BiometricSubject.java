@@ -14,15 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A subject represents a Person for whom one or more biometric samples are being collected,
- * and for whom we want to associate all of these biometrics together with a single subjectId identifier
+ * A subject represents a Person for whom one or more biometric samples are being collected, and for whom we want to
+ * associate all of these biometrics together with a single subjectId identifier
  */
 public class BiometricSubject implements Serializable {
 
     private String subjectId;
     private List<Fingerprint> fingerprints;
 
-    public BiometricSubject() { }
+    public BiometricSubject() {
+    }
 
     public BiometricSubject(String subjectId) {
         this.subjectId = subjectId;

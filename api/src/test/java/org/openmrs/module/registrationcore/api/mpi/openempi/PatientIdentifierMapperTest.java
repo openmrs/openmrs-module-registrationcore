@@ -19,8 +19,10 @@ public class PatientIdentifierMapperTest {
     private static final Integer PROPERTY_LOCAL_PART = 1;
     private static final Integer PROPERTY_MPI_PART = 2;
 
-    @InjectMocks private PatientIdentifierMapper identifierMapper;
-    @Mock private MpiProperties mpiProperties;
+    @InjectMocks
+    private PatientIdentifierMapper identifierMapper;
+    @Mock
+    private MpiProperties mpiProperties;
 
     @Before
     public void setUp() throws Exception {

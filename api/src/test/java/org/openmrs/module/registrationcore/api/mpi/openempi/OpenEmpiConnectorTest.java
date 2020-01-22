@@ -20,15 +20,23 @@ public class OpenEmpiConnectorTest {
 
     private static final PatientIdentifier PATIENT_ID = new PatientIdentifier();
 
-    @InjectMocks private MpiProvider mpiProvider = new OpenEmpiConnector();
-    @Mock private MpiSimilarPatientsSearcher searchAlgorithm;
-    @Mock private MpiPatientFetcher patientImporter;
-    @Mock private MpiAuthenticator authenticator;
-    @Mock private MpiProperties mpiProperties;
+    @InjectMocks
+    private MpiProvider mpiProvider = new OpenEmpiConnector();
+    @Mock
+    private MpiSimilarPatientsSearcher searchAlgorithm;
+    @Mock
+    private MpiPatientFetcher patientImporter;
+    @Mock
+    private MpiAuthenticator authenticator;
+    @Mock
+    private MpiProperties mpiProperties;
 
-    @Mock private List<PatientAndMatchQuality> listPatients;
-    @Mock private Map<String, Object> otherDataPoints;
-    @Mock private Patient patient;
+    @Mock
+    private List<PatientAndMatchQuality> listPatients;
+    @Mock
+    private Map<String, Object> otherDataPoints;
+    @Mock
+    private Patient patient;
     private Double cutoff = 3d;
     private Integer maxResults = 10;
 
@@ -69,7 +77,8 @@ public class OpenEmpiConnectorTest {
         when(searchAlgorithm.findSimilarMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        List<PatientAndMatchQuality> similarPatients = mpiProvider.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
+        List<PatientAndMatchQuality> similarPatients = mpiProvider.findSimilarMatches(patient, otherDataPoints, cutoff,
+                maxResults);
         verify(authenticator).performAuthentication();
         verify(searchAlgorithm).findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);
@@ -104,7 +113,8 @@ public class OpenEmpiConnectorTest {
         when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
                 .thenReturn(listPatients);
 
-        List<PatientAndMatchQuality> similarPatients = mpiProvider.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
+        List<PatientAndMatchQuality> similarPatients = mpiProvider.findExactMatches(patient, otherDataPoints, cutoff,
+                maxResults);
         verify(authenticator).performAuthentication();
         verify(searchAlgorithm).findExactMatches(patient, otherDataPoints, cutoff, maxResults);
         assertEquals(similarPatients, listPatients);

@@ -21,7 +21,8 @@ public class BiometricData implements Serializable {
     private BiometricSubject subject;
     private PatientIdentifierType identifierType;
 
-    public BiometricData() { }
+    public BiometricData() {
+    }
 
     public BiometricData(BiometricSubject subject, PatientIdentifierType identifierType) {
         this.subject = subject;

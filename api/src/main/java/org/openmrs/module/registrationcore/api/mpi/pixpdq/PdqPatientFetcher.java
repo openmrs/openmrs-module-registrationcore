@@ -47,27 +47,30 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
         try {
             Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
-            Hl7v2Sender hl7v2Sender = (Hl7v2Sender) registrationCoreProperties.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
+            Hl7v2Sender hl7v2Sender = (Hl7v2Sender) registrationCoreProperties
+                    .getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
             Message response = hl7v2Sender.sendPdqMessage(pdqRequest);
 
             List<MpiPatient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
-            mpiPatients = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(mpiPatients, patientIdentifier, identifierTypeUuid);
+            mpiPatients = pixPdqMessageUtil.filterByIdentifierAndIdentifierType(mpiPatients, patientIdentifier,
+                    identifierTypeUuid);
             if (CollectionUtils.isEmpty(mpiPatients)) {
                 return null;
             }
-            if (mpiPatients.size() != 1){
-            	throw new MpiException(String.format("Created patient not uniquely identified in mpi! " +
-                                                        "There are %d patients with identifier %s of identifier type %s",
-                                                        mpiPatients.size(), patientIdentifier, identifierTypeUuid));
+            if (mpiPatients.size() != 1) {
+                throw new MpiException(String.format(
+                        "Created patient not uniquely identified in mpi! "
+                                + "There are %d patients with identifier %s of identifier type %s",
+                        mpiPatients.size(), patientIdentifier, identifierTypeUuid));
             }
             return mpiPatients.get(0);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new MpiException("Error in PDQ fetch by identifier", e);
         }
     }
 
     @Override
     public MpiPatient fetchMpiPatient(PatientIdentifier patientIdentifier) {
-    	return fetchMpiPatient(patientIdentifier.getIdentifier(), patientIdentifier.getIdentifierType().getUuid());
+        return fetchMpiPatient(patientIdentifier.getIdentifier(), patientIdentifier.getIdentifierType().getUuid());
     }
 }

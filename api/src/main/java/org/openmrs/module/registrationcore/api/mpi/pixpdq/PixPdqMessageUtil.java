@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.Set;
 
-
 public class PixPdqMessageUtil {
 
     private final Log log = LogFactory.getLog(this.getClass());
@@ -64,19 +63,20 @@ public class PixPdqMessageUtil {
     @Qualifier("registrationcore.mpiProperties")
     private MpiProperties mpiProperties;
 
-	public Message createPdqMessage(Patient patient) throws HL7Exception {
-		return createPdqMessage(patientToQPD3Params(patient));
-	}
+    public Message createPdqMessage(Patient patient) throws HL7Exception {
+        return createPdqMessage(patientToQPD3Params(patient));
+    }
 
-	public Message createPdqMessage(List<Map.Entry<String, String>> queryParameters) throws HL7Exception {
-		QBP_Q21 message = initQPD123(queryParameters);
-		return message;
-	}
+    public Message createPdqMessage(List<Map.Entry<String, String>> queryParameters) throws HL7Exception {
+        QBP_Q21 message = initQPD123(queryParameters);
+        return message;
+    }
 
-	public Message createPdqMessage(List<Map.Entry<String, String>> queryParameters, String qpd8IdentifierUuid) throws HL7Exception {
-	    QBP_Q21 message = setQPD8(initQPD123(queryParameters), qpd8IdentifierUuid);
-		return message;
-	}
+    public Message createPdqMessage(List<Map.Entry<String, String>> queryParameters, String qpd8IdentifierUuid)
+            throws HL7Exception {
+        QBP_Q21 message = setQPD8(initQPD123(queryParameters), qpd8IdentifierUuid);
+        return message;
+    }
 
     public QBP_Q21 initQPD123(List<Map.Entry<String, String>> queryParameters) throws HL7Exception {
         QBP_Q21 message = new QBP_Q21();
@@ -86,8 +86,7 @@ public class PixPdqMessageUtil {
 
         // Set the query parameters
         int qpdRep = 0;
-        for(Map.Entry<String, String> entry : queryParameters)
-        {
+        for (Map.Entry<String, String> entry : queryParameters) {
             terser.set(String.format("/QPD-3(%d)-1", qpdRep), entry.getKey());
             terser.set(String.format("/QPD-3(%d)-2", qpdRep++), entry.getValue());
         }
@@ -101,30 +100,30 @@ public class PixPdqMessageUtil {
     }
 
     public QBP_Q21 setQPD8(QBP_Q21 message, String qpd8MappedIdentifierUuid) throws HL7Exception {
-	    Terser terser = new Terser(message);
-	    terser.set("/QPD-8-4", qpd8MappedIdentifierUuid);
-	    return message;
+        Terser terser = new Terser(message);
+        terser.set("/QPD-8-4", qpd8MappedIdentifierUuid);
+        return message;
     }
 
-    public List<Map.Entry<String, String>> patientToQPD3Params(Patient patient){
+    public List<Map.Entry<String, String>> patientToQPD3Params(Patient patient) {
         List<Map.Entry<String, String>> queryParams = new ArrayList<Map.Entry<String, String>>();
-        if (patient == null){
+        if (patient == null) {
             return null;
         }
         // Add Names to query
-        if(StringUtils.isNotBlank(patient.getFamilyName())){
+        if (StringUtils.isNotBlank(patient.getFamilyName())) {
             queryParams.add(new AbstractMap.SimpleEntry("@PID.5.1", patient.getFamilyName()));
         }
-        if(StringUtils.isNotBlank(patient.getGivenName())){
+        if (StringUtils.isNotBlank(patient.getGivenName())) {
             queryParams.add(new AbstractMap.SimpleEntry("@PID.5.2", patient.getGivenName()));
         }
         // Add Identifiers to query
         Set<PatientIdentifier> identifiers = patient.getIdentifiers();
-        if(identifiers != null && !identifiers.isEmpty()){
+        if (identifiers != null && !identifiers.isEmpty()) {
             for (PatientIdentifier patIdentifier : identifiers) {
-                String mappedMpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
-                if (StringUtils.isNotBlank(patIdentifier.getIdentifier())
-                        && StringUtils.isNotBlank(mappedMpiUuid)) {
+                String mappedMpiUuid = identifierMapper
+                        .getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
+                if (StringUtils.isNotBlank(patIdentifier.getIdentifier()) && StringUtils.isNotBlank(mappedMpiUuid)) {
                     // We need to change the datatype so that it can have multiple with the same key
                     queryParams.add(new AbstractMap.SimpleEntry("@PID.3.1", patIdentifier.getIdentifier()));
                     queryParams.add(new AbstractMap.SimpleEntry("@PID.3.4", mappedMpiUuid));
@@ -132,46 +131,43 @@ public class PixPdqMessageUtil {
             }
         }
         // Add Gender to query
-        if(StringUtils.isNotBlank(patient.getGender())){
+        if (StringUtils.isNotBlank(patient.getGender())) {
             queryParams.add(new AbstractMap.SimpleEntry("@PID.8", patient.getGender()));
         }
         // Add Date of Birth to query (?) what if its an estimate?
-        if(patient.getBirthdate() != null){
+        if (patient.getBirthdate() != null) {
             String birthdate;
-            if(patient.getBirthdateEstimated()){
+            if (patient.getBirthdateEstimated()) {
                 birthdate = new SimpleDateFormat("yyyy").format(patient.getBirthdate());
-            }
-            else{
+            } else {
                 birthdate = new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate());
             }
             queryParams.add(new AbstractMap.SimpleEntry("@PID.7", birthdate));
         }
         // Add Address to query
-        if (!patient.getAddresses().isEmpty()){
+        if (!patient.getAddresses().isEmpty()) {
             PersonAddress pa = patient.getAddresses().iterator().next();
-            if(StringUtils.isNotBlank(pa.getAddress1())) {
+            if (StringUtils.isNotBlank(pa.getAddress1())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.1", pa.getAddress1()));
             }
-            if(StringUtils.isNotBlank(pa.getAddress2())
-                && StringUtils.isNotBlank(pa.getAddress3())){
+            if (StringUtils.isNotBlank(pa.getAddress2()) && StringUtils.isNotBlank(pa.getAddress3())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.2", pa.getAddress2() + " " + pa.getAddress3()));
-            }
-            else if (StringUtils.isNotBlank(pa.getAddress2())){
+            } else if (StringUtils.isNotBlank(pa.getAddress2())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.2", pa.getAddress2()));
             }
-            if(StringUtils.isNotBlank(pa.getCityVillage())) {
+            if (StringUtils.isNotBlank(pa.getCityVillage())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.3", pa.getCityVillage()));
             }
-            if(StringUtils.isNotBlank(pa.getCountry())) {
+            if (StringUtils.isNotBlank(pa.getCountry())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.6", pa.getCountry()));
             }
-            if(StringUtils.isNotBlank(pa.getCountyDistrict())) {
+            if (StringUtils.isNotBlank(pa.getCountyDistrict())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.9", pa.getCountyDistrict()));
             }
-            if(StringUtils.isNotBlank(pa.getPostalCode())) {
+            if (StringUtils.isNotBlank(pa.getPostalCode())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.5", pa.getPostalCode()));
             }
-            if(StringUtils.isNotBlank(pa.getStateProvince())) {
+            if (StringUtils.isNotBlank(pa.getStateProvince())) {
                 queryParams.add(new AbstractMap.SimpleEntry("@PID.11.4", pa.getStateProvince()));
             }
         }
@@ -182,7 +178,9 @@ public class PixPdqMessageUtil {
         msh.getFieldSeparator().setValue("|");
         msh.getEncodingCharacters().setValue("^~\\&");
         msh.getAcceptAcknowledgmentType().setValue("AL"); // Always send response
-        msh.getDateTimeOfMessage().getTime().setValue(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())); // DateTime of message
+        msh.getDateTimeOfMessage().getTime().setValue(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())); // DateTime
+                                                                                                                  // of
+                                                                                                                  // message
         msh.getMessageControlID().setValue(UUID.randomUUID().toString()); // Unique id for message
         msh.getMessageType().getMessageStructure().setValue(msh.getMessage().getName()); // Message Structure Type
         msh.getMessageType().getMessageCode().setValue(messageCode); // Message Structure Code
@@ -202,11 +200,12 @@ public class PixPdqMessageUtil {
 
     /**
      * Interpret PID segments
+     * 
      * @param response
      * @return
      * @throws HL7Exception
      */
-    public List<MpiPatient> interpretPIDSegments (Message response) throws HL7Exception, ParseException {
+    public List<MpiPatient> interpretPIDSegments(Message response) throws HL7Exception, ParseException {
         List<MpiPatient> retVal = new ArrayList<MpiPatient>();
 
         Terser terser = new Terser(response);
@@ -220,34 +219,32 @@ public class PixPdqMessageUtil {
         Location defaultLocation = Context.getLocationService().getDefaultLocation();
 
         for (Structure queryResponseStruct : response.getAll("QUERY_RESPONSE")) {
-            Group queryResponseGroup = (Group)queryResponseStruct;
+            Group queryResponseGroup = (Group) queryResponseStruct;
             for (Structure pidStruct : queryResponseGroup.getAll("PID")) {
-                PID pid = (PID)pidStruct;
+                PID pid = (PID) pidStruct;
                 MpiPatient patient = new MpiPatient();
                 // Attempt to load a patient by identifier
                 for (CX id : pid.getPatientIdentifierList()) {
 
                     PatientIdentifierType pit = null;
                     if (StringUtils.isNotBlank(id.getAssigningAuthority().getUniversalID().getValue())) {
-                        pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
-                                identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getUniversalID().getValue()));
+                        pit = Context.getPatientService()
+                                .getPatientIdentifierTypeByUuid(identifierMapper.getMappedLocalIdentifierTypeUuid(
+                                        id.getAssigningAuthority().getUniversalID().getValue()));
                     }
                     if (pit == null && StringUtils.isNotBlank(id.getAssigningAuthority().getNamespaceID().getValue())) {
-                        pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
-                                identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getNamespaceID().getValue()));
+                        pit = Context.getPatientService()
+                                .getPatientIdentifierTypeByUuid(identifierMapper.getMappedLocalIdentifierTypeUuid(
+                                        id.getAssigningAuthority().getNamespaceID().getValue()));
                     }
                     if (pit == null) {
                         continue;
                     }
 
-                    PatientIdentifier patId = new PatientIdentifier(
-                            id.getIDNumber().getValue(),
-                            pit,
-                            defaultLocation
-                    );
+                    PatientIdentifier patId = new PatientIdentifier(id.getIDNumber().getValue(), pit, defaultLocation);
 
-                    if (patId.getIdentifierType().equals(patientService.getPatientIdentifierTypeByUuid(
-                            mpiProperties.getMpiPersonIdentifierTypeUuid()))) {
+                    if (patId.getIdentifierType().equals(patientService
+                            .getPatientIdentifierTypeByUuid(mpiProperties.getMpiPersonIdentifierTypeUuid()))) {
                         patId.setPreferred(true);
                     }
 
@@ -324,9 +321,11 @@ public class PixPdqMessageUtil {
                 // Mother's name
                 XPN momsName = pid.getMotherSMaidenName(0);
                 if (momsName != null) {
-                    PersonAttributeType momNameAtt = Context.getPersonService().getPersonAttributeTypeByName("Mother's Name");
+                    PersonAttributeType momNameAtt = Context.getPersonService()
+                            .getPersonAttributeTypeByName("Mother's Name");
                     if (momNameAtt != null) {
-                        PersonAttribute pa = new PersonAttribute(momNameAtt, String.format("%s, %s", momsName.getFamilyName().getSurname().getValue(), momsName.getGivenName().getValue()));
+                        PersonAttribute pa = new PersonAttribute(momNameAtt, String.format("%s, %s",
+                                momsName.getFamilyName().getSurname().getValue(), momsName.getGivenName().getValue()));
                         patient.addAttribute(pa);
                     }
                 }
@@ -337,33 +336,29 @@ public class PixPdqMessageUtil {
         return retVal;
     }
 
-	/**
-	 * Filter list of mpiPatients for mpiPatients with a specific identifier for a specific identifier type
-	 */
-	public List<MpiPatient> filterByIdentifierAndIdentifierType (  List<MpiPatient> patients,
-																String identifier,
-																String identifierTypeUuid){
+    /**
+     * Filter list of mpiPatients for mpiPatients with a specific identifier for a specific identifier type
+     */
+    public List<MpiPatient> filterByIdentifierAndIdentifierType(List<MpiPatient> patients, String identifier,
+            String identifierTypeUuid) {
         PatientIdentifierType identifierType = patientService.getPatientIdentifierTypeByUuid(identifierTypeUuid);
-		List<MpiPatient> retVal = new ArrayList<MpiPatient>();
+        List<MpiPatient> retVal = new ArrayList<MpiPatient>();
 
-        patientloop:
-		for (MpiPatient p : patients){
-		    for (PatientIdentifier id :p.getIdentifiers()){
-		        if (id.getIdentifier().equals(identifier) &&
-                        id.getIdentifierType().equals(identifierType)){
+        patientloop: for (MpiPatient p : patients) {
+            for (PatientIdentifier id : p.getIdentifiers()) {
+                if (id.getIdentifier().equals(identifier) && id.getIdentifierType().equals(identifierType)) {
                     retVal.add(p);
                     break patientloop;
                 }
             }
-		}
-		/*
-		TODO Should just break instead of breaking out of both loops, because in this case if theres more than one patient
-		it will just be ignored, but it should be caught in the function that calls this method, since this method is supposed to
-		return the whole list.
-		 */
-		return retVal;
-	}
-
+        }
+        /*
+         * TODO Should just break instead of breaking out of both loops, because in this case if theres more than one
+         * patient it will just be ignored, but it should be caught in the function that calls this method, since this
+         * method is supposed to return the whole list.
+         */
+        return retVal;
+    }
 
     public Message createAdmit(Patient patient) throws HL7Exception {
         ADT_A01 message = new ADT_A01();
@@ -377,6 +372,7 @@ public class PixPdqMessageUtil {
 
     /**
      * Create the update message
+     * 
      * @throws HL7Exception
      */
     public Message createUpdate(Patient patient) throws HL7Exception {
@@ -392,6 +388,7 @@ public class PixPdqMessageUtil {
 
     /**
      * Update the PID segment
+     * 
      * @throws HL7Exception
      */
     private void updatePID(PID pid, Patient patient) throws HL7Exception {
@@ -400,17 +397,19 @@ public class PixPdqMessageUtil {
         for (PatientIdentifier patIdentifier : patient.getIdentifiers()) {
             if (uuidList.contains(patIdentifier.getIdentifierType().getUuid())) {
                 CX patientId = pid.getPatientIdentifierList(pid.getPatientIdentifierList().length);
-                String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
+                String mpiUuid = identifierMapper
+                        .getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
                 patientId.getAssigningAuthority().getUniversalID().setValue(mpiUuid);
                 patientId.getAssigningAuthority().getNamespaceID().setValue(mpiUuid);
-                patientId.getAssigningAuthority().getUniversalIDType().setValue(identifierMapper.getMappedMpiUniversalIdType(patIdentifier.getIdentifierType().getUuid()));
+                patientId.getAssigningAuthority().getUniversalIDType().setValue(
+                        identifierMapper.getMappedMpiUniversalIdType(patIdentifier.getIdentifierType().getUuid()));
                 patientId.getIDNumber().setValue(patIdentifier.getIdentifier());
 
             }
         }
 
         // Names
-        for(PersonName pn : patient.getNames()) {
+        for (PersonName pn : patient.getNames()) {
             if (!pn.getFamilyName().equals("(none)") && !pn.getGivenName().equals("(none)")) {
                 this.updateXPN(pid.getPatientName(pid.getPatientName().length), pn);
             }
@@ -420,39 +419,41 @@ public class PixPdqMessageUtil {
         pid.getAdministrativeSex().setValue(patient.getGender());
 
         // Date of birth
-        if(patient.getBirthdateEstimated())
+        if (patient.getBirthdateEstimated())
             pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyy").format(patient.getBirthdate()));
         else
-            pid.getDateTimeOfBirth().getTime().setValue(new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate()));
+            pid.getDateTimeOfBirth().getTime()
+                    .setValue(new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate()));
 
         PersonAddress pa = patient.getAddresses().iterator().next();
 
         // Addresses
         XAD xad = pid.getPatientAddress(pid.getPatientAddress().length);
-        if(pa.getAddress1() != null)
+        if (pa.getAddress1() != null)
             xad.getStreetAddress().getStreetOrMailingAddress().setValue(pa.getAddress1());
-        if(pa.getAddress2() != null)
+        if (pa.getAddress2() != null)
             xad.getOtherDesignation().setValue(pa.getAddress2());
-        if(pa.getAddress3() != null)
+        if (pa.getAddress3() != null)
             xad.getOtherDesignation().setValue(xad.getOtherDesignation() + " " + pa.getAddress3());
-        if(pa.getCityVillage() != null)
+        if (pa.getCityVillage() != null)
             xad.getCity().setValue(pa.getCityVillage());
-        if(pa.getCountry() != null)
+        if (pa.getCountry() != null)
             xad.getCountry().setValue(pa.getCountry());
-        if(pa.getCountyDistrict() != null)
+        if (pa.getCountyDistrict() != null)
             xad.getCountyParishCode().setValue(pa.getCountyDistrict());
-        if(pa.getPostalCode() != null)
+        if (pa.getPostalCode() != null)
             xad.getZipOrPostalCode().setValue(pa.getPostalCode());
-        if(pa.getStateProvince() != null)
+        if (pa.getStateProvince() != null)
             xad.getStateOrProvince().setValue(pa.getStateProvince());
 
-        if(pa.getPreferred())
+        if (pa.getPreferred())
             xad.getAddressType().setValue("L");
 
         // Death
         if (patient.getDead()) {
             pid.getPatientDeathIndicator().setValue("Y");
-            pid.getPatientDeathDateAndTime().getTime().setDatePrecision(patient.getDeathDate().getYear(), patient.getDeathDate().getMonth(), patient.getDeathDate().getDay());
+            pid.getPatientDeathDateAndTime().getTime().setDatePrecision(patient.getDeathDate().getYear(),
+                    patient.getDeathDate().getMonth(), patient.getDeathDate().getDay());
         }
 
         PersonName mother = new PersonName();
@@ -477,7 +478,7 @@ public class PixPdqMessageUtil {
     }
 
     private boolean isMotherAttributeType(PersonAttribute attribute) {
-       return attribute.getAttributeType().getName().toLowerCase().contains("mother");
+        return attribute.getAttributeType().getName().toLowerCase().contains("mother");
     }
 
     private boolean isTelephoneAttributeType(PersonAttribute attribute) {
@@ -486,23 +487,24 @@ public class PixPdqMessageUtil {
 
     /**
      * Updates the PN with the XPN
+     * 
      * @param xpn
      * @param pn
      * @throws DataTypeException
      */
     private void updateXPN(XPN xpn, PersonName pn) throws DataTypeException {
-        if(pn.getFamilyName() != null && !pn.getFamilyName().equals("(none)"))
+        if (pn.getFamilyName() != null && !pn.getFamilyName().equals("(none)"))
             xpn.getFamilyName().getSurname().setValue(pn.getFamilyName());
-        if(pn.getFamilyName2() != null)
+        if (pn.getFamilyName2() != null)
             xpn.getFamilyName().getSurnameFromPartnerSpouse().setValue(pn.getFamilyName2());
-        if(pn.getGivenName() != null && !pn.getGivenName().equals("(none)"))
+        if (pn.getGivenName() != null && !pn.getGivenName().equals("(none)"))
             xpn.getGivenName().setValue(pn.getGivenName());
-        if(pn.getMiddleName() != null)
+        if (pn.getMiddleName() != null)
             xpn.getSecondAndFurtherGivenNamesOrInitialsThereof().setValue(pn.getMiddleName());
-        if(pn.getPrefix() != null)
+        if (pn.getPrefix() != null)
             xpn.getPrefixEgDR().setValue(pn.getPrefix());
 
-        if(pn.getPreferred())
+        if (pn.getPreferred())
             xpn.getNameTypeCode().setValue("L");
         else
             xpn.getNameTypeCode().setValue("U");

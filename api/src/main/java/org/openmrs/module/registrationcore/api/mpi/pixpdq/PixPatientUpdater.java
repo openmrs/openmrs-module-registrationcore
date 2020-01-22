@@ -26,7 +26,8 @@ public class PixPatientUpdater implements MpiPatientUpdater {
     public void updatePatient(Patient patient) {
         try {
             Message updateMsg = pixPdqMessageUtil.createUpdate(patient);
-            Hl7v2Sender hl7v2Sender = (Hl7v2Sender) registrationCoreProperties.getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
+            Hl7v2Sender hl7v2Sender = (Hl7v2Sender) registrationCoreProperties
+                    .getBeanFromName(RegistrationCoreConstants.GP_MPI_HL7_IMPLEMENTATION);
             Message response = hl7v2Sender.sendPixMessage(updateMsg);
 
             if (pixPdqMessageUtil.isQueryError(response)) {
@@ -35,7 +36,7 @@ public class PixPatientUpdater implements MpiPatientUpdater {
 
         } catch (Exception e) {
             log.error(e);
-            if (e instanceof  MpiException) {
+            if (e instanceof MpiException) {
                 throw (MpiException) e;
             } else {
                 throw new MpiException("Error while updating patient", e);

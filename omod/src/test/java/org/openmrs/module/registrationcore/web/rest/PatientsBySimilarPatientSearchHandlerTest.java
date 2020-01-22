@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.registrationcore.web.rest;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Patient;
@@ -57,12 +56,12 @@ public class PatientsBySimilarPatientSearchHandlerTest extends MainResourceContr
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         executeDataSet("patients_dataset.xml");
     }
 
     @Test
-    public void shouldReturnOneSimilarPatient() throws Exception{
+    public void shouldReturnOneSimilarPatient() throws Exception {
         MockHttpServletRequest req = request(RequestMethod.GET, getURI());
         req.addParameter("matchSimilar", "true");
         req.addHeader("givenname", "Jarus");
@@ -77,7 +76,7 @@ public class PatientsBySimilarPatientSearchHandlerTest extends MainResourceContr
     }
 
     @Test
-    public void shouldNotReturnSimilarPatient() throws Exception{
+    public void shouldNotReturnSimilarPatient() throws Exception {
         MockHttpServletRequest req = request(RequestMethod.GET, getURI());
         req.addParameter("matchSimilar", "true");
         req.addHeader("givenname", "New");

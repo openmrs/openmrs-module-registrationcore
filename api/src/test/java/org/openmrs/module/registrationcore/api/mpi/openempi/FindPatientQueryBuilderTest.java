@@ -16,12 +16,17 @@ import java.util.TreeSet;
 import static org.junit.Assert.assertEquals;
 
 public class FindPatientQueryBuilderTest {
-    @InjectMocks private FindPatientQueryBuilder queryMapper = new FindPatientQueryBuilder();
-    @Mock private IdentifierBuilder identifierBuilder;
+    @InjectMocks
+    private FindPatientQueryBuilder queryMapper = new FindPatientQueryBuilder();
+    @Mock
+    private IdentifierBuilder identifierBuilder;
 
-    @Mock private PatientIdentifier ecidIdentifier;
-    @Mock private PatientIdentifier openMrsIdentifier;
-    @Mock private PatientIdentifier openEmpiIdentifier;
+    @Mock
+    private PatientIdentifier ecidIdentifier;
+    @Mock
+    private PatientIdentifier openMrsIdentifier;
+    @Mock
+    private PatientIdentifier openEmpiIdentifier;
 
     @Before
     public void setUp() throws Exception {

@@ -22,8 +22,8 @@ import org.openmrs.Patient;
  * Defines an interface for algorithms to find similar patients.
  */
 public interface SimilarPatientSearchAlgorithm {
-	
-	List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-	                                                 Integer maxResults);
-	
+
+    List<PatientAndMatchQuality> findSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+            Double cutoff, Integer maxResults);
+
 }

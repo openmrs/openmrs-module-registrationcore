@@ -62,7 +62,7 @@ public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
 
     @Override
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints,
-                                                           Double cutoff, Integer maxResults) {
+            Double cutoff, Integer maxResults) {
         authenticateIfNeeded();
         if (mpiProperties.isProbabilisticMatchingEnabled()) {
             return searchAlgorithm.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
@@ -73,7 +73,7 @@ public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
 
     @Override
     public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints,
-                                                         Double cutoff, Integer maxResults) {
+            Double cutoff, Integer maxResults) {
         authenticateIfNeeded();
         return searchAlgorithm.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
     }

@@ -20,7 +20,8 @@ public class BiometricEngineStatus implements Serializable {
     private String description;
     private String statusMessage;
 
-    public BiometricEngineStatus() { }
+    public BiometricEngineStatus() {
+    }
 
     public boolean isEnabled() {
         return enabled;
