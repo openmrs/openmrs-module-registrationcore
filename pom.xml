@@ -15,7 +15,7 @@
 	<packaging>pom</packaging>
 	<name>Registration Core Module</name>
 	<description>Provides core utilities and services for patient registration.</description>
-	
+
 	<url>https://wiki.openmrs.org/display/docs/Registration+Core+Module+Module</url>
 	<developers>
 		<developer>
@@ -26,19 +26,19 @@
 		<name>OpenMRS</name>
 		<url>http://openmrs.org</url>
 	</organization>
-	
+
 	<scm>
 		<connection>scm:git:git@github.com:openmrs/openmrs-module-registrationcore.git</connection>
 		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-registrationcore.git</developerConnection>
 		<url>https://github.com/openmrs/openmrs-module-registrationcore.git</url>
 		<tag>HEAD</tag>
 	</scm>
-	
+
 	<modules>
 		<module>api</module>
 		<module>omod</module>
 	</modules>
-	
+
 	<properties>
 		<openmrsPlatformVersion>1.10.5</openmrsPlatformVersion>
 		<idgenVersion>4.3</idgenVersion>
@@ -49,7 +49,7 @@
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
 		<apacheHttpClientVersion>4.5</apacheHttpClientVersion>
 	</properties>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- Begin OpenMRS core -->
@@ -151,7 +151,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -160,11 +160,11 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 
 		<plugins>
-			<plugin>
+			<!--<plugin>
 				<groupId>net.revelc.code.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
 				<version>2.10.0</version>
@@ -186,12 +186,12 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 		</plugins>
 
 		<pluginManagement>
 			<plugins>
-				<plugin>
+				<!--<plugin>
 					<groupId>net.revelc.code.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
 					<dependencies>
@@ -201,7 +201,7 @@
 							<version>${openmrsPlatformVersion}</version>
 						</dependency>
 					</dependencies>
-				</plugin>
+				</plugin>-->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -247,7 +247,7 @@
 		</pluginManagement>
 
 	</build>
-	
+
 	<repositories>
 		<repository>
 			<id>openmrs-repo</id>
@@ -279,5 +279,5 @@
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 </project>
