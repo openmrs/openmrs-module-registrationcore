@@ -56,8 +56,6 @@ import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgori
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
@@ -491,10 +489,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private IdentifierSourceService getIssAndUpdateIdSource() {
 		IdentifierSourceService iss = Context.getService(IdentifierSourceService.class);
 		if (idSource == null) {
-			Integer idSourceId = registrationCoreProperties.getOpenMrsIdentifierSourceId();
-			idSource = iss.getIdentifierSource(idSourceId);
+			String sourceIdentifier = registrationCoreProperties.getSourceIdentifier();
+			if (StringUtils.isNumeric(sourceIdentifier)) {
+				idSource = iss.getIdentifierSource(Integer.valueOf(sourceIdentifier));
+			} else {
+				idSource = iss.getIdentifierSourceByUuid(sourceIdentifier);
+			}
 			if (idSource == null) {
-				throw new APIException("cannot find identifier source with id:" + idSourceId);
+				throw new APIException("cannot find identifier source with id:" + sourceIdentifier);
 			}
 		}
 		return iss;

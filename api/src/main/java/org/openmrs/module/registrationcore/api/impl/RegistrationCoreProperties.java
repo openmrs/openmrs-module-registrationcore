@@ -30,9 +30,21 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 		this.applicationContext = applicationContext;
 	}
 	
+	/**
+	 * @deprecated as of 1.9.0, replaced by {@link #getSourceIdentifier()}
+	 */
+	@Deprecated
 	public Integer getOpenMrsIdentifierSourceId() {
 		String propertyName = RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID;
 		return getIntegerProperty(propertyName);
+	}
+	
+	/**
+	 * @return identifier source uuid or id
+	 */
+	public String getSourceIdentifier() {
+		String propertyName = RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID;
+		return getProperty(propertyName);
 	}
 	
 	public String getOpenMrsIdentifierUuid() {

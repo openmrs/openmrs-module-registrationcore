@@ -34,6 +34,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.event.Event;
+import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.RegistrationData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
@@ -286,6 +287,16 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		assertEquals("LEFT-INDEX", fingerprint.getType());
 		assertEquals("ISO", fingerprint.getFormat());
 		assertEquals("xxxyyyzzz", fingerprint.getTemplate());
+	}
+	
+	@Test
+	public void registerPatient_shouldAlsoConsumeUuidAsValueForIdentifierSourceIdGP() {
+		String sourceUuid = Context.getService(IdentifierSourceService.class).getIdentifierSource(1).getUuid();
+		adminService.saveGlobalProperty(
+		    new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, sourceUuid));
+		Location location = locationService.getLocation(2);
+		Patient registeredPatient = service.registerPatient(createBasicPatient(), null, null, location);
+		assertNotNull(registeredPatient);
 	}
 	
 	private RegistrationData getSampleRegistrationDataWithBiometrics() {

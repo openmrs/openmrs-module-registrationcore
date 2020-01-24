@@ -68,7 +68,7 @@ public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
 	
 	private void addOpenMrsIdentifier(Patient patient) {
 		log.info("Generate OpenMRS identifier for imported Mpi patient.");
-		Integer openMrsIdentifierId = coreProperties.getOpenMrsIdentifierSourceId();
+		String openMrsIdentifierId = coreProperties.getSourceIdentifier();
 		PatientIdentifier identifier = identifierBuilder.generateIdentifier(openMrsIdentifierId, null);
 		identifier.setPreferred(true);
 		patient.addIdentifier(identifier);

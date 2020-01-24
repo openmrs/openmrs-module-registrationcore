@@ -136,4 +136,13 @@
 
     <bean id="registrationcore.openEmpiPatientFilter"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientFilter"/>
+          
+    <!-- Add global property listeners -->
+	<bean id="registrationcore.globalPropertyListeners" parent="openmrsEventListeners">
+	    <property name="globalPropertyListeners">
+	        <list value-type="org.openmrs.api.GlobalPropertyListener" merge="true">
+	            <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.RegistrationCoreServiceImpl" />
+	        </list>
+	    </property>
+	</bean>
 </beans>
