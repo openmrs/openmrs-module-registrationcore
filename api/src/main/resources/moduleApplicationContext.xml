@@ -59,7 +59,7 @@
         <property name="moduleService">
             <list>
                 <value>${project.parent.groupId}.${project.parent.artifactId}.api.RegistrationCoreService</value>
-                <ref local="registrationCoreService" />
+                <ref bean="registrationCoreService" />
             </list>
         </property>
     </bean>
