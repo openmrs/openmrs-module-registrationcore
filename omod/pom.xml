@@ -40,8 +40,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs</groupId>
-			<artifactId>event-api-tests</artifactId>
-			<type>test-jar</type>
+			<artifactId>event-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs</groupId>
+			<artifactId>event-api</artifactId>
+			<classifier>tests</classifier>
 		</dependency>
 		<!-- End OpenMRS modules -->
 		<!-- Begin OpenMRS core -->
