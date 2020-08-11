@@ -42,8 +42,8 @@ public class PixPatientExporter implements MpiPatientExporter {
 			// Ensure that patient with that identifier does not already exist on the MPI
 			Patient existingMpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier());
 			if (existingMpiPatient != null) {
-				throw new MpiException(
-				        "Patient with that identifier is already present on MPI. " + "Unable to create patient");
+				throw new MpiException("Patient with that identifier is already present on MPI. "
+				        + "Unable to create patient");
 			}
 			
 			Message admitMessage = pixPdqMessageUtil.createAdmit(patient);
@@ -57,8 +57,8 @@ public class PixPatientExporter implements MpiPatientExporter {
 			
 			Patient mpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier());
 			if (mpiPatient == null) {
-				throw new MpiException(
-				        "Patient has not been created on MPI. " + "Probably patient with the same IDs already exists");
+				throw new MpiException("Patient has not been created on MPI. "
+				        + "Probably patient with the same IDs already exists");
 			}
 			return getMpiIdentifier(mpiPatient);
 		}
@@ -73,8 +73,8 @@ public class PixPatientExporter implements MpiPatientExporter {
 	}
 	
 	private String getMpiIdentifier(Patient mpiPatient) {
-		PatientIdentifierType patientIdentifierType = patientService
-		        .getPatientIdentifierTypeByUuid(mpiProperties.getMpiPersonIdentifierTypeUuid());
+		PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByUuid(mpiProperties
+		        .getMpiPersonIdentifierTypeUuid());
 		return mpiPatient.getPatientIdentifier(patientIdentifierType).getIdentifier();
 	}
 }

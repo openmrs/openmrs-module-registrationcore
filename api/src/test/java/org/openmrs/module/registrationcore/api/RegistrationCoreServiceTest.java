@@ -139,8 +139,8 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		locationService.saveLocationTag(primaryIdentifierLocationTag);
 		
 		Location parentLocation = locationService.getLocation(2);
-		parentLocation.addTag(
-		    locationService.getLocationTagByName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION));
+		parentLocation.addTag(locationService
+		        .getLocationTagByName(RegistrationCoreConstants.LOCATION_TAG_IDENTIFIER_ASSIGNMENT_LOCATION));
 		locationService.saveLocation(parentLocation);
 		
 		Location location = new Location();
@@ -211,8 +211,8 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 	}
 	
 	/**
-	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)} This needs to be
-	 *      fixed after fixing https://tickets.openmrs.org/browse/RC-9
+	 * @see {@link RegistrationCoreService#registerPatient(Patient, List, Location)} This needs to
+	 *      be fixed after fixing https://tickets.openmrs.org/browse/RC-9
 	 */
 	@Test
 	@Ignore
@@ -271,8 +271,8 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 	 */
 	@Test
 	public void registerPatient_shouldSucceedIfBiometricsSuppliedAndEngineEnabled() throws Exception {
-		adminService.saveGlobalProperty(
-		    new GlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_IMPLEMENTATION, "testBiometricEngine"));
+		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_BIOMETRICS_IMPLEMENTATION,
+		        "testBiometricEngine"));
 		RegistrationData data = getSampleRegistrationDataWithBiometrics();
 		int startPatients = getNumPatients();
 		Patient p = service.registerPatient(data);
@@ -292,8 +292,8 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 	@Test
 	public void registerPatient_shouldAlsoConsumeUuidAsValueForIdentifierSourceIdGP() {
 		String sourceUuid = Context.getService(IdentifierSourceService.class).getIdentifierSource(1).getUuid();
-		adminService.saveGlobalProperty(
-		    new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, sourceUuid));
+		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID,
+		        sourceUuid));
 		Location location = locationService.getLocation(2);
 		Patient registeredPatient = service.registerPatient(createBasicPatient(), null, null, location);
 		assertNotNull(registeredPatient);

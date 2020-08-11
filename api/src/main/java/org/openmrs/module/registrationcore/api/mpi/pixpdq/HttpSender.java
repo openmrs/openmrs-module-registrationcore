@@ -58,8 +58,8 @@ public class HttpSender implements Hl7v2Sender {
 			Message response = null;
 			
 			if (!isSuccessfulResponseCode(code)) {
-				throw new MpiException(String.format(
-				    "MPI connection error. " + "Response code: %s, response message: %s, error stream: %n%s ", code,
+				throw new MpiException(String.format("MPI connection error. "
+				        + "Response code: %s, response message: %s, error stream: %n%s ", code,
 				    connection.getResponseMessage(), IOUtils.toString(connection.getErrorStream())));
 			}
 			response = getResponse(connection, parser);

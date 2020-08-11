@@ -68,13 +68,12 @@ public class PatientsBySimilarPatientSearchHandler implements SearchHandler {
 	
 	private static final String STATE = "state";
 	
-	private final SearchConfig searchConfig = new SearchConfig("registrationCoreFindSimilar",
-	        RestConstants.VERSION_1 + "/patient",
-	        Arrays.asList("1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.0.*", "2.1.*"),
+	private final SearchConfig searchConfig = new SearchConfig("registrationCoreFindSimilar", RestConstants.VERSION_1
+	        + "/patient", Arrays.asList("1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.0.*", "2.1.*"),
 	        Arrays.asList(new SearchQuery.Builder("Allows you to find similar patients")
-	                .withRequiredParameters(MATCH_SIMILAR).withOptionalParameters(GIVENNAME, FAMILYNAME, MIDDLENAME, GENDER,
-	                    BIRTHDATE, ADDRESS_1, ADDRESS_2, CITY, POSTALCODE, COUNTRY, STATE)
-	                .build()));
+	                .withRequiredParameters(MATCH_SIMILAR)
+	                .withOptionalParameters(GIVENNAME, FAMILYNAME, MIDDLENAME, GENDER, BIRTHDATE, ADDRESS_1, ADDRESS_2,
+	                    CITY, POSTALCODE, COUNTRY, STATE).build()));
 	
 	@Override
 	public SearchConfig getSearchConfig() {
@@ -90,8 +89,8 @@ public class PatientsBySimilarPatientSearchHandler implements SearchHandler {
 			RegistrationCoreService registrationCoreService = Context.getService(RegistrationCoreService.class);
 			List<Patient> patientList = new LinkedList<Patient>();
 			
-			List<PatientAndMatchQuality> patientAndMatchQualityList = registrationCoreService
-			        .findPreciseSimilarPatients(patient, null, 2d, 10);
+			List<PatientAndMatchQuality> patientAndMatchQualityList = registrationCoreService.findPreciseSimilarPatients(
+			    patient, null, 2d, 10);
 			for (PatientAndMatchQuality matches : patientAndMatchQualityList) {
 				patientList.add(matches.getPatient());
 			}

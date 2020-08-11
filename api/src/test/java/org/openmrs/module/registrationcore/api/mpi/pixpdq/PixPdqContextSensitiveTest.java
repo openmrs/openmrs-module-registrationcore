@@ -61,7 +61,8 @@ public class PixPdqContextSensitiveTest extends BaseRegistrationCoreSensitiveTes
 		String pixResponseString = "MSH|^~\\&|MESA_XREF|XYZ_HOSPITAL|OpenMRS|Demo|20180706150503-0400||ACK^A01|a0ad85c16470292a741|P|2.3.1\r"
 		        + "MSA|AA|3f0684d2-f4d1-4b4e-8608-29db94b497e3\r";
 		String pdqResponseString = "MSH|^~\\&|MESA_PD_SUPPLIER|XYZ_HOSPITAL|OpenMRS|Demo|20180706150504-0400||RSP^K22^RSP_K21|a0ad85c164702a18843|P|2.5\r"
-		        + "MSA|AA|b0e566cd-e9c5-4afc-bbf1-03c153c71553\r" + "QAK|cf4725fb-ce77-4b24-8cfa-f00c117d71ed|OK||1|1|0\r"
+		        + "MSA|AA|b0e566cd-e9c5-4afc-bbf1-03c153c71553\r"
+		        + "QAK|cf4725fb-ce77-4b24-8cfa-f00c117d71ed|OK||1|1|0\r"
 		        + "QPD|Q22^Find Candidates^HL7|cf4725fb-ce77-4b24-8cfa-f00c117d71ed|@PID.3.1^1000X1~@PID.3.4^2.16.840.1.113883.4.357\r"
 		        + "PID|1||1000X1^^^2.25.71280592878078638113873461180761116318&2.25.71280592878078638113873461180761116318&PI^PI~5c11da40-812f-11e8-8a2c-06c4d099933a^^^2.16.840.1.113883.4.357&2.16.840.1.113883.4.357&hl7^PI||familyN99^givenN99^^^^^L||19550311|F|||addr1^addr2^city^state^1234^country\r";
 		PDQ_RESPONSE = parser.parse(pdqResponseString);
@@ -95,8 +96,8 @@ public class PixPdqContextSensitiveTest extends BaseRegistrationCoreSensitiveTes
 	}
 	
 	/**
-	 * Note: Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient from
-	 * a provided patient
+	 * Note: Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient
+	 * from a provided patient
 	 * 
 	 * @see <a href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>
 	 */
@@ -114,8 +115,8 @@ public class PixPdqContextSensitiveTest extends BaseRegistrationCoreSensitiveTes
 	}
 	
 	/**
-	 * Note: Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient from
-	 * a provided patient
+	 * Note: Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient
+	 * from a provided patient
 	 * 
 	 * @see <a href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>
 	 */

@@ -19,8 +19,8 @@ public interface MpiAuthenticator {
 	void performAuthentication();
 	
 	/**
-	 * Returns token value if authentication was performed, otherwise performs authentication before,
-	 * and return token value.
+	 * Returns token value if authentication was performed, otherwise performs authentication
+	 * before, and return token value.
 	 * 
 	 * @return authentication token
 	 */

@@ -197,8 +197,7 @@ public class BasicSimilarPatientSearchAlgorithm implements SimilarPatientSearchA
 						matchedFields.add("names.familyName");
 					}
 					
-					double givenNameScore = countStartWithScoreForField(matchName.getGivenName(),
-					    patientName.getGivenName());
+					double givenNameScore = countStartWithScoreForField(matchName.getGivenName(), patientName.getGivenName());
 					if (givenNameScore != 0) {
 						matchedFields.add("names.givenName");
 						score += givenNameScore;

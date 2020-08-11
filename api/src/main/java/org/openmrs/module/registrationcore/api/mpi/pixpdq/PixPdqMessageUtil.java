@@ -121,8 +121,8 @@ public class PixPdqMessageUtil {
 		Set<PatientIdentifier> identifiers = patient.getIdentifiers();
 		if (identifiers != null && !identifiers.isEmpty()) {
 			for (PatientIdentifier patIdentifier : identifiers) {
-				String mappedMpiUuid = identifierMapper
-				        .getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType().getUuid());
+				String mappedMpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(patIdentifier.getIdentifierType()
+				        .getUuid());
 				if (StringUtils.isNotBlank(patIdentifier.getIdentifier()) && StringUtils.isNotBlank(mappedMpiUuid)) {
 					// We need to change the datatype so that it can have multiple with the same key
 					queryParams.add(new AbstractMap.SimpleEntry("@PID.3.1", patIdentifier.getIdentifier()));
@@ -226,12 +226,14 @@ public class PixPdqMessageUtil {
 					
 					PatientIdentifierType pit = null;
 					if (StringUtils.isNotBlank(id.getAssigningAuthority().getUniversalID().getValue())) {
-						pit = Context.getPatientService().getPatientIdentifierTypeByUuid(identifierMapper
-						        .getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getUniversalID().getValue()));
+						pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
+						    identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getUniversalID()
+						            .getValue()));
 					}
 					if (pit == null && StringUtils.isNotBlank(id.getAssigningAuthority().getNamespaceID().getValue())) {
-						pit = Context.getPatientService().getPatientIdentifierTypeByUuid(identifierMapper
-						        .getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getNamespaceID().getValue()));
+						pit = Context.getPatientService().getPatientIdentifierTypeByUuid(
+						    identifierMapper.getMappedLocalIdentifierTypeUuid(id.getAssigningAuthority().getNamespaceID()
+						            .getValue()));
 					}
 					if (pit == null) {
 						continue;
@@ -320,8 +322,8 @@ public class PixPdqMessageUtil {
 					PersonAttributeType momNameAtt = Context.getPersonService()
 					        .getPersonAttributeTypeByName("Mother's Name");
 					if (momNameAtt != null) {
-						PersonAttribute pa = new PersonAttribute(momNameAtt, String.format("%s, %s",
-						    momsName.getFamilyName().getSurname().getValue(), momsName.getGivenName().getValue()));
+						PersonAttribute pa = new PersonAttribute(momNameAtt, String.format("%s, %s", momsName
+						        .getFamilyName().getSurname().getValue(), momsName.getGivenName().getValue()));
 						patient.addAttribute(pa);
 					}
 				}
@@ -333,8 +335,8 @@ public class PixPdqMessageUtil {
 	}
 	
 	/**
-	 * Filter list of mpiPatients for mpiPatients with a specific identifier for a specific identifier
-	 * type
+	 * Filter list of mpiPatients for mpiPatients with a specific identifier for a specific
+	 * identifier type
 	 */
 	public List<MpiPatient> filterByIdentifierAndIdentifierType(List<MpiPatient> patients, String identifier,
 	        String identifierTypeUuid) {
@@ -447,8 +449,10 @@ public class PixPdqMessageUtil {
 		// Death
 		if (patient.getDead()) {
 			pid.getPatientDeathIndicator().setValue("Y");
-			pid.getPatientDeathDateAndTime().getTime().setDatePrecision(patient.getDeathDate().getYear(),
-			    patient.getDeathDate().getMonth(), patient.getDeathDate().getDay());
+			pid.getPatientDeathDateAndTime()
+			        .getTime()
+			        .setDatePrecision(patient.getDeathDate().getYear(), patient.getDeathDate().getMonth(),
+			            patient.getDeathDate().getDay());
 		}
 		
 		PersonName mother = new PersonName();

@@ -72,8 +72,8 @@ public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
 	}
 	
 	@Override
-	public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-	        Integer maxResults) {
+	public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints,
+	        Double cutoff, Integer maxResults) {
 		authenticateIfNeeded();
 		return searchAlgorithm.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
 	}

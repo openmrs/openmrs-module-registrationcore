@@ -112,18 +112,17 @@ public class OpenEmpiPatientFetcherTest extends BaseRegistrationCoreSensitiveTes
 		        "registrationcore.mpi.implementation.OpenEMPI"));
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_URL, "server.url"));
-		adminService.saveGlobalProperty(
-		    new GlobalProperty(RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID, PERSON_IDENTIFIER_TYPE_UUID));
+		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID,
+		        PERSON_IDENTIFIER_TYPE_UUID));
 		
-		adminService.saveGlobalProperty(new GlobalProperty(
-		        RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMRS_NAME,
-		        LOCAL_IDENTIFIER_TYPE_UUID_OPENMRS + ":" + MPI_IDENTIFIER_TYPE_ID_OPENMRS));
-		adminService.saveGlobalProperty(new GlobalProperty(
-		        RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMPI_NAME,
-		        LOCAL_IDENTIFIER_TYPE_UUID_OPENEMPI + ":" + MPI_IDENTIFIER_TYPE_ID_OPENEMPI));
-		adminService.saveGlobalProperty(
-		    new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_ECID_NAME,
-		            LOCAL_IDENTIFIER_TYPE_UUID_ECID + ":" + MPI_IDENTIFIER_TYPE_ID_ECID));
+		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP
+		        + MPI_IDENTIFIER_TYPE_OPENEMRS_NAME, LOCAL_IDENTIFIER_TYPE_UUID_OPENMRS + ":"
+		        + MPI_IDENTIFIER_TYPE_ID_OPENMRS));
+		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP
+		        + MPI_IDENTIFIER_TYPE_OPENEMPI_NAME, LOCAL_IDENTIFIER_TYPE_UUID_OPENEMPI + ":"
+		        + MPI_IDENTIFIER_TYPE_ID_OPENEMPI));
+		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP
+		        + MPI_IDENTIFIER_TYPE_ECID_NAME, LOCAL_IDENTIFIER_TYPE_UUID_ECID + ":" + MPI_IDENTIFIER_TYPE_ID_ECID));
 	}
 	
 	private void mockResTemplate() {
@@ -153,8 +152,9 @@ public class OpenEmpiPatientFetcherTest extends BaseRegistrationCoreSensitiveTes
 	
 	@SuppressWarnings("unchecked")
 	private void mockMpiResponse(Object response) {
-		when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class),
-		    eq(OpenEmpiPatientResult.class))).thenReturn(new ResponseEntity(response, HttpStatus.OK));
+		when(
+		    mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class),
+		        eq(OpenEmpiPatientResult.class))).thenReturn(new ResponseEntity(response, HttpStatus.OK));
 	}
 	
 	private void verifyRemoteMpiServerQuerying() {

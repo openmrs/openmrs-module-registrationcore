@@ -43,8 +43,8 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 	}
 	
 	@Override
-	public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-	        Integer maxResults) {
+	public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints,
+	        Double cutoff, Integer maxResults) {
 		return find(patient, maxResults);
 	}
 	
@@ -127,12 +127,15 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 						matchedFields.add("addresses.country");
 						score += 0.125;
 					}
-					if (personAddress.getCityVillage() != null && matchAddress.getCityVillage() != null && personAddress
-					        .getCityVillage().toLowerCase().equals(matchAddress.getCityVillage().toLowerCase())) {
+					if (personAddress.getCityVillage() != null
+					        && matchAddress.getCityVillage() != null
+					        && personAddress.getCityVillage().toLowerCase()
+					                .equals(matchAddress.getCityVillage().toLowerCase())) {
 						matchedFields.add("addresses.cityVillage");
 						score += 0.125;
 					}
-					if (personAddress.getCountyDistrict() != null && matchAddress.getCountyDistrict() != null
+					if (personAddress.getCountyDistrict() != null
+					        && matchAddress.getCountyDistrict() != null
 					        && personAddress.getCountyDistrict().toLowerCase()
 					                .equals(matchAddress.getCountyDistrict().toLowerCase())) {
 						matchedFields.add("addresses.countryDistrict");

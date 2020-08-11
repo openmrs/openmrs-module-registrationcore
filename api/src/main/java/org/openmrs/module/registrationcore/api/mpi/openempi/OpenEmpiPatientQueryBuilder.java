@@ -79,8 +79,8 @@ public class OpenEmpiPatientQueryBuilder {
 				setPersonIdentifier(identifier, query);
 				continue;
 			}
-			Integer mpiIdentifierTypeId = Integer
-			        .valueOf(identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid.toString()));
+			Integer mpiIdentifierTypeId = Integer.valueOf(identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid
+			        .toString()));
 			
 			if (mpiIdentifierTypeId != null) {
 				personIdentifiers.add(createPersonIdentifier(mpiIdentifierTypeId, identifier));

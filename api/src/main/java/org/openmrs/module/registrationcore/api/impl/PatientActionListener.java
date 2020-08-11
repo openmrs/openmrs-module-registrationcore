@@ -75,7 +75,8 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	}
 	
 	/**
-	 * Defines the list of classes that this subscribable event listener class listens for changes to.
+	 * Defines the list of classes that this subscribable event listener class listens for changes
+	 * to.
 	 * 
 	 * @return a list of classes that this can handle
 	 */
@@ -130,8 +131,8 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	}
 	
 	/**
-	 * Prepares the parameters required for sending the patient to the MPI (the message) via the error
-	 * handling module (specified in the global properties) in the case of initial failure.
+	 * Prepares the parameters required for sending the patient to the MPI (the message) via the
+	 * error handling module (specified in the global properties) in the case of initial failure.
 	 * 
 	 * @param patient patient to be sent to MPI
 	 * @return parameters as a string

@@ -18,8 +18,8 @@ public class MpiException extends APIException {
 	}
 	
 	/**
-	 * General constructor to give the end user a helpful message and to also propagate the parent error
-	 * exception message.
+	 * General constructor to give the end user a helpful message and to also propagate the parent
+	 * error exception message.
 	 * 
 	 * @param s helpful message string for the end user
 	 * @param throwable the parent exception cause that this MpiException is wrapping around

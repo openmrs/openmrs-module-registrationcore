@@ -118,8 +118,8 @@ public class OpenEmpiConnectorTest {
 	public void testFindPreciseSimilarPatients() throws Exception {
 		mockProbablyMatchingEnabled(false);
 		mockAuthentication(false);
-		when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
-		        .thenReturn(listPatients);
+		when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt())).thenReturn(
+		    listPatients);
 		
 		List<PatientAndMatchQuality> similarPatients = mpiProvider.findExactMatches(patient, otherDataPoints, cutoff,
 		    maxResults);
@@ -131,8 +131,8 @@ public class OpenEmpiConnectorTest {
 	@Test
 	public void testFindPreciseSimilarPatientsDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
 		mockAuthentication(true);
-		when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
-		        .thenReturn(listPatients);
+		when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt())).thenReturn(
+		    listPatients);
 		
 		mpiProvider.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
 		

@@ -68,10 +68,10 @@ public class PatientBuilderTest {
 	}
 	
 	private void mockIdentifierMapper() {
-		when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_OPENMRS_IDENTIFIER_TYPE_ID))
-		        .thenReturn(LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID);
-		when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_ECID_IDENTIFIER_TYPE_ID))
-		        .thenReturn(LOCAL_ECID_IDENTIFIER_TYPE_UUID);
+		when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_OPENMRS_IDENTIFIER_TYPE_ID)).thenReturn(
+		    LOCAL_OPENMRS_IDENTIFIER_TYPE_UUID);
+		when(identifierMapper.getMappedLocalIdentifierTypeUuid(MPI_ECID_IDENTIFIER_TYPE_ID)).thenReturn(
+		    LOCAL_ECID_IDENTIFIER_TYPE_UUID);
 	}
 	
 	private void mockIdentifierBuilder() {

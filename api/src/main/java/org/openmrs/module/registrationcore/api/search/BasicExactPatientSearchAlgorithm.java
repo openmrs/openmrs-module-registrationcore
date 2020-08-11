@@ -23,8 +23,7 @@ import org.springframework.stereotype.Service;
 /**
  * Implementation of SimilarPatientSearchAlgorithm that searches for:
  * <ul>
- * <li>Every name must exactly match (on each name component specified on the passed-in
- * patient)</li>
+ * <li>Every name must exactly match (on each name component specified on the passed-in patient)</li>
  * <li>Birthdate within 1 year</li>
  * <li>Same gender</li>
  * </ul>

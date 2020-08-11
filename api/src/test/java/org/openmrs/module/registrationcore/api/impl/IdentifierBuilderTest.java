@@ -139,8 +139,8 @@ public class IdentifierBuilderTest {
 	}
 	
 	private void mockPatientIdentifierType(PatientIdentifierType customMpiPatientIdentifierType) {
-		when(patientService.getPatientIdentifierTypeByUuid(PERSON_IDENTIFIER_TYPE_UUID))
-		        .thenReturn(customMpiPatientIdentifierType);
+		when(patientService.getPatientIdentifierTypeByUuid(PERSON_IDENTIFIER_TYPE_UUID)).thenReturn(
+		    customMpiPatientIdentifierType);
 	}
 	
 	@Test

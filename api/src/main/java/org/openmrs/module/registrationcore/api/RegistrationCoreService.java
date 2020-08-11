@@ -42,13 +42,14 @@ public interface RegistrationCoreService extends OpenmrsService {
 	
 	/**
 	 * Assigns an identifier to the patient and saves them in the database including the specified
-	 * relationships, the method always attempts to set the other side of each relationship therefore
-	 * callers of this method are required to set exactly one side
+	 * relationships, the method always attempts to set the other side of each relationship
+	 * therefore callers of this method are required to set exactly one side
 	 * 
 	 * @param patient the patient to save
 	 * @param relationships the relationships to save along with the patient
-	 * @param identifierLocation the location to set for the patient identifier, if not specified, it
-	 *            defaults to the system default locale see {@link LocationService#getDefaultLocation()}
+	 * @param identifierLocation the location to set for the patient identifier, if not specified,
+	 *            it defaults to the system default locale see
+	 *            {@link LocationService#getDefaultLocation()}
 	 * @return the created patient
 	 * @should create a patient from record with relationships
 	 * @should fire an event when a patient is registered
@@ -57,14 +58,15 @@ public interface RegistrationCoreService extends OpenmrsService {
 	public Patient registerPatient(Patient patient, List<Relationship> relationships, Location identifierLocation);
 	
 	/**
-	 * Creates patient and saves them in the database, setting their identifier as specified instead of
-	 * assigning automatically
+	 * Creates patient and saves them in the database, setting their identifier as specified instead
+	 * of assigning automatically
 	 * 
 	 * @param patient the patient to save
 	 * @param relationships the relationships to save along with the patient
 	 * @param identifierString the identifier to use for the patient
-	 * @param identifierLocation the location to set for the patient identifier, if not specified, it
-	 *            defaults to the system default locale see {@link LocationService#getDefaultLocation()}
+	 * @param identifierLocation the location to set for the patient identifier, if not specified,
+	 *            it defaults to the system default locale see
+	 *            {@link LocationService#getDefaultLocation()}
 	 * @return the created patient
 	 * @should create a patient from record with relationships
 	 * @should fire an event when a patient is registered
@@ -96,8 +98,8 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @param maxResults
 	 * @return the list
 	 */
-	List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
-	        Integer maxResults);
+	List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
+	        Double cutoff, Integer maxResults);
 	
 	/**
 	 * Returns a list of matching patients using the precise algorithm.
@@ -146,8 +148,8 @@ public interface RegistrationCoreService extends OpenmrsService {
 	MpiPatient findMpiPatient(String identifier, String identifierTypeUuid);
 	
 	/**
-	 * Import a specific patient by sending Query to MPI server to find patient with identifier and save
-	 * that patient to local DB.
+	 * Import a specific patient by sending Query to MPI server to find patient with identifier and
+	 * save that patient to local DB.
 	 * 
 	 * @param personId person identifier of patient which should be imported
 	 * @return Imported patient

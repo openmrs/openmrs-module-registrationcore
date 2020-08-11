@@ -83,8 +83,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 			log.debug("Looking up biometrics engine component: " + engineId);
 			engine = Context.getRegisteredComponent(engineId, BiometricEngine.class);
 			if (engine == null) {
-				throw new IllegalStateException(
-				        propertyName + " must point to a bean implementing BiometricEngine. " + engineId + " is not valid.");
+				throw new IllegalStateException(propertyName + " must point to a bean implementing BiometricEngine. "
+				        + engineId + " is not valid.");
 			}
 		}
 		return engine;
@@ -123,8 +123,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 	 * @return
 	 */
 	public Integer getPdqPort() {
-		return Integer
-		        .valueOf(Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PDQ_PORT));
+		return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
+		    RegistrationCoreConstants.GP_MPI_PDQ_PORT));
 	}
 	
 	public String getPixEndpoint() {
@@ -132,8 +132,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 	}
 	
 	public Integer getPixPort() {
-		return Integer
-		        .valueOf(Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PIX_PORT));
+		return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
+		    RegistrationCoreConstants.GP_MPI_PIX_PORT));
 	}
 	
 	public String getMpiUsername() {

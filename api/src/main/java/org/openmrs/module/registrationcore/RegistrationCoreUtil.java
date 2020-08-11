@@ -13,16 +13,16 @@ public class RegistrationCoreUtil {
 	private static final Log log = LogFactory.getLog(RegistrationCoreUtil.class);
 	
 	/**
-	 * Converts an age (specified in year, month, and day) to a birthdate. You can specify the specific
-	 * date to calculate the age from, or, if not specified, today's date is used. Year, month, or day
-	 * can all be left blank. Note that if only a year is specified, the month/day is set to January 1
-	 * or the month specified by the
+	 * Converts an age (specified in year, month, and day) to a birthdate. You can specify the
+	 * specific date to calculate the age from, or, if not specified, today's date is used. Year,
+	 * month, or day can all be left blank. Note that if only a year is specified, the month/day is
+	 * set to January 1 or the month specified by the
 	 * 
-	 * @see RegistrationCoreConstants#GP_BIRTHDATE_ESTIMATION_START_MONTH global property if specified;
-	 *      If only the month (or the month and year) is specified, the day is set to the first day of
-	 *      the month For example, if ageOnDate is set to April 3, 2010, and someone is said to be 10
-	 *      years old, the method would return January 1, 2000; if someone is said to be 2 months old,
-	 *      the method would return February 1, 2000
+	 * @see RegistrationCoreConstants#GP_BIRTHDATE_ESTIMATION_START_MONTH global property if
+	 *      specified; If only the month (or the month and year) is specified, the day is set to the
+	 *      first day of the month For example, if ageOnDate is set to April 3, 2010, and someone is
+	 *      said to be 10 years old, the method would return January 1, 2000; if someone is said to
+	 *      be 2 months old, the method would return February 1, 2000
 	 */
 	public static Date calculateBirthdateFromAge(Integer years, Integer months, Integer days, Date ageOnDate) {
 		Calendar c = Calendar.getInstance();
@@ -57,8 +57,8 @@ public class RegistrationCoreUtil {
 	 */
 	public static int getEstimationStartMonth() {
 		int startMonth = Calendar.JANUARY;
-		String gpStartMonth = Context.getAdministrationService()
-		        .getGlobalProperty(RegistrationCoreConstants.GP_BIRTHDATE_ESTIMATION_START_MONTH);
+		String gpStartMonth = Context.getAdministrationService().getGlobalProperty(
+		    RegistrationCoreConstants.GP_BIRTHDATE_ESTIMATION_START_MONTH);
 		if (StringUtils.isNotBlank(gpStartMonth)) {
 			try {
 				startMonth = Integer.parseInt(gpStartMonth);

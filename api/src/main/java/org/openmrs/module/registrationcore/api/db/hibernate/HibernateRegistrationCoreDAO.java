@@ -56,8 +56,9 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
 			return results;
 		}
 		
-		Query query = sessionFactory.getCurrentSession().createQuery("select givenName from PersonName where voided = 0 and "
-		        + "givenName like :query group by givenName having count(*) > 3 order by count(*) desc");
+		Query query = sessionFactory.getCurrentSession().createQuery(
+		    "select givenName from PersonName where voided = 0 and "
+		            + "givenName like :query group by givenName having count(*) > 3 order by count(*) desc");
 		query.setString("query", "%" + searchPhrase + "%");
 		
 		List<Object> rows = query.list();
@@ -78,9 +79,9 @@ public class HibernateRegistrationCoreDAO implements RegistrationCoreDAO {
 			return results;
 		}
 		
-		Query query = sessionFactory.getCurrentSession()
-		        .createQuery("select familyName from PersonName where voided = 0 and "
-		                + "familyName like :query group by familyName having count(*) > 3 order by count(*) desc");
+		Query query = sessionFactory.getCurrentSession().createQuery(
+		    "select familyName from PersonName where voided = 0 and "
+		            + "familyName like :query group by familyName having count(*) > 3 order by count(*) desc");
 		query.setString("query", "%" + searchPhrase + "%");
 		
 		List<Object> rows = query.list();

@@ -97,7 +97,7 @@ public class OpenEmpiPatientResultBuilderTest {
 	}
 	
 	private void mockIdentifierMapper() {
-		when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_UUID))
-		        .thenReturn(MPI_IDENTIFIER_TYPE_ID.toString());
+		when(identifierMapper.getMappedMpiIdentifierTypeId(LOCAL_IDENTIFIER_TYPE_UUID)).thenReturn(
+		    MPI_IDENTIFIER_TYPE_ID.toString());
 	}
 }

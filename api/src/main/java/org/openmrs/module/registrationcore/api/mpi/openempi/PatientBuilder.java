@@ -91,8 +91,8 @@ public class PatientBuilder {
 			String mpiIdentifierTypeName = identifier.getIdentifierDomain().getIdentifierDomainName();
 			Integer mpiIdentifierTypeId = identifier.getIdentifierDomain().getIdentifierDomainId();
 			
-			String localIdentifierTypeUuid = identifierMapper
-			        .getMappedLocalIdentifierTypeUuid(mpiIdentifierTypeId.toString());
+			String localIdentifierTypeUuid = identifierMapper.getMappedLocalIdentifierTypeUuid(mpiIdentifierTypeId
+			        .toString());
 			String identifierValue = identifier.getIdentifier();
 			PatientIdentifier patientIdentifier = createIdentifier(mpiIdentifierTypeName, localIdentifierTypeUuid,
 			    identifierValue);

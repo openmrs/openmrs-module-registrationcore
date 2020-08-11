@@ -181,8 +181,8 @@ public class RestQueryExecutorTest {
 	private void mockServerResponse(Object body, Class<?> value) {
 		response = mock(ResponseEntity.class);
 		when(response.getBody()).thenReturn(body);
-		when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), eq(value)))
-		        .thenReturn(response);
+		when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), eq(value))).thenReturn(
+		    response);
 	}
 	
 	private MpiCredentials createCredentials() {

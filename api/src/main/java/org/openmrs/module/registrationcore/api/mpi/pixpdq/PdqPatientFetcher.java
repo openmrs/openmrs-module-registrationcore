@@ -58,10 +58,9 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 				return null;
 			}
 			if (mpiPatients.size() != 1) {
-				throw new MpiException(String.format(
-				    "Created patient not uniquely identified in mpi! "
-				            + "There are %d patients with identifier %s of identifier type %s",
-				    mpiPatients.size(), patientIdentifier, identifierTypeUuid));
+				throw new MpiException(String.format("Created patient not uniquely identified in mpi! "
+				        + "There are %d patients with identifier %s of identifier type %s", mpiPatients.size(),
+				    patientIdentifier, identifierTypeUuid));
 			}
 			return mpiPatients.get(0);
 		}

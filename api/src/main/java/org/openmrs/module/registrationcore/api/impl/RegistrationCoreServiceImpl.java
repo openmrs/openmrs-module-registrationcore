@@ -316,8 +316,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		matches.addAll(localMatches);
 		
 		if (registrationCoreProperties.isMpiEnabled()) {
-			List<PatientAndMatchQuality> mpiMatches = registrationCoreProperties.getMpiProvider().findSimilarMatches(patient,
-			    otherDataPoints, cutoff, maxResults);
+			List<PatientAndMatchQuality> mpiMatches = registrationCoreProperties.getMpiProvider().findSimilarMatches(
+			    patient, otherDataPoints, cutoff, maxResults);
 			matches.addAll(mpiMatches);
 			
 			mpiPatientFilter.filter(matches);
@@ -420,10 +420,9 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		Patient savedPatient = null;
 		try {
 			if (foundPatient == null) {
-				throw new MpiException(String.format(
-				    "Error during importing Patient from MPI. "
-				            + "Patient ID: %s of identifier type: %s has not been found in MPI",
-				    patientIdentifier, patientIdentifierTypeUuid));
+				throw new MpiException(String.format("Error during importing Patient from MPI. "
+				        + "Patient ID: %s of identifier type: %s has not been found in MPI", patientIdentifier,
+				    patientIdentifierTypeUuid));
 			}
 			savedPatient = persistImportedMpiPatient(foundPatient);
 		}
@@ -455,7 +454,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	/**
 	 * Prepares the string of parameters required by the retrying service in the error handler
 	 * 
-	 * @param identifier identifier for patient that is to be fetched by the retry service from the MPI
+	 * @param identifier identifier for patient that is to be fetched by the retry service from the
+	 *            MPI
 	 * @param identifierTypeUuid uuid of the identifier type for the identifier provided
 	 * @return parameters in the form of a string
 	 */
@@ -476,8 +476,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	 * @return local patient object of saved MPI patient
 	 */
 	private Patient persistImportedMpiPatient(MpiPatient mpiPatient) {
-		PatientIdentifierType openMrsIdType = patientService
-		        .getPatientIdentifierTypeByUuid(registrationCoreProperties.getOpenMrsIdentifierUuid());
+		PatientIdentifierType openMrsIdType = patientService.getPatientIdentifierTypeByUuid(registrationCoreProperties
+		        .getOpenMrsIdentifierUuid());
 		if (mpiPatient.getPatientIdentifier(openMrsIdType) == null) {
 			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
 			mpiPatient.addIdentifier(localId);
@@ -511,8 +511,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 		
 		// see if there is a primary identifier location further up the chain, use that instead if there is
-		Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(
-		    identifierLocation);
+		Location identifierAssignmentLocationAssociatedWith = getIdentifierAssignmentLocationAssociatedWith(identifierLocation);
 		if (identifierAssignmentLocationAssociatedWith != null) {
 			identifierLocation = identifierAssignmentLocationAssociatedWith;
 		}
@@ -561,8 +560,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			if (idType != null) {
 				log.debug("Saving biometrics as a patient identifier of type: " + idType.getName());
 				
-				BiometricSubject existingSubject = (subject.getSubjectId() == null ? null
-				        : biometricEngine.lookup(subject.getSubjectId()));
+				BiometricSubject existingSubject = (subject.getSubjectId() == null ? null : biometricEngine.lookup(subject
+				        .getSubjectId()));
 				if (existingSubject == null) {
 					subject = biometricEngine.enroll(subject);
 					log.debug("Enrolled new biometric subject: " + subject.getSubjectId());
