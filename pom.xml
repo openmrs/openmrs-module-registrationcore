@@ -42,7 +42,7 @@
 	<properties>
 		<openmrsPlatformVersion>1.10.5</openmrsPlatformVersion>
 		<idgenVersion>4.3</idgenVersion>
-		<eventVersion>2.3</eventVersion>
+		<eventVersion>2.8.0</eventVersion>
 		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jodaTimeVersion>2.2</jodaTimeVersion>
@@ -106,20 +106,6 @@
 			<dependency>
 				<groupId>org.openmrs</groupId>
 				<artifactId>event-api</artifactId>
-				<version>${eventVersion}</version>
-				<type>jar</type>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.openmrs</groupId>
-				<artifactId>event-api-1.x</artifactId>
-				<version>${eventVersion}</version>
-				<type>jar</type>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.openmrs</groupId>
-				<artifactId>event-api-2.x</artifactId>
 				<version>${eventVersion}</version>
 				<type>jar</type>
 				<scope>provided</scope>
