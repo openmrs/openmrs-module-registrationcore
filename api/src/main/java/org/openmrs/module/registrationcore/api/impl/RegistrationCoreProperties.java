@@ -136,8 +136,12 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 		    RegistrationCoreConstants.GP_MPI_PIX_PORT));
 	}
 	
+	private String getApplicationName() {
+		return Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.APPLICATION_NAME);
+	}
+	
 	public String getMpiUsername() {
-		Properties props = OpenmrsUtil.getRuntimeProperties(null);
+		Properties props = OpenmrsUtil.getRuntimeProperties(getApplicationName());
 		String username = props.getProperty(RegistrationCoreConstants.RTP_MPI_ACCESS_USERNAME);
 		if (StringUtils.isBlank(username)) {
 			log.error("MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");
@@ -146,7 +150,7 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 	}
 	
 	public String getMpiPassword() {
-		Properties props = OpenmrsUtil.getRuntimeProperties(null);
+		Properties props = OpenmrsUtil.getRuntimeProperties(getApplicationName());
 		String password = props.getProperty(RegistrationCoreConstants.RTP_MPI_ACCESS_PASSWORD);
 		if (StringUtils.isBlank(password)) {
 			log.error("MPI Username is not defined in .OpenMRS/openmrs-runtime.properties file. Unable to authenticate.");

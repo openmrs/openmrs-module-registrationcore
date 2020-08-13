@@ -102,4 +102,5 @@ public final class RegistrationCoreConstants {
 	
 	public static final String GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pdq.errorHandler.implementation";
 	
+	public static final String APPLICATION_NAME = "registrationcore.application.name";
 }
