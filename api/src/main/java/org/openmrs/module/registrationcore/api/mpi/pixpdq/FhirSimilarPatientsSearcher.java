@@ -13,6 +13,7 @@ import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.santedb.mpiclient.api.MpiClientService;
+import org.openmrs.module.santedb.mpiclient.api.impl.MpiClientServiceImpl;
 import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,25 +40,37 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
 
+        log.error("Preparing to do the search!!!");
+
         List<Patient> retVal = new LinkedList<Patient>();
         try {
-            MpiClientService mpiClientService = Context.getService(MpiClientService.class);
+            log.error("Instantiation the service equivalent");
+            MpiClientService mpiClientService = new MpiClientServiceImpl();
+            log.error("Fetching the records.....");
             List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
-            retVal.addAll(mpiPatients);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Error in FHIR Search", e);
-            ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
-            if (errorHandler != null) {
-                errorHandler.handle(e.getMessage(),
-                        "org.openmrs.module.registrationcore.api.mpi.pixpdq.FhirSimilarPatientsSearcher",
-                        true, ExceptionUtils.getFullStackTrace(e));
-            }
-        }
+//            MpiClientService mpiClientService = Context.getService(MpiClientService.class);
+//            List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
 
-        if (maxResults != null && retVal.size() > maxResults) {
-            retVal = retVal.subList(0, maxResults);
+            log.error("Mapping the records....");
+            for (MpiPatient mp : mpiPatients) {
+                retVal.add(mp.toPatient());
+            }
+//
+        } catch (Exception e) {
+//            e.printStackTrace();
+            log.error("Error in FHIR Search", e);
+            log.error(ExceptionUtils.getFullStackTrace(e));
+//            ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
+//            if (errorHandler != null) {
+//                errorHandler.handle(e.getMessage(),
+//                        "org.openmrs.module.registrationcore.api.mpi.pixpdq.FhirSimilarPatientsSearcher",
+//                        true, ExceptionUtils.getFullStackTrace(e));
+//            }
         }
+//
+//        if (maxResults != null && retVal.size() > maxResults) {
+//            retVal = retVal.subList(0, maxResults);
+//        }
 
         return toMatchList(patient, retVal);
     }
