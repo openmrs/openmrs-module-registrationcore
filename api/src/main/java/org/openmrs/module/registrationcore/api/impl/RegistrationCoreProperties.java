@@ -3,6 +3,7 @@ package org.openmrs.module.registrationcore.api.impl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.EncounterRole;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
@@ -168,5 +169,14 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         String handlerId = getProperty(propertyName);
         log.debug("Looking up component: " + handlerId);
         return Context.getRegisteredComponent(handlerId, type);
+    }
+
+    public String getRegistrationEncounterTypeUuid() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_REG_ENCOUNTER_UUID, "873f968a-73a8-4f9c-ac78-9f4778b751b6");
+    }
+
+    public EncounterRole getRegistrationEncounterRole() {
+        return Context.getEncounterService().getEncounterRoleByUuid("240b26f9-dd88-4172-823d-4a8bfeb7841f");
     }
 }

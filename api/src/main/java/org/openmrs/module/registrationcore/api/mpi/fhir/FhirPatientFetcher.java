@@ -1,36 +1,22 @@
-package org.openmrs.module.registrationcore.api.mpi.pixpdq;
+package org.openmrs.module.registrationcore.api.mpi.fhir;
 
-import ca.uhn.hl7v2.model.Message;
-import java.util.List;
-
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
+import org.openmrs.module.santedb.mpiclient.api.MpiClientService;
+import org.openmrs.module.santedb.mpiclient.configuration.MpiClientConfiguration;
 import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.util.CollectionUtils;
-
-public class PdqPatientFetcher implements MpiPatientFetcher {
-
-    @Autowired
-    @Qualifier("registrationcore.mpiPixPdqMessageUtil")
-    private PixPdqMessageUtil pixPdqMessageUtil;
-
-    @Autowired
-    @Qualifier("registrationcore.Hl7SenderHolder")
-    private Hl7SenderHolder hl7SenderHolder;
+public class FhirPatientFetcher implements MpiPatientFetcher {
 
     @Autowired
     private PatientIdentifierMapper identifierMapper;
@@ -42,29 +28,27 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
 
     @Override
     public Patient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {
-        String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid);
-
-        Map<String, String> queryParams = new HashMap<String, String>();
-        queryParams.put("@PID.3.1", patientIdentifier);
-        queryParams.put("@PID.3.4", mpiUuid);
-
         try {
-            Message pdqRequest = pixPdqMessageUtil.createPdqMessage(queryParams);
-            Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
-
-            List<Patient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
-            if (CollectionUtils.isEmpty(mpiPatients)) {
-                return null;
-            }
-            return toPatientFromMpiPatient(mpiPatients.get(0));
+            MpiClientService service = Context.getService(MpiClientService.class);
+            MpiClientConfiguration config = MpiClientConfiguration.getInstance();
+            Patient patient = service.getPatient(patientIdentifier, config.getEnterprisePatientIdRoot()).toPatient();
+            return patient;
         } catch(Exception e) {
             throw new MpiException("Error in PDQ fetch by identifier", e);
         }
     }
 
+
     @Override
-    public MpiPatient fetchMpiPatientWithObservations(String patientId, String identifierTypeUuid) {
-        throw new NotImplementedException("Method fetchMpiPatientWithObservations for PdqPatientFetcher is not implemented yet");
+    public MpiPatient fetchMpiPatientWithObservations(String patientIdentifier, String identifierTypeUuid) {
+        try {
+            MpiClientService service = Context.getService(MpiClientService.class);
+            MpiClientConfiguration config = MpiClientConfiguration.getInstance();
+            MpiPatient mpiPatient = service.getPatient(patientIdentifier, config.getEnterprisePatientIdRoot());
+            return mpiPatient;
+        } catch(Exception e) {
+            throw new MpiException("Error in PDQ fetch by identifier", e);
+        }
     }
 
     @Override
