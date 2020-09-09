@@ -40,6 +40,7 @@
 		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xdsSenderVersion>1.0.0</xdsSenderVersion>
+		<mpiClientVersion>1.0.0-SNAPSHOT</mpiClientVersion>
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
 		<apacheHttpClientVersion>4.5</apacheHttpClientVersion>
 		<jodaTimeVersion>2.2</jodaTimeVersion>
@@ -150,6 +151,13 @@
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>xds-sender-api</artifactId>
 				<version>${xdsSenderVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>santedb-mpiclient-api</artifactId>
+				<version>${mpiClientVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 

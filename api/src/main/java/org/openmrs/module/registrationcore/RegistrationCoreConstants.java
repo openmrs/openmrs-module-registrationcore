@@ -72,6 +72,8 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_MPI_PIX_ENDPOINT= "registrationcore.mpi.pixEndpoint";
 
+	public static final String GP_MPI_FHIR_ENDPOINT= "registrationcore.mpi.fhirEndpoint";
+
 	public static final String GP_MPI_PIX_PORT = "registrationcore.mpi.pixPort";
 
 	public static final String GP_MPI_SENDING_APPLICATION = "registrationcore.mpi.sendingApplication";
@@ -98,7 +100,7 @@ public final class RegistrationCoreConstants {
 	public static final String GP_MPI_PIX_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pix.errorHandler.implementation";
 	
 	public static final String GP_MPI_PDQ_ERROR_HANDLER_IMPLEMENTATION = "registrationcore.mpi.pdq.errorHandler.implementation";
-	
+
 	public static final String MPI_IDENTIFIER_TYPE_ECID_NAME = "ECID";
 
 	public static final String LOCAL_FINGERPRINT_NAME = "localFingerprint";

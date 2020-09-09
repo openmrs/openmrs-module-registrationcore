@@ -333,6 +333,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				.findSimilarPatients(patient, otherDataPoints, cutoff, maxResults);
 		matches.addAll(localMatches);
 
+//		Check if the MPI (CR) is configured and search for/extract similar patients from it.
 		if (registrationCoreProperties.isMpiEnabled()) {
 			List<PatientAndMatchQuality> mpiMatches = registrationCoreProperties.getMpiProvider()
 					.findSimilarMatches(patient, otherDataPoints, cutoff, maxResults);
