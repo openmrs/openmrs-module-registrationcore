@@ -52,8 +52,17 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 //            List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
 
             log.error("Mapping the records....");
+
             for (MpiPatient mp : mpiPatients) {
-                retVal.add(mp.toPatient());
+                org.openmrs.module.registrationcore.api.mpi.common.MpiPatient mpiPatientExtract = new org.openmrs.module.registrationcore.api.mpi.common.MpiPatient();
+                mpiPatientExtract.setId(mp.getId());
+                mpiPatientExtract.setUuid(mp.getUuid());
+                mpiPatientExtract.setBirthdate(mp.getBirthdate());
+                mpiPatientExtract.setDead(mp.isDead());
+                mpiPatientExtract.setGender(mp.getGender());
+                PersonName pn = new PersonName(mp.getGivenName(),mp.getMiddleName(),mp.getFamilyName());
+                mpiPatientExtract.addName(pn);
+                retVal.add(mpiPatientExtract);
             }
 //
         } catch (Exception e) {
@@ -68,17 +77,22 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 //            }
         }
 //
-//        if (maxResults != null && retVal.size() > maxResults) {
-//            retVal = retVal.subList(0, maxResults);
-//        }
+        log.error("Mapping the records....In total we have : "+retVal.size());
+
+        if (maxResults != null && retVal.size() > maxResults) {
+            retVal = retVal.subList(0, maxResults);
+        }
 
         return toMatchList(patient, retVal);
     }
 
     private List<PatientAndMatchQuality> toMatchList(Patient patient, List<Patient> patients) {
+        log.error("Inside toMatch List method................................................................................");
+
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 
         for (Patient match : patients) {
+            log.error(match.toString());
             List<String> matchedFields = new ArrayList<String>();
             Double score = 0.0;
 
