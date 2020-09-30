@@ -43,22 +43,18 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
         List<Patient> retVal = new LinkedList<Patient>();
         try {
-            MpiClientService mpiClientService = new MpiClientServiceImpl();
+            MpiClientService mpiClientService = Context.getService(MpiClientService.class);
             List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
-//            MpiClientService mpiClientService = Context.getService(MpiClientService.class);
-//            List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
 
             for (MpiPatient mp : mpiPatients) {
                 org.openmrs.module.registrationcore.api.mpi.common.MpiPatient mpiPatientExtract = new org.openmrs.module.registrationcore.api.mpi.common.MpiPatient();
-                mpiPatientExtract.setId(mp.getId());
-                mpiPatientExtract.setUuid(mp.getUuid());
+                mpiPatientExtract.setIdentifiers(mp.getIdentifiers());
                 mpiPatientExtract.setBirthdate(mp.getBirthdate());
                 mpiPatientExtract.setDead(mp.isDead());
                 mpiPatientExtract.setGender(mp.getGender());
-                log.error("Setting the location===========================================>"+mp.getSourceLocation());
                 mpiPatientExtract.setSourceLocation(mp.getSourceLocation());
-                PersonName pn = new PersonName(mp.getGivenName(),mp.getMiddleName(),mp.getFamilyName());
-                mpiPatientExtract.addName(pn);
+                mpiPatientExtract.setNames(mp.getNames());
+                mpiPatientExtract.setAddresses(mp.getAddresses());
                 retVal.add(mpiPatientExtract);
             }
 //
@@ -69,7 +65,7 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 //            ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
 //            if (errorHandler != null) {
 //                errorHandler.handle(e.getMessage(),
-//                        "org.openmrs.module.registrationcore.api.mpi.pixpdq.FhirSimilarPatientsSearcher",
+//                        "org.openmrs.module.registrationcore.api.mpi.fhir.FhirSimilarPatientsSearcher",
 //                        true, ExceptionUtils.getFullStackTrace(e));
 //            }
         }
@@ -86,7 +82,7 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     private List<PatientAndMatchQuality> toMatchList(Patient patient, List<Patient> patients) {
         log.error("Inside toMatch List method................................................................................");
 
-        List<PatientAndMatchQuality> matchList = new ArrayList<>();
+        List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 
         for (Patient match : patients) {
             log.error(match.toString());
