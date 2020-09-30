@@ -7,6 +7,7 @@ import org.openmrs.Patient;
  * implies.
  */
 public class MpiPatient extends Patient {
+    private String sourceLocation;
 
     /**
      * Checks if patients is MpiPatient
@@ -14,5 +15,13 @@ public class MpiPatient extends Patient {
      */
     public boolean getMpiPatient() {
         return true;
+    }
+
+    public String getSourceLocation() {
+        return sourceLocation;
+    }
+
+    public void setSourceLocation(String sourceLocation) {
+        this.sourceLocation = sourceLocation;
     }
 }
