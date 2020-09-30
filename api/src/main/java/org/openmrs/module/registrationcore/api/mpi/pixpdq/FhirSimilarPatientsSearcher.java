@@ -40,18 +40,13 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
 
-        log.error("Preparing to do the search!!!");
 
         List<Patient> retVal = new LinkedList<Patient>();
         try {
-            log.error("Instantiation the service equivalent");
             MpiClientService mpiClientService = new MpiClientServiceImpl();
-            log.error("Fetching the records.....");
             List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
 //            MpiClientService mpiClientService = Context.getService(MpiClientService.class);
 //            List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
-
-            log.error("Mapping the records....");
 
             for (MpiPatient mp : mpiPatients) {
                 org.openmrs.module.registrationcore.api.mpi.common.MpiPatient mpiPatientExtract = new org.openmrs.module.registrationcore.api.mpi.common.MpiPatient();
@@ -60,6 +55,8 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
                 mpiPatientExtract.setBirthdate(mp.getBirthdate());
                 mpiPatientExtract.setDead(mp.isDead());
                 mpiPatientExtract.setGender(mp.getGender());
+                log.error("Setting the location===========================================>"+mp.getSourceLocation());
+                mpiPatientExtract.setSourceLocation(mp.getSourceLocation());
                 PersonName pn = new PersonName(mp.getGivenName(),mp.getMiddleName(),mp.getFamilyName());
                 mpiPatientExtract.addName(pn);
                 retVal.add(mpiPatientExtract);
@@ -89,7 +86,7 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     private List<PatientAndMatchQuality> toMatchList(Patient patient, List<Patient> patients) {
         log.error("Inside toMatch List method................................................................................");
 
-        List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
+        List<PatientAndMatchQuality> matchList = new ArrayList<>();
 
         for (Patient match : patients) {
             log.error(match.toString());
