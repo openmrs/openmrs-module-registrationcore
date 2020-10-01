@@ -60,6 +60,10 @@ import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.registrationcore.api.search.PatientNameSearch;
 import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgorithm;
 import org.openmrs.module.registrationcore.api.xdssender.XdsCcdImporter;
+import org.openmrs.module.santedb.mpiclient.api.MpiClientService;
+import org.openmrs.module.santedb.mpiclient.exception.MpiClientException;
+import org.openmrs.module.santedb.mpiclient.model.MpiPatientExport;
+import org.openmrs.serialization.SerializationException;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,19 +86,19 @@ import java.util.Map;
  */
 @Transactional
 public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements RegistrationCoreService, GlobalPropertyListener, ApplicationContextAware {
-	
+
 	protected final Log log = LogFactory.getLog(this.getClass());
-	
+
 	private ApplicationContext applicationContext;
-	
+
 	private RegistrationCoreDAO dao;
-	
+
 	private PatientService patientService;
-	
+
 	private PersonService personService;
-	
+
 	private LocationService locationService;
-	
+
 	private AdministrationService adminService;
 
 	private static IdentifierSource idSource;
@@ -115,25 +119,25 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
-	
+
 	public void setDao(RegistrationCoreDAO dao) {
 		this.dao = dao;
 	}
-	
+
 	/**
 	 * @return the dao
 	 */
 	public RegistrationCoreDAO getDao() {
 		return dao;
 	}
-	
+
 	public void setPatientService(PatientService patientService) {
 		this.patientService = patientService;
 	}
 
-    public void setLocationService(LocationService locationService) {
-        this.locationService = locationService;
-    }
+	public void setLocationService(LocationService locationService) {
+		this.locationService = locationService;
+	}
 
 	public void setPersonService(PersonService personService) {
 		this.personService = personService;
@@ -209,7 +213,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		//TODO fix this when creating a patient from a person is possible
 		boolean wasAPerson = patient.getPersonId() != null;
-		
+
 		patient = patientService.savePatient(patient);
 
 		List<Relationship> relationships = registrationData.getRelationships();
@@ -231,7 +235,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			saveBiometricsForPatient(patient, biometricData);
 		}
 		DateFormat df = new SimpleDateFormat(RegistrationCoreConstants.DATE_FORMAT_STRING);
-		
+
 		EventMessage eventMessage = new EventMessage();
 		eventMessage.put(RegistrationCoreConstants.KEY_PATIENT_UUID, patient.getUuid());
 		eventMessage.put(RegistrationCoreConstants.KEY_REGISTERER_UUID, patient.getCreator().getUuid());
@@ -258,7 +262,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
         }
         return null;
     }
-	
+
 	/**
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyChanged(org.openmrs.GlobalProperty)
 	 */
@@ -266,7 +270,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void globalPropertyChanged(GlobalProperty gp) {
 		idSource = null;
 	}
-	
+
 	/**
 	 * @see org.openmrs.api.GlobalPropertyListener#globalPropertyDeleted(java.lang.String)
 	 */
@@ -274,11 +278,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public void globalPropertyDeleted(String gpName) {
 		idSource = null;
 	}
-	
+
 	private SimilarPatientSearchAlgorithm getFastSimilarPatientSearchAlgorithm() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_FAST_SIMILAR_PATIENT_SEARCH_ALGORITHM,
 		    "registrationcore.BasicSimilarPatientSearchAlgorithm");
-		
+
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof SimilarPatientSearchAlgorithm) {
 			return (SimilarPatientSearchAlgorithm) bean;
@@ -287,11 +291,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			        + " must point to " + "a bean implementing SimilarPatientSearchAlgorithm");
 		}
 	}
-	
+
 	private SimilarPatientSearchAlgorithm getPreciseSimilarPatientSearchAlgorithm() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PRECISE_SIMILAR_PATIENT_SEARCH_ALGORITHM,
 		    "registrationcore.BasicExactPatientSearchAlgorithm");
-		
+
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof SimilarPatientSearchAlgorithm) {
 			return (SimilarPatientSearchAlgorithm) bean;
@@ -300,11 +304,11 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			        + " must point to " + "a bean implementing SimilarPatientSearchAlgorithm");
 		}
 	}
-	
+
 	private PatientNameSearch getPatientNameSearch() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
 		    "registrationcore.BasicPatientNameSearch");
-		
+
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof PatientNameSearch) {
 			return (PatientNameSearch) bean;
@@ -313,7 +317,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			        + "a bean implementing PatientNameSearch");
 		}
 	}
-	
+
 	/**
 	 * @see org.openmrs.api.GlobalPropertyListener#supportsPropertyName(java.lang.String)
 	 */
@@ -322,7 +326,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public boolean supportsPropertyName(String gpName) {
 		return RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID.equals(gpName);
 	}
-	
+
 	@Override
     @Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findFastSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
@@ -344,7 +348,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return matches;
 	}
-	
+
 	@Override
     @Transactional(readOnly = true)
 	public List<PatientAndMatchQuality> findPreciseSimilarPatients(Patient patient, Map<String, Object> otherDataPoints,
@@ -365,7 +369,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 		return matches;
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarGivenNames(String)
 	 */
@@ -374,7 +378,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	public List<String> findSimilarGivenNames(String searchPhrase) {
 		return getPatientNameSearch().findSimilarGivenNames(searchPhrase);
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.registrationcore.api.RegistrationCoreService#findSimilarFamilyNames(String)
 	 */
@@ -421,17 +425,34 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 								+ "Patient ID: %s of identifier type: %s has not been found in MPI",
 						patientIdentifier, patientIdentifierTypeUuid));
 			}
-			savedPatientUuid = persistImportedMpiPatient(foundPatient);
+			if(foundPatient!=null){
+
+				Patient savedPatient = persistImportedMpiPatient(foundPatient);
+
+				exportPatient(savedPatient);
+				savedPatientUuid = savedPatient.getUuid();
+			}
 		} catch (RuntimeException e) {
-			servePdqExceptionAndThrowAgain(e,
-					prepareParameters(patientIdentifier, patientIdentifierTypeUuid),
-					PdqErrorHandlingService.PERSIST_MPI_PATIENT_DESTINATION);
+//			servePdqExceptionAndThrowAgain(e,
+//					prepareParameters(patientIdentifier, patientIdentifierTypeUuid),
+//					PdqErrorHandlingService.PERSIST_MPI_PATIENT_DESTINATION);
+			log.error(ExceptionUtils.getFullStackTrace(e));
 		}
 		return savedPatientUuid;
 	}
 
+	private void exportPatient(Patient savedPatient) {
+		MpiClientService mpiClientService = Context.getService(MpiClientService.class);
+		MpiPatientExport patientExport = new MpiPatientExport(savedPatient,null,null,null,null);
+		try {
+			mpiClientService.exportPatient(patientExport);
+		} catch (MpiClientException e) {
+			log.error(ExceptionUtils.getFullStackTrace(e));
+		}
+	}
+
 	private void servePdqExceptionAndThrowAgain(RuntimeException e, String message,
-			String destination) {
+												String destination) {
 		ErrorHandlingService errorHandler = registrationCoreProperties.getPdqErrorHandlingService();
 		if (errorHandler == null) {
 			throw new MpiException(message + " with not configured PDQ error handler", e);
@@ -597,7 +618,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		return patient.getPatientIdentifier(nationalBiometricId) != null;
 	}
 
-	private String persistImportedMpiPatient(Patient mpiPatient) {
+	private Patient persistImportedMpiPatient(Patient mpiPatient) {
 		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
 
 		PatientIdentifierType openMrsIdType = patientService.getPatientIdentifierTypeByUuid(openMrsIdTypeUuid);
@@ -605,10 +626,28 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		if (mpiPatient.getPatientIdentifier(openMrsIdType) == null) {
 			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
 			mpiPatient.addIdentifier(localId);
+		}else{
+			if(mpiPatient.getPatientIdentifier(openMrsIdType).getLocation() == null){
+				mpiPatient.getPatientIdentifier(openMrsIdType).setLocation(getIdentifierLocation(null));
+			}
 		}
 
+//		TODO:  Find an appropriate way to handle the scenario where we are importing a patient with IDs similar to one that already exists
+		List<Patient> patients = patientService.getPatients(null, mpiPatient.getPatientIdentifier(openMrsIdType).getIdentifier(), null, true);
+//		Return resident if exists, otherwise return remote
+		if(patients.size() > 0){
+			Patient resident = patients.get(0);
+			try {
+				if(resident !=null){
+					//				patientService.mergePatients(resident,mpiPatient);
+					return resident;
+				}
+			} catch (Exception e) {
+				log.error("Error While merging the records!");
+			}
+		}
 		Patient patient = patientService.savePatient(mpiPatient);
-		return patient.getUuid();
+		return patient;
 	}
 
 	private boolean isBiometricEngineEnabled() {
