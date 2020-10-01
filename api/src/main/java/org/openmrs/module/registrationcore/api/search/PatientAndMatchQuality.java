@@ -31,6 +31,7 @@ public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality
 	private final List<String> matchedFields;
 
 	private String sourceLocation;
+
 	public PatientAndMatchQuality(Patient patient, Double score, List<String> matchedFields) {
 		this.patient = patient;
 		this.score = score;

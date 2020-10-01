@@ -1,5 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.fhir;
 
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,9 +12,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
-import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.santedb.mpiclient.api.MpiClientService;
+import org.openmrs.module.santedb.mpiclient.api.impl.MpiClientServiceImpl;
 import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,8 +23,6 @@ import java.util.*;
 
 public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
-    @Autowired
-    private PatientIdentifierMapper identifierMapper;
     @Autowired
     @Qualifier("registrationcore.coreProperties")
     private RegistrationCoreProperties registrationCoreProperties;
@@ -70,7 +69,6 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 //            }
         }
 //
-        log.error("Mapping the records....In total we have : "+retVal.size());
         if (maxResults != null && retVal.size() > maxResults) {
             retVal = retVal.subList(0, maxResults);
         }
@@ -83,6 +81,7 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 
         for (Patient match : patients) {
+            log.error(match.toString());
             List<String> matchedFields = new ArrayList<String>();
             Double score = 0.0;
 
@@ -146,18 +145,4 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         return matchList;
     }
 
-    private boolean hasGivenNameOrFamilyName(Patient patient) {
-        return (patient.getFamilyName() != null && !patient.getFamilyName().isEmpty())
-                || (patient.getGivenName() != null && !patient.getGivenName().isEmpty());
-    }
-
-    private PatientIdentifier getLastIdentifier(Set<PatientIdentifier> identifiers) {
-
-        PatientIdentifier lastIdentifier = new PatientIdentifier();
-
-        for (PatientIdentifier patIdentifier : identifiers) {
-            lastIdentifier = patIdentifier;
-        }
-        return lastIdentifier;
-    }
 }
