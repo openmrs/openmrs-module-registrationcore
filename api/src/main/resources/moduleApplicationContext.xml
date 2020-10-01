@@ -112,9 +112,6 @@
     <bean id="registrationcore.mpi.implementation.PixPdq"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqProvider"/>
 
-    <bean id="registrationcore.mpi.implementation.Fhir"
-          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.FhirProvider"/>
-
     <bean id="registrationcore.mpiPatientFetcherPdq"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqPatientFetcher"/>
 
@@ -126,8 +123,6 @@
 
     <bean id="registrationcore.mpiPatientSearcherPdq"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PdqSimilarPatientsSearcher"/>
-    <bean id="registrationcore.mpiPatientSearcherFhir"
-          class="org.openmrs.module.registrationcore.api.mpi.pixpdq.FhirSimilarPatientsSearcher"/>
 
     <bean id="registrationcore.mpiPixPdqMessageUtil"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqMessageUtil"/>
