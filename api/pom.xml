@@ -104,6 +104,13 @@
 
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
+			<artifactId>santedb-mpiclient-api</artifactId>
+			<version>${mpiClientVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
 			<artifactId>xds-sender-api</artifactId>
 		</dependency>
 		<dependency>

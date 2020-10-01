@@ -15,7 +15,7 @@
 	<require_version>1.11.3, 1.10.2 - 1.10.*, 1.9.9 - 1.9.*</require_version>
 	<!-- / Module Properties -->
 
-	
+
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.RegistrationCoreActivator</activator>
     <require_modules>
@@ -31,18 +31,21 @@
 		<require_module version="${mpiClientVersion}">
 			org.openmrs.module.santedb-mpiclient
 		</require_module>
+		<require_module version="${mpiClientVersion}">
+			org.openmrs.module.santedb-mpiclient
+		</require_module>
     </require_modules>
 
 	<extension>
 		<point>org.openmrs.admin.list</point>
 		<class>org.openmrs.module.registrationcore.extension.html.AdminList</class>
 	</extension>
-    
+
     <aware_of_modules>
        <aware_of_module version="${namephoneticsVersion}">org.openmrs.module.namephonetics</aware_of_module>
        <aware_of_module>org.openmrs.module.legacyui</aware_of_module>
 	</aware_of_modules>
-	
+
 	<!-- Global properties -->
 	<globalProperty>
 		<property>${project.parent.artifactId}.identifierSourceId</property>
@@ -51,7 +54,7 @@
 			Specifies the identifier source to use when generating patient identifiers
 		</description>
 	</globalProperty>
-	
+
 	<globalProperty>
 		<property>${project.parent.artifactId}.givenNameAutoSuggestList</property>
 		<defaultValue></defaultValue>
@@ -59,7 +62,7 @@
 			A comma separated list of common names to auto suggest for the given name field, when registering patients.
 		</description>
 	</globalProperty>
-	
+
 	<globalProperty>
 		<property>${project.parent.artifactId}.familyNameAutoSuggestList</property>
 		<defaultValue></defaultValue>
@@ -75,7 +78,7 @@
             Specifies a bean used for the auto suggest name feature.
         </description>
     </globalProperty>
-    
+
     <globalProperty>
         <property>${project.parent.artifactId}.fastSimilarPatientSearchAlgorithm</property>
         <defaultValue>registrationcore.BasicSimilarPatientSearchAlgorithm</defaultValue>
@@ -83,7 +86,7 @@
             Specifies a bean used for the fast similar patient search algorithm.
         </description>
     </globalProperty>
-    
+
     <globalProperty>
         <property>${project.parent.artifactId}.preciseSimilarPatientSearchAlgorithm</property>
         <defaultValue>registrationcore.BasicExactPatientSearchAlgorithm</defaultValue>
@@ -163,7 +166,7 @@
 			Specifies UUID of the identifier type that is used to store the national biometric reference code
 		</description>
 	</globalProperty>
-	
+
 	<globalProperty>
 		<property>${project.parent.artifactId}.biometrics.implementation</property>
 		<defaultValue></defaultValue>
@@ -280,9 +283,9 @@
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
-				
+
 		RegistrationEvent.hbm.xml
-				
+
 	</mappingFiles>
 
 	<!-- Internationalization -->
