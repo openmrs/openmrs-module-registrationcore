@@ -42,7 +42,7 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
 
 
-        List<Patient> retVal = new LinkedList<Patient>();
+        List<Patient> retVal = new LinkedList<>();
         try {
             MpiClientService mpiClientService = Context.getService(MpiClientService.class);
             List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
