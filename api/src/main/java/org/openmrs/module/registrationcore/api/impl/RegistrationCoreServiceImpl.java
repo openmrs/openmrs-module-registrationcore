@@ -302,7 +302,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private PatientNameSearch getPatientNameSearch() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
 				"registrationcore.BasicPatientNameSearch");
-
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof PatientNameSearch) {
 			return (PatientNameSearch) bean;
@@ -451,7 +450,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				Context.getEncounterService().saveEncounter(registrationEncounter);
 //
 				Set<Obs> patientObservations = foundPatient.getPatientObservations();
-				log.error("==================================================================================> :"+patientObservations.size());
 				Iterator<Obs> iterator = patientObservations.iterator();
 				while(iterator.hasNext()){
 					Obs next = iterator.next();
@@ -472,6 +470,14 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				exportPatient(savedPatient);
 				savedPatientUuid = savedPatient.getUuid();
 			}
+			if(foundPatient!=null){
+
+				Patient savedPatient = persistImportedMpiPatient(foundPatient);
+
+				exportPatient(savedPatient);
+				savedPatientUuid = savedPatient.getUuid();
+			}
+
 		} catch (RuntimeException e) {
 //			servePdqExceptionAndThrowAgain(e,
 //					prepareParameters(patientIdentifier, patientIdentifierTypeUuid),
@@ -688,8 +694,25 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			mpiPatient.removeIdentifier(mpiPatient.getPatientIdentifier(codeStType));
 			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
 			mpiPatient.addIdentifier(localId);
+			if(mpiPatient.getPatientIdentifier(openMrsIdType).getLocation() == null){
+				mpiPatient.getPatientIdentifier(openMrsIdType).setLocation(getIdentifierLocation(null));
+			}
 		}
 
+//		TODO:  Find an appropriate way to handle the scenario where we are importing a patient with IDs similar to one that already exists
+		List<Patient> patients = patientService.getPatients(null, mpiPatient.getPatientIdentifier(openMrsIdType).getIdentifier(), null, true);
+//		Return resident if exists, otherwise return remote
+		if(patients.size() > 0){
+			Patient resident = patients.get(0);
+			try {
+				if(resident !=null){
+					//				patientService.mergePatients(resident,mpiPatient);
+					return resident;
+				}
+			} catch (Exception e) {
+				log.error("Error While merging the records!");
+			}
+		}
 		Patient patient = patientService.savePatient(mpiPatient);
 		return patient;
 	}
