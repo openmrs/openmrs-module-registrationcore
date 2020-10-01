@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.openmrs.Patient;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
+import org.openmrs.module.registrationcore.api.mpi.fhir.FhirSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 

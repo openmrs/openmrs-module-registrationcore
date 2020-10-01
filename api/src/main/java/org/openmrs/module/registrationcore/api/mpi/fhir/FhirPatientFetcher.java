@@ -6,10 +6,13 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
+import org.openmrs.module.santedb.mpiclient.api.MpiClientService;
+import org.openmrs.module.santedb.mpiclient.configuration.MpiClientConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class FhirPatientFetcher implements MpiPatientFetcher {
@@ -24,22 +27,14 @@ public class FhirPatientFetcher implements MpiPatientFetcher {
 
     @Override
     public Patient fetchMpiPatient(String patientIdentifier, String identifierTypeUuid) {
-        String mpiUuid = identifierMapper.getMappedMpiIdentifierTypeId(identifierTypeUuid);
-
-
-
         try {
-//            Util to fetch Patient
-//            Message response = hl7SenderHolder.getHl7v2Sender().sendPdqMessage(pdqRequest);
-//            List<Patient> mpiPatients = pixPdqMessageUtil.interpretPIDSegments(response);
-//            if (CollectionUtils.isEmpty(mpiPatients)) {
-//                return null;
-//            }
-//            return toPatientFromMpiPatient(mpiPatients.get(0));
+            MpiClientService service = Context.getService(MpiClientService.class);
+            MpiClientConfiguration config = MpiClientConfiguration.getInstance();
+            Patient patient = service.getPatient(patientIdentifier, config.getEnterprisePatientIdRoot());
+            return patient;
         } catch(Exception e) {
             throw new MpiException("Error in PDQ fetch by identifier", e);
         }
-        return null;
     }
 
     @Override

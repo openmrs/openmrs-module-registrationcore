@@ -12,7 +12,7 @@ import java.util.Map;
 public class FhirProvider implements MpiProvider<Patient> {
 
     @Autowired
-    @Qualifier("registrationcore.mpiPatientFetcherPdq")
+    @Qualifier("registrationcore.mpiPatientFetcherFhir")
     private MpiPatientFetcher patientFetcher;
 
     @Autowired

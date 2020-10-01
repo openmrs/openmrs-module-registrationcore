@@ -23,15 +23,15 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
  * The results for {@link SimilarPatientSearchAlgorithm}.
  */
 public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality> {
-	
+
 	private final Patient patient;
-	
+
 	private final Double score;
-	
+
 	private final List<String> matchedFields;
 
 	private String sourceLocation;
-	
+
 	public PatientAndMatchQuality(Patient patient, Double score, List<String> matchedFields) {
 		this.patient = patient;
 		this.score = score;
@@ -49,15 +49,15 @@ public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality
 	public Patient getPatient() {
 		return patient;
 	}
-	
+
 	public Double getScore() {
 		return score;
 	}
-	
+
 	public List<String> getMatchedFields() {
 		return matchedFields;
 	}
-	
+
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
