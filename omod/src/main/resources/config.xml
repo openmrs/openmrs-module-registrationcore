@@ -279,6 +279,12 @@
 		<defaultValue>05a29f94-c0ed-11e2-94be-8c13b969e334</defaultValue>
 	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.application.name</property>
+		<defaultValue>openmrs</defaultValue>
+		<description>Specify the application name e.g openmrs, amrs</description>
+	</globalProperty>
+
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
