@@ -43,6 +43,7 @@
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
 		<apacheHttpClientVersion>4.5</apacheHttpClientVersion>
 		<jodaTimeVersion>2.2</jodaTimeVersion>
+		<m2SysVersion>1.0.0</m2SysVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -114,6 +115,13 @@
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
+			
+        <dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>m2sys-biometrics-api</artifactId>
+			<version>${m2SysVersion}</version>
+			<scope>provided</scope>
+		</dependency>			
 			
 			<dependency>
 				<groupId>org.openmrs</groupId>

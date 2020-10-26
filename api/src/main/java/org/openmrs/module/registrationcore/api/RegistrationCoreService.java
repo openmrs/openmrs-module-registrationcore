@@ -26,6 +26,8 @@ import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.xdssender.api.domain.Ccd;
 
+//import org.openmrs.module.m2sysbiometrics.service.RegistrationService;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;

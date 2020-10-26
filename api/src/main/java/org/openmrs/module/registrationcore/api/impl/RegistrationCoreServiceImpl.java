@@ -69,6 +69,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+//import org.openmrs.module.m2sysbiometrics.service.RegistrationService;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -102,6 +104,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private MpiPatientFilter mpiPatientFilter;
 
 	private RegistrationCoreProperties registrationCoreProperties;
+	
 
 	@Autowired
 	@Qualifier("registrationcore.xdsCcdImporter")
@@ -467,9 +470,10 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				throw new IllegalStateException("Unable to save biometrics, as no biometrics engine is enabled");
 			}
 			BiometricEngine biometricEngine = getBiometricEngine();
-			log.debug("Using biometric engine: " + biometricEngine.getClass().getSimpleName());
+			log.error("Using biometric engine: " + biometricEngine.getClass().getSimpleName());
 
 			PatientIdentifierType idType = biometricData.getIdentifierType();
+			log.error("There are no biometrics to save for patient:"+ idType.getName()+ "UUID:"+idType.getUuid()+"ID:"+subject.getSubjectId());
 			if (idType != null) {
 				log.debug("Saving biometrics as a patient identifier of type: " + idType.getName());
 				//Currently, lookup checks if identifier exists only in local fingerprint server, but this method will be used also by national ids
@@ -488,16 +492,25 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				if (identifierExists) {
 					log.debug("Identifier already exists for patient");
 				} else {
+					
+					log.error("New patient identifier saved for patient avant: ");
 					PatientIdentifier identifier = identifierBuilder.createIdentifier(idType.getUuid(), subject.getSubjectId(), null);
+					log.error("New patient identifier saved for patient apres: " + identifier);
 					patient.addIdentifier(identifier);
 					patientService.savePatientIdentifier(identifier);
-					log.debug("New patient identifier saved for patient: " + identifier);
+					log.debug("New patient identifier saved for patient: " + identifier);	
+					
+					//registrationService.registerLocally(subject);
+					
+					
 				}
 			} else {
 				// TODO: In the future we could add additional support for different storage options - eg. as person attributes
 				throw new IllegalArgumentException("Invalid biometric configuration.  No patient identifier type specified");
 			}
 		}
+		
+		
 		return biometricData;
 	}
 

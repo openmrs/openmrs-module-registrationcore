@@ -35,8 +35,8 @@ import java.util.UUID;
 @Component
 public class TestBiometricEngine implements BiometricEngine {
 
-    private static final String FINGERPRINT_TYPE = "ISO";
-    private static final String FINGERPRINT_FORMAT = "ISO";
+    private static final String FINGERPRINT_TYPE = "FP1";
+    private static final String FINGERPRINT_FORMAT = "FP1";
 
     private Map<String, BiometricSubject> enrolledSubjects = new HashMap<String, BiometricSubject>();
 
