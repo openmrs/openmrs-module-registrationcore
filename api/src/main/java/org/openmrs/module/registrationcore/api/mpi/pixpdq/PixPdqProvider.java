@@ -1,5 +1,6 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
@@ -7,6 +8,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientUpdater;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -49,6 +51,11 @@ public class PixPdqProvider implements MpiProvider<Patient> {
     @Override
     public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
         return patientFetcher.fetchMpiPatient(patientId, identifierTypeUuid);
+    }
+
+    @Override
+    public MpiPatient fetchMpiPatientWithObservations(String patientId, String identifierTypeUuid) {
+        throw new NotImplementedException("Method fetchMpiPatientWithObservations for PixPdqProvider is not implemented yet");
     }
 
     @Override

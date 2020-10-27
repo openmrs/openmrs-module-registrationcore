@@ -17,19 +17,14 @@ import static org.openmrs.module.registrationcore.RegistrationCoreConstants.LOCA
 import static org.openmrs.module.registrationcore.RegistrationCoreConstants.NATIONAL_FINGERPRINT_NAME;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.openmrs.GlobalProperty;
-import org.openmrs.Location;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.Relationship;
+import org.openmrs.*;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.GlobalPropertyListener;
@@ -62,6 +57,7 @@ import org.openmrs.module.registrationcore.api.search.SimilarPatientSearchAlgori
 import org.openmrs.module.registrationcore.api.xdssender.XdsCcdImporter;
 import org.openmrs.module.santedb.mpiclient.api.MpiClientService;
 import org.openmrs.module.santedb.mpiclient.exception.MpiClientException;
+import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.openmrs.module.santedb.mpiclient.model.MpiPatientExport;
 import org.openmrs.serialization.SerializationException;
 import org.openmrs.validator.PatientIdentifierValidator;
@@ -75,11 +71,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * It is a default implementation of {@link RegistrationCoreService}.
@@ -404,6 +395,22 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 		}
 		return patient;
 	}
+	@Override
+	public MpiPatient fetchMpiPatientWithObservations(String identifier, String identifierTypeUuid) {
+		if (!registrationCoreProperties.isMpiEnabled()) {
+			throw new MpiException("Should not perform 'fetchMpiPatientWithObservations' when MPI is disabled");
+		}
+		MpiProvider mpiProvider = registrationCoreProperties.getMpiProvider();
+		MpiPatient mpiPatient = null;
+		try {
+			mpiPatient = mpiProvider.fetchMpiPatientWithObservations(identifier, identifierTypeUuid);
+		} catch (RuntimeException e) {
+			servePdqExceptionAndThrowAgain(e,
+					prepareParameters(identifier, identifierTypeUuid),
+					PdqErrorHandlingService.FIND_MPI_PATIENT_DESTINATION);
+		}
+		return mpiPatient;
+	}
 
 	@Override
 	public String importMpiPatient(String personId) {
@@ -415,7 +422,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	@Override
 	public String importMpiPatient(String patientIdentifier, String patientIdentifierTypeUuid) {
-		Patient foundPatient = findMpiPatient(patientIdentifier, patientIdentifierTypeUuid);
+		MpiPatient foundPatient = fetchMpiPatientWithObservations(patientIdentifier, patientIdentifierTypeUuid);
 
 		String savedPatientUuid = null;
 		try {
@@ -427,7 +434,28 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 			if(foundPatient!=null){
 
-				Patient savedPatient = persistImportedMpiPatient(foundPatient);
+				Patient savedPatient = persistImportedMpiPatient(foundPatient.toPatient());
+//				TODO save the extra obs
+//				Create registration encounter
+//				EncounterType registrationEncounterType = Context.getEncounterService()
+//						.getEncounterTypeByUuid(registrationCoreProperties.getRegistrationEncounterTypeUuid());
+//				Encounter regEncounter = new Encounter();
+//				regEncounter.setPatient(savedPatient);
+//				regEncounter.setEncounterType(registrationEncounterType);
+//				regEncounter.setEncounterDatetime(new Date());
+//				regEncounter.setLocation(Context.getLocationService().getDefaultLocation());
+//
+//				Iterator<Obs> iterator = foundPatient.getPatientObservations().iterator();
+//				while(iterator.hasNext()){
+//					Obs next = iterator.next();
+//					next.setPerson(savedPatient);
+//					if(next.getObsDatetime() == null){
+//						next.setObsDatetime(new Date());
+//					}
+//
+//				}
+//				regEncounter.setObs(foundPatient.getPatientObservations());
+//				Context.getEncounterService().saveEncounter(regEncounter);
 
 				exportPatient(savedPatient);
 				savedPatientUuid = savedPatient.getUuid();
@@ -620,32 +648,26 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 
 	private Patient persistImportedMpiPatient(Patient mpiPatient) {
 		String openMrsIdTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_UUID);
+		String codePcTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_CODE_PC_IDENTIFIER_UUID);
+		String codeStTypeUuid = adminService.getGlobalProperty(RegistrationCoreConstants.GP_CODE_ST_IDENTIFIER_UUID);
 
 		PatientIdentifierType openMrsIdType = patientService.getPatientIdentifierTypeByUuid(openMrsIdTypeUuid);
+		PatientIdentifierType codePcType = patientService.getPatientIdentifierTypeByUuid(codePcTypeUuid);
+		PatientIdentifierType codeStType = patientService.getPatientIdentifierTypeByUuid(codeStTypeUuid);
 
 		if (mpiPatient.getPatientIdentifier(openMrsIdType) == null) {
 			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
 			mpiPatient.addIdentifier(localId);
 		}else{
-			if(mpiPatient.getPatientIdentifier(openMrsIdType).getLocation() == null){
-				mpiPatient.getPatientIdentifier(openMrsIdType).setLocation(getIdentifierLocation(null));
-			}
+//			A patient with similar openmrs Id - possibly from a different instance of OpenMRS
+//			Remove the openmrs id, Code ST and Code PC identifiers and create patient
+			mpiPatient.removeIdentifier(mpiPatient.getPatientIdentifier(openMrsIdType));
+			mpiPatient.removeIdentifier(mpiPatient.getPatientIdentifier(codePcType));
+			mpiPatient.removeIdentifier(mpiPatient.getPatientIdentifier(codeStType));
+			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
+			mpiPatient.addIdentifier(localId);
 		}
 
-//		TODO:  Find an appropriate way to handle the scenario where we are importing a patient with IDs similar to one that already exists
-		List<Patient> patients = patientService.getPatients(null, mpiPatient.getPatientIdentifier(openMrsIdType).getIdentifier(), null, true);
-//		Return resident if exists, otherwise return remote
-		if(patients.size() > 0){
-			Patient resident = patients.get(0);
-			try {
-				if(resident !=null){
-					//				patientService.mergePatients(resident,mpiPatient);
-					return resident;
-				}
-			} catch (Exception e) {
-				log.error("Error While merging the records!");
-			}
-		}
 		Patient patient = patientService.savePatient(mpiPatient);
 		return patient;
 	}

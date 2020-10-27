@@ -22,6 +22,10 @@ public final class RegistrationCoreConstants {
 
 	public static final String GP_OPENMRS_IDENTIFIER_UUID = "registrationcore.openmrsIdenitfier.uuid";
 
+	public static final String GP_CODE_PC_IDENTIFIER_UUID = "registrationcore.codePc.uuid";
+
+	public static final String GP_CODE_ST_IDENTIFIER_UUID = "registrationcore.codeSt.uuid";
+
 	public static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
 
 	public static final String PATIENT_REGISTRATION_EVENT_TOPIC_NAME = "org.openmrs.module.registrationcore.PatientRegistrationEvent";
@@ -106,4 +110,6 @@ public final class RegistrationCoreConstants {
 	public static final String LOCAL_FINGERPRINT_NAME = "localFingerprint";
 
 	public static final String NATIONAL_FINGERPRINT_NAME = "nationalFingerprint";
+
+    public static final String GP_MPI_REG_ENCOUNTER_UUID = "registrationcore.mpi.reg.encounter.uuid";
 }

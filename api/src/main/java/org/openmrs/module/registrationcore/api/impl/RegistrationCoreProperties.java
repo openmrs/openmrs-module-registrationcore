@@ -168,4 +168,9 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
         log.debug("Looking up component: " + handlerId);
         return Context.getRegisteredComponent(handlerId, type);
     }
+
+    public String getRegistrationEncounterTypeUuid() {
+        return Context.getAdministrationService().getGlobalProperty(
+                RegistrationCoreConstants.GP_MPI_REG_ENCOUNTER_UUID, "873f968a-73a8-4f9c-ac78-9f4778b751b6");
+    }
 }

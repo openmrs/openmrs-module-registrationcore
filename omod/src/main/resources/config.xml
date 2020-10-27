@@ -280,6 +280,27 @@
 		</description>
 		<defaultValue>05a29f94-c0ed-11e2-94be-8c13b969e334</defaultValue>
 	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.codePc.uuid</property>
+		<description>
+			UUID of the Code PC identifier that will be generated during MPI import unless it is present.
+		</description>
+		<defaultValue>b7a154fd-0097-4071-ac09-af11ee7e0310</defaultValue>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.codeSt.uuid</property>
+		<description>
+			UUID of the Code ST identifier that will be generated during MPI import unless it is present.
+		</description>
+		<defaultValue>d059f6d0-9e42-4760-8de1-8316b48bc5f1</defaultValue>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.mpi.reg.encounter.uuid</property>
+		<description>
+			UUID of the registration encounter type.
+		</description>
+		<defaultValue>873f968a-73a8-4f9c-ac78-9f4778b751b6</defaultValue>
+	</globalProperty>
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>

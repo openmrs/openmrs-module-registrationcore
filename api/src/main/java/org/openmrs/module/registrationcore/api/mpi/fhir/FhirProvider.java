@@ -3,6 +3,7 @@ package org.openmrs.module.registrationcore.api.mpi.fhir;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.*;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -45,6 +46,11 @@ public class FhirProvider implements MpiProvider<Patient> {
     @Override
     public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
         return patientFetcher.fetchMpiPatient(patientId, identifierTypeUuid);
+    }
+
+    @Override
+    public MpiPatient fetchMpiPatientWithObservations(String patientId, String identifierTypeUuid) {
+        return patientFetcher.fetchMpiPatientWithObservations(patientId, identifierTypeUuid);
     }
 
     @Override

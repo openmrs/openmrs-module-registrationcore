@@ -24,6 +24,7 @@ import org.openmrs.module.registrationcore.api.biometrics.BiometricEngine;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricData;
 import org.openmrs.module.registrationcore.api.biometrics.model.BiometricSubject;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.openmrs.module.xdssender.api.domain.Ccd;
 
 import java.io.IOException;
@@ -152,6 +153,14 @@ public interface RegistrationCoreService extends OpenmrsService {
 	 * @return found patient
 	 */
 	Patient findMpiPatient(String identifier, String identifierTypeUuid);
+	/**
+	 * Query to MPI server to find patient with Id "patientId".
+	 *
+	 * @param identifier person identifier of patient which should be imported
+	 * @param identifierTypeUuid person identifier type of patient which will be found
+	 * @return found patient with attached observations
+	 */
+	MpiPatient fetchMpiPatientWithObservations(String identifier, String identifierTypeUuid);
 
 	/**
 	 * Query to MPI server to find patient with Id "patientId"

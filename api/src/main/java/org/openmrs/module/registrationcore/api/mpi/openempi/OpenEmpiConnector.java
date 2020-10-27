@@ -1,8 +1,10 @@
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.openmrs.Patient;
 import org.openmrs.module.registrationcore.api.mpi.common.*;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
+import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -45,6 +47,11 @@ public class OpenEmpiConnector implements MpiProvider<PatientAndMatchQuality> {
     public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
         authenticateIfNeeded();
         return patientImporter.fetchMpiPatient(patientId, identifierTypeUuid);
+    }
+
+    @Override
+    public MpiPatient fetchMpiPatientWithObservations(String patientId, String identifierTypeUuid) {
+        throw new NotImplementedException("Method fetchMpiPatientWithObservations for OpenEmpiConnector is not implemented yet");
     }
 
     @Override

@@ -2,6 +2,8 @@ package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.model.Message;
 import java.util.List;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
@@ -12,6 +14,7 @@ import org.openmrs.module.registrationcore.RegistrationCoreConstants;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
 import org.openmrs.module.registrationcore.api.mpi.openempi.PatientIdentifierMapper;
+import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -57,6 +60,11 @@ public class PdqPatientFetcher implements MpiPatientFetcher {
         } catch(Exception e) {
             throw new MpiException("Error in PDQ fetch by identifier", e);
         }
+    }
+
+    @Override
+    public MpiPatient fetchMpiPatientWithObservations(String patientId, String identifierTypeUuid) {
+        throw new NotImplementedException("Method fetchMpiPatientWithObservations for PdqPatientFetcher is not implemented yet");
     }
 
     @Override
