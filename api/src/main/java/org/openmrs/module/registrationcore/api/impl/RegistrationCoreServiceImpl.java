@@ -472,7 +472,28 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			}
 			if(foundPatient!=null){
 
-				Patient savedPatient = persistImportedMpiPatient(foundPatient);
+				Patient savedPatient = persistImportedMpiPatient(foundPatient.toPatient());
+//				TODO save the extra obs
+//				Create registration encounter
+//				EncounterType registrationEncounterType = Context.getEncounterService()
+//						.getEncounterTypeByUuid(registrationCoreProperties.getRegistrationEncounterTypeUuid());
+//				Encounter regEncounter = new Encounter();
+//				regEncounter.setPatient(savedPatient);
+//				regEncounter.setEncounterType(registrationEncounterType);
+//				regEncounter.setEncounterDatetime(new Date());
+//				regEncounter.setLocation(Context.getLocationService().getDefaultLocation());
+//
+//				Iterator<Obs> iterator = foundPatient.getPatientObservations().iterator();
+//				while(iterator.hasNext()){
+//					Obs next = iterator.next();
+//					next.setPerson(savedPatient);
+//					if(next.getObsDatetime() == null){
+//						next.setObsDatetime(new Date());
+//					}
+//
+//				}
+//				regEncounter.setObs(foundPatient.getPatientObservations());
+//				Context.getEncounterService().saveEncounter(regEncounter);
 
 				exportPatient(savedPatient);
 				savedPatientUuid = savedPatient.getUuid();
@@ -694,25 +715,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			mpiPatient.removeIdentifier(mpiPatient.getPatientIdentifier(codeStType));
 			PatientIdentifier localId = validateOrGenerateIdentifier(null, null);
 			mpiPatient.addIdentifier(localId);
-			if(mpiPatient.getPatientIdentifier(openMrsIdType).getLocation() == null){
-				mpiPatient.getPatientIdentifier(openMrsIdType).setLocation(getIdentifierLocation(null));
-			}
 		}
 
-//		TODO:  Find an appropriate way to handle the scenario where we are importing a patient with IDs similar to one that already exists
-		List<Patient> patients = patientService.getPatients(null, mpiPatient.getPatientIdentifier(openMrsIdType).getIdentifier(), null, true);
-//		Return resident if exists, otherwise return remote
-		if(patients.size() > 0){
-			Patient resident = patients.get(0);
-			try {
-				if(resident !=null){
-					//				patientService.mergePatients(resident,mpiPatient);
-					return resident;
-				}
-			} catch (Exception e) {
-				log.error("Error While merging the records!");
-			}
-		}
 		Patient patient = patientService.savePatient(mpiPatient);
 		return patient;
 	}
