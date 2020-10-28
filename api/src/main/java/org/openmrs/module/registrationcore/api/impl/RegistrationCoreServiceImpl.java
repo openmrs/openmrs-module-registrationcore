@@ -471,29 +471,38 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				savedPatientUuid = savedPatient.getUuid();
 			}
 			if(foundPatient!=null){
-
 				Patient savedPatient = persistImportedMpiPatient(foundPatient.toPatient());
+				Location defaultLocation = Context.getLocationService().getDefaultLocation();
 //				TODO save the extra obs
 //				Create registration encounter
-//				EncounterType registrationEncounterType = Context.getEncounterService()
-//						.getEncounterTypeByUuid(registrationCoreProperties.getRegistrationEncounterTypeUuid());
-//				Encounter regEncounter = new Encounter();
-//				regEncounter.setPatient(savedPatient);
-//				regEncounter.setEncounterType(registrationEncounterType);
-//				regEncounter.setEncounterDatetime(new Date());
-//				regEncounter.setLocation(Context.getLocationService().getDefaultLocation());
+				EncounterType registrationEncounterType = Context.getEncounterService()
+						.getEncounterTypeByUuid(registrationCoreProperties.getRegistrationEncounterTypeUuid());
+				EncounterRole registrationEncounterRole = registrationCoreProperties.getRegistrationEncounterRole();
+				// create the encounter
+				Encounter registrationEncounter = new Encounter();
+				registrationEncounter.setPatient(savedPatient);
+				registrationEncounter.setEncounterType(registrationEncounterType);
+				registrationEncounter.setLocation(defaultLocation);
+				registrationEncounter.setEncounterDatetime(new Date());
+				Context.getEncounterService().saveEncounter(registrationEncounter);
 //
-//				Iterator<Obs> iterator = foundPatient.getPatientObservations().iterator();
-//				while(iterator.hasNext()){
-//					Obs next = iterator.next();
-//					next.setPerson(savedPatient);
-//					if(next.getObsDatetime() == null){
-//						next.setObsDatetime(new Date());
-//					}
-//
-//				}
-//				regEncounter.setObs(foundPatient.getPatientObservations());
-//				Context.getEncounterService().saveEncounter(regEncounter);
+				Set<Obs> patientObservations = foundPatient.getPatientObservations();
+				Iterator<Obs> iterator = patientObservations.iterator();
+				while(iterator.hasNext()){
+					Obs next = iterator.next();
+					next.setPerson(savedPatient);
+					if(next.getObsDatetime() == null){
+						next.setObsDatetime(new Date());
+					}
+					Iterator<Obs> groupIterator = next.getGroupMembers().iterator();
+					while(groupIterator.hasNext()){
+						Obs memberObs = groupIterator.next();
+						memberObs.setPerson(savedPatient);
+						memberObs.setObsGroup(next);
+					}
+					registrationEncounter.addObs(next);
+				}
+				Context.getEncounterService().saveEncounter(registrationEncounter);
 
 				exportPatient(savedPatient);
 				savedPatientUuid = savedPatient.getUuid();
