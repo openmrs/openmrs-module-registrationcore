@@ -232,6 +232,11 @@
 			<id>marc-te-main</id>
 			<url>http://te.marc-hi.ca/mvn</url>
 		</repository>
+		<repository>
+			<id>santesute-main</id>
+			<url>http://santesuite.org/mvn</url>
+			<name>SanteSuite</name>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
