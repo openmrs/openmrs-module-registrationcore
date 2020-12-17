@@ -1,12 +1,7 @@
-package org.openmrs.module.registrationcore.api.mpi.pixpdq;
+package org.openmrs.module.registrationcore.api.mpi.fhir;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.openmrs.Patient;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientExporter;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientUpdater;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiProvider;
-import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
+import org.openmrs.module.registrationcore.api.mpi.common.*;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +10,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.List;
 import java.util.Map;
 
-public class PixPdqProvider implements MpiProvider<Patient> {
+public class FhirProvider implements MpiProvider<Patient> {
 
     @Autowired
-    @Qualifier("registrationcore.mpiPatientFetcherPdq")
+    @Qualifier("registrationcore.mpiPatientFetcherFhir")
     private MpiPatientFetcher patientFetcher;
 
     @Autowired
@@ -30,7 +25,7 @@ public class PixPdqProvider implements MpiProvider<Patient> {
     private MpiPatientUpdater patientUpdater;
 
     @Autowired
-    @Qualifier("registrationcore.mpiPatientSearcherPdq")
+    @Qualifier("registrationcore.mpiPatientSearcherFhir")
     private MpiSimilarPatientsSearcher searchAlgorithm;
 
     @Override
@@ -55,7 +50,7 @@ public class PixPdqProvider implements MpiProvider<Patient> {
 
     @Override
     public MpiPatient fetchMpiPatientWithObservations(String patientId, String identifierTypeUuid) {
-        throw new NotImplementedException("Method fetchMpiPatientWithObservations for PixPdqProvider is not implemented yet");
+        return patientFetcher.fetchMpiPatientWithObservations(patientId, identifierTypeUuid);
     }
 
     @Override

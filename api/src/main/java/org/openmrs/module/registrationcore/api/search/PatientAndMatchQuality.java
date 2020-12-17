@@ -17,36 +17,47 @@ import java.util.List;
 
 import java.util.Objects;
 import org.openmrs.Patient;
+import org.openmrs.module.registrationcore.api.mpi.common.MpiPatient;
 
 /**
  * The results for {@link SimilarPatientSearchAlgorithm}.
  */
 public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality> {
-	
+
 	private final Patient patient;
-	
+
 	private final Double score;
-	
+
 	private final List<String> matchedFields;
-	
+
+	private String sourceLocation;
+
 	public PatientAndMatchQuality(Patient patient, Double score, List<String> matchedFields) {
 		this.patient = patient;
 		this.score = score;
 		this.matchedFields = matchedFields;
+		this.sourceLocation = ((MpiPatient)patient).getSourceLocation();
 	}
-	
+
+	public PatientAndMatchQuality(Patient patient, Double score, List<String> matchedFields, String sourceLocation) {
+		this.patient = patient;
+		this.score = score;
+		this.matchedFields = matchedFields;
+		this.sourceLocation = sourceLocation;
+	}
+
 	public Patient getPatient() {
 		return patient;
 	}
-	
+
 	public Double getScore() {
 		return score;
 	}
-	
+
 	public List<String> getMatchedFields() {
 		return matchedFields;
 	}
-	
+
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
@@ -70,5 +81,13 @@ public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality
 	@Override
 	public int hashCode() {
 		return Objects.hash(patient);
+	}
+
+	public String getSourceLocation() {
+		return sourceLocation;
+	}
+
+	public void setSourceLocation(String sourceLocation) {
+		this.sourceLocation = sourceLocation;
 	}
 }

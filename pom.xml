@@ -4,7 +4,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>registrationcore</artifactId>
-	<version>1.7.2</version>
+	<version>1.7.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Registration Core Module</name>
 	<description>Provides core utilities and services for patient registration.</description>
@@ -40,6 +40,7 @@
 		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xdsSenderVersion>1.0.0</xdsSenderVersion>
+		<mpiClientVersion>1.0.0-SNAPSHOT</mpiClientVersion>
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
 		<apacheHttpClientVersion>4.5</apacheHttpClientVersion>
 		<jodaTimeVersion>2.2</jodaTimeVersion>
@@ -114,14 +115,7 @@
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
-			
-<!--        <dependency>-->
-<!--			<groupId>org.openmrs.module</groupId>-->
-<!--			<artifactId>m2sys-biometrics-api</artifactId>-->
-<!--			<version>${m2SysVersion}</version>-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>			-->
-			
+
 			<dependency>
 				<groupId>org.openmrs</groupId>
 				<artifactId>event-api-1.x</artifactId>
@@ -129,7 +123,7 @@
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.openmrs</groupId>
 				<artifactId>event-api-2.x</artifactId>
@@ -157,6 +151,13 @@
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>xds-sender-api</artifactId>
 				<version>${xdsSenderVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>santedb-mpiclient-api</artifactId>
+				<version>${mpiClientVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 

@@ -9,6 +9,7 @@ import org.openmrs.module.registrationcore.api.impl.IdentifierBuilder;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiAuthenticator;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiPatientFetcher;
+import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -46,6 +47,11 @@ public class OpenEmpiPatientFetcher implements MpiPatientFetcher {
     @Override
     public Patient fetchMpiPatient(String patientId, String identifierTypeUuid) {
         throw new NotImplementedException("Method fetchMpiPatient for OpenEmpiPatientFetcher is not implemented yet");
+    }
+
+    @Override
+    public MpiPatient fetchMpiPatientWithObservations(String patientId, String identifierTypeUuid) {
+        throw new NotImplementedException("Method fetchMpiPatientWithObservations for OpenEmpiPatientFetcher is not implemented yet");
     }
 
     private Patient buildPatient(OpenEmpiPatientResult mpiPatient) {

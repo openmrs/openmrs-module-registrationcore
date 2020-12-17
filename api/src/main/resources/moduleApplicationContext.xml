@@ -89,6 +89,25 @@
     <bean id="registrationcore.mpiPatientSearcher"
           class="org.openmrs.module.registrationcore.api.mpi.openempi.OpenEmpiPatientsSearcher"/>
 
+    <!-- Fhir Mpi implementation part -->
+    <bean id="registrationcore.mpi.implementation.Fhir"
+          class="org.openmrs.module.registrationcore.api.mpi.fhir.FhirProvider"/>
+
+    <bean id="registrationcore.mpiPatientFetcherFhir"
+          class="org.openmrs.module.registrationcore.api.mpi.fhir.FhirPatientFetcher"/>
+
+    <bean id="registrationcore.mpiPatientExporterFhir"
+          class="org.openmrs.module.registrationcore.api.mpi.fhir.FhirPatientExporter"/>
+
+    <bean id="registrationcore.mpiPatientUpdaterFhir"
+          class="org.openmrs.module.registrationcore.api.mpi.fhir.FhirPatientUpdater"/>
+
+    <bean id="registrationcore.mpiPatientSearcherFhir"
+          class="org.openmrs.module.registrationcore.api.mpi.fhir.FhirSimilarPatientsSearcher"/>
+
+
+
+
     <!-- PixPdq Mpi implementation part -->
     <bean id="registrationcore.mpi.implementation.PixPdq"
           class="org.openmrs.module.registrationcore.api.mpi.pixpdq.PixPdqProvider"/>
