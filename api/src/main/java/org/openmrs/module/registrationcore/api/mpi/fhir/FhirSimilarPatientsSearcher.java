@@ -31,19 +31,19 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Override
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        return find(patient, maxResults);
+        return find(patient, maxResults,otherDataPoints);
     }
 
     @Override
     public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        return find(patient, maxResults);
+        return find(patient, maxResults,otherDataPoints);
     }
 
-    private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
+    private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults,Map<String, Object> otherDataPoints) {
         List<Patient> retVal = new LinkedList<>();
         try {
             MpiClientService mpiClientService = Context.getService(MpiClientService.class);
-            List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
+            List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient,otherDataPoints);
 
             for (MpiPatient mp : mpiPatients) {
                 org.openmrs.module.registrationcore.api.mpi.common.MpiPatient mpiPatientExtract = new org.openmrs.module.registrationcore.api.mpi.common.MpiPatient();
@@ -77,7 +77,6 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     }
 
     private List<PatientAndMatchQuality> toMatchList(Patient patient, List<Patient> patients) {
-
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 
         for (Patient match : patients) {
