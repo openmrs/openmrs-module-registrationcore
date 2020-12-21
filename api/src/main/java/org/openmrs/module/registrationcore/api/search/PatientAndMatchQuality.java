@@ -36,7 +36,6 @@ public class PatientAndMatchQuality implements Comparable<PatientAndMatchQuality
 		this.patient = patient;
 		this.score = score;
 		this.matchedFields = matchedFields;
-		this.sourceLocation = ((MpiPatient)patient).getSourceLocation();
 	}
 
 	public PatientAndMatchQuality(Patient patient, Double score, List<String> matchedFields, String sourceLocation) {

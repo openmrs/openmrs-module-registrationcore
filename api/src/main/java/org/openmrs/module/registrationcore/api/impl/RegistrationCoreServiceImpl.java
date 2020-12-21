@@ -447,8 +447,7 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				registrationEncounter.setEncounterDatetime(new Date());
 				Context.getEncounterService().saveEncounter(registrationEncounter);
 //
-				Set<Obs> patientObservations = foundPatient.getPatientObservations();
-				log.error("==================================================================================> :"+patientObservations.size());
+				List<Obs> patientObservations = foundPatient.getPatientObservations();
 				Iterator<Obs> iterator = patientObservations.iterator();
 				while(iterator.hasNext()){
 					Obs next = iterator.next();
