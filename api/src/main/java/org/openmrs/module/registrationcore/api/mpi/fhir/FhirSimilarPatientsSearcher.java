@@ -40,7 +40,7 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
         List<Patient> retVal = new LinkedList<>();
         try {
             MpiClientService mpiClientService = Context.getService(MpiClientService.class);
-            List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient,otherDataPoints);
+            List<MpiPatient> mpiPatients = mpiClientService.searchPatient(patient);
 
             for (MpiPatient mp : mpiPatients) {
                 org.openmrs.module.registrationcore.api.mpi.common.MpiPatient mpiPatientExtract = new org.openmrs.module.registrationcore.api.mpi.common.MpiPatient();
