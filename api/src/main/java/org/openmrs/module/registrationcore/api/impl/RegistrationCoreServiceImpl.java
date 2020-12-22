@@ -302,7 +302,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 	private PatientNameSearch getPatientNameSearch() {
 		String gp = adminService.getGlobalProperty(RegistrationCoreConstants.GP_PATIENT_NAME_SEARCH,
 				"registrationcore.BasicPatientNameSearch");
-
 		Object bean = applicationContext.getBean(gp);
 		if (bean instanceof PatientNameSearch) {
 			return (PatientNameSearch) bean;
@@ -451,7 +450,6 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				Context.getEncounterService().saveEncounter(registrationEncounter);
 //
 				Set<Obs> patientObservations = foundPatient.getPatientObservations();
-				log.error("==================================================================================> :"+patientObservations.size());
 				Iterator<Obs> iterator = patientObservations.iterator();
 				while(iterator.hasNext()){
 					Obs next = iterator.next();
@@ -472,6 +470,44 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				exportPatient(savedPatient);
 				savedPatientUuid = savedPatient.getUuid();
 			}
+			if(foundPatient!=null){
+				Patient savedPatient = persistImportedMpiPatient(foundPatient.toPatient());
+				Location defaultLocation = Context.getLocationService().getDefaultLocation();
+//				TODO save the extra obs
+//				Create registration encounter
+				EncounterType registrationEncounterType = Context.getEncounterService()
+						.getEncounterTypeByUuid(registrationCoreProperties.getRegistrationEncounterTypeUuid());
+				EncounterRole registrationEncounterRole = registrationCoreProperties.getRegistrationEncounterRole();
+				// create the encounter
+				Encounter registrationEncounter = new Encounter();
+				registrationEncounter.setPatient(savedPatient);
+				registrationEncounter.setEncounterType(registrationEncounterType);
+				registrationEncounter.setLocation(defaultLocation);
+				registrationEncounter.setEncounterDatetime(new Date());
+				Context.getEncounterService().saveEncounter(registrationEncounter);
+//
+				Set<Obs> patientObservations = foundPatient.getPatientObservations();
+				Iterator<Obs> iterator = patientObservations.iterator();
+				while(iterator.hasNext()){
+					Obs next = iterator.next();
+					next.setPerson(savedPatient);
+					if(next.getObsDatetime() == null){
+						next.setObsDatetime(new Date());
+					}
+					Iterator<Obs> groupIterator = next.getGroupMembers().iterator();
+					while(groupIterator.hasNext()){
+						Obs memberObs = groupIterator.next();
+						memberObs.setPerson(savedPatient);
+						memberObs.setObsGroup(next);
+					}
+					registrationEncounter.addObs(next);
+				}
+				Context.getEncounterService().saveEncounter(registrationEncounter);
+
+				exportPatient(savedPatient);
+				savedPatientUuid = savedPatient.getUuid();
+			}
+
 		} catch (RuntimeException e) {
 //			servePdqExceptionAndThrowAgain(e,
 //					prepareParameters(patientIdentifier, patientIdentifierTypeUuid),

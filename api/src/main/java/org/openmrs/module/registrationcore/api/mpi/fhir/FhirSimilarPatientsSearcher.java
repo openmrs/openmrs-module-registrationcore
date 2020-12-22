@@ -5,16 +5,13 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.registrationcore.api.errorhandling.ErrorHandlingService;
 import org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiSimilarPatientsSearcher;
 import org.openmrs.module.registrationcore.api.search.PatientAndMatchQuality;
 import org.openmrs.module.santedb.mpiclient.api.MpiClientService;
-import org.openmrs.module.santedb.mpiclient.api.impl.MpiClientServiceImpl;
 import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,17 +28,15 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 
     @Override
     public List<PatientAndMatchQuality> findSimilarMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        return find(patient, maxResults);
+        return find(patient, maxResults,otherDataPoints);
     }
 
     @Override
     public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff, Integer maxResults) {
-        return find(patient, maxResults);
+        return find(patient, maxResults,otherDataPoints);
     }
 
-    private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults) {
-
-
+    private List<PatientAndMatchQuality> find(Patient patient, Integer maxResults,Map<String, Object> otherDataPoints) {
         List<Patient> retVal = new LinkedList<>();
         try {
             MpiClientService mpiClientService = Context.getService(MpiClientService.class);
@@ -71,8 +66,6 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 //            }
         }
 //
-        log.error("Mapping the records....In total we have : "+retVal.size());
-
         if (maxResults != null && retVal.size() > maxResults) {
             retVal = retVal.subList(0, maxResults);
         }
@@ -81,8 +74,6 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
     }
 
     private List<PatientAndMatchQuality> toMatchList(Patient patient, List<Patient> patients) {
-        log.error("Inside toMatch List method................................................................................");
-
         List<PatientAndMatchQuality> matchList = new ArrayList<PatientAndMatchQuality>();
 
         for (Patient match : patients) {
