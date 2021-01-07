@@ -39,7 +39,7 @@
 		<eventVersion>2.3</eventVersion>
 		<namephoneticsVersion>1.4</namephoneticsVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xdsSenderVersion>2.0.0-SNAPSHOT</xdsSenderVersion>
+		<xdsSenderVersion>2.0.1-SNAPSHOT</xdsSenderVersion>
 		<mpiClientVersion>1.0.4-SNAPSHOT</mpiClientVersion>
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
 		<apacheHttpClientVersion>4.5</apacheHttpClientVersion>
