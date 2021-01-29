@@ -59,7 +59,6 @@ import org.openmrs.module.santedb.mpiclient.api.MpiClientService;
 import org.openmrs.module.santedb.mpiclient.exception.MpiClientException;
 import org.openmrs.module.santedb.mpiclient.model.MpiPatient;
 import org.openmrs.module.santedb.mpiclient.model.MpiPatientExport;
-import org.openmrs.serialization.SerializationException;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -449,6 +448,8 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 				registrationEncounter.setLocation(defaultLocation);
 				registrationEncounter.setEncounterDatetime(new Date());
 
+				registrationEncounter.setProvider(registrationEncounterRole, getRegistrationProvider());
+
 				Set<Obs> patientObservations = foundPatient.getPatientObservations();
 				Iterator<Obs> iterator = patientObservations.iterator();
 				while(iterator.hasNext()){
@@ -481,6 +482,25 @@ public class RegistrationCoreServiceImpl extends BaseOpenmrsService implements R
 			log.error(ExceptionUtils.getFullStackTrace(e));
 		}
 		return savedPatientUuid;
+	}
+
+	private Provider getRegistrationProvider() {
+		// TODO: determine what the correct way to get the current user as a provider is.
+		Provider registrationProvider = Context.getProviderService().getProviderByIdentifier("UNKNOWN");
+		Person authPerson = Context.getAuthenticatedUser().getPerson();
+
+		Collection<Provider> authenticatedProviders = null;
+		try {
+			if(authPerson != null &&
+					!((authenticatedProviders = Context.getProviderService().getProvidersByPerson(authPerson))
+							.isEmpty())) {
+				registrationProvider = authenticatedProviders.stream().findFirst().get();
+			}
+		} catch (Exception e) {
+			log.error("Error finding registration provider - using UNKNOWN");
+		}
+
+		return registrationProvider;
 	}
 
 	private void exportPatient(Patient savedPatient) {
