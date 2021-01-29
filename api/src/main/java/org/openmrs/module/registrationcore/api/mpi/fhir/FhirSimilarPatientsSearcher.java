@@ -49,8 +49,12 @@ public class FhirSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
                 mpiPatientExtract.setDead(mp.isDead());
                 mpiPatientExtract.setGender(mp.getGender());
                 mpiPatientExtract.setSourceLocation(mp.getSourceLocation());
-                mpiPatientExtract.setMothersName(mp.getAttribute("First Name of Mother").getValue());
-                mpiPatientExtract.setPhoneNumber(mp.getAttribute("Telephone Number").getValue());
+                if(mp.getAttribute("First Name of Mother")!=null){
+                    mpiPatientExtract.setMothersName(mp.getAttribute("First Name of Mother").getValue());
+                }
+                if(mp.getAttribute("Telephone Number")!=null){
+                    mpiPatientExtract.setPhoneNumber(mp.getAttribute("Telephone Number").getValue());
+                }
                 mpiPatientExtract.setNames(mp.getNames());
                 mpiPatientExtract.setAddresses(mp.getAddresses());
                 retVal.add(mpiPatientExtract);
