@@ -58,7 +58,7 @@ public class PatientCreationListener extends PatientActionListener {
     @Override
     public void performMpiAction(Message message) {
         Patient patient = extractPatient(message);
-    
+
         String personId = null;
         try {
             personId = pushPatientToMpiServer(patient);
@@ -82,6 +82,7 @@ public class PatientCreationListener extends PatientActionListener {
     }
 
     private String pushPatientToMpiServer(Patient patient) {
+        LOGGER.info("Pushing patient to MPI server");
         return coreProperties.getMpiProvider().exportPatient(patient);
     }
 

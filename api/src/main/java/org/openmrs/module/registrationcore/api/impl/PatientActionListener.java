@@ -1,10 +1,13 @@
 package org.openmrs.module.registrationcore.api.impl;
 
 import java.io.IOException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
@@ -19,6 +22,8 @@ import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpi
  * Abstract class for event listening.
  */
 public abstract class PatientActionListener implements EventListener {
+
+    private final Log log = LogFactory.getLog(this.getClass());
 
     protected RegistrationCoreProperties coreProperties;
 
@@ -61,7 +66,7 @@ public abstract class PatientActionListener implements EventListener {
         validateMessage(message);
 
         String patientUuid = getMessagePropertyValue(message, RegistrationCoreConstants.KEY_PATIENT_UUID);
-
+        log.info(String.format("Patient UUID is %s", patientUuid));
         return getPatient(patientUuid);
     }
 
@@ -89,7 +94,11 @@ public abstract class PatientActionListener implements EventListener {
     }
 
     private Patient getPatient(String patientUuid) {
+        patientService = Context.getService(PatientService.class);
         Patient patient = patientService.getPatientByUuid(patientUuid);
+        if (patient == null) {
+            throw new APIException("Unable to retrieve patient by uuid " + patientUuid);
+        }
         return patient;
     }
 }

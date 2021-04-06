@@ -34,6 +34,7 @@ public class PixPatientExporter implements MpiPatientExporter {
             Message response = hl7SenderHolder.getHl7v2Sender().sendPixMessage(admitMessage);
 
             if (pixPdqMessageUtil.isQueryError(response)) {
+                log.info("Error querying patient data during export");
                 throw new MpiException("Error querying patient data during export");
             }
 
