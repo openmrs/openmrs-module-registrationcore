@@ -47,7 +47,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jodaTimeVersion>2.2</jodaTimeVersion>
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
-		<apacheHttpClientVersion>4.5</apacheHttpClientVersion>
+		<apacheHttpClientVersion>4.5.13</apacheHttpClientVersion>
 	</properties>
 
 	<dependencyManagement>
