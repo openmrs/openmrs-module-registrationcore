@@ -11,7 +11,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>registrationcore</artifactId>
-	<version>1.11.0-SNAPSHOT</version>
+	<version>1.11.0</version>
 	<packaging>pom</packaging>
 	<name>Registration Core Module</name>
 	<description>Provides core utilities and services for patient registration.</description>
@@ -31,7 +31,7 @@
 		<connection>scm:git:git@github.com:openmrs/openmrs-module-registrationcore.git</connection>
 		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-registrationcore.git</developerConnection>
 		<url>https://github.com/openmrs/openmrs-module-registrationcore.git</url>
-		<tag>HEAD</tag>
+		<tag>1.11.0</tag>
 	</scm>
 
 	<modules>
