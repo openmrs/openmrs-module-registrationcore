@@ -35,7 +35,7 @@
     </bean>
 
     <bean id="registrationcore.patientCreatedListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientCreatedListener">
+          class="org.openmrs.module.registrationcore.api.impl.PatientCreatedListener" init-method="init">
         <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
         <property name="mpiProperties" ref="registrationcore.mpiProperties"/>
@@ -43,7 +43,7 @@
     </bean>
 
     <bean id="registrationcore.patientUpdatedListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientUpdatedListener">
+          class="org.openmrs.module.registrationcore.api.impl.PatientUpdatedListener" init-method="init">
         <property name="coreProperties" ref="registrationcore.coreProperties"/>
         <property name="patientService" ref="patientService"/>
     </bean>

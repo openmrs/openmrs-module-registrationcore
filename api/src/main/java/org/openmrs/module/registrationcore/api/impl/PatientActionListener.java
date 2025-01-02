@@ -12,6 +12,7 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Daemon;
+import org.openmrs.event.Event;
 import org.openmrs.event.SubscribableEventListener;
 import org.openmrs.module.DaemonToken;
 
@@ -44,6 +45,14 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	
 	public void setDaemonToken(DaemonToken daemonToken) {
 		this.daemonToken = daemonToken;
+	}
+	
+	/**
+	 * Subscribes for Class - Patient and specified Actions event.
+	 */
+	public void init() {
+		Event event = new Event();
+		event.setSubscription(this);
 	}
 	
 	/**
