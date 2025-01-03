@@ -34,20 +34,6 @@
         <property name="patientService" ref="patientService"/>
     </bean>
 
-    <bean id="registrationcore.patientCreatedListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientCreatedListener">
-        <property name="coreProperties" ref="registrationcore.coreProperties"/>
-        <property name="patientService" ref="patientService"/>
-        <property name="mpiProperties" ref="registrationcore.mpiProperties"/>
-        <property name="identifierBuilder" ref="registrationcore.identifierBuilder"/>
-    </bean>
-
-    <bean id="registrationcore.patientUpdatedListener"
-          class="org.openmrs.module.registrationcore.api.impl.PatientUpdatedListener">
-        <property name="coreProperties" ref="registrationcore.coreProperties"/>
-        <property name="patientService" ref="patientService"/>
-    </bean>
-
     <bean id="registrationcore.coreProperties"
           class="org.openmrs.module.registrationcore.api.impl.RegistrationCoreProperties"/>
 

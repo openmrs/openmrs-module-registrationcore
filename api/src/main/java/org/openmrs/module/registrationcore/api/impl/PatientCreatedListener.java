@@ -14,6 +14,7 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -29,8 +30,10 @@ public class PatientCreatedListener extends PatientActionListener {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientCreatedListener.class);
 	
+	@Autowired
 	private MpiProperties mpiProperties;
 	
+	@Autowired
 	private IdentifierBuilder identifierBuilder;
 	
 	public void setMpiProperties(MpiProperties mpiProperties) {

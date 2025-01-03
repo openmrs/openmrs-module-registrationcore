@@ -20,6 +20,7 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import org.openmrs.module.registrationcore.api.errorhandling.SendingPatientToMpiParameters;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract class for subscribable event listening.
@@ -28,8 +29,10 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
+	@Autowired
 	protected RegistrationCoreProperties coreProperties;
 	
+	@Autowired
 	protected PatientService patientService;
 	
 	private DaemonToken daemonToken;
