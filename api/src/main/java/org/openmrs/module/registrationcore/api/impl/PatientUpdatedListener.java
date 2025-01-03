@@ -2,6 +2,7 @@ package org.openmrs.module.registrationcore.api.impl;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openmrs.Patient;
+import org.openmrs.annotation.Handler;
 import org.openmrs.event.Event;
 
 import javax.jms.Message;
@@ -10,6 +11,7 @@ import org.openmrs.module.registrationcore.api.errorhandling.PixErrorHandlingSer
 import org.openmrs.module.registrationcore.api.mpi.common.MpiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
 /**
  * This class listens for patient UPDATED events. If MPI is enabled it updates patient in MPI.
  */
+@Handler
+@Component("registrationcore.patientUpdatedListener")
 public class PatientUpdatedListener extends PatientActionListener {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientUpdatedListener.class);
