@@ -1,3 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.registrationcore.api.mpi.common;
 
 import org.openmrs.Patient;
@@ -26,12 +35,11 @@ public class MpiPatient extends Patient {
 	
 	/**
 	 * This constructor creates a new MpiPatient object from the given {@link Patient} object. All
-	 * attributes are copied over to the new object. NOTE! All child collection objects are copied
-	 * as pointers, each individual element is not copied. <br>
+	 * attributes are copied over to the new object. NOTE! All child collection objects are copied as
+	 * pointers, each individual element is not copied. <br>
 	 * <br>
 	 * Note: Requires openmrs-core version 2.2.0 for constructor method to create patient from a
-	 * provided patient refer to <a
-	 * href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>
+	 * provided patient refer to <a href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>
 	 * 
 	 * @param patient the patient object to copy onto a new Patient
 	 * @see MpiPatient#MpiPatient(Patient)
@@ -41,15 +49,14 @@ public class MpiPatient extends Patient {
 	}
 	
 	/**
-	 * Converts MpiPatient to Patient object. Currently required because trying to save an
-	 * MpiPatient using PatientService.savePatient results in a Hibernate Error
-	 * org.hibernate.HibernateException: Unable to resolve entity name from Class
+	 * Converts MpiPatient to Patient object. Currently required because trying to save an MpiPatient
+	 * using PatientService.savePatient results in a Hibernate Error org.hibernate.HibernateException:
+	 * Unable to resolve entity name from Class
 	 * [org.openmrs.module.registrationcore.api.mpi.common.MpiPatient] expected instance/subclass of
-	 * [org.openmrs.Person] Note: Allergy status is not duplicated as the version of core required
-	 * by the module does not include the allergy api integration Note: This method is a hack and
-	 * dirties the original patient as the identifiers within the original patient will reference
-	 * the new patient. This method should be deprecated when openmrs-core is upgraded to at least V
-	 * 2.2.0
+	 * [org.openmrs.Person] Note: Allergy status is not duplicated as the version of core required by
+	 * the module does not include the allergy api integration Note: This method is a hack and dirties
+	 * the original patient as the identifiers within the original patient will reference the new
+	 * patient. This method should be deprecated when openmrs-core is upgraded to at least V 2.2.0
 	 * 
 	 * @return patient
 	 * @see <a href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>

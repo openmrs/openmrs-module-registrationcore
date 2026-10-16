@@ -1,4 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
 <dataset>
 
     <patient_identifier_type patient_identifier_type_id="3" uuid="0d47284f-9e9b-4a81-a88b-8bb42bc0a903" name="OpenMRS ID" description="OpenMRS patient identifier, with check-digit" check_digit="1"  creator="1" date_created="2015-07-27 11:28:30.489" required="0" retired="0"/>

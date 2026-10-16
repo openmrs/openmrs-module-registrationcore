@@ -1,3 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.registrationcore.api.impl;
 
 import java.io.IOException;
@@ -69,8 +78,7 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	}
 	
 	/**
-	 * Defines the list of classes that this subscribable event listener class listens for changes
-	 * to.
+	 * Defines the list of classes that this subscribable event listener class listens for changes to.
 	 * 
 	 * @return a list of classes that this can handle
 	 */
@@ -125,8 +133,8 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	}
 	
 	/**
-	 * Prepares the parameters required for sending the patient to the MPI (the message) via the
-	 * error handling module (specified in the global properties) in the case of initial failure.
+	 * Prepares the parameters required for sending the patient to the MPI (the message) via the error
+	 * handling module (specified in the global properties) in the case of initial failure.
 	 * 
 	 * @param patient patient to be sent to MPI
 	 * @return parameters as a string
