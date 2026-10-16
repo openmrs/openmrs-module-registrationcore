@@ -1,3 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
@@ -118,8 +127,8 @@ public class OpenEmpiConnectorTest {
 	public void testFindPreciseSimilarPatients() throws Exception {
 		mockProbablyMatchingEnabled(false);
 		mockAuthentication(false);
-		when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt())).thenReturn(
-		    listPatients);
+		when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+		        .thenReturn(listPatients);
 		
 		List<PatientAndMatchQuality> similarPatients = mpiProvider.findExactMatches(patient, otherDataPoints, cutoff,
 		    maxResults);
@@ -131,8 +140,8 @@ public class OpenEmpiConnectorTest {
 	@Test
 	public void testFindPreciseSimilarPatientsDoNotPerformAuthenticationInCaseAuthenticated() throws Exception {
 		mockAuthentication(true);
-		when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt())).thenReturn(
-		    listPatients);
+		when(searchAlgorithm.findExactMatches(any(Patient.class), any(Map.class), any(Double.class), anyInt()))
+		        .thenReturn(listPatients);
 		
 		mpiProvider.findExactMatches(patient, otherDataPoints, cutoff, maxResults);
 		

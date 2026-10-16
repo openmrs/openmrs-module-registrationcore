@@ -1,3 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.model.Message;
@@ -43,8 +52,8 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 	}
 	
 	@Override
-	public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints,
-	        Double cutoff, Integer maxResults) {
+	public List<PatientAndMatchQuality> findExactMatches(Patient patient, Map<String, Object> otherDataPoints, Double cutoff,
+	        Integer maxResults) {
 		return find(patient, maxResults);
 	}
 	
@@ -127,15 +136,12 @@ public class PdqSimilarPatientsSearcher implements MpiSimilarPatientsSearcher {
 						matchedFields.add("addresses.country");
 						score += 0.125;
 					}
-					if (personAddress.getCityVillage() != null
-					        && matchAddress.getCityVillage() != null
-					        && personAddress.getCityVillage().toLowerCase()
-					                .equals(matchAddress.getCityVillage().toLowerCase())) {
+					if (personAddress.getCityVillage() != null && matchAddress.getCityVillage() != null && personAddress
+					        .getCityVillage().toLowerCase().equals(matchAddress.getCityVillage().toLowerCase())) {
 						matchedFields.add("addresses.cityVillage");
 						score += 0.125;
 					}
-					if (personAddress.getCountyDistrict() != null
-					        && matchAddress.getCountyDistrict() != null
+					if (personAddress.getCountyDistrict() != null && matchAddress.getCountyDistrict() != null
 					        && personAddress.getCountyDistrict().toLowerCase()
 					                .equals(matchAddress.getCountyDistrict().toLowerCase())) {
 						matchedFields.add("addresses.countryDistrict");

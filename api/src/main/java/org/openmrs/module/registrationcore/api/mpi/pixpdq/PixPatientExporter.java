@@ -1,3 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import ca.uhn.hl7v2.model.Message;
@@ -42,8 +51,8 @@ public class PixPatientExporter implements MpiPatientExporter {
 			// Ensure that patient with that identifier does not already exist on the MPI
 			Patient existingMpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier());
 			if (existingMpiPatient != null) {
-				throw new MpiException("Patient with that identifier is already present on MPI. "
-				        + "Unable to create patient");
+				throw new MpiException(
+				        "Patient with that identifier is already present on MPI. " + "Unable to create patient");
 			}
 			
 			Message admitMessage = pixPdqMessageUtil.createAdmit(patient);
@@ -57,8 +66,8 @@ public class PixPatientExporter implements MpiPatientExporter {
 			
 			Patient mpiPatient = pdqPatientFetcher.fetchMpiPatient(patient.getPatientIdentifier());
 			if (mpiPatient == null) {
-				throw new MpiException("Patient has not been created on MPI. "
-				        + "Probably patient with the same IDs already exists");
+				throw new MpiException(
+				        "Patient has not been created on MPI. " + "Probably patient with the same IDs already exists");
 			}
 			return getMpiIdentifier(mpiPatient);
 		}
@@ -73,8 +82,8 @@ public class PixPatientExporter implements MpiPatientExporter {
 	}
 	
 	private String getMpiIdentifier(Patient mpiPatient) {
-		PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByUuid(mpiProperties
-		        .getMpiPersonIdentifierTypeUuid());
+		PatientIdentifierType patientIdentifierType = patientService
+		        .getPatientIdentifierTypeByUuid(mpiProperties.getMpiPersonIdentifierTypeUuid());
 		return mpiPatient.getPatientIdentifier(patientIdentifierType).getIdentifier();
 	}
 }
