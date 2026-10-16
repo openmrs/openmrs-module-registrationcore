@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.openmrs.maven.parents</groupId>
 		<artifactId>maven-parent-openmrs-module</artifactId>
-		<version>2.2.0</version>
+		<version>2.3.0</version>
 	</parent>
 
 	<groupId>org.openmrs.module</groupId>
@@ -51,6 +51,7 @@
 		<jodaTimeVersion>2.2</jodaTimeVersion>
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
 		<apacheHttpClientVersion>4.5.13</apacheHttpClientVersion>
+		<byteBuddyVersion>1.17.6</byteBuddyVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -148,86 +149,14 @@
 			<version>1.3</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- openmrs-api brings in an older byte-buddy that cannot read Java 21 class files (breaks Mockito on JDK 21) -->
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>${byteBuddyVersion}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
-	<build>
-
-		<plugins>
-			<!--<plugin>
-				<groupId>net.revelc.code.formatter</groupId>
-				<artifactId>formatter-maven-plugin</artifactId>
-				<version>2.10.0</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>format</goal>
-						</goals>
-						<configuration>
-							<directories>
-								<directory>.</directory>
-							</directories>
-							<configFile>eclipse/OpenMRSFormatter.xml</configFile>
-							<includes>
-								<include>**/*.java</include>
-								<include>**/*.json</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>-->
-		</plugins>
-
-		<pluginManagement>
-			<plugins>
-				<!--<plugin>
-					<groupId>net.revelc.code.formatter</groupId>
-					<artifactId>formatter-maven-plugin</artifactId>
-					<dependencies>
-						<dependency>
-							<groupId>org.openmrs.tools</groupId>
-							<artifactId>openmrs-tools</artifactId>
-							<version>${openmrsPlatformVersion}</version>
-						</dependency>
-					</dependencies>
-				</plugin>-->
-				<plugin>
-					<groupId>org.openmrs.maven.plugins</groupId>
-					<artifactId>maven-openmrs-plugin</artifactId>
-					<version>1.0.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.4</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.4.2</version>
-					<configuration>
-						<autoVersionSubmodules>true</autoVersionSubmodules>
-						<tagNameFormat>@{project.version}</tagNameFormat>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.9.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.17</version>
-					<configuration>
-						<runOrder>alphabetical</runOrder>
-						<!-- https://talk.openmrs.org/t/error-could-not-find-or-load-main-class-org-apache-maven-surefire-booter-forkedbooter/20509 -->
-						<argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-
-	</build>
 
 	<repositories>
 		<repository>
