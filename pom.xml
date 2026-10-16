@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>org.openmrs.maven.parents</groupId>
 		<artifactId>maven-parent-openmrs-module</artifactId>
-		<version>1.1.1</version>
+		<version>2.2.0</version>
 	</parent>
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>registrationcore</artifactId>
-	<version>1.14.0-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Registration Core Module</name>
 	<description>Provides core utilities and services for patient registration.</description>
@@ -40,10 +40,13 @@
 	</modules>
 
 	<properties>
-		<openmrsPlatformVersion>1.10.5</openmrsPlatformVersion>
-		<idgenVersion>4.3</idgenVersion>
-		<eventVersion>2.8.0</eventVersion>
-		<namephoneticsVersion>1.4</namephoneticsVersion>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
+		<openmrsPlatformVersion>2.8.3</openmrsPlatformVersion>
+		<idgenVersion>6.0.0-SNAPSHOT</idgenVersion>
+		<eventVersion>4.0.0</eventVersion>
+		<namephoneticsVersion>1.19.0</namephoneticsVersion>
+		<webservicesRestVersion>3.1.0</webservicesRestVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jodaTimeVersion>2.2</jodaTimeVersion>
 		<apacheHttpCoreVersion>4.4.9</apacheHttpCoreVersion>
@@ -188,14 +191,6 @@
 						</dependency>
 					</dependencies>
 				</plugin>-->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<target>1.6</target>
-						<source>1.6</source>
-					</configuration>
-				</plugin>
 				<plugin>
 					<groupId>org.openmrs.maven.plugins</groupId>
 					<artifactId>maven-openmrs-plugin</artifactId>

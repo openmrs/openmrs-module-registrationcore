@@ -1,34 +1,38 @@
 package org.openmrs.module.registrationcore;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Context.class })
 public class RegistrationCoreUtilTest {
 	
 	private AdministrationService administrationService;
 	
+	private MockedStatic<Context> contextMock;
+	
 	@Before
 	public void setUp() {
-		PowerMockito.mockStatic(Context.class);
-		when(Context.getAdministrationService()).thenReturn(mock(AdministrationService.class));
+		administrationService = mock(AdministrationService.class);
+		contextMock = mockStatic(Context.class);
+		contextMock.when(Context::getAdministrationService).thenReturn(administrationService);
 		
-		administrationService = Context.getAdministrationService();
 		when(administrationService.getGlobalProperty(RegistrationCoreConstants.GP_BIRTHDATE_ESTIMATION_START_MONTH))
 		        .thenReturn("");
+	}
+	
+	@After
+	public void tearDown() {
+		contextMock.close();
 	}
 	
 	@Test

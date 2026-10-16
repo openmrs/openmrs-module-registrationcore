@@ -14,6 +14,9 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +61,9 @@ public class PatientBuilderTest {
 	@Mock
 	private PatientIdentifier ecidIdentifier;
 	
+	@Mock
+	private PatientIdentifier personIdentifier;
+	
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
@@ -79,6 +85,9 @@ public class PatientBuilderTest {
 		        .thenReturn(openmrsidentifier);
 		when(identifierBuilder.createIdentifier(LOCAL_ECID_IDENTIFIER_TYPE_UUID, PATIENT_ECID_IDENTIFIER_VALUE, null))
 		        .thenReturn(ecidIdentifier);
+		// the MPI person identifier is added to the patient as well; patient identifiers can't contain null
+		when(identifierBuilder.createIdentifier(eq(PERSON_IDENTIFIER_TYPE_UUID), anyString(), isNull()))
+		        .thenReturn(personIdentifier);
 	}
 	
 	private void mockRegistrationCoreProperties() {
@@ -99,8 +108,9 @@ public class PatientBuilderTest {
 		assertEquals(patient.getMiddleName(), query.getMiddleName());
 		
 		verify(openmrsidentifier).setPreferred(true);
-		assertTrue(patient.getIdentifiers().contains(openmrsidentifier));
-		assertTrue(patient.getIdentifiers().contains(ecidIdentifier));
+		// compare by identity: patient identifiers are a sorted set, which can't look up mocks reliably
+		assertTrue(patient.getIdentifiers().stream().anyMatch(i -> i == openmrsidentifier));
+		assertTrue(patient.getIdentifiers().stream().anyMatch(i -> i == ecidIdentifier));
 	}
 	
 	private OpenEmpiPatientResult readPatient(String path) throws Exception {

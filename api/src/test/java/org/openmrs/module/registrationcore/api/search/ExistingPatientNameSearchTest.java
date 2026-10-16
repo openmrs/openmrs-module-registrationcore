@@ -32,6 +32,7 @@ public class ExistingPatientNameSearchTest extends BaseRegistrationCoreSensitive
 	
 	@Before
 	public void setup() throws Exception {
+		executeDataSet("identifiers_dataset.xml");
 		executeDataSet("patients_dataset.xml");
 	}
 	
