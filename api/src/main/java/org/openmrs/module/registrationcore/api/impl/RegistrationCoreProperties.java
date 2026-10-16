@@ -1,3 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.registrationcore.api.impl;
 
 import java.util.Properties;
@@ -83,8 +92,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 			log.debug("Looking up biometrics engine component: " + engineId);
 			engine = Context.getRegisteredComponent(engineId, BiometricEngine.class);
 			if (engine == null) {
-				throw new IllegalStateException(propertyName + " must point to a bean implementing BiometricEngine. "
-				        + engineId + " is not valid.");
+				throw new IllegalStateException(
+				        propertyName + " must point to a bean implementing BiometricEngine. " + engineId + " is not valid.");
 			}
 		}
 		return engine;
@@ -123,8 +132,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 	 * @return
 	 */
 	public Integer getPdqPort() {
-		return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-		    RegistrationCoreConstants.GP_MPI_PDQ_PORT));
+		return Integer
+		        .valueOf(Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PDQ_PORT));
 	}
 	
 	public String getPixEndpoint() {
@@ -132,8 +141,8 @@ public class RegistrationCoreProperties extends ModuleProperties implements Appl
 	}
 	
 	public Integer getPixPort() {
-		return Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
-		    RegistrationCoreConstants.GP_MPI_PIX_PORT));
+		return Integer
+		        .valueOf(Context.getAdministrationService().getGlobalProperty(RegistrationCoreConstants.GP_MPI_PIX_PORT));
 	}
 	
 	private String getApplicationName() {

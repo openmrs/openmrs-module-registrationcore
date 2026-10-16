@@ -1,3 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.registrationcore.api.mpi.openempi;
 
 import org.junit.Before;
@@ -112,17 +121,18 @@ public class OpenEmpiPatientFetcherTest extends BaseRegistrationCoreSensitiveTes
 		        "registrationcore.mpi.implementation.OpenEMPI"));
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_URL, "server.url"));
-		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID,
-		        PERSON_IDENTIFIER_TYPE_UUID));
+		adminService.saveGlobalProperty(
+		    new GlobalProperty(RegistrationCoreConstants.GP_MPI_PERSON_IDENTIFIER_TYPE_UUID, PERSON_IDENTIFIER_TYPE_UUID));
 		
-		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP
-		        + MPI_IDENTIFIER_TYPE_OPENEMRS_NAME, LOCAL_IDENTIFIER_TYPE_UUID_OPENMRS + ":"
-		        + MPI_IDENTIFIER_TYPE_ID_OPENMRS));
-		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP
-		        + MPI_IDENTIFIER_TYPE_OPENEMPI_NAME, LOCAL_IDENTIFIER_TYPE_UUID_OPENEMPI + ":"
-		        + MPI_IDENTIFIER_TYPE_ID_OPENEMPI));
-		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP
-		        + MPI_IDENTIFIER_TYPE_ECID_NAME, LOCAL_IDENTIFIER_TYPE_UUID_ECID + ":" + MPI_IDENTIFIER_TYPE_ID_ECID));
+		adminService.saveGlobalProperty(new GlobalProperty(
+		        RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMRS_NAME,
+		        LOCAL_IDENTIFIER_TYPE_UUID_OPENMRS + ":" + MPI_IDENTIFIER_TYPE_ID_OPENMRS));
+		adminService.saveGlobalProperty(new GlobalProperty(
+		        RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_OPENEMPI_NAME,
+		        LOCAL_IDENTIFIER_TYPE_UUID_OPENEMPI + ":" + MPI_IDENTIFIER_TYPE_ID_OPENEMPI));
+		adminService.saveGlobalProperty(
+		    new GlobalProperty(RegistrationCoreConstants.GP_LOCAL_MPI_IDENTIFIER_TYPE_MAP + MPI_IDENTIFIER_TYPE_ECID_NAME,
+		            LOCAL_IDENTIFIER_TYPE_UUID_ECID + ":" + MPI_IDENTIFIER_TYPE_ID_ECID));
 	}
 	
 	private void mockResTemplate() {
@@ -152,9 +162,8 @@ public class OpenEmpiPatientFetcherTest extends BaseRegistrationCoreSensitiveTes
 	
 	@SuppressWarnings("unchecked")
 	private void mockMpiResponse(Object response) {
-		when(
-		    mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class),
-		        eq(OpenEmpiPatientResult.class))).thenReturn(new ResponseEntity(response, HttpStatus.OK));
+		when(mockRestTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class),
+		    eq(OpenEmpiPatientResult.class))).thenReturn(new ResponseEntity(response, HttpStatus.OK));
 	}
 	
 	private void verifyRemoteMpiServerQuerying() {
