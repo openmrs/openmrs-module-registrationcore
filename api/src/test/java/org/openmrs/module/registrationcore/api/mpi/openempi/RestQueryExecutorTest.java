@@ -24,9 +24,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.*;
 
 public class RestQueryExecutorTest {
@@ -190,8 +190,9 @@ public class RestQueryExecutorTest {
 	private void mockServerResponse(Object body, Class<?> value) {
 		response = mock(ResponseEntity.class);
 		when(response.getBody()).thenReturn(body);
-		when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), eq(value))).thenReturn(
-		    response);
+		// the url may be null when the url builder isn't stubbed, which anyString() doesn't match
+		when(restTemplate.exchange(nullable(String.class), any(HttpMethod.class), any(HttpEntity.class), eq(value)))
+		        .thenReturn(response);
 	}
 	
 	private MpiCredentials createCredentials() {

@@ -20,8 +20,8 @@ import org.openmrs.module.registrationcore.api.mpi.common.MpiProperties;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class OpenEmpiAuthenticatorTest {

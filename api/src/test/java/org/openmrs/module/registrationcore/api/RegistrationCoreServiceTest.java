@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.registrationcore.api;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -39,6 +40,7 @@ import org.openmrs.module.registrationcore.api.biometrics.model.Fingerprint;
 import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.transaction.TestTransaction;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -83,6 +85,11 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		executeDataSet("mpi_global_properties_dataset.xml");
 		executeDataSet("patients_dataset.xml");
 		executeDataSet("org/openmrs/module/idgen/include/TestData.xml");
+		// idgen generates identifiers in a REQUIRES_NEW transaction, which can only see committed data
+		Context.flushSession();
+		TestTransaction.flagForCommit();
+		TestTransaction.end();
+		TestTransaction.start();
 		service = Context.getService(RegistrationCoreService.class);
 		adminService.saveGlobalProperty(new GlobalProperty(RegistrationCoreConstants.GP_OPENMRS_IDENTIFIER_SOURCE_ID, "1"));
 		biometricsIdentifierType = new PatientIdentifierType();
@@ -90,6 +97,12 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		biometricsIdentifierType.setDescription("Biometrics Reference Code");
 		biometricsIdentifierType.setLocationBehavior(PatientIdentifierType.LocationBehavior.NOT_USED);
 		biometricsIdentifierType = patientService.savePatientIdentifierType(biometricsIdentifierType);
+	}
+	
+	@After
+	public void after() {
+		// remove the data committed in before()
+		deleteAllData();
 	}
 	
 	private Patient createBasicPatient() {
@@ -100,7 +113,6 @@ public class RegistrationCoreServiceTest extends BaseRegistrationCoreSensitiveTe
 		patient.addName(pName);
 		
 		patient.setBirthdate(new Date());
-		patient.setDeathDate(new Date());
 		patient.setBirthdateEstimated(true);
 		patient.setGender("M");
 		
