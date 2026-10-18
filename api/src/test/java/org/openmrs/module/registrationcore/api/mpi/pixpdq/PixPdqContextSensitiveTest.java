@@ -10,7 +10,6 @@
 package org.openmrs.module.registrationcore.api.mpi.pixpdq;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -117,14 +116,7 @@ public class PixPdqContextSensitiveTest extends BaseRegistrationCoreSensitiveTes
 		return values;
 	}
 	
-	/**
-	 * Note: Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient from
-	 * a provided patient
-	 * 
-	 * @see <a href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>
-	 */
 	@Test
-	@Ignore
 	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnEmptyList() throws Exception {
 		List<MpiPatient> inputList = new ArrayList<MpiPatient>();
 		
@@ -136,14 +128,7 @@ public class PixPdqContextSensitiveTest extends BaseRegistrationCoreSensitiveTes
 		assertEquals(true, resultList.isEmpty());
 	}
 	
-	/**
-	 * Note: Requires openmrs-core version 2.2.0-SNAPSHOT for constructor method to create patient from
-	 * a provided patient
-	 * 
-	 * @see <a href="https://issues.openmrs.org/browse/TRUNK-5408">TRUNK-5408</a>
-	 */
 	@Test
-	@Ignore
 	public void filterByIdentifierAndIdentifierType_ContextSensitiveShouldReturnPatient() throws Exception {
 		List<MpiPatient> inputList = new ArrayList<MpiPatient>();
 		inputList.add(new MpiPatient(patientService.getPatient(99)));
