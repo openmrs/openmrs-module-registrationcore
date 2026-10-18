@@ -43,6 +43,7 @@ public class BasicSimilarPatientSearchAlgorithmTest extends BaseRegistrationCore
 	
 	@Before
 	public void setup() throws Exception {
+		executeDataSet("identifiers_dataset.xml");
 		executeDataSet("patients_dataset.xml");
 	}
 	
